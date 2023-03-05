@@ -1,0 +1,8 @@
+{
+  "name": "dezaina",
+  "version": "0.0.1",
+  "description": "a design app",
+  "main": "index.js",
+  "repository": "git@github.com:liuyanxing/Dezaina.git",
+  "author": "刘延兴 <liuyanxing@hetao101.com>"
+}
