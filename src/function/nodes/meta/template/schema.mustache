@@ -1,0 +1,23 @@
+{{#enums}}
+	enum {{name}} {
+		{{#members}}
+			{{name}},
+		{{/members}}
+	}
+{{/enums}}
+
+{{#structs}}
+	struct {{name}} {
+		{{#members}}
+			{{name}}: {{type}},
+		{{/members}}
+	}
+{{/structs}}
+
+{{#messages}}
+	message {{name}} {
+		{{#members}}
+			{{name}}: {{type}},
+		{{/members}}
+	}
+{{/messages}}
