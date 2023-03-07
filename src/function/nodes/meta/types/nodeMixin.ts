@@ -51,8 +51,7 @@ type AxisSizingMode = 'FIXED' | 'AUTO'
 type PrimaryAxisAlignItems = 'MIN' | 'MAX' | 'CENTER' | 'SPACE_BETWEEN'
 type CounterAxisAlignItems = 'MIN' | 'MAX' | 'CENTER' | 'BASELINE'
 
-interface BaseFrameMixin
-  extends BaseNodeMixin,
+interface BaseFrameMixin extends BaseNodeMixin,
     SceneNodeMixin,
     GeometryMixin,
     CornerMixin,

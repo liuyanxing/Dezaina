@@ -2,6 +2,7 @@ import ts, { Identifier, TypeReference } from "typescript";
 import fs from "fs";
 import path from "path"
 import toposort from "toposort"
+import { Graph } from "./utils/graph"
 import { group } from "console";
 
 function concatDirFiles(dir: string) {
@@ -72,7 +73,6 @@ function getInterfaceMembers(node: ts.InterfaceDeclaration) {
 			if (typeName === "Array") {
 				isArray = true;
 				if (typeRef.typeArguments?.length !== 1) {
-					console.log(typeRef.typeArguments);
 					throw new Error("illegal type");
 				}
 				typeRef = typeRef.typeArguments[0] as ts.TypeReferenceNode;
@@ -89,7 +89,6 @@ function visitor(node: ts.Node) {
 	if (ts.isInterfaceDeclaration(node)) {
 		const interfaceNode = node as ts.InterfaceDeclaration;
 		const name = getNameText(interfaceNode.name);
-		console.log(name);
 		const members = getInterfaceMembers(interfaceNode);
 		const mixins = getInterfaceMixins(interfaceNode);
 		const isStruct = mixins.includes("Struct");
@@ -97,7 +96,7 @@ function visitor(node: ts.Node) {
 			interfaces.push({
 				name,
 				members,
-				mixins,
+				mixins: mixins.filter(m => m !== "Struct"),
 				isStruct,
 			})
 		}
@@ -105,51 +104,28 @@ function visitor(node: ts.Node) {
 	node.forEachChild(visitor);
 }
 
-function sortInterface(interfaces: Array<Interface>) {
-	const edges: [string, string | undefined][] = [];
+function groupByExtends(interfaces: Interface[]) {
+	const graph = new Graph();
 	for (let interf of interfaces) {
 		const from = interf.name;
 		if (interf.mixins.length === 0) {
-			edges.push([from, undefined]);
+			graph.addEdge(from, "");
 			continue;
 		}
 		for (let mixin of interf.mixins) {
-			edges.push([mixin, from]);
+			// console.log(mixin, from);
+			graph.addEdge(mixin, from);
 		}
 	}
-	const res = toposort(edges).filter(c => !!c && c !== "Struct");
-	return res;
-}
-
-function groupByExtends(interfaceNames: string[]) {
-	const typeMaps: Record<string, Interface> = {};
-	for (let interf of interfaces) {
-		typeMaps[interf.name] = interf;
-	}
-	const groups: Interface[][] = [];
-	for (let interfaceName of interfaceNames) {
-		const extendNames = typeMaps[interfaceName].mixins;
-		if (!extendNames.length) {
-			groups.push([typeMaps[interfaceName]]);
-			continue;
-		}
-		for (let group of groups) {
-			if (extendNames.some(extName => {
-				return group.some(interf => interf.name === extName);
-			})) {
-				group.push(typeMaps[interfaceName]);
-				break;
-			}
-		}
-	}
-	return groups;
+	return graph.groupByConnection();
 }
 
 function main() {
 	const source = concatDirFiles("./types");
 	const sourceFile = ts.createSourceFile("type.ts", source, ts.ScriptTarget.ESNext);
 	visitor(sourceFile);
-	sortInterface(interfaces);
+	console.log(groupByExtends(interfaces));
+	// groupByExtends(interfaces);
 }
 
 main();
