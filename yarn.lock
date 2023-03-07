@@ -7,6 +7,11 @@
   resolved "https://registry.npmmirror.com/@types/node/-/node-18.14.6.tgz#ae1973dd2b1eeb1825695bb11ebfb746d27e3e93"
   integrity sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==
 
+"@types/toposort@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.npmmirror.com/@types/toposort/-/toposort-2.0.3.tgz#dc490842b77c3e910c8d727ff0bdb2fb124cb41b"
+  integrity sha512-jRtyvEu0Na/sy0oIxBW0f6wPQjidgVqlmCTJVHEGTNEUdL1f0YSvdPzHY7nX7MUWAZS6zcAa0KkqofHjy/xDZQ==
+
 toposort@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmmirror.com/toposort/-/toposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
