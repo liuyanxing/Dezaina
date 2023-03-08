@@ -1,17 +1,12 @@
 class GNode {
 	name: string;
-	pre: Set<GNode> = new Set<GNode>();
-	next: Set<GNode> = new Set<GNode>();
+	connections: Set<GNode> = new Set<GNode>();
 	constructor(name: string) {
 		this.name = name;
 	}
 
-	addNext(next: GNode) {
-		this.next.add(next);
-	}
-
-	addPre(pre: GNode) {
-		this.pre.add(pre);
+	addConnection(node: GNode) {
+		this.connections.add(node);
 	}
 }
 
@@ -24,8 +19,8 @@ export class Graph {
 		}
 		let fromNode = this.getOrCreate(from);
 		let toNode = this.getOrCreate(to);
-		fromNode.addNext(toNode);
-		toNode.addPre(fromNode);
+		fromNode.addConnection(toNode);
+		toNode.addConnection(fromNode);
 	}
 
 	getOrCreate(name: string) {
@@ -37,20 +32,16 @@ export class Graph {
 		return node;
 	}
 
-	visitePre(node: GNode, cb: (node: GNode) => void) {
-		const preNodes = node.pre;
-		for (let preNode of preNodes) {
-			cb(preNode);
-			this.visitePre(preNode, cb);
+	visite(node: GNode, visited = new Set<GNode>()) {
+		if (visited.has(node)) {
+			return visited;
 		}
-	}
-
-	visiteNext(node: GNode, cb: (node: GNode) => void) {
-		const nextNodes = node.next;
-		for (let nextNode of nextNodes) {
-			cb(nextNode);
-			this.visiteNext(nextNode, cb);
+		visited.add(node);
+		const connectNodes = node.connections;
+		for (let connectNode of connectNodes) {
+			this.visite(connectNode, visited);
 		}
+		return visited;
 	}
 
 	groupByConnection() {
@@ -60,23 +51,15 @@ export class Graph {
 			if (visited.has(name)) {
 				continue;
 			}
-			visited.add(name);
-			let curNodes = [name];
-			this.visitePre(node, (vNode) => {
-				if (visited.has(vNode.name)) {
-					return;
-				}
-				curNodes.push(vNode.name);
-				visited.add(vNode.name);
+			let curNode: string[] = [];
+			this.visite(node).forEach((node) => {
+				const name = node.name;
+				visited.add(name);
+				curNode.push(name);
+				return name;
 			});
-			this.visiteNext(node, (vNode) => {
-				if (visited.has(vNode.name)) {
-					return;
-				}
-				curNodes.push(vNode.name);
-				visited.add(vNode.name);
-			});
-			res.push(curNodes);
+			
+			res.push(curNode);
 		}
 		return res;
 	}
