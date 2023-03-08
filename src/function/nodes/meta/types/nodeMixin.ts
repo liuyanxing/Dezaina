@@ -1,37 +1,38 @@
-interface BaseNodeMixin {
+interface Node_Change_kiwi {}
+interface BaseNodeMixin extends Node_Change_kiwi {
   id: string
   parent: GUID
   name: string
 }
 
 interface SceneNodeMixin {
-  visible: boolean
-  locked: boolean
+  visible: bool
+  locked: bool
 }
 
 interface IndividualStrokesMixin {
-  strokeTopWeight: number
-  strokeBottomWeight: number
-  strokeLeftWeight: number
-  strokeRightWeight: number
+  strokeTopWeight: float
+  strokeBottomWeight: float
+  strokeLeftWeight: float
+  strokeRightWeight: float
 }
 
 interface GeometryMixin extends MinimalStrokesMixin, MinimalFillsMixin {
   strokeCap: StrokeCap
-  strokeMiterLimit: number
+  strokeMiterLimit: float
   fillGeometry: VectorPaths
 }
 
 interface CornerMixin {
-  cornerRadius: number
-  cornerSmoothing: number
+  cornerRadius: float
+  cornerSmoothing: float
 }
 
 interface RectangleCornerMixin {
-  topLeftRadius: number
-  topRightRadius: number
-  bottomLeftRadius: number
-  bottomRightRadius: number
+  topLeftRadius: float
+  topRightRadius: float
+  bottomLeftRadius: float
+  bottomRightRadius: float
 }
 
 interface DefaultShapeMixin
@@ -65,16 +66,16 @@ interface BaseFrameMixin extends BaseNodeMixin,
   counterAxisSizingMode: AxisSizingMode
   primaryAxisAlignItems: PrimaryAxisAlignItems
   counterAxisAlignItems: CounterAxisAlignItems
-  paddingLeft: number
-  paddingRight: number
-  paddingTop: number
-  paddingBottom: number
-  itemSpacing: number
-  itemReverseZIndex: boolean
-  strokesIncludedInLayout: boolean
-  horizontalPadding: number
-  verticalPadding: number
-  clipsContent: boolean
+  paddingLeft: float
+  paddingRight: float
+  paddingTop: float
+  paddingBottom: float
+  itemSpacing: float
+  itemReverseZIndex: bool
+  strokesIncludedInLayout: bool
+  horizontalPadding: float
+  verticalPadding: float
+  clipsContent: bool
 }
 
 interface DefaultFrameMixin extends BaseFrameMixin {}

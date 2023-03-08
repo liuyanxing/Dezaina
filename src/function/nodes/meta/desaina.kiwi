@@ -1,0 +1,145 @@
+
+	struct ColorStop {
+			position: float,
+			color: RGBA,
+	}
+	struct RGBA {
+			r: byte,
+			g: byte,
+			b: byte,
+			a: byte,
+	}
+	struct RGB {
+			r: byte,
+			g: byte,
+			b: byte,
+	}
+	struct GUID {
+			sessionId: uint,
+			localId: uint,
+	}
+
+	message LetterSpacing {
+			value: float,
+			unit: Unit,
+	}
+	message ImageFilters {
+			exposure: float,
+			contrast: float,
+			saturation: float,
+			temperature: float,
+			tint: float,
+			highlights: float,
+			shadows: float,
+	}
+	message Paint {
+			type: PaintType,
+			color: RGB,
+			visible: bool,
+			opacity: float,
+			blendMode: BlendMode,
+			gradientTransform: Transform,
+			gradientStops: ColorStop,
+			visible: bool,
+			opacity: float,
+			blendMode: BlendMode,
+			scaleMode: ScaleMode,
+			imageHash: string,
+			imageTransform: Transform,
+			scalingFactor: float,
+			rotation: float,
+			filters: ImageFilters,
+			visible: bool,
+			opacity: float,
+			blendMode: BlendMode,
+	}
+	message Constraints {
+			horizontal: ConstraintType,
+			vertical: ConstraintType,
+	}
+	message Effect {
+			type: EffectType,
+			color: RGBA,
+			offset: Vector,
+			radius: float,
+			spread: float,
+			visible: bool,
+			blendMode: BlendMode,
+			showShadowBehindNode: bool,
+			color: RGBA,
+			offset: Vector,
+			radius: float,
+			spread: float,
+			visible: bool,
+			blendMode: BlendMode,
+			radius: float,
+			visible: bool,
+	}
+	message Node_Change {
+			opacity: float,
+			blendMode: BlendMode,
+			effects: Effect,
+			effectStyleId: string,
+			clone: RectangleNode,
+			constraints: Constraints,
+			layoutMode: LayoutMode,
+			primaryAxisSizingMode: AxisSizingMode,
+			counterAxisSizingMode: AxisSizingMode,
+			primaryAxisAlignItems: PrimaryAxisAlignItems,
+			counterAxisAlignItems: CounterAxisAlignItems,
+			paddingLeft: float,
+			paddingRight: float,
+			paddingTop: float,
+			paddingBottom: float,
+			itemSpacing: float,
+			itemReverseZIndex: bool,
+			strokesIncludedInLayout: bool,
+			horizontalPadding: float,
+			verticalPadding: float,
+			clipsContent: bool,
+			id: string,
+			parent: GUID,
+			name: string,
+			backgrounds: Paint,
+			children: PageNode,
+			visible: bool,
+			locked: bool,
+			strokeCap: StrokeCap,
+			strokeMiterLimit: float,
+			fillGeometry: VectorPaths,
+			strokes: Paint,
+			strokeStyleId: string,
+			strokeWeight: float,
+			strokeJoin: StrokeJoin,
+			strokeAlign: Align,
+			dashPattern: float,
+			strokeGeometry: VectorPaths,
+			fills: Paint,
+			fillStyleId: string,
+			cornerRadius: float,
+			cornerSmoothing: float,
+			topLeftRadius: float,
+			topRightRadius: float,
+			bottomLeftRadius: float,
+			bottomRightRadius: float,
+			rotation: float,
+			layoutAlign: LayoutAlignType,
+			layoutGrow: uint,
+			width: float,
+			height: float,
+			transform: Transform,
+			strokeTopWeight: float,
+			strokeBottomWeight: float,
+			strokeLeftWeight: float,
+			strokeRightWeight: float,
+	}
+	message float {
+	}
+	message uint {
+	}
+	message int {
+	}
+	message bool {
+	}
+	message byte {
+	}

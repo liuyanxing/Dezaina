@@ -1,6 +1,6 @@
 interface DimensionAndPositionMixin {
-  readonly width: number
-  readonly height: number
+  readonly width: float
+  readonly height: float
   transform: Transform
 }
 
@@ -18,8 +18,7 @@ interface ConstraintMixin {
 }
 
 interface LayoutMixin extends DimensionAndPositionMixin {
-  rotation: number
+  rotation: float
   layoutAlign: LayoutAlignType
-  layoutGrow: number
-  layoutPositioning: 'AUTO' | 'ABSOLUTE'
+  layoutGrow: uint
 }

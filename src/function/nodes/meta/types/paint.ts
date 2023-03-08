@@ -6,7 +6,7 @@ type PaintType = 'SOLID'
 		| 'IMAGE'
 
 interface ColorStop extends Struct {
-  position: number
+  position: float
   color: RGBA
 }
 
@@ -16,27 +16,27 @@ interface Paint {
 
 interface SolidPaint extends Paint {
   color: RGB
-  visible: boolean
-  opacity: number
+  visible: bool
+  opacity: float
   blendMode: BlendMode
 }
 
 interface GradientPaint extends Paint{
   gradientTransform: Transform
   gradientStops: ReadonlyArray<ColorStop>
-  visible: boolean
-  opacity: number
+  visible: bool
+  opacity: float
   blendMode: BlendMode
 }
 
 interface ImageFilters {
-  exposure: number
-  contrast: number
-  saturation: number
-  temperature: number
-  tint: number
-  highlights: number
-  shadows: number
+  exposure: float
+  contrast: float
+  saturation: float
+  temperature: float
+  tint: float
+  highlights: float
+  shadows: float
 }
 
 type ScaleMode = 'FILL' | 'FIT' | 'CROP' | 'TILE'
@@ -44,10 +44,10 @@ interface ImagePaint extends Paint {
   scaleMode: ScaleMode
   imageHash: string
   imageTransform: Transform
-  scalingFactor: number
-  rotation: number
+  scalingFactor: float
+  rotation: float
   filters: ImageFilters
-  visible: boolean
-  opacity: number
+  visible: bool
+  opacity: float
   blendMode: BlendMode
 }

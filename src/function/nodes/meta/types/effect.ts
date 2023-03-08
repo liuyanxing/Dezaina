@@ -4,28 +4,30 @@ type EffectType = 'DROP_SHADOW'
 	| 'LAYER_BLUR'
 	| 'BACKGROUND_BLUR'
 
-interface Effect {
+interface Effect_kiwi {}
+
+interface Effect extends Effect_kiwi {
   type: EffectType
 }
 
 interface DropShadowEffect extends Effect {
   readonly color: RGBA
   readonly offset: Vector
-  readonly radius: number
-  readonly spread?: number
-  readonly visible: boolean
+  readonly radius: float
+  readonly spread?: float
+  readonly visible: bool
   readonly blendMode: BlendMode
-  readonly showShadowBehindNode?: boolean
+  readonly showShadowBehindNode?: bool
 }
 interface InnerShadowEffect extends Effect {
   readonly color: RGBA
   readonly offset: Vector
-  readonly radius: number
-  readonly spread?: number
-  readonly visible: boolean
+  readonly radius: float
+  readonly spread?: float
+  readonly visible: bool
   readonly blendMode: BlendMode
 }
 interface BlurEffect extends Effect {
-  readonly radius: number
-  readonly visible: boolean
+  readonly radius: float
+  readonly visible: bool
 }

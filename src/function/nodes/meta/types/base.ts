@@ -1,6 +1,12 @@
 interface Struct {}
 interface Message {}
 
+interface byte {}
+interface bool {}
+interface int {}
+interface uint {}
+interface float {}
+
 declare type Transform = [[number, number, number], [number, number, number]]
 declare type BlendMode =
   | 'PASS_THROUGH'
@@ -23,6 +29,6 @@ declare type BlendMode =
   | 'COLOR'
   | 'LUMINOSITY'
 interface MinimalBlendMixin {
-  opacity: number
+  opacity: float
   blendMode: BlendMode
 }

@@ -1,17 +1,17 @@
 interface GUID extends Struct {
-	sessionId: number
-	localId: number
+	sessionId: uint
+	localId: uint
 }
 
 interface RGB extends Struct {
-  r: number
-  g: number
-  b: number
+  r: byte
+  g: byte
+  b: byte
 }
 
 interface RGBA extends Struct {
-  r: number
-  g: number
-  b: number
-  a: number
+  r: byte
+  g: byte
+  b: byte
+  a: byte
 }

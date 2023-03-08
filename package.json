@@ -6,11 +6,13 @@
   "repository": "git@github.com:liuyanxing/Dezaina.git",
   "author": "刘延兴 <liuyanxing@hetao101.com>",
   "dependencies": {
+    "@types/mustache": "^4.2.2",
+    "mustache": "^4.2.0",
     "toposort": "^2.0.2",
     "typescript": "^4.9.5"
   },
   "devDependencies": {
-    "@types/toposort": "^2.0.3",
-    "@types/node": "^18.14.6"
+    "@types/node": "^18.14.6",
+    "@types/toposort": "^2.0.3"
   }
 }
