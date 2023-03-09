@@ -13,7 +13,7 @@ function concatDirFiles(dir: string) {
 	return source;
 }
 
-type Member = Array<{ name: string, type: string, isArray: boolean} | undefined>;
+type Member = Array<{ name: string, type: string, isArray: boolean, index?: number} | undefined>;
 
 interface Interface {
 	name: string
@@ -88,6 +88,20 @@ function visitor(node: ts.Node) {
 			name: getNameText(enumNode.name),
 			members: enumNode.members.map(m => getNameText(m.name as ts.Identifier))
 		});
+	} else if (ts.isTypeAliasDeclaration(node)) {
+		const aliasTypeNode = node as ts.TypeAliasDeclaration;
+		const name = getNameText(aliasTypeNode.name);
+		if (ts.isUnionTypeNode(aliasTypeNode.type)) {
+			const taType = aliasTypeNode.type as ts.UnionTypeNode;
+			const members = taType.types.map((type)=> {
+				const literType = type as ts.LiteralTypeNode;
+				return (literType.literal as ts.StringLiteral).text;
+			})
+			enums.push({
+				name,
+				members,
+			});
+		}
 	} else if (ts.isInterfaceDeclaration(node)) {
 		const interfaceNode = node as ts.InterfaceDeclaration;
 		const name = getNameText(interfaceNode.name);
@@ -140,8 +154,10 @@ function mixinInterfacByGroup(group: string[][]) {
 		}
 		for (let name of i) {
 			const interf = interfaceMap.get(name);
-			item.members.push(...(interf!.members))	
+			const members = interf!.members as Member;
+			item.members.push(...members)	
 		}
+		item.members = item.members.map((member, index) => ({ ...member, index })) as Member;
 		groupedInterface.push(item);
 	}
 	return groupedInterface;

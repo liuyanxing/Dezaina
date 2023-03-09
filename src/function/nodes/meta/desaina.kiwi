@@ -1,145 +1,247 @@
+enum BlendMode {
+	PASS_THROUGH;
+	NORMAL;
+	DARKEN;
+	MULTIPLY;
+	LINEAR_BURN;
+	COLOR_BURN;
+	LIGHTEN;
+	SCREEN;
+	LINEAR_DODGE;
+	COLOR_DODGE;
+	OVERLAY;
+	SOFT_LIGHT;
+	HARD_LIGHT;
+	DIFFERENCE;
+	EXCLUSION;
+	HUE;
+	SATURATION;
+	COLOR;
+	LUMINOSITY;
+}
+enum EffectType {
+	DROP_SHADOW;
+	DROP_SHADOW;
+	INNER_SHADOW;
+	LAYER_BLUR;
+	BACKGROUND_BLUR;
+}
+enum ConstraintType {
+	MIN;
+	CENTER;
+	MAX;
+	STRETCH;
+	SCALE;
+}
+enum LayoutAlignType {
+	MIN;
+	CENTER;
+	MAX;
+	STRETCH;
+	INHERIT;
+}
+enum LayoutMode {
+	NONE;
+	HORIZONTAL;
+	VERTICAL;
+}
+enum AxisSizingMode {
+	FIXED;
+	AUTO;
+}
+enum PrimaryAxisAlignItems {
+	MIN;
+	MAX;
+	CENTER;
+	SPACE_BETWEEN;
+}
+enum CounterAxisAlignItems {
+	MIN;
+	MAX;
+	CENTER;
+	BASELINE;
+}
+enum PaintType {
+	SOLID;
+	GRADIENT_LINEAR;
+	GRADIENT_RADIAL;
+	GRADIENT_ANGULAR;
+	GRADIENT_DIAMOND;
+	IMAGE;
+}
+enum ScaleMode {
+	FILL;
+	FIT;
+	CROP;
+	TILE;
+}
+enum StrokeCap {
+	NONE;
+	ROUND;
+	SQUARE;
+	ARROW_LINES;
+	ARROW_EQUILATERAL;
+}
+enum StrokeJoin {
+	MITER;
+	BEVEL;
+	ROUND;
+}
+enum Align {
+	CENTER;
+	INSIDE;
+	OUTSIDE;
+}
+enum WindingRule {
+	NONZERO;
+	EVENODD;
+}
+enum Unit {
+	PIXELS;
+	PERCENT;
+}
 
-	struct ColorStop {
-			position: float,
-			color: RGBA,
-	}
-	struct RGBA {
-			r: byte,
-			g: byte,
-			b: byte,
-			a: byte,
-	}
-	struct RGB {
-			r: byte,
-			g: byte,
-			b: byte,
-	}
-	struct GUID {
-			sessionId: uint,
-			localId: uint,
-	}
+struct ColorStop {
+	float position;
+	RGBA color;
+}
+struct RGBA {
+	byte r;
+	byte g;
+	byte b;
+	byte a;
+}
+struct RGB {
+	byte r;
+	byte g;
+	byte b;
+}
+struct GUID {
+	uint sessionId;
+	uint localId;
+}
 
-	message LetterSpacing {
-			value: float,
-			unit: Unit,
-	}
-	message ImageFilters {
-			exposure: float,
-			contrast: float,
-			saturation: float,
-			temperature: float,
-			tint: float,
-			highlights: float,
-			shadows: float,
-	}
-	message Paint {
-			type: PaintType,
-			color: RGB,
-			visible: bool,
-			opacity: float,
-			blendMode: BlendMode,
-			gradientTransform: Transform,
-			gradientStops: ColorStop,
-			visible: bool,
-			opacity: float,
-			blendMode: BlendMode,
-			scaleMode: ScaleMode,
-			imageHash: string,
-			imageTransform: Transform,
-			scalingFactor: float,
-			rotation: float,
-			filters: ImageFilters,
-			visible: bool,
-			opacity: float,
-			blendMode: BlendMode,
-	}
-	message Constraints {
-			horizontal: ConstraintType,
-			vertical: ConstraintType,
-	}
-	message Effect {
-			type: EffectType,
-			color: RGBA,
-			offset: Vector,
-			radius: float,
-			spread: float,
-			visible: bool,
-			blendMode: BlendMode,
-			showShadowBehindNode: bool,
-			color: RGBA,
-			offset: Vector,
-			radius: float,
-			spread: float,
-			visible: bool,
-			blendMode: BlendMode,
-			radius: float,
-			visible: bool,
-	}
-	message Node_Change {
-			opacity: float,
-			blendMode: BlendMode,
-			effects: Effect,
-			effectStyleId: string,
-			clone: RectangleNode,
-			constraints: Constraints,
-			layoutMode: LayoutMode,
-			primaryAxisSizingMode: AxisSizingMode,
-			counterAxisSizingMode: AxisSizingMode,
-			primaryAxisAlignItems: PrimaryAxisAlignItems,
-			counterAxisAlignItems: CounterAxisAlignItems,
-			paddingLeft: float,
-			paddingRight: float,
-			paddingTop: float,
-			paddingBottom: float,
-			itemSpacing: float,
-			itemReverseZIndex: bool,
-			strokesIncludedInLayout: bool,
-			horizontalPadding: float,
-			verticalPadding: float,
-			clipsContent: bool,
-			id: string,
-			parent: GUID,
-			name: string,
-			backgrounds: Paint,
-			children: PageNode,
-			visible: bool,
-			locked: bool,
-			strokeCap: StrokeCap,
-			strokeMiterLimit: float,
-			fillGeometry: VectorPaths,
-			strokes: Paint,
-			strokeStyleId: string,
-			strokeWeight: float,
-			strokeJoin: StrokeJoin,
-			strokeAlign: Align,
-			dashPattern: float,
-			strokeGeometry: VectorPaths,
-			fills: Paint,
-			fillStyleId: string,
-			cornerRadius: float,
-			cornerSmoothing: float,
-			topLeftRadius: float,
-			topRightRadius: float,
-			bottomLeftRadius: float,
-			bottomRightRadius: float,
-			rotation: float,
-			layoutAlign: LayoutAlignType,
-			layoutGrow: uint,
-			width: float,
-			height: float,
-			transform: Transform,
-			strokeTopWeight: float,
-			strokeBottomWeight: float,
-			strokeLeftWeight: float,
-			strokeRightWeight: float,
-	}
-	message float {
-	}
-	message uint {
-	}
-	message int {
-	}
-	message bool {
-	}
-	message byte {
-	}
+message LetterSpacing {
+	float value = 0;
+	Unit unit = 1;
+}
+message ImageFilters {
+	float exposure = 0;
+	float contrast = 1;
+	float saturation = 2;
+	float temperature = 3;
+	float tint = 4;
+	float highlights = 5;
+	float shadows = 6;
+}
+message Paint {
+	PaintType type = 0;
+	RGB color = 1;
+	bool visible = 2;
+	float opacity = 3;
+	BlendMode blendMode = 4;
+	Transform gradientTransform = 5;
+	ColorStop gradientStops = 6;
+	bool visible = 7;
+	float opacity = 8;
+	BlendMode blendMode = 9;
+	ScaleMode scaleMode = 10;
+	string imageHash = 11;
+	Transform imageTransform = 12;
+	float scalingFactor = 13;
+	float rotation = 14;
+	ImageFilters filters = 15;
+	bool visible = 16;
+	float opacity = 17;
+	BlendMode blendMode = 18;
+}
+message Constraints {
+	ConstraintType horizontal = 0;
+	ConstraintType vertical = 1;
+}
+message Effect {
+	EffectType type = 0;
+	RGBA color = 1;
+	Vector offset = 2;
+	float radius = 3;
+	float spread = 4;
+	bool visible = 5;
+	BlendMode blendMode = 6;
+	bool showShadowBehindNode = 7;
+	RGBA color = 8;
+	Vector offset = 9;
+	float radius = 10;
+	float spread = 11;
+	bool visible = 12;
+	BlendMode blendMode = 13;
+	float radius = 14;
+	bool visible = 15;
+}
+message Node_Change {
+	float opacity = 0;
+	BlendMode blendMode = 1;
+	Effect effects = 2;
+	string effectStyleId = 3;
+	RectangleNode clone = 4;
+	Constraints constraints = 5;
+	LayoutMode layoutMode = 6;
+	AxisSizingMode primaryAxisSizingMode = 7;
+	AxisSizingMode counterAxisSizingMode = 8;
+	PrimaryAxisAlignItems primaryAxisAlignItems = 9;
+	CounterAxisAlignItems counterAxisAlignItems = 10;
+	float paddingLeft = 11;
+	float paddingRight = 12;
+	float paddingTop = 13;
+	float paddingBottom = 14;
+	float itemSpacing = 15;
+	bool itemReverseZIndex = 16;
+	bool strokesIncludedInLayout = 17;
+	float horizontalPadding = 18;
+	float verticalPadding = 19;
+	bool clipsContent = 20;
+	string id = 21;
+	GUID parent = 22;
+	string name = 23;
+	Paint backgrounds = 24;
+	PageNode children = 25;
+	bool visible = 26;
+	bool locked = 27;
+	StrokeCap strokeCap = 28;
+	float strokeMiterLimit = 29;
+	VectorPaths fillGeometry = 30;
+	Paint strokes = 31;
+	string strokeStyleId = 32;
+	float strokeWeight = 33;
+	StrokeJoin strokeJoin = 34;
+	Align strokeAlign = 35;
+	float dashPattern = 36;
+	VectorPaths strokeGeometry = 37;
+	Paint fills = 38;
+	string fillStyleId = 39;
+	float cornerRadius = 40;
+	float cornerSmoothing = 41;
+	float topLeftRadius = 42;
+	float topRightRadius = 43;
+	float bottomLeftRadius = 44;
+	float bottomRightRadius = 45;
+	float rotation = 46;
+	LayoutAlignType layoutAlign = 47;
+	uint layoutGrow = 48;
+	float width = 49;
+	float height = 50;
+	Transform transform = 51;
+	float strokeTopWeight = 52;
+	float strokeBottomWeight = 53;
+	float strokeLeftWeight = 54;
+	float strokeRightWeight = 55;
+}
+message float {
+}
+message uint {
+}
+message int {
+}
+message bool {
+}
+message byte {
+}
