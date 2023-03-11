@@ -1,5 +1,7 @@
 - [ ] kiwi schema生成  
 - [ ] cpp文件生成
+- [ ] cpp文件继
+- [ ] cpp enum 转换
 
 
 长期规划：
