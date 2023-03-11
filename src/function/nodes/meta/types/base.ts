@@ -1,11 +1,11 @@
 interface Struct {}
 interface Message {}
 
-interface byte {}
-interface bool {}
-interface int {}
-interface uint {}
-interface float {}
+type byte = number 
+type bool  = number 
+type int  = number 
+type uint = number 
+type float = number 
 
 declare type Transform = [[number, number, number], [number, number, number]]
 declare type BlendMode =
