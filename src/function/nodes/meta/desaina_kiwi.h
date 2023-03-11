@@ -469,9 +469,9 @@ public:
   const Matrix *gradientTransform() const;
   void set_gradientTransform(Matrix *value);
 
-  ColorStop *gradientStops();
-  const ColorStop *gradientStops() const;
-  void set_gradientStops(ColorStop *value);
+  kiwi::Array<ColorStop> *gradientStops();
+  const kiwi::Array<ColorStop> *gradientStops() const;
+  kiwi::Array<ColorStop> &set_gradientStops(kiwi::MemoryPool &pool, uint32_t count);
 
   bool *visible();
   const bool *visible() const;
@@ -526,7 +526,7 @@ private:
   RGB *_data_color = {};
   BlendMode _data_blendMode = {};
   Matrix *_data_gradientTransform = {};
-  ColorStop *_data_gradientStops = {};
+  kiwi::Array<ColorStop> _data_gradientStops = {};
   BlendMode _data_blendMode = {};
   ScaleMode _data_scaleMode = {};
   kiwi::String _data_imageHash = {};
@@ -666,9 +666,9 @@ public:
   const BlendMode *blendMode() const;
   void set_blendMode(const BlendMode &value);
 
-  Effect *effects();
-  const Effect *effects() const;
-  void set_effects(Effect *value);
+  kiwi::Array<Effect> *effects();
+  const kiwi::Array<Effect> *effects() const;
+  kiwi::Array<Effect> &set_effects(kiwi::MemoryPool &pool, uint32_t count);
 
   kiwi::String *effectStyleId();
   const kiwi::String *effectStyleId() const;
@@ -750,9 +750,9 @@ public:
   const kiwi::String *name() const;
   void set_name(const kiwi::String &value);
 
-  Paint *backgrounds();
-  const Paint *backgrounds() const;
-  void set_backgrounds(Paint *value);
+  kiwi::Array<Paint> *backgrounds();
+  const kiwi::Array<Paint> *backgrounds() const;
+  kiwi::Array<Paint> &set_backgrounds(kiwi::MemoryPool &pool, uint32_t count);
 
   bool *visible();
   const bool *visible() const;
@@ -770,13 +770,13 @@ public:
   const float *strokeMiterLimit() const;
   void set_strokeMiterLimit(const float &value);
 
-  KiwiPath *fillGeometry();
-  const KiwiPath *fillGeometry() const;
-  void set_fillGeometry(KiwiPath *value);
+  kiwi::Array<KiwiPath> *fillGeometry();
+  const kiwi::Array<KiwiPath> *fillGeometry() const;
+  kiwi::Array<KiwiPath> &set_fillGeometry(kiwi::MemoryPool &pool, uint32_t count);
 
-  Paint *strokes();
-  const Paint *strokes() const;
-  void set_strokes(Paint *value);
+  kiwi::Array<Paint> *strokes();
+  const kiwi::Array<Paint> *strokes() const;
+  kiwi::Array<Paint> &set_strokes(kiwi::MemoryPool &pool, uint32_t count);
 
   kiwi::String *strokeStyleId();
   const kiwi::String *strokeStyleId() const;
@@ -794,17 +794,17 @@ public:
   const Align *strokeAlign() const;
   void set_strokeAlign(const Align &value);
 
-  float *dashPattern();
-  const float *dashPattern() const;
-  void set_dashPattern(const float &value);
+  kiwi::Array<float> *dashPattern();
+  const kiwi::Array<float> *dashPattern() const;
+  kiwi::Array<float> &set_dashPattern(kiwi::MemoryPool &pool, uint32_t count);
 
-  KiwiPath *strokeGeometry();
-  const KiwiPath *strokeGeometry() const;
-  void set_strokeGeometry(KiwiPath *value);
+  kiwi::Array<KiwiPath> *strokeGeometry();
+  const kiwi::Array<KiwiPath> *strokeGeometry() const;
+  kiwi::Array<KiwiPath> &set_strokeGeometry(kiwi::MemoryPool &pool, uint32_t count);
 
-  Paint *fills();
-  const Paint *fills() const;
-  void set_fills(Paint *value);
+  kiwi::Array<Paint> *fills();
+  const kiwi::Array<Paint> *fills() const;
+  kiwi::Array<Paint> &set_fills(kiwi::MemoryPool &pool, uint32_t count);
 
   kiwi::String *fillStyleId();
   const kiwi::String *fillStyleId() const;
@@ -880,7 +880,7 @@ public:
 private:
   uint32_t _flags[2] = {};
   BlendMode _data_blendMode = {};
-  Effect *_data_effects = {};
+  kiwi::Array<Effect> _data_effects = {};
   kiwi::String _data_effectStyleId = {};
   Constraints *_data_constraints = {};
   LayoutMode _data_layoutMode = {};
@@ -891,15 +891,16 @@ private:
   kiwi::String _data_id = {};
   GUID *_data_parent = {};
   kiwi::String _data_name = {};
-  Paint *_data_backgrounds = {};
+  kiwi::Array<Paint> _data_backgrounds = {};
   StrokeCap _data_strokeCap = {};
-  KiwiPath *_data_fillGeometry = {};
-  Paint *_data_strokes = {};
+  kiwi::Array<KiwiPath> _data_fillGeometry = {};
+  kiwi::Array<Paint> _data_strokes = {};
   kiwi::String _data_strokeStyleId = {};
   StrokeJoin _data_strokeJoin = {};
   Align _data_strokeAlign = {};
-  KiwiPath *_data_strokeGeometry = {};
-  Paint *_data_fills = {};
+  kiwi::Array<float> _data_dashPattern = {};
+  kiwi::Array<KiwiPath> _data_strokeGeometry = {};
+  kiwi::Array<Paint> _data_fills = {};
   kiwi::String _data_fillStyleId = {};
   LayoutAlignType _data_layoutAlign = {};
   Matrix *_data_transform = {};
@@ -913,7 +914,6 @@ private:
   float _data_verticalPadding = {};
   float _data_strokeMiterLimit = {};
   float _data_strokeWeight = {};
-  float _data_dashPattern = {};
   float _data_cornerRadius = {};
   float _data_cornerSmoothing = {};
   float _data_topLeftRadius = {};
@@ -1807,16 +1807,16 @@ void Paint::set_gradientTransform(Matrix *value) {
   _data_gradientTransform = value;
 }
 
-ColorStop *Paint::gradientStops() {
-  return _data_gradientStops;
+kiwi::Array<ColorStop> *Paint::gradientStops() {
+  return _flags[0] & 64 ? &_data_gradientStops : nullptr;
 }
 
-const ColorStop *Paint::gradientStops() const {
-  return _data_gradientStops;
+const kiwi::Array<ColorStop> *Paint::gradientStops() const {
+  return _flags[0] & 64 ? &_data_gradientStops : nullptr;
 }
 
-void Paint::set_gradientStops(ColorStop *value) {
-  _data_gradientStops = value;
+kiwi::Array<ColorStop> &Paint::set_gradientStops(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 64; return _data_gradientStops = pool.array<ColorStop>(count);
 }
 
 bool *Paint::visible() {
@@ -1978,7 +1978,8 @@ bool Paint::encode(kiwi::ByteBuffer &_bb) {
   }
   if (gradientStops() != nullptr) {
     _bb.writeVarUint(7);
-    if (!_data_gradientStops->encode(_bb)) return false;
+    _bb.writeVarUint(_data_gradientStops.size());
+    for (ColorStop &_it : _data_gradientStops) if (!_it.encode(_bb)) return false;
   }
   if (visible() != nullptr) {
     _bb.writeVarUint(8);
@@ -2029,6 +2030,7 @@ bool Paint::encode(kiwi::ByteBuffer &_bb) {
 }
 
 bool Paint::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
   while (true) {
     uint32_t _type;
     if (!_bb.readVarUint(_type)) return false;
@@ -2066,8 +2068,8 @@ bool Paint::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinaryS
         break;
       }
       case 7: {
-        _data_gradientStops = _pool.allocate<ColorStop>();
-        if (!_data_gradientStops->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (ColorStop &_it : set_gradientStops(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 8: {
@@ -2575,16 +2577,16 @@ void Node_Change::set_blendMode(const BlendMode &value) {
   _flags[0] |= 2; _data_blendMode = value;
 }
 
-Effect *Node_Change::effects() {
-  return _data_effects;
+kiwi::Array<Effect> *Node_Change::effects() {
+  return _flags[0] & 4 ? &_data_effects : nullptr;
 }
 
-const Effect *Node_Change::effects() const {
-  return _data_effects;
+const kiwi::Array<Effect> *Node_Change::effects() const {
+  return _flags[0] & 4 ? &_data_effects : nullptr;
 }
 
-void Node_Change::set_effects(Effect *value) {
-  _data_effects = value;
+kiwi::Array<Effect> &Node_Change::set_effects(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 4; return _data_effects = pool.array<Effect>(count);
 }
 
 kiwi::String *Node_Change::effectStyleId() {
@@ -2827,16 +2829,16 @@ void Node_Change::set_name(const kiwi::String &value) {
   _flags[0] |= 4194304; _data_name = value;
 }
 
-Paint *Node_Change::backgrounds() {
-  return _data_backgrounds;
+kiwi::Array<Paint> *Node_Change::backgrounds() {
+  return _flags[0] & 8388608 ? &_data_backgrounds : nullptr;
 }
 
-const Paint *Node_Change::backgrounds() const {
-  return _data_backgrounds;
+const kiwi::Array<Paint> *Node_Change::backgrounds() const {
+  return _flags[0] & 8388608 ? &_data_backgrounds : nullptr;
 }
 
-void Node_Change::set_backgrounds(Paint *value) {
-  _data_backgrounds = value;
+kiwi::Array<Paint> &Node_Change::set_backgrounds(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 8388608; return _data_backgrounds = pool.array<Paint>(count);
 }
 
 bool *Node_Change::visible() {
@@ -2887,28 +2889,28 @@ void Node_Change::set_strokeMiterLimit(const float &value) {
   _flags[0] |= 134217728; _data_strokeMiterLimit = value;
 }
 
-KiwiPath *Node_Change::fillGeometry() {
-  return _data_fillGeometry;
+kiwi::Array<KiwiPath> *Node_Change::fillGeometry() {
+  return _flags[0] & 268435456 ? &_data_fillGeometry : nullptr;
 }
 
-const KiwiPath *Node_Change::fillGeometry() const {
-  return _data_fillGeometry;
+const kiwi::Array<KiwiPath> *Node_Change::fillGeometry() const {
+  return _flags[0] & 268435456 ? &_data_fillGeometry : nullptr;
 }
 
-void Node_Change::set_fillGeometry(KiwiPath *value) {
-  _data_fillGeometry = value;
+kiwi::Array<KiwiPath> &Node_Change::set_fillGeometry(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 268435456; return _data_fillGeometry = pool.array<KiwiPath>(count);
 }
 
-Paint *Node_Change::strokes() {
-  return _data_strokes;
+kiwi::Array<Paint> *Node_Change::strokes() {
+  return _flags[0] & 536870912 ? &_data_strokes : nullptr;
 }
 
-const Paint *Node_Change::strokes() const {
-  return _data_strokes;
+const kiwi::Array<Paint> *Node_Change::strokes() const {
+  return _flags[0] & 536870912 ? &_data_strokes : nullptr;
 }
 
-void Node_Change::set_strokes(Paint *value) {
-  _data_strokes = value;
+kiwi::Array<Paint> &Node_Change::set_strokes(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 536870912; return _data_strokes = pool.array<Paint>(count);
 }
 
 kiwi::String *Node_Change::strokeStyleId() {
@@ -2959,40 +2961,40 @@ void Node_Change::set_strokeAlign(const Align &value) {
   _flags[1] |= 2; _data_strokeAlign = value;
 }
 
-float *Node_Change::dashPattern() {
+kiwi::Array<float> *Node_Change::dashPattern() {
   return _flags[1] & 4 ? &_data_dashPattern : nullptr;
 }
 
-const float *Node_Change::dashPattern() const {
+const kiwi::Array<float> *Node_Change::dashPattern() const {
   return _flags[1] & 4 ? &_data_dashPattern : nullptr;
 }
 
-void Node_Change::set_dashPattern(const float &value) {
-  _flags[1] |= 4; _data_dashPattern = value;
+kiwi::Array<float> &Node_Change::set_dashPattern(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[1] |= 4; return _data_dashPattern = pool.array<float>(count);
 }
 
-KiwiPath *Node_Change::strokeGeometry() {
-  return _data_strokeGeometry;
+kiwi::Array<KiwiPath> *Node_Change::strokeGeometry() {
+  return _flags[1] & 8 ? &_data_strokeGeometry : nullptr;
 }
 
-const KiwiPath *Node_Change::strokeGeometry() const {
-  return _data_strokeGeometry;
+const kiwi::Array<KiwiPath> *Node_Change::strokeGeometry() const {
+  return _flags[1] & 8 ? &_data_strokeGeometry : nullptr;
 }
 
-void Node_Change::set_strokeGeometry(KiwiPath *value) {
-  _data_strokeGeometry = value;
+kiwi::Array<KiwiPath> &Node_Change::set_strokeGeometry(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[1] |= 8; return _data_strokeGeometry = pool.array<KiwiPath>(count);
 }
 
-Paint *Node_Change::fills() {
-  return _data_fills;
+kiwi::Array<Paint> *Node_Change::fills() {
+  return _flags[1] & 16 ? &_data_fills : nullptr;
 }
 
-const Paint *Node_Change::fills() const {
-  return _data_fills;
+const kiwi::Array<Paint> *Node_Change::fills() const {
+  return _flags[1] & 16 ? &_data_fills : nullptr;
 }
 
-void Node_Change::set_fills(Paint *value) {
-  _data_fills = value;
+kiwi::Array<Paint> &Node_Change::set_fills(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[1] |= 16; return _data_fills = pool.array<Paint>(count);
 }
 
 kiwi::String *Node_Change::fillStyleId() {
@@ -3210,7 +3212,8 @@ bool Node_Change::encode(kiwi::ByteBuffer &_bb) {
   }
   if (effects() != nullptr) {
     _bb.writeVarUint(3);
-    if (!_data_effects->encode(_bb)) return false;
+    _bb.writeVarUint(_data_effects.size());
+    for (Effect &_it : _data_effects) if (!_it.encode(_bb)) return false;
   }
   if (effectStyleId() != nullptr) {
     _bb.writeVarUint(4);
@@ -3294,7 +3297,8 @@ bool Node_Change::encode(kiwi::ByteBuffer &_bb) {
   }
   if (backgrounds() != nullptr) {
     _bb.writeVarUint(24);
-    if (!_data_backgrounds->encode(_bb)) return false;
+    _bb.writeVarUint(_data_backgrounds.size());
+    for (Paint &_it : _data_backgrounds) if (!_it.encode(_bb)) return false;
   }
   if (visible() != nullptr) {
     _bb.writeVarUint(25);
@@ -3314,11 +3318,13 @@ bool Node_Change::encode(kiwi::ByteBuffer &_bb) {
   }
   if (fillGeometry() != nullptr) {
     _bb.writeVarUint(29);
-    if (!_data_fillGeometry->encode(_bb)) return false;
+    _bb.writeVarUint(_data_fillGeometry.size());
+    for (KiwiPath &_it : _data_fillGeometry) if (!_it.encode(_bb)) return false;
   }
   if (strokes() != nullptr) {
     _bb.writeVarUint(30);
-    if (!_data_strokes->encode(_bb)) return false;
+    _bb.writeVarUint(_data_strokes.size());
+    for (Paint &_it : _data_strokes) if (!_it.encode(_bb)) return false;
   }
   if (strokeStyleId() != nullptr) {
     _bb.writeVarUint(31);
@@ -3338,15 +3344,18 @@ bool Node_Change::encode(kiwi::ByteBuffer &_bb) {
   }
   if (dashPattern() != nullptr) {
     _bb.writeVarUint(35);
-    _bb.writeVarFloat(_data_dashPattern);
+    _bb.writeVarUint(_data_dashPattern.size());
+    for (float &_it : _data_dashPattern) _bb.writeVarFloat(_it);
   }
   if (strokeGeometry() != nullptr) {
     _bb.writeVarUint(36);
-    if (!_data_strokeGeometry->encode(_bb)) return false;
+    _bb.writeVarUint(_data_strokeGeometry.size());
+    for (KiwiPath &_it : _data_strokeGeometry) if (!_it.encode(_bb)) return false;
   }
   if (fills() != nullptr) {
     _bb.writeVarUint(37);
-    if (!_data_fills->encode(_bb)) return false;
+    _bb.writeVarUint(_data_fills.size());
+    for (Paint &_it : _data_fills) if (!_it.encode(_bb)) return false;
   }
   if (fillStyleId() != nullptr) {
     _bb.writeVarUint(38);
@@ -3421,6 +3430,7 @@ bool Node_Change::encode(kiwi::ByteBuffer &_bb) {
 }
 
 bool Node_Change::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
   while (true) {
     uint32_t _type;
     if (!_bb.readVarUint(_type)) return false;
@@ -3438,8 +3448,8 @@ bool Node_Change::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const B
         break;
       }
       case 3: {
-        _data_effects = _pool.allocate<Effect>();
-        if (!_data_effects->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (Effect &_it : set_effects(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 4: {
@@ -3543,8 +3553,8 @@ bool Node_Change::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const B
         break;
       }
       case 24: {
-        _data_backgrounds = _pool.allocate<Paint>();
-        if (!_data_backgrounds->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (Paint &_it : set_backgrounds(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 25: {
@@ -3568,13 +3578,13 @@ bool Node_Change::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const B
         break;
       }
       case 29: {
-        _data_fillGeometry = _pool.allocate<KiwiPath>();
-        if (!_data_fillGeometry->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (KiwiPath &_it : set_fillGeometry(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 30: {
-        _data_strokes = _pool.allocate<Paint>();
-        if (!_data_strokes->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (Paint &_it : set_strokes(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 31: {
@@ -3598,18 +3608,18 @@ bool Node_Change::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const B
         break;
       }
       case 35: {
-        if (!_bb.readVarFloat(_data_dashPattern)) return false;
-        set_dashPattern(_data_dashPattern);
+        if (!_bb.readVarUint(_count)) return false;
+        for (float &_it : set_dashPattern(_pool, _count)) if (!_bb.readVarFloat(_it)) return false;
         break;
       }
       case 36: {
-        _data_strokeGeometry = _pool.allocate<KiwiPath>();
-        if (!_data_strokeGeometry->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (KiwiPath &_it : set_strokeGeometry(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 37: {
-        _data_fills = _pool.allocate<Paint>();
-        if (!_data_fills->decode(_bb, _pool, _schema)) return false;
+        if (!_bb.readVarUint(_count)) return false;
+        for (Paint &_it : set_fills(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 38: {

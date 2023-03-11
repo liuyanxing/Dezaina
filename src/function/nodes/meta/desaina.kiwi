@@ -165,7 +165,7 @@ message Paint {
 	float opacity = 4;
 	BlendMode blendMode = 5;
 	Matrix gradientTransform = 6;
-	ColorStop gradientStops = 7;
+	ColorStop[] gradientStops = 7;
 	bool visible = 8;
 	float opacity = 9;
 	BlendMode blendMode = 10;
@@ -203,7 +203,7 @@ message Effect {
 message Node_Change {
 	float opacity = 1;
 	BlendMode blendMode = 2;
-	Effect effects = 3;
+	Effect[] effects = 3;
 	string effectStyleId = 4;
 	Constraints constraints = 5;
 	LayoutMode layoutMode = 6;
@@ -224,20 +224,20 @@ message Node_Change {
 	string id = 21;
 	GUID parent = 22;
 	string name = 23;
-	Paint backgrounds = 24;
+	Paint[] backgrounds = 24;
 	bool visible = 25;
 	bool locked = 26;
 	StrokeCap strokeCap = 27;
 	float strokeMiterLimit = 28;
-	KiwiPath fillGeometry = 29;
-	Paint strokes = 30;
+	KiwiPath[] fillGeometry = 29;
+	Paint[] strokes = 30;
 	string strokeStyleId = 31;
 	float strokeWeight = 32;
 	StrokeJoin strokeJoin = 33;
 	Align strokeAlign = 34;
-	float dashPattern = 35;
-	KiwiPath strokeGeometry = 36;
-	Paint fills = 37;
+	float[] dashPattern = 35;
+	KiwiPath[] strokeGeometry = 36;
+	Paint[] fills = 37;
 	string fillStyleId = 38;
 	float cornerRadius = 39;
 	float cornerSmoothing = 40;

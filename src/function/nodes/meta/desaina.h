@@ -395,13 +395,13 @@ void setByKiwiData(const Desaina_Kiwi::BlurEffect& data) {
 };
 class MinimalFillsMixin {
 private:
-	Paint fills;
+	std::vector<Paint> fills;
 	string fillStyleId;
 public:
-	Paint get_fills() {
+	std::vector<Paint> get_fills() {
 		return fills;
 	};
-	void set_fills (const Paint& value) {
+	void set_fills (const std::vector&lt;Paint&gt;& value) {
 		fills = value;
 	};
 	string get_fillStyleId() {
@@ -550,12 +550,12 @@ void setByKiwiData(const Desaina_Kiwi::FrameNode& data) {
 };
 class PageNode {
 private:
-	Paint backgrounds;
+	std::vector<Paint> backgrounds;
 public:
-	Paint get_backgrounds() {
+	std::vector<Paint> get_backgrounds() {
 		return backgrounds;
 	};
-	void set_backgrounds (const Paint& value) {
+	void set_backgrounds (const std::vector&lt;Paint&gt;& value) {
 		backgrounds = value;
 	};
 void setByKiwiData(const Desaina_Kiwi::PageNode& data) {
@@ -688,7 +688,7 @@ private:
 	StrokeCap strokeCap;
 	static float strokeMiterLimit_default;
 	float strokeMiterLimit;
-	KiwiPath fillGeometry;
+	std::vector<KiwiPath> fillGeometry;
 public:
 	StrokeCap get_strokeCap() {
 		return strokeCap;
@@ -702,10 +702,10 @@ public:
 	void set_strokeMiterLimit (const float& value) {
 		strokeMiterLimit = value;
 	};
-	KiwiPath get_fillGeometry() {
+	std::vector<KiwiPath> get_fillGeometry() {
 		return fillGeometry;
 	};
-	void set_fillGeometry (const KiwiPath& value) {
+	void set_fillGeometry (const std::vector&lt;KiwiPath&gt;& value) {
 		fillGeometry = value;
 	};
 void setByKiwiData(const Desaina_Kiwi::GeometryMixin& data) {
@@ -806,13 +806,13 @@ void setByKiwiData(const Desaina_Kiwi::DefaultShapeMixin& data) {
 };
 class EffectMixin {
 private:
-	Effect effects;
+	std::vector<Effect> effects;
 	string effectStyleId;
 public:
-	Effect get_effects() {
+	std::vector<Effect> get_effects() {
 		return effects;
 	};
-	void set_effects (const Effect& value) {
+	void set_effects (const std::vector&lt;Effect&gt;& value) {
 		effects = value;
 	};
 	string get_effectStyleId() {
@@ -1067,7 +1067,7 @@ void setByKiwiData(const Desaina_Kiwi::SolidPaint& data) {
 class GradientPaint {
 private:
 	Matrix gradientTransform;
-	ColorStop gradientStops;
+	std::vector<ColorStop> gradientStops;
 	bool visible;
 	static float opacity_default;
 	float opacity;
@@ -1079,10 +1079,10 @@ public:
 	void set_gradientTransform (const Matrix& value) {
 		gradientTransform = value;
 	};
-	ColorStop get_gradientStops() {
+	std::vector<ColorStop> get_gradientStops() {
 		return gradientStops;
 	};
-	void set_gradientStops (const ColorStop& value) {
+	void set_gradientStops (const std::vector&lt;ColorStop&gt;& value) {
 		gradientStops = value;
 	};
 	bool get_visible() {
@@ -1209,18 +1209,18 @@ void setByKiwiData(const Desaina_Kiwi::ImagePaint& data) {
 };
 class MinimalStrokesMixin {
 private:
-	Paint strokes;
+	std::vector<Paint> strokes;
 	string strokeStyleId;
 	float strokeWeight;
 	StrokeJoin strokeJoin;
 	Align strokeAlign;
-	float dashPattern;
-	KiwiPath strokeGeometry;
+	std::vector<float> dashPattern;
+	std::vector<KiwiPath> strokeGeometry;
 public:
-	Paint get_strokes() {
+	std::vector<Paint> get_strokes() {
 		return strokes;
 	};
-	void set_strokes (const Paint& value) {
+	void set_strokes (const std::vector&lt;Paint&gt;& value) {
 		strokes = value;
 	};
 	string get_strokeStyleId() {
@@ -1247,16 +1247,16 @@ public:
 	void set_strokeAlign (const Align& value) {
 		strokeAlign = value;
 	};
-	float get_dashPattern() {
+	std::vector<float> get_dashPattern() {
 		return dashPattern;
 	};
-	void set_dashPattern (const float& value) {
+	void set_dashPattern (const std::vector&lt;float&gt;& value) {
 		dashPattern = value;
 	};
-	KiwiPath get_strokeGeometry() {
+	std::vector<KiwiPath> get_strokeGeometry() {
 		return strokeGeometry;
 	};
-	void set_strokeGeometry (const KiwiPath& value) {
+	void set_strokeGeometry (const std::vector&lt;KiwiPath&gt;& value) {
 		strokeGeometry = value;
 	};
 void setByKiwiData(const Desaina_Kiwi::MinimalStrokesMixin& data) {

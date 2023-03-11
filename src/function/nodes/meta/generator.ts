@@ -199,10 +199,24 @@ function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
 }
 
 function getSchemaData(interfaces: DInterface[], enums: DEnum[]) {
+	const kiwiInterfaces = interfaces.map((item) => {
+		const members = item.members.map((member) => {
+			let type = member.type;
+			if (member.isArray) {
+				type = type + "[]";
+			}
+			return { ...member, type };
+		});
+		return {
+			name: item.name,
+			members,
+			isStruct: item.isStruct,
+		};
+	});
 	const schemaData = {
 		enums,
-		structs: interfaces.filter((item) => item.isStruct),
-		messages: interfaces.filter((item) => !item.isStruct),
+		structs: kiwiInterfaces.filter((item) => item.isStruct),
+		messages: kiwiInterfaces.filter((item) => !item.isStruct),
 	}
 	return schemaData;
 }
@@ -223,11 +237,24 @@ function genKiwiSchema(declars: Declaraction[]) {
 	execSync("kiwic --schema desaina.kiwi --cpp desaina_kiwi.h", { cwd: __dirname });
 }
 
-
 function genCppFils(declars: Declaraction[]) {
 	const interfaces = declars.filter(dInterface => dInterface.type === DeclaractionType.Interface) as DInterface[];	
-	const structs = interfaces.filter((item) => item.isStruct);
-	const classes = interfaces.filter((item) => !item.isStruct);
+	const cppInterfaces = interfaces.map((item) => {
+		const members = item.members.map((member) => {
+			let type = member.type;
+			if (member.isArray) {
+				type = "std::vector<" + type + ">";
+			}
+			return { ...member, type };
+		});
+		return {
+			name: item.name,
+			members,
+			isStruct: item.isStruct,
+		};
+	});
+	const structs = cppInterfaces.filter((item) => item.isStruct);
+	const classes = cppInterfaces.filter((item) => !item.isStruct);
 	const enums = declars.filter(dInterface => dInterface.type === DeclaractionType.Enum) as DEnum[];
 	const data = {
 		classes,
