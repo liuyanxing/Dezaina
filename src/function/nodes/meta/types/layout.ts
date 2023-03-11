@@ -1,24 +1,36 @@
-interface DimensionAndPositionMixin {
-  readonly width: float
-  readonly height: float
-  transform: Transform
+class DimensionAndPositionMixin {
+  readonly width: float = 100;
+  readonly height: float = 100;
+  transform: Matrix
 }
 
-declare type ConstraintType = 'MIN' | 'CENTER' | 'MAX' | 'STRETCH' | 'SCALE'
+enum ConstraintType {
+  MIN,
+  CENTER,
+  MAX,
+  STRETCH,
+  SCALE,
+}
 
-interface Constraints {
+class Constraints {
   readonly horizontal: ConstraintType
   readonly vertical: ConstraintType
 }
 
-type LayoutAlignType = 'MIN' | 'CENTER' | 'MAX' | 'STRETCH' | 'INHERIT'
-
-interface ConstraintMixin {
+enum LayoutAlignType{
+  MIN,
+  CENTER,
+  MAX,
+  STRETCH,
+  SCALE,
+  INHERIT
+}
+class ConstraintMixin {
   constraints: Constraints
 }
 
-interface LayoutMixin extends DimensionAndPositionMixin {
-  rotation: float
+class LayoutMixin extends DimensionAndPositionMixin {
+  rotation: float = 0;
   layoutAlign: LayoutAlignType
   layoutGrow: uint
 }

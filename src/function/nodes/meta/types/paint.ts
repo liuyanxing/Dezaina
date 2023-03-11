@@ -1,52 +1,49 @@
-type PaintType = 'SOLID'
-		| 'GRADIENT_LINEAR'
-		| 'GRADIENT_RADIAL'
-		| 'GRADIENT_ANGULAR'
-		| 'GRADIENT_DIAMOND'
-		| 'IMAGE'
+enum PaintType {
+  SOLID,
+  GRADIENT_LINEAR,
+  GRADIENT_RADIAL,
+  GRADIENT_ANGULAR,
+  GRADIENT_DIAMOND,
+  IMAGE,
+}
 
-interface ColorStop extends Struct {
-  position: float
+class ColorStop extends Struct {
+  position: float = 0;
   color: RGBA
 }
 
-interface Paint {
+class Paint {
 	type: PaintType
 }
 
-interface SolidPaint extends Paint {
+class SolidPaint extends Paint {
   color: RGB
-  visible: bool
-  opacity: float
+  visible: bool = true;
+  opacity: float = 1;
   blendMode: BlendMode
 }
 
-interface GradientPaint extends Paint{
-  gradientTransform: Transform
+class GradientPaint extends Paint{
+  gradientTransform: Matrix
   gradientStops: ReadonlyArray<ColorStop>
   visible: bool
-  opacity: float
+  opacity: float = 1;
   blendMode: BlendMode
 }
 
-interface ImageFilters {
-  exposure: float
-  contrast: float
-  saturation: float
-  temperature: float
-  tint: float
-  highlights: float
-  shadows: float
+enum ScaleMode{
+  FILL,
+  FIT,
+  CROP,
+  TILE,
 }
 
-type ScaleMode = 'FILL' | 'FIT' | 'CROP' | 'TILE'
-interface ImagePaint extends Paint {
+class ImagePaint extends Paint {
   scaleMode: ScaleMode
   imageHash: string
-  imageTransform: Transform
+  imageTransform: Matrix
   scalingFactor: float
   rotation: float
-  filters: ImageFilters
   visible: bool
   opacity: float
   blendMode: BlendMode

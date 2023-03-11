@@ -1,13 +1,28 @@
-type StrokeCap = 'NONE' | 'ROUND' | 'SQUARE' | 'ARROW_LINES' | 'ARROW_EQUILATERAL'
-type StrokeJoin = 'MITER' | 'BEVEL' | 'ROUND'
+enum StrokeCap {
+  NONE,
+  ROUND,
+  SQUARE,
+  ARROW_LINES,
+  ARROW_EQUILATERAL
+}
+enum StrokeJoin {
+  MITER,
+  BEVEL,
+  ROUND
+}
 
-type Align = 'CENTER' | 'INSIDE' | 'OUTSIDE'
-interface MinimalStrokesMixin {
+enum Align {
+  CENTER,
+  INSIDE,
+  OUTSIDE
+}
+
+class MinimalStrokesMixin {
   strokes: ReadonlyArray<Paint>
   strokeStyleId: string
   strokeWeight: float
   strokeJoin: StrokeJoin
   strokeAlign: Align
   dashPattern: ReadonlyArray<float>
-  strokeGeometry: VectorPaths
+  strokeGeometry: Readonly<KiwiPath> | Readonly<VectorPath>
 }

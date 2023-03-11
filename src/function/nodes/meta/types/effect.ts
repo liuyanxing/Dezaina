@@ -1,33 +1,34 @@
-type EffectType = 'DROP_SHADOW'
-	| 'DROP_SHADOW'
-	| 'INNER_SHADOW'
-	| 'LAYER_BLUR'
-	| 'BACKGROUND_BLUR'
+enum EffectType {
+	DROP_SHADOW,
+	INNER_SHADOW,
+	LAYER_BLUR,
+	BACKGROUND_BLUR,
+}
 
-interface Effect_kiwi {}
+class Effect_kiwi {}
 
-interface Effect extends Effect_kiwi {
+class Effect extends Effect_kiwi {
   type: EffectType
 }
 
-interface DropShadowEffect extends Effect {
+class DropShadowEffect extends Effect {
   readonly color: RGBA
   readonly offset: Vector
-  readonly radius: float
-  readonly spread?: float
-  readonly visible: bool
+  readonly radius: float = 0;
+  readonly spread?: float = 0;
+  readonly visible: bool = true
   readonly blendMode: BlendMode
-  readonly showShadowBehindNode?: bool
+  readonly showShadowBehindNode?: bool = false;
 }
-interface InnerShadowEffect extends Effect {
+class InnerShadowEffect extends Effect {
   readonly color: RGBA
   readonly offset: Vector
-  readonly radius: float
-  readonly spread?: float
-  readonly visible: bool
+  readonly radius: float = 10
+  readonly spread?: float = 0;
+  readonly visible: bool = true;
   readonly blendMode: BlendMode
 }
-interface BlurEffect extends Effect {
-  readonly radius: float
-  readonly visible: bool
+class BlurEffect extends Effect {
+  readonly radius: float = 10
+  readonly visible: bool = true
 }
