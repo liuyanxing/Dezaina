@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include "desaina_kiwi.h"
 
 using  uint = uint32_t;
@@ -159,7 +160,7 @@ public:
 	void set_y (const float& value) {
 		y = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::Vector& data) {
+void setWithKiwiData(const Desaina_Kiwi::Vector& data) {
 	if (data.x() != nullptr) {
 		x = *data.x();
 	}
@@ -186,7 +187,7 @@ public:
 	void set_blendMode (const BlendMode& value) {
 		blendMode = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::MinimalBlendMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::MinimalBlendMixin& data) {
 	if (data.opacity() != nullptr) {
 		opacity = *data.opacity();
 	}
@@ -198,7 +199,7 @@ void setByKiwiData(const Desaina_Kiwi::MinimalBlendMixin& data) {
 class Effect_kiwi {
 private:
 public:
-void setByKiwiData(const Desaina_Kiwi::Effect_kiwi& data) {
+void setWithKiwiData(const Desaina_Kiwi::Effect_kiwi& data) {
 }
 };
 class Effect {
@@ -211,7 +212,7 @@ public:
 	void set_type (const EffectType& value) {
 		type = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::Effect& data) {
+void setWithKiwiData(const Desaina_Kiwi::Effect& data) {
 	if (data.type() != nullptr) {
 		type = *data.type();
 	}
@@ -272,7 +273,7 @@ public:
 	void set_showShadowBehindNode (const bool& value) {
 		showShadowBehindNode = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::DropShadowEffect& data) {
+void setWithKiwiData(const Desaina_Kiwi::DropShadowEffect& data) {
 	if (data.color() != nullptr) {
 		color = *data.color();
 	}
@@ -344,7 +345,7 @@ public:
 	void set_blendMode (const BlendMode& value) {
 		blendMode = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::InnerShadowEffect& data) {
+void setWithKiwiData(const Desaina_Kiwi::InnerShadowEffect& data) {
 	if (data.color() != nullptr) {
 		color = *data.color();
 	}
@@ -384,7 +385,7 @@ public:
 	void set_visible (const bool& value) {
 		visible = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::BlurEffect& data) {
+void setWithKiwiData(const Desaina_Kiwi::BlurEffect& data) {
 	if (data.radius() != nullptr) {
 		radius = *data.radius();
 	}
@@ -401,7 +402,7 @@ public:
 	std::vector<Paint> get_fills() {
 		return fills;
 	};
-	void set_fills (const std::vector&lt;Paint&gt;& value) {
+	void set_fills (const std::vector<Paint>& value) {
 		fills = value;
 	};
 	string get_fillStyleId() {
@@ -410,7 +411,7 @@ public:
 	void set_fillStyleId (const string& value) {
 		fillStyleId = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::MinimalFillsMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::MinimalFillsMixin& data) {
 	if (data.fills() != nullptr) {
 		fills = *data.fills();
 	}
@@ -445,7 +446,7 @@ public:
 	void set_transform (const Matrix& value) {
 		transform = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::DimensionAndPositionMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::DimensionAndPositionMixin& data) {
 	if (data.width() != nullptr) {
 		width = *data.width();
 	}
@@ -474,7 +475,7 @@ public:
 	void set_vertical (const ConstraintType& value) {
 		vertical = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::Constraints& data) {
+void setWithKiwiData(const Desaina_Kiwi::Constraints& data) {
 	if (data.horizontal() != nullptr) {
 		horizontal = *data.horizontal();
 	}
@@ -493,7 +494,7 @@ public:
 	void set_constraints (const Constraints& value) {
 		constraints = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::ConstraintMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::ConstraintMixin& data) {
 	if (data.constraints() != nullptr) {
 		constraints = *data.constraints();
 	}
@@ -524,7 +525,7 @@ public:
 	void set_layoutGrow (const uint& value) {
 		layoutGrow = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::LayoutMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::LayoutMixin& data) {
 	if (data.rotation() != nullptr) {
 		rotation = *data.rotation();
 	}
@@ -539,13 +540,13 @@ void setByKiwiData(const Desaina_Kiwi::LayoutMixin& data) {
 class RectangleNode {
 private:
 public:
-void setByKiwiData(const Desaina_Kiwi::RectangleNode& data) {
+void setWithKiwiData(const Desaina_Kiwi::RectangleNode& data) {
 }
 };
 class FrameNode {
 private:
 public:
-void setByKiwiData(const Desaina_Kiwi::FrameNode& data) {
+void setWithKiwiData(const Desaina_Kiwi::FrameNode& data) {
 }
 };
 class PageNode {
@@ -555,10 +556,10 @@ public:
 	std::vector<Paint> get_backgrounds() {
 		return backgrounds;
 	};
-	void set_backgrounds (const std::vector&lt;Paint&gt;& value) {
+	void set_backgrounds (const std::vector<Paint>& value) {
 		backgrounds = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::PageNode& data) {
+void setWithKiwiData(const Desaina_Kiwi::PageNode& data) {
 	if (data.backgrounds() != nullptr) {
 		backgrounds = *data.backgrounds();
 	}
@@ -567,7 +568,7 @@ void setByKiwiData(const Desaina_Kiwi::PageNode& data) {
 class Node_Change_kiwi {
 private:
 public:
-void setByKiwiData(const Desaina_Kiwi::Node_Change_kiwi& data) {
+void setWithKiwiData(const Desaina_Kiwi::Node_Change_kiwi& data) {
 }
 };
 class BaseNodeMixin {
@@ -594,7 +595,7 @@ public:
 	void set_name (const string& value) {
 		name = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::BaseNodeMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::BaseNodeMixin& data) {
 	if (data.id() != nullptr) {
 		id = *data.id();
 	}
@@ -624,7 +625,7 @@ public:
 	void set_locked (const bool& value) {
 		locked = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::SceneNodeMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::SceneNodeMixin& data) {
 	if (data.visible() != nullptr) {
 		visible = *data.visible();
 	}
@@ -668,7 +669,7 @@ public:
 	void set_strokeRightWeight (const float& value) {
 		strokeRightWeight = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::IndividualStrokesMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::IndividualStrokesMixin& data) {
 	if (data.strokeTopWeight() != nullptr) {
 		strokeTopWeight = *data.strokeTopWeight();
 	}
@@ -705,10 +706,10 @@ public:
 	std::vector<KiwiPath> get_fillGeometry() {
 		return fillGeometry;
 	};
-	void set_fillGeometry (const std::vector&lt;KiwiPath&gt;& value) {
+	void set_fillGeometry (const std::vector<KiwiPath>& value) {
 		fillGeometry = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::GeometryMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::GeometryMixin& data) {
 	if (data.strokeCap() != nullptr) {
 		strokeCap = *data.strokeCap();
 	}
@@ -739,7 +740,7 @@ public:
 	void set_cornerSmoothing (const float& value) {
 		cornerSmoothing = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::CornerMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::CornerMixin& data) {
 	if (data.cornerRadius() != nullptr) {
 		cornerRadius = *data.cornerRadius();
 	}
@@ -783,7 +784,7 @@ public:
 	void set_bottomRightRadius (const float& value) {
 		bottomRightRadius = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::RectangleCornerMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::RectangleCornerMixin& data) {
 	if (data.topLeftRadius() != nullptr) {
 		topLeftRadius = *data.topLeftRadius();
 	}
@@ -801,7 +802,7 @@ void setByKiwiData(const Desaina_Kiwi::RectangleCornerMixin& data) {
 class DefaultShapeMixin {
 private:
 public:
-void setByKiwiData(const Desaina_Kiwi::DefaultShapeMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::DefaultShapeMixin& data) {
 }
 };
 class EffectMixin {
@@ -812,7 +813,7 @@ public:
 	std::vector<Effect> get_effects() {
 		return effects;
 	};
-	void set_effects (const std::vector&lt;Effect&gt;& value) {
+	void set_effects (const std::vector<Effect>& value) {
 		effects = value;
 	};
 	string get_effectStyleId() {
@@ -821,7 +822,7 @@ public:
 	void set_effectStyleId (const string& value) {
 		effectStyleId = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::EffectMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::EffectMixin& data) {
 	if (data.effects() != nullptr) {
 		effects = *data.effects();
 	}
@@ -946,7 +947,7 @@ public:
 	void set_clipsContent (const bool& value) {
 		clipsContent = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::BaseFrameMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::BaseFrameMixin& data) {
 	if (data.layoutMode() != nullptr) {
 		layoutMode = *data.layoutMode();
 	}
@@ -997,7 +998,7 @@ void setByKiwiData(const Desaina_Kiwi::BaseFrameMixin& data) {
 class DefaultFrameMixin {
 private:
 public:
-void setByKiwiData(const Desaina_Kiwi::DefaultFrameMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::DefaultFrameMixin& data) {
 }
 };
 class Paint {
@@ -1010,7 +1011,7 @@ public:
 	void set_type (const PaintType& value) {
 		type = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::Paint& data) {
+void setWithKiwiData(const Desaina_Kiwi::Paint& data) {
 	if (data.type() != nullptr) {
 		type = *data.type();
 	}
@@ -1049,7 +1050,7 @@ public:
 	void set_blendMode (const BlendMode& value) {
 		blendMode = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::SolidPaint& data) {
+void setWithKiwiData(const Desaina_Kiwi::SolidPaint& data) {
 	if (data.color() != nullptr) {
 		color = *data.color();
 	}
@@ -1082,7 +1083,7 @@ public:
 	std::vector<ColorStop> get_gradientStops() {
 		return gradientStops;
 	};
-	void set_gradientStops (const std::vector&lt;ColorStop&gt;& value) {
+	void set_gradientStops (const std::vector<ColorStop>& value) {
 		gradientStops = value;
 	};
 	bool get_visible() {
@@ -1103,7 +1104,7 @@ public:
 	void set_blendMode (const BlendMode& value) {
 		blendMode = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::GradientPaint& data) {
+void setWithKiwiData(const Desaina_Kiwi::GradientPaint& data) {
 	if (data.gradientTransform() != nullptr) {
 		gradientTransform = *data.gradientTransform();
 	}
@@ -1180,7 +1181,7 @@ public:
 	void set_blendMode (const BlendMode& value) {
 		blendMode = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::ImagePaint& data) {
+void setWithKiwiData(const Desaina_Kiwi::ImagePaint& data) {
 	if (data.scaleMode() != nullptr) {
 		scaleMode = *data.scaleMode();
 	}
@@ -1220,7 +1221,7 @@ public:
 	std::vector<Paint> get_strokes() {
 		return strokes;
 	};
-	void set_strokes (const std::vector&lt;Paint&gt;& value) {
+	void set_strokes (const std::vector<Paint>& value) {
 		strokes = value;
 	};
 	string get_strokeStyleId() {
@@ -1250,16 +1251,16 @@ public:
 	std::vector<float> get_dashPattern() {
 		return dashPattern;
 	};
-	void set_dashPattern (const std::vector&lt;float&gt;& value) {
+	void set_dashPattern (const std::vector<float>& value) {
 		dashPattern = value;
 	};
 	std::vector<KiwiPath> get_strokeGeometry() {
 		return strokeGeometry;
 	};
-	void set_strokeGeometry (const std::vector&lt;KiwiPath&gt;& value) {
+	void set_strokeGeometry (const std::vector<KiwiPath>& value) {
 		strokeGeometry = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::MinimalStrokesMixin& data) {
+void setWithKiwiData(const Desaina_Kiwi::MinimalStrokesMixin& data) {
 	if (data.strokes() != nullptr) {
 		strokes = *data.strokes();
 	}
@@ -1324,7 +1325,7 @@ public:
 	void set_cornerRadius (const float& value) {
 		cornerRadius = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::VectorVertex& data) {
+void setWithKiwiData(const Desaina_Kiwi::VectorVertex& data) {
 	if (data.x() != nullptr) {
 		x = *data.x();
 	}
@@ -1375,7 +1376,7 @@ public:
 	void set_tangentEnd (const Vector& value) {
 		tangentEnd = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::VectorSegment& data) {
+void setWithKiwiData(const Desaina_Kiwi::VectorSegment& data) {
 	if (data.start() != nullptr) {
 		start = *data.start();
 	}
@@ -1407,7 +1408,7 @@ public:
 	void set_data (const string& value) {
 		data = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::VectorPath& data) {
+void setWithKiwiData(const Desaina_Kiwi::VectorPath& data) {
 	if (data.windingRule() != nullptr) {
 		windingRule = *data.windingRule();
 	}
@@ -1442,7 +1443,7 @@ public:
 	void set_styleID (const uint& value) {
 		styleID = value;
 	};
-void setByKiwiData(const Desaina_Kiwi::KiwiPath& data) {
+void setWithKiwiData(const Desaina_Kiwi::KiwiPath& data) {
 	if (data.windingRule() != nullptr) {
 		windingRule = *data.windingRule();
 	}

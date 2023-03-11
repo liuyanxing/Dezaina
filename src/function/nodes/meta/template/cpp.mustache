@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include "desaina_kiwi.h"
 
 using  uint = uint32_t;
@@ -15,7 +16,7 @@ enum class {{name}} {
 {{#structs}}
 struct {{name}} {
 {{#members}}
-	{{type}} {{name}};
+	{{&type}} {{name}};
 {{/members}}
 };
 {{/structs}}
@@ -34,7 +35,7 @@ public:
 	{{&type}} get_{{name}}() {
 		return {{name}};
 	};
-	void set_{{name}} (const {{type}}& value) {
+	void set_{{name}} (const {{&type}}& value) {
 		{{name}} = value;
 	};
 {{/members}}
