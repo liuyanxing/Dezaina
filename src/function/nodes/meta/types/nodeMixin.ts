@@ -20,7 +20,7 @@ interface IndividualStrokesMixin {
 interface GeometryMixin extends MinimalStrokesMixin, MinimalFillsMixin {
   strokeCap: StrokeCap
   strokeMiterLimit: float | 0;
-  fillGeometry: VectorPaths
+  fillGeometry: Array<KiwiPath>;
 }
 
 interface CornerMixin {

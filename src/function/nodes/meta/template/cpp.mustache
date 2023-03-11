@@ -1,0 +1,49 @@
+#include <string>
+#include "desaina_kiwi.h"
+
+using  uint = uint32_t;
+using string = std::string;
+
+{{#enums}}
+enum class {{name}} {
+{{#members}}
+	{{name}},
+{{/members}}
+};
+{{/enums}}
+
+{{#structs}}
+struct {{name}} {
+{{#members}}
+	{{type}} {{name}};
+{{/members}}
+};
+{{/structs}}
+
+{{#classes}}
+class {{name}} {
+private:
+{{#members}}
+{{#defaultValue}}
+	static {{type}} {{name}}_default;
+{{/defaultValue}}
+	{{type}} {{name}};
+{{/members}}
+public:
+{{#members}}
+	{{type}} get_{{name}}() {
+		return {{name}};
+	};
+	void set_{{name}} (const {{type}}& value) {
+		{{name}} = value;
+	};
+{{/members}}
+void setByKiwiData(const Desaina_Kiwi::{{name}}& data) {
+{{#members}}
+	if (data.{{name}}() != nullptr) {
+		{{name}} = *data.{{name}}();
+	}
+{{/members}}
+}
+};
+{{/classes}}

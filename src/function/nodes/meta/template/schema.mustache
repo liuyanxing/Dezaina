@@ -1,7 +1,9 @@
+package Desaina_Kiwi;
+
 {{#enums}}
 enum {{name}} {
 {{#members}}
-	{{.}};
+	{{name}} = {{index}};
 {{/members}}
 }
 {{/enums}}

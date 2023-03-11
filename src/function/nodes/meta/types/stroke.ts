@@ -24,5 +24,5 @@ interface MinimalStrokesMixin {
   strokeJoin: StrokeJoin
   strokeAlign: Align
   dashPattern: ReadonlyArray<float>
-  strokeGeometry: Readonly<KiwiPath> | Readonly<VectorPath>
+  strokeGeometry: ReadonlyArray<KiwiPath>
 }

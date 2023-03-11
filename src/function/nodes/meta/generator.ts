@@ -1,8 +1,12 @@
-import ts, { Identifier, TypeOfExpression, TypeReference } from "typescript";
+import ts, { Identifier } from "typescript";
 import fs, { readFileSync } from "fs";
+import { promisify } from "util";
+import { exec } from "child_process";
 import path from "path"
 import { Graph } from "./utils/graph"
 import Mustache from "mustache"
+
+const execSync = promisify(exec);
 
 function concatDirFiles(dir: string) {
 	let source: string = "";
@@ -13,33 +17,65 @@ function concatDirFiles(dir: string) {
 	return source;
 }
 
-type Member = Array<{ name: string, type: string, isArray: boolean, index?: number} | undefined>;
+type DefalutValue = number | string | boolean;
+interface Member {
+	name: string,
+	type: string,
+	isArray: boolean,
+	defaultValue?: DefalutValue,
+	index?: number
+}
 
-interface Interface {
+enum DeclaractionType {
+	Interface,
+	Enum,
+}
+
+interface DInterface {
 	name: string
-	members: Member
+	type: DeclaractionType.Interface
+	members: Member[]
 	mixins?: string[]
 	isStruct: boolean
 }
 
-type Struct = Interface
-
-interface Enum {
+interface DEnum {
+	type: DeclaractionType.Enum
 	name: string
-	members: Array<string>
+	members: Array<{name: string, index: number}>
 }
 
-const interfaces: Array<Interface> = [];
-const structs: Array<Struct> = [];
-const enums: Array<Enum> = [];
-
+type Declaraction = DInterface | DEnum;
 
 function isStringKeyWord(node: ts.Node) {
 	return node.kind === ts.SyntaxKind.StringKeyword;
 }
 
+function isTrueKeyWord(node: ts.Node) {
+	return node.kind === ts.SyntaxKind.TrueKeyword;
+}
+
+function isFalseKeyWord(node: ts.Node) {
+	return node.kind === ts.SyntaxKind.FalseKeyword;
+}
+
 function getNameText(name: ts.Identifier) {
 	return name.escapedText as string;
+}
+
+function getTypeAndDefaultValeFrom(node: ts.UnionTypeNode): [string, DefalutValue] {
+	const typeNode = node.types[0] as ts.TypeReferenceNode;
+	const valueNode = node.types[1] as ts.LiteralTypeNode;
+	let value: DefalutValue = 0;
+	const literal = valueNode.literal;
+	if (isTrueKeyWord(literal)) {
+		value = true;
+	} else if (isFalseKeyWord(literal)) {
+		value = false;
+	} else {
+		value = (valueNode.literal as ts.StringLiteral).text;
+	}
+	return [getNameText(typeNode.typeName as Identifier), value];
 }
 
 function getInterfaceMixins(node: ts.InterfaceDeclaration): string[] {
@@ -55,7 +91,7 @@ function getInterfaceMixins(node: ts.InterfaceDeclaration): string[] {
 	return [];
 }
 
-function getInterfaceMembers(node: ts.InterfaceDeclaration) {
+function getInterfaceMembers(node: ts.InterfaceDeclaration): (Member | undefined)[] {
 	return node.members.map((mem) => {
 		let member = mem as ts.PropertySignature;
 		const name = getNameText(member.name as ts.Identifier); 
@@ -64,63 +100,62 @@ function getInterfaceMembers(node: ts.InterfaceDeclaration) {
 		if (isStringKeyWord(type as ts.Node)) {
 			return { name, type: "string", isArray};
 		} else if (ts.isTypeReferenceNode(type as ts.Node)) {
-			let typeRef = type as ts.TypeReferenceNode;	
+			let typeRef = type as ts.TypeReferenceNode;
 			let typeName = getNameText(typeRef.typeName as ts.Identifier);
 			if (["Array", "ReadonlyArray"].includes(typeName)) {
 				isArray = true;
 				if (typeRef.typeArguments?.length !== 1) {
-					throw new Error("illegal type");
+					throw new Error("typeArguments error");
+					
 				}
 				typeRef = typeRef.typeArguments[0] as ts.TypeReferenceNode;
 				typeName = getNameText(typeRef.typeName as ts.Identifier);
 			}
 			return { name, type: typeName, isArray};
-		} else {
-			throw Error("wrong member type");
+		} else if (ts.isUnionTypeNode(type as ts.Node)) {
+			let typeRef = type as ts.UnionTypeNode;
+			const [typeName, defaultValue] = getTypeAndDefaultValeFrom(typeRef);
+			return { name, type: typeName, defaultValue, isArray};
 		}
 	})
 }
 
-function visitor(node: ts.Node) {
-	if (ts.isEnumDeclaration(node)) {
-		const enumNode = node as ts.EnumDeclaration;
-		enums.push({
-			name: getNameText(enumNode.name),
-			members: enumNode.members.map(m => getNameText(m.name as ts.Identifier))
-		});
-	} else if (ts.isTypeAliasDeclaration(node)) {
-		const aliasTypeNode = node as ts.TypeAliasDeclaration;
-		const name = getNameText(aliasTypeNode.name);
-		if (ts.isUnionTypeNode(aliasTypeNode.type)) {
-			const taType = aliasTypeNode.type as ts.UnionTypeNode;
-			const members = taType.types.map((type)=> {
-				const literType = type as ts.LiteralTypeNode;
-				return (literType.literal as ts.StringLiteral).text;
-			})
-			enums.push({
-				name,
-				members,
+function getDeclarations(node: ts.Node) {
+	let declarations: Declaraction[] = []; 
+	function visit(node: ts.Node) {
+		if (ts.isEnumDeclaration(node)) {
+			const enumNode = node as ts.EnumDeclaration;
+			declarations.push({
+				type: DeclaractionType.Enum,
+				name: getNameText(enumNode.name),
+				members: enumNode.members.map((m, index) => ({
+					name: getNameText(m.name as ts.Identifier),
+					index,
+				}))
 			});
+		} else if (ts.isInterfaceDeclaration(node)) {
+			const interfaceNode = node as ts.InterfaceDeclaration;
+			const name = getNameText(interfaceNode.name);
+			const members = getInterfaceMembers(interfaceNode) as Member[];
+			const mixins = getInterfaceMixins(interfaceNode);
+			const isStruct = mixins.includes("Struct");
+			if (!["Struct", "Message"].includes(name)) {
+				declarations.push({
+					name,
+					type: DeclaractionType.Interface,
+					members,
+					mixins: mixins.filter(m => m !== "Struct"),
+					isStruct,
+				})
+			}
 		}
-	} else if (ts.isInterfaceDeclaration(node)) {
-		const interfaceNode = node as ts.InterfaceDeclaration;
-		const name = getNameText(interfaceNode.name);
-		const members = getInterfaceMembers(interfaceNode);
-		const mixins = getInterfaceMixins(interfaceNode);
-		const isStruct = mixins.includes("Struct");
-		if (!["Struct", "Message"].includes(name)) {
-			interfaces.push({
-				name,
-				members,
-				mixins: mixins.filter(m => m !== "Struct"),
-				isStruct,
-			})
-		}
+		node.forEachChild(visit);
 	}
-	node.forEachChild(visitor);
+	visit(node);
+	return declarations;
 }
 
-function groupByExtends(interfaces: Interface[]) {
+function groupByExtends(interfaces: DInterface[]) {
 	const graph = new Graph();
 	for (let interf of interfaces) {
 		const from = interf.name;
@@ -129,41 +164,41 @@ function groupByExtends(interfaces: Interface[]) {
 			continue;
 		}
 		for (let mixin of interf.mixins!) {
-			// console.log(mixin, from);
 			graph.addEdge(mixin, from);
 		}
 	}
 	return graph.groupByConnection();
 }
 
-function mixinInterfacByGroup(group: string[][]) {
-	let interfaceMap: Map<string, Interface> = new Map();	
+function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
+	let interfaceMap: Map<string, DInterface> = new Map();	
 	for (let interf of interfaces) {
 		interfaceMap.set(interf.name, interf);
 	}
 	group.reverse();
-	let groupedInterface: Interface[] = [];
+	let groupedInterface: DInterface[] = [];
 	for (let i of group) {
 		const isStruct = i.some(name => interfaceMap.get(name)?.isStruct);
 		const kiwiName = i.find(name => name.endsWith("_kiwi"));
 		const name = kiwiName ? kiwiName.split("_kiwi")[0] : i[0];
-		const item: Interface = {
+		const item: DInterface = {
 			name,
+			type: DeclaractionType.Interface,
 			members: [],
 			isStruct, 
 		}
 		for (let name of i) {
 			const interf = interfaceMap.get(name);
-			const members = interf!.members as Member;
+			const members = interf!.members as Member[];
 			item.members.push(...members)	
 		}
-		item.members = item.members.map((member, index) => ({ ...member, index })) as Member;
+		item.members = item.members.map((member, index) => ({ ...member, index: index + 1 })) as Member[];
 		groupedInterface.push(item);
 	}
 	return groupedInterface;
 }
 
-function getSchemaData(interfaces: Interface[]) {
+function getSchemaData(interfaces: DInterface[], enums: DEnum[]) {
 	const schemaData = {
 		enums,
 		structs: interfaces.filter((item) => item.isStruct),
@@ -172,16 +207,43 @@ function getSchemaData(interfaces: Interface[]) {
 	return schemaData;
 }
 
-function main() {
-	const source = concatDirFiles("./types");
-	const sourceFile = ts.createSourceFile("type.ts", source, ts.ScriptTarget.ESNext);
-	visitor(sourceFile);
+function getPathFromRelative(p: string) {
+	return path.join(__dirname, p);	
+}
+
+function genKiwiSchema(declars: Declaraction[]) {
+	const interfaces = declars.filter(dInterface => dInterface.type === DeclaractionType.Interface) as DInterface[];
+	const enums = declars.filter(dInterface => dInterface.type === DeclaractionType.Enum) as DEnum[];
 	const grouped = groupByExtends(interfaces);
-	const mixined =	mixinInterfacByGroup(grouped);
-	const schemaData = getSchemaData(mixined);
-	const template = readFileSync("./template/schema.mustache").toString();
+	const mixined =	mixinInterfacByGroup(grouped, interfaces);
+	const schemaData = getSchemaData(mixined, enums);
+	const template = readFileSync(getPathFromRelative("./template/schema.mustache")).toString();
 	const reslut = Mustache.render(template, schemaData);
-	fs.writeFileSync("desaina.kiwi", reslut);
+	fs.writeFileSync(getPathFromRelative("desaina.kiwi"), reslut);
+	execSync("kiwic --schema desaina.kiwi --cpp desaina_kiwi.h", { cwd: __dirname });
+}
+
+
+function genCppFils(declars: Declaraction[]) {
+	const interfaces = declars.filter(dInterface => dInterface.type === DeclaractionType.Interface) as DInterface[];	
+	const structs = interfaces.filter((item) => item.isStruct);
+	const classes = interfaces.filter((item) => !item.isStruct);
+	const enums = declars.filter(dInterface => dInterface.type === DeclaractionType.Enum) as DEnum[];
+	const data = {
+		classes,
+		structs,
+		enums,
+	}
+	const reslut = Mustache.render(readFileSync(getPathFromRelative("./template/cpp.mustache")).toString(), data);
+	fs.writeFileSync(getPathFromRelative("desaina.h"), reslut);
+}
+
+function main() {
+	const source = concatDirFiles(getPathFromRelative("./types"));
+	const sourceFile = ts.createSourceFile("type.ts", source, ts.ScriptTarget.ESNext);
+	const declars = getDeclarations(sourceFile);
+	genKiwiSchema(declars);
+	genCppFils(declars);
 }
 
 main();
