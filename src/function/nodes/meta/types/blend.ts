@@ -20,7 +20,7 @@ enum BlendMode {
  LUMINOSITY,
 }
 
-class MinimalBlendMixin {
-  opacity: float = 1;
+interface MinimalBlendMixin {
+  opacity: float | 1;
   blendMode: BlendMode
 }

@@ -1,48 +1,48 @@
-class Node_Change_kiwi {}
-class BaseNodeMixin extends Node_Change_kiwi {
+interface Node_Change_kiwi {}
+interface BaseNodeMixin extends Node_Change_kiwi {
   id: string
   parent: GUID
   name: string
 }
 
-class SceneNodeMixin {
-  visible: bool = true;
-  locked: bool = false;
+interface SceneNodeMixin {
+  visible: bool | true;
+  locked: bool | false;
 }
 
-class IndividualStrokesMixin {
-  strokeTopWeight: float = 0;
-  strokeBottomWeight: float = 0;
-  strokeLeftWeight: float = 0;
-  strokeRightWeight: float = 0;
+interface IndividualStrokesMixin {
+  strokeTopWeight: float | 0;
+  strokeBottomWeight: float | 0;
+  strokeLeftWeight: float | 0;
+  strokeRightWeight: float | 0;
 }
 
-class GeometryMixin extends MinimalStrokesMixin, MinimalFillsMixin {
+interface GeometryMixin extends MinimalStrokesMixin, MinimalFillsMixin {
   strokeCap: StrokeCap
-  strokeMiterLimit: float = 0;
+  strokeMiterLimit: float | 0;
   fillGeometry: VectorPaths
 }
 
-class CornerMixin {
-  cornerRadius: float = 0;
-  cornerSmoothing: float = 0;
+interface CornerMixin {
+  cornerRadius: float | 0;
+  cornerSmoothing: float | 0;
 }
 
-class RectangleCornerMixin {
-  topLeftRadius: float = 0;
-  topRightRadius: float = 0;
-  bottomLeftRadius: float = 0;
-  bottomRightRadius: float = 0;
+interface RectangleCornerMixin {
+  topLeftRadius: float | 0;
+  topRightRadius: float | 0;
+  bottomLeftRadius: float | 0;
+  bottomRightRadius: float | 0;
 }
 
-class DefaultShapeMixin
+interface DefaultShapeMixin
 	extends BaseNodeMixin,
 		SceneNodeMixin,
 		LayoutMixin,
 		EffectMixin,
 		GeometryMixin {}
 
-class EffectMixin extends MinimalBlendMixin {
+interface EffectMixin extends MinimalBlendMixin {
   effects: ReadonlyArray<Effect>
   effectStyleId: string
 }
@@ -68,7 +68,7 @@ enum CounterAxisAlignItems {
   CENTER,
   BASELINE
 }
-class BaseFrameMixin extends BaseNodeMixin,
+interface BaseFrameMixin extends BaseNodeMixin,
     SceneNodeMixin,
     GeometryMixin,
     CornerMixin,
@@ -82,16 +82,16 @@ class BaseFrameMixin extends BaseNodeMixin,
   counterAxisSizingMode: AxisSizingMode
   primaryAxisAlignItems: PrimaryAxisAlignItems
   counterAxisAlignItems: CounterAxisAlignItems
-  paddingLeft: float = 0;
-  paddingRight: float = 0;
-  paddingTop: float = 0;
-  paddingBottom: float = 0;
-  itemSpacing: float = 0;
-  itemReverseZIndex: bool = false;
-  strokesIncludedInLayout: bool = false;
-  horizontalPadding: float = 0;
-  verticalPadding: float = 0;
-  clipsContent: bool = true;
+  paddingLeft: float | 0;
+  paddingRight: float | 0;
+  paddingTop: float | 0;
+  paddingBottom: float | 0;
+  itemSpacing: float | 0;
+  itemReverseZIndex: bool | false;
+  strokesIncludedInLayout: bool | false;
+  horizontalPadding: float | 0;
+  verticalPadding: float | 0;
+  clipsContent: bool | true;
 }
 
-class DefaultFrameMixin extends BaseFrameMixin {}
+interface DefaultFrameMixin extends BaseFrameMixin {}

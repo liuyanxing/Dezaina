@@ -7,27 +7,27 @@ enum PaintType {
   IMAGE,
 }
 
-class ColorStop extends Struct {
-  position: float = 0;
+interface ColorStop extends Struct {
+  position: float | 0;
   color: RGBA
 }
 
-class Paint {
+interface Paint {
 	type: PaintType
 }
 
-class SolidPaint extends Paint {
+interface SolidPaint extends Paint {
   color: RGB
-  visible: bool = true;
-  opacity: float = 1;
+  visible: bool | true;
+  opacity: float | 1;
   blendMode: BlendMode
 }
 
-class GradientPaint extends Paint{
+interface GradientPaint extends Paint{
   gradientTransform: Matrix
   gradientStops: ReadonlyArray<ColorStop>
   visible: bool
-  opacity: float = 1;
+  opacity: float | 1;
   blendMode: BlendMode
 }
 
@@ -38,7 +38,7 @@ enum ScaleMode{
   TILE,
 }
 
-class ImagePaint extends Paint {
+interface ImagePaint extends Paint {
   scaleMode: ScaleMode
   imageHash: string
   imageTransform: Matrix

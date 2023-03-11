@@ -1,4 +1,4 @@
-class MinimalFillsMixin {
+interface MinimalFillsMixin {
   fills: ReadonlyArray<Paint>
   fillStyleId: string
 }

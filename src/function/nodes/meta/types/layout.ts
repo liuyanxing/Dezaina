@@ -1,6 +1,6 @@
-class DimensionAndPositionMixin {
-  readonly width: float = 100;
-  readonly height: float = 100;
+interface DimensionAndPositionMixin {
+  readonly width: float | 100;
+  readonly height: float | 100;
   transform: Matrix
 }
 
@@ -12,7 +12,7 @@ enum ConstraintType {
   SCALE,
 }
 
-class Constraints {
+interface Constraints {
   readonly horizontal: ConstraintType
   readonly vertical: ConstraintType
 }
@@ -25,12 +25,12 @@ enum LayoutAlignType{
   SCALE,
   INHERIT
 }
-class ConstraintMixin {
+interface ConstraintMixin {
   constraints: Constraints
 }
 
-class LayoutMixin extends DimensionAndPositionMixin {
-  rotation: float = 0;
+interface LayoutMixin extends DimensionAndPositionMixin {
+  rotation: float | 0;
   layoutAlign: LayoutAlignType
   layoutGrow: uint
 }

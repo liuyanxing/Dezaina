@@ -17,7 +17,7 @@ enum Align {
   OUTSIDE
 }
 
-class MinimalStrokesMixin {
+interface MinimalStrokesMixin {
   strokes: ReadonlyArray<Paint>
   strokeStyleId: string
   strokeWeight: float
