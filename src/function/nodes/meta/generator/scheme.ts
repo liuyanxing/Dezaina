@@ -1,0 +1,104 @@
+import Mustache from "mustache";
+import {
+  DDeclaraction,
+  DeclaractionType,
+  DEnum,
+  DInterface,
+  Member,
+} from "./types";
+import { Graph } from "../utils/graph";
+import fs from "fs";
+import { execSync, getPathFromRelative } from "../utils/system";
+
+function groupByExtends(interfaces: DInterface[]) {
+  const graph = new Graph();
+  for (const interf of interfaces) {
+    const from = interf.name;
+    if (interf.mixins.length === 0) {
+      graph.addEdge(from, "");
+      continue;
+    }
+    for (const mixin of interf.mixins) {
+      graph.addEdge(mixin, from);
+    }
+  }
+  return graph.groupByConnection();
+}
+
+function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
+  const interfaceMap: Map<string, DInterface> = new Map();
+  for (const interf of interfaces) {
+    interfaceMap.set(interf.name, interf);
+  }
+  group.reverse();
+  const groupedInterface: DInterface[] = [];
+  for (const i of group) {
+    const isStruct = i.some((name) => interfaceMap.get(name)?.isStruct);
+    const kiwiName = i.find((name) => name.endsWith("_kiwi"));
+    const name = kiwiName ? kiwiName.split("_kiwi")[0] : i[0];
+    const item: DInterface = {
+      name,
+      type: DeclaractionType.Interface,
+      members: [],
+      mixins: [],
+      isStruct,
+    };
+    for (const name of i) {
+      const interf = interfaceMap.get(name);
+      if (interf === undefined) {
+        continue;
+      }
+      const members = interf.members as Member[];
+      item.members.push(...members);
+    }
+    item.members = item.members.map((member, index) => ({
+      ...member,
+      index: index + 1,
+    })) as Member[];
+    groupedInterface.push(item);
+  }
+  return groupedInterface;
+}
+
+function getSchemaData(interfaces: DInterface[], enums: DEnum[]) {
+  const kiwiInterfaces = interfaces.map((item) => {
+    const members = item.members.map((member) => {
+      let type = member.type;
+      if (member.isArray) {
+        type = type + "[]";
+      }
+      return { ...member, type };
+    });
+    return {
+      name: item.name,
+      members,
+      isStruct: item.isStruct,
+    };
+  });
+  const schemaData = {
+    enums,
+    structs: kiwiInterfaces.filter((item) => item.isStruct),
+    messages: kiwiInterfaces.filter((item) => !item.isStruct),
+  };
+  return schemaData;
+}
+
+export function genKiwiSchema(declars: DDeclaraction[]) {
+  const interfaces = declars.filter(
+    (dInterface) => dInterface.type === DeclaractionType.Interface
+  ) as DInterface[];
+  const enums = declars.filter(
+    (dInterface) => dInterface.type === DeclaractionType.Enum
+  ) as DEnum[];
+  const grouped = groupByExtends(interfaces);
+  const mixined = mixinInterfacByGroup(grouped, interfaces);
+  const schemaData = getSchemaData(mixined, enums);
+  const template = fs
+    .readFileSync(getPathFromRelative("../template/schema.mustache"))
+    .toString();
+  const reslut = Mustache.render(template, schemaData);
+  fs.writeFileSync(getPathFromRelative("../desaina.kiwi"), reslut);
+  execSync("kiwic --schema desaina.kiwi --cpp desaina_kiwi.h", {
+    cwd: __dirname,
+  });
+}
