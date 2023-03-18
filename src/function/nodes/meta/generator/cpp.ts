@@ -2,8 +2,16 @@ import Mustache from "mustache";
 import { readFileSync, writeFileSync } from "fs";
 import { getPathFromRelative } from "../utils/system";
 import { DDeclaraction, DeclaractionType, DEnum, DInterface } from "./types";
+import { execSync } from "child_process";
+import { desainaHppFileName, outDir, schemaFileName, schemaHppFileName } from "../const";
+import path from "path";
 
-export function genCpp(declars: DDeclaraction[]) {
+export function genCpp(declars: DDeclaraction[], template: string) {
+  const schemaPath = path.join(outDir, schemaFileName);
+  const schemaHppPath = path.join(outDir, schemaHppFileName);
+  execSync(`kiwic --schema ${schemaPath} --cpp ${schemaHppPath}`, {
+    cwd: __dirname,
+  });
   const interfaces = declars.filter(
     (dInterface) => dInterface.type === DeclaractionType.Interface
   ) as DInterface[];
@@ -35,8 +43,9 @@ export function genCpp(declars: DDeclaraction[]) {
     enums,
   };
   const reslut = Mustache.render(
-    readFileSync(getPathFromRelative("../template/cpp.mustache")).toString(),
+    template,
     data
   );
-  writeFileSync(getPathFromRelative("../desaina.h"), reslut);
+
+  writeFileSync(path.join(outDir, desainaHppFileName), reslut);
 }

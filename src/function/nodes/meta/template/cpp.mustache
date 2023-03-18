@@ -22,7 +22,7 @@ struct {{name}} {
 {{/structs}}
 
 {{#classes}}
-class {{name}} {{#mixins}} public {{.}} {{/mixins}} {
+class {{name}} {{#mixins}}: public {{.}} {{/mixins}} {
 private:
 {{#members}}
 {{#defaultValue}}

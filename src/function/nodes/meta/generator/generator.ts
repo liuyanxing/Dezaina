@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
+import { getCppTemplate, getScahemTemplate } from "../template";
 import { getPathFromRelative } from "../utils/system";
 import { genCpp } from "./cpp";
 import { getDeclarations } from "./declaration";
@@ -23,8 +24,8 @@ function main() {
     ts.ScriptTarget.ESNext
   );
   const declars = getDeclarations(sourceFile);
-  genKiwiSchema(declars);
-  genCpp(declars);
+  genKiwiSchema(declars, getScahemTemplate());
+  genCpp(declars, getCppTemplate());
 }
 
 main();

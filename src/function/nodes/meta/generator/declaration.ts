@@ -17,6 +17,7 @@ export function getDeclarations(node: ts.Node) {
         declarations.push(dInterface as DInterface);
       }
     }
+		node.forEachChild(visit);
   }
   visit(node);
   return declarations;

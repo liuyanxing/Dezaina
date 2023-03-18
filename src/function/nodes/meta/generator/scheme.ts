@@ -8,7 +8,9 @@ import {
 } from "./types";
 import { Graph } from "../utils/graph";
 import fs from "fs";
-import { execSync, getPathFromRelative } from "../utils/system";
+import path from "path";
+import { execSync } from "../utils/system";
+import { outDir } from "../const";
 
 function groupByExtends(interfaces: DInterface[]) {
   const graph = new Graph();
@@ -83,7 +85,7 @@ function getSchemaData(interfaces: DInterface[], enums: DEnum[]) {
   return schemaData;
 }
 
-export function genKiwiSchema(declars: DDeclaraction[]) {
+export function genKiwiSchema(declars: DDeclaraction[], template: string) {
   const interfaces = declars.filter(
     (dInterface) => dInterface.type === DeclaractionType.Interface
   ) as DInterface[];
@@ -93,12 +95,6 @@ export function genKiwiSchema(declars: DDeclaraction[]) {
   const grouped = groupByExtends(interfaces);
   const mixined = mixinInterfacByGroup(grouped, interfaces);
   const schemaData = getSchemaData(mixined, enums);
-  const template = fs
-    .readFileSync(getPathFromRelative("../template/schema.mustache"))
-    .toString();
   const reslut = Mustache.render(template, schemaData);
-  fs.writeFileSync(getPathFromRelative("../desaina.kiwi"), reslut);
-  execSync("kiwic --schema desaina.kiwi --cpp desaina_kiwi.h", {
-    cwd: __dirname,
-  });
+  fs.writeFileSync(path.join(outDir, "desaina.kiwi"), reslut);
 }
