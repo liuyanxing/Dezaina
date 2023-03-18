@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
+import { nodeIncludeDir, outDir } from "../const";
 import { getCppTemplate, getScahemTemplate } from "../template";
 import { getPathFromRelative } from "../utils/system";
 import { genCpp } from "./cpp";
@@ -16,6 +17,10 @@ function concatDirFiles(dir: string) {
   return source;
 }
 
+function moveOutFiles() {
+  fs.cpSync(outDir, nodeIncludeDir, { recursive: true });
+}
+
 function main() {
   const source = concatDirFiles(getPathFromRelative("../types"));
   const sourceFile = ts.createSourceFile(
@@ -26,6 +31,7 @@ function main() {
   const declars = getDeclarations(sourceFile);
   genKiwiSchema(declars, getScahemTemplate());
   genCpp(declars, getCppTemplate());
+  moveOutFiles();
 }
 
 main();

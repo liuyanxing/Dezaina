@@ -10,7 +10,7 @@ import { Graph } from "../utils/graph";
 import fs from "fs";
 import path from "path";
 import { execSync } from "../utils/system";
-import { outDir } from "../const";
+import { outDir, schemaFileName } from "../const";
 
 function groupByExtends(interfaces: DInterface[]) {
   const graph = new Graph();
@@ -96,5 +96,5 @@ export function genKiwiSchema(declars: DDeclaraction[], template: string) {
   const mixined = mixinInterfacByGroup(grouped, interfaces);
   const schemaData = getSchemaData(mixined, enums);
   const reslut = Mustache.render(template, schemaData);
-  fs.writeFileSync(path.join(outDir, "desaina.kiwi"), reslut);
+  fs.writeFileSync(path.join(outDir, schemaFileName), reslut);
 }
