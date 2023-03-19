@@ -34,3 +34,5 @@
 node_modules
 build
 .vscode
+.cache
+compile_db_temp

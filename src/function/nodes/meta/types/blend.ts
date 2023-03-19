@@ -19,8 +19,3 @@ enum BlendMode {
  COLOR,
  LUMINOSITY,
 }
-
-interface MinimalBlendMixin {
-  opacity: float | 1;
-  blendMode: BlendMode
-}

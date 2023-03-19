@@ -1,9 +1,17 @@
 #include <string>
 #include <vector>
-#include "desaina_kiwi.h"
+
+#define IMPLEMENT_KIWI_H
+#define IMPLEMENT_SCHEMA_H
+
+#include "desaina_node_kiwi.h"
 
 using  uint = uint32_t;
 using string = std::string;
+
+{{#classes}}
+class {{name}};
+{{/classes}}
 
 {{#enums}}
 enum class {{name}} {
@@ -39,12 +47,5 @@ public:
 		{{name}} = value;
 	};
 {{/members}}
-void setWithKiwiData(const Desaina_Kiwi::{{name}}& data) {
-{{#members}}
-	if (data.{{name}}() != nullptr) {
-		{{name}} = *data.{{name}}();
-	}
-{{/members}}
-}
 };
 {{/classes}}

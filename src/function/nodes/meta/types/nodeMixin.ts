@@ -42,7 +42,7 @@ interface DefaultShapeMixin
 		EffectMixin,
 		GeometryMixin {}
 
-interface EffectMixin extends MinimalBlendMixin {
+interface EffectMixin {
   effects: ReadonlyArray<Effect>
   effectStyleId: string
 }

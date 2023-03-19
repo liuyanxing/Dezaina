@@ -1,10 +1,31 @@
 import Mustache from "mustache";
-import { readFileSync, writeFileSync } from "fs";
-import { getPathFromRelative } from "../utils/system";
+import { writeFileSync } from "fs";
 import { DDeclaraction, DeclaractionType, DEnum, DInterface } from "./types";
 import { execSync } from "child_process";
 import { desainaHppFileName, outDir, schemaFileName, schemaHppFileName } from "../const";
 import path from "path";
+
+export function sortInterfaceByExtends(interfaces: DInterface[]) {
+  const result: DInterface[] = [];
+  const map: { [key: string]: DInterface } = {};
+  interfaces.forEach((item) => {
+    map[item.name] = item;
+  });
+  interfaces.forEach((item) => {
+    if (item.mixins.length) {
+      const mixin = map[item.mixins[0]];
+      if (mixin) {
+        mixin.members = mixin.members.concat(item.members);
+        mixin.mixins = mixin.mixins.concat(item.mixins.slice(1));
+      } else {
+        result.push(item);
+      }
+    } else {
+      result.push(item);
+    }
+  });
+  return result;
+}
 
 export function genCpp(declars: DDeclaraction[], template: string) {
   const schemaPath = path.join(outDir, schemaFileName);

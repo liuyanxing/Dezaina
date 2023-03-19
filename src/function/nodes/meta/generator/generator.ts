@@ -7,6 +7,8 @@ import { getPathFromRelative } from "../utils/system";
 import { genCpp } from "./cpp";
 import { getDeclarations } from "./declaration";
 import { genKiwiSchema } from "./scheme";
+import toposort from "toposort";
+import { DDeclaraction, DeclaractionType } from "./types";
 
 function concatDirFiles(dir: string) {
   let source = "";
@@ -21,6 +23,25 @@ function moveOutFiles() {
   fs.cpSync(outDir, nodeIncludeDir, { recursive: true });
 }
 
+function sortDeclarationsByExtends(declars: DDeclaraction[]) {
+  const edges: [string, string][] = [];
+  declars.map((item) => {
+    if (item.type ===  DeclaractionType.Interface) {
+      if (item.mixins.length) {
+        item.mixins.forEach((mixin) => {
+          edges.push([mixin, item.name]);
+        });
+        return;
+      }
+    }
+    edges.push(["", item.name]);
+  });
+  const interfaceNames = toposort(edges);
+  declars.sort((a, b) => {
+    return interfaceNames.indexOf(a.name) - interfaceNames.indexOf(b.name);
+  });
+}
+
 function main() {
   const source = concatDirFiles(getPathFromRelative("../types"));
   const sourceFile = ts.createSourceFile(
@@ -29,6 +50,7 @@ function main() {
     ts.ScriptTarget.ESNext
   );
   const declars = getDeclarations(sourceFile);
+  sortDeclarationsByExtends(declars);
   genKiwiSchema(declars, getScahemTemplate());
   genCpp(declars, getCppTemplate());
   moveOutFiles();

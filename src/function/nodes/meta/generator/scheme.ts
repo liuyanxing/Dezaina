@@ -27,6 +27,14 @@ function groupByExtends(interfaces: DInterface[]) {
   return graph.groupByConnection();
 }
 
+function uniqueMembers(members: Member[]) {
+  const map = new Map();
+  for (const member of members) {
+    map.set(member.name, member);
+  }
+  return Array.from(map.values());
+}
+
 function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
   const interfaceMap: Map<string, DInterface> = new Map();
   for (const interf of interfaces) {
@@ -53,6 +61,8 @@ function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
       const members = interf.members as Member[];
       item.members.push(...members);
     }
+    
+    item.members = uniqueMembers(item.members);
     item.members = item.members.map((member, index) => ({
       ...member,
       index: index + 1,
