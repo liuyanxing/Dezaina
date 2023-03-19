@@ -1,7 +1,10 @@
-- [ ] kiwi schema 生成
-- [ ] cpp 文件生成
-- [ ] cpp 文件继
-- [ ] cpp enum 转换
+- [x] kiwi schema 生成
+- [x] cpp 文件生成
+- [x] cpp 文件继承
+- [x] cpp enum 转换
+- [ ] cpp 默认值文件生成
+- [ ] cpp set value with kiwi data
+
 
 长期规划：
 
