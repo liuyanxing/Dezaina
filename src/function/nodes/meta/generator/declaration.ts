@@ -1,7 +1,27 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import ts from "typescript";
 import { getEnum } from "./enum";
 import { getInterface } from "./interface";
-import { DDeclaraction, DEnum, DInterface } from "./types";
+import { DDeclaraction, DeclaractionType, DEnum, DInterface, Member } from "./types";
+
+function setMemberType(declars: DDeclaraction[]) {
+  const enumsNames = declars.filter((d) => d.type === DeclaractionType.Enum).map((d) => d.name);
+  const interfaceNames = declars.filter((d) => d.type === DeclaractionType.Interface).map((d) => d.name);
+  const interfaces = declars.filter((d) => d.type === DeclaractionType.Interface);
+  interfaces.forEach((d) => {
+    d.members.forEach((m: Member) => {
+      if (interfaceNames.includes(m.type!)) {
+        m.isComplexType = true;
+      } else if (enumsNames.includes(m.type!)) {
+        m.isEnum = true;
+      } else if (m.type === "string") {
+        m.isString = true;
+      } else if (["number", "boolean", "float"].includes(m.type!)) {
+        m.isBasicType = true;
+      }
+    });
+  });
+}
 
 export function getDeclarations(node: ts.Node) {
   const declarations: DDeclaraction[] = [];
@@ -20,5 +40,6 @@ export function getDeclarations(node: ts.Node) {
 		node.forEachChild(visit);
   }
   visit(node);
+  setMemberType(declarations);
   return declarations;
 }

@@ -26,6 +26,24 @@ struct {{name}} {
 {{#members}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
 {{/members}}
+void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& data) {
+{{#members}}
+	if (data.{{name}}() != nullptr) {
+	{{#isEnum}}
+		{{name}} = static_cast<{{type}}>(*data.{{name}}());
+	{{/isEnum}}
+	{{#isString}}
+		{{name}} = *data.{{name}}()->c_str();
+	{{/isString}}	
+	{{#isBasicType}}
+		{{name}} = *data.{{name}}();
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		{{name}}.setWithKiwiData(*data.{{name}}());
+	{{/isComplexType}}	
+	}
+{{/members}}
+}
 };
 {{/structs}}
 
@@ -45,5 +63,43 @@ public:
 		{{name}} = value;
 	};
 {{/members}}
+void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& data) {
+{{#members}}
+	if (data.{{name}}() != nullptr) {
+{{^isArray}}
+	{{#isEnum}}
+		{{name}} = static_cast<{{type}}>(*data.{{name}}());
+	{{/isEnum}}
+	{{#isString}}
+		{{name}} = *data.{{name}}()->c_str();
+	{{/isString}}	
+	{{#isBasicType}}
+		{{name}} = *data.{{name}}();
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		{{name}}.setWithKiwiData(*data.{{name}}());
+	{{/isComplexType}}	
+{{/isArray}}
+{{#isArray}}
+	{{name}}.clear();
+	for (auto& item : *data.{{name}}()) {
+	{{#isEnum}}
+		{{name}}.push_back(static_cast<{{type}}>(item));
+	{{/isEnum}}
+	{{#isString}}
+		{{name}}.push_back(*item->c_str());
+	{{/isString}}	
+	{{#isBasicType}}
+		{{name}}.push_back(item);
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		{{name}}.push_back({{typeInArray}}());
+		{{name}}.back().setWithKiwiData(item);
+	{{/isComplexType}}	
+	}
+{{/isArray}}
+  }
+{{/members}}
+}
 };
 {{/classes}}

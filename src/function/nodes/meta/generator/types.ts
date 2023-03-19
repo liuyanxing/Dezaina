@@ -3,9 +3,14 @@ type DefalutValue = number | string | boolean;
 export interface Member {
   name: string;
   type?: string;
+  typeInArray?: string;
   isArray?: boolean;
   defaultValue?: DefalutValue;
   index?: number;
+  isEnum?: boolean;
+  isString?: boolean;
+  isBasicType?: boolean;
+  isComplexType?: boolean;
 }
 
 export enum DeclaractionType {

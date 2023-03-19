@@ -9,7 +9,6 @@ import {
 import { Graph } from "../utils/graph";
 import fs from "fs";
 import path from "path";
-import { execSync } from "../utils/system";
 import { outDir, schemaFileName } from "../const";
 
 function groupByExtends(interfaces: DInterface[]) {
@@ -50,7 +49,7 @@ function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
       name,
       type: DeclaractionType.Interface,
       members: [],
-      mixins: [],
+      mixins: [...i],
       isStruct,
     };
     for (const name of i) {
@@ -113,5 +112,5 @@ export function genKiwiSchema(declars: DDeclaraction[], template: string) {
       declar.mixins = declar.mixins.filter(mixin => !mixin.endsWith("_kiwi"));
     }
   });
-  return res;
+  return [res, mixined];
 }
