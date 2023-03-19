@@ -107,4 +107,11 @@ export function genKiwiSchema(declars: DDeclaraction[], template: string) {
   const schemaData = getSchemaData(mixined, enums);
   const reslut = Mustache.render(template, schemaData);
   fs.writeFileSync(path.join(outDir, schemaFileName), reslut);
+  const res = declars.filter(declar => !declar.name.endsWith("_kiwi"))
+  res.forEach(declar => {
+    if (declar.type === DeclaractionType.Interface) {
+      declar.mixins = declar.mixins.filter(mixin => !mixin.endsWith("_kiwi"));
+    }
+  });
+  return res;
 }

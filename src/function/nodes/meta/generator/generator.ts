@@ -2,9 +2,9 @@ import fs from "fs";
 import path from "path";
 import ts from "typescript";
 import { nodeIncludeDir, outDir } from "../const";
-import { getCppTemplate, getScahemTemplate } from "../template";
+import { getCppHeaderTemplate, getScahemTemplate } from "../template";
 import { getPathFromRelative } from "../utils/system";
-import { genCpp } from "./cpp";
+import { genCppHeader } from "./cpp";
 import { getDeclarations } from "./declaration";
 import { genKiwiSchema } from "./scheme";
 import toposort from "toposort";
@@ -51,8 +51,9 @@ function main() {
   );
   const declars = getDeclarations(sourceFile);
   sortDeclarationsByExtends(declars);
-  genKiwiSchema(declars, getScahemTemplate());
-  genCpp(declars, getCppTemplate());
+  const filteredDeclars =  genKiwiSchema(declars, getScahemTemplate());
+  genCppHeader(filteredDeclars, getCppHeaderTemplate());
+  // genCppSource(declars, getCppSourceTemplate());
   moveOutFiles();
 }
 

@@ -7,7 +7,7 @@ type int  = number
 type uint = number 
 type float = number 
 
-interface Vector {
+interface Vector extends Struct {
   x: float | 0;
   y: float  | 0;
 }
@@ -27,6 +27,6 @@ enum NumberUnits {
   PERCENT,
 }
 interface KiwiNumber extends Struct {
-  value: float  | 0;
+  value: float | 0;
   units: NumberUnits;
 }

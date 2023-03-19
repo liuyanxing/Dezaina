@@ -4,3 +4,4 @@ export const nodeIncludeDir = path.join(__dirname, "../include");
 export const schemaFileName = "desaina.kiwi";
 export const schemaHppFileName = "desaina_node_kiwi.h";
 export const desainaHppFileName = "desaina_node.h";
+export const desainaSourceFileName = "desaina_node.cpp";

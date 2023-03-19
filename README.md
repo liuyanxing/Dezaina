@@ -2,7 +2,7 @@
 - [x] cpp 文件生成
 - [x] cpp 文件继承
 - [x] cpp enum 转换
-- [ ] cpp 默认值文件生成
+- [ ] cpp 默认值
 - [ ] cpp set value with kiwi data
 
 

@@ -5,9 +5,7 @@ enum EffectType {
 	BACKGROUND_BLUR,
 }
 
-interface Effect_kiwi {}
-
-interface Effect extends Effect_kiwi {
+interface Effect {
   type: EffectType
 }
 

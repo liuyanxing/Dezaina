@@ -2,7 +2,7 @@ import Mustache from "mustache";
 import { writeFileSync } from "fs";
 import { DDeclaraction, DeclaractionType, DEnum, DInterface } from "./types";
 import { execSync } from "child_process";
-import { desainaHppFileName, outDir, schemaFileName, schemaHppFileName } from "../const";
+import { desainaHppFileName, desainaSourceFileName, outDir, schemaFileName, schemaHppFileName } from "../const";
 import path from "path";
 
 export function sortInterfaceByExtends(interfaces: DInterface[]) {
@@ -27,7 +27,7 @@ export function sortInterfaceByExtends(interfaces: DInterface[]) {
   return result;
 }
 
-export function genCpp(declars: DDeclaraction[], template: string) {
+export function genCppHeader(declars: DDeclaraction[], template: string) {
   const schemaPath = path.join(outDir, schemaFileName);
   const schemaHppPath = path.join(outDir, schemaHppFileName);
   execSync(`kiwic --schema ${schemaPath} --cpp ${schemaHppPath}`, {
@@ -47,7 +47,7 @@ export function genCpp(declars: DDeclaraction[], template: string) {
     return {
       name: item.name,
       members,
-      mixins: item.mixins.length ? item.mixins.join(",") : null,
+      mixins: item.mixins.length ? item.mixins.join(", ") : null,
       isStruct: item.isStruct,
     };
   });
@@ -69,4 +69,32 @@ export function genCpp(declars: DDeclaraction[], template: string) {
   );
 
   writeFileSync(path.join(outDir, desainaHppFileName), reslut);
+}
+
+interface CppSourceItem {
+  className: string;
+  memberName: string;
+  memberType: string;
+  memberDefaultValue: string | number;
+}
+
+export function genCppSource(declars: DDeclaraction[], template: string) {
+  const interfaceWithDefaultMember = declars.filter(declar => {
+    return declar.type === DeclaractionType.Interface
+      && declar.members.some(member => member.defaultValue !== undefined)
+      && !declar.isStruct;
+  }) as DInterface[];
+  const cppSourceData = interfaceWithDefaultMember.map(declar => {
+    return declar.members.map(member => {
+      return {
+        className: declar.name,
+        memberName: member.name,
+        memberType: member.type,
+        memberDefaultValue: member.defaultValue
+      } as CppSourceItem;
+    });
+  }).flat();
+
+  const reslut = Mustache.render(template, { data: cppSourceData });
+  writeFileSync(path.join(outDir, desainaSourceFileName), reslut);
 }

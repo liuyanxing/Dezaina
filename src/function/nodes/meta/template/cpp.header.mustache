@@ -24,20 +24,18 @@ enum class {{name}} {
 {{#structs}}
 struct {{name}} {
 {{#members}}
-	{{&type}} {{name}};
+	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
 {{/members}}
 };
 {{/structs}}
 
 {{#classes}}
-class {{name}} {{#mixins}}: public {{.}} {{/mixins}} {
+class {{name}} {{#mixins}}: public {{.}}{{/mixins}} {
 private:
 {{#members}}
-{{#defaultValue}}
-	static {{type}} {{name}}_default;
-{{/defaultValue}}
-	{{&type}} {{name}};
+	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
 {{/members}}
+
 public:
 {{#members}}
 	{{&type}} get_{{name}}() {
