@@ -1,5 +1,5 @@
-interface Node_Change_kiwi {}
-interface BaseNodeMixin extends Node_Change_kiwi {
+interface NodeChange_kiwi {}
+interface BaseNodeMixin extends NodeChange_kiwi {
   id: string
   parent: GUID
   name: string
