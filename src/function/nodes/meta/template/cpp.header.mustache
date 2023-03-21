@@ -26,20 +26,20 @@ struct {{name}} {
 {{#members}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
 {{/members}}
-void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& data) {
+void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
 {{#members}}
-	if (data.{{name}}() != nullptr) {
+	if (kiwi_data.{{name}}() != nullptr) {
 	{{#isEnum}}
-		{{name}} = static_cast<{{type}}>(*data.{{name}}());
+		{{name}} = static_cast<{{type}}>(*kiwi_data.{{name}}());
 	{{/isEnum}}
 	{{#isString}}
-		{{name}} = *data.{{name}}()->c_str();
+		{{name}} = *kiwi_data.{{name}}()->c_str();
 	{{/isString}}	
 	{{#isBasicType}}
-		{{name}} = *data.{{name}}();
+		{{name}} = *kiwi_data.{{name}}();
 	{{/isBasicType}}	
 	{{#isComplexType}}
-		{{name}}.setWithKiwiData(*data.{{name}}());
+		{{name}}.setWithKiwiData(*kiwi_data.{{name}}());
 	{{/isComplexType}}	
 	}
 {{/members}}
@@ -63,26 +63,26 @@ public:
 		{{name}} = value;
 	};
 {{/members}}
-void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& data) {
+void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
 {{#members}}
-	if (data.{{name}}() != nullptr) {
+	if (kiwi_data.{{name}}() != nullptr) {
 {{^isArray}}
 	{{#isEnum}}
-		{{name}} = static_cast<{{type}}>(*data.{{name}}());
+		{{name}} = static_cast<{{type}}>(*kiwi_data.{{name}}());
 	{{/isEnum}}
 	{{#isString}}
-		{{name}} = *data.{{name}}()->c_str();
+		{{name}} = *kiwi_data.{{name}}()->c_str();
 	{{/isString}}	
 	{{#isBasicType}}
-		{{name}} = *data.{{name}}();
+		{{name}} = *kiwi_data.{{name}}();
 	{{/isBasicType}}	
 	{{#isComplexType}}
-		{{name}}.setWithKiwiData(*data.{{name}}());
+		{{name}}.setWithKiwiData(*kiwi_data.{{name}}());
 	{{/isComplexType}}	
 {{/isArray}}
 {{#isArray}}
 	{{name}}.clear();
-	for (auto& item : *data.{{name}}()) {
+	for (auto& item : *kiwi_data.{{name}}()) {
 	{{#isEnum}}
 		{{name}}.push_back(static_cast<{{type}}>(item));
 	{{/isEnum}}

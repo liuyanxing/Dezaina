@@ -23,6 +23,7 @@ export interface DInterface {
   type: DeclaractionType.Interface;
   members: Member[];
   mixins: string[];
+  depends: string[];
   isStruct: boolean;
 }
 

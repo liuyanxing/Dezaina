@@ -23,6 +23,24 @@ function setMemberType(declars: DDeclaraction[]) {
   });
 }
 
+function setInterfaceDepends(declars: DDeclaraction[]) {
+  const interfaces = declars.filter((d) => d.type === DeclaractionType.Interface);
+  interfaces.forEach((item) => {
+    if (item.type === DeclaractionType.Interface) {
+      if (item.mixins.length) {
+        item.mixins.forEach((mixin) => {
+          item.depends.push(mixin);
+        });
+      }
+      item.members.forEach((m) => {
+        if (m.isComplexType) {
+          item.depends.push(m.type!);
+        }
+      });
+    }
+  });
+}
+
 export function getDeclarations(node: ts.Node) {
   const declarations: DDeclaraction[] = [];
   function visit(node: ts.Node) {
@@ -41,5 +59,6 @@ export function getDeclarations(node: ts.Node) {
   }
   visit(node);
   setMemberType(declarations);
+  setInterfaceDepends(declarations);
   return declarations;
 }

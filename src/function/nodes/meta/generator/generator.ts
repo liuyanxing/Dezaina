@@ -23,13 +23,13 @@ function moveOutFiles() {
   fs.cpSync(outDir, nodeIncludeDir, { recursive: true });
 }
 
-function sortDeclarationsByExtends(declars: DDeclaraction[]) {
+function sortDeclarationsByDepends(declars: DDeclaraction[]) {
   const edges: [string, string][] = [];
   declars.map((item) => {
     if (item.type ===  DeclaractionType.Interface) {
-      if (item.mixins.length) {
-        item.mixins.forEach((mixin) => {
-          edges.push([mixin, item.name]);
+      if (item.depends.length) {
+        item.depends.forEach((depend) => {
+          edges.push([depend, item.name]);
         });
         return;
       }
@@ -50,7 +50,7 @@ function main() {
     ts.ScriptTarget.ESNext
   );
   const declars = getDeclarations(sourceFile);
-  sortDeclarationsByExtends(declars);
+  sortDeclarationsByDepends(declars);
   const [filteredDeclars, mixinedInterfaces] = genKiwiSchema(declars, getScahemTemplate());
   genCppHeader(filteredDeclars, mixinedInterfaces, getCppHeaderTemplate());
   // genCppSource(declars, getCppSourceTemplate());

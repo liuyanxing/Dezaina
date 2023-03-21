@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import ts from "typescript";
-import { Member, DeclaractionType } from "./types";
+import { Member, DeclaractionType, DInterface } from "./types";
 import {
   getNameText,
   isStringKeyWord,
@@ -66,7 +66,8 @@ export function getInterface(node: ts.InterfaceDeclaration) {
       type: DeclaractionType.Interface,
       members,
       mixins: mixins.filter((m) => m !== "Struct"),
+      depends: [],
       isStruct,
-    };
+    } as DInterface;
   }
 }

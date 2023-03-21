@@ -50,6 +50,7 @@ function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
       type: DeclaractionType.Interface,
       members: [],
       mixins: [...i],
+      depends: [],
       isStruct,
     };
     for (const name of i) {
