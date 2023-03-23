@@ -1,0 +1,105 @@
+#include <string>
+#include <vector>
+
+#define IMPLEMENT_KIWI_H
+#define IMPLEMENT_SCHEMA_H
+
+#include "desaina_node_kiwi.h"
+
+using  uint = uint32_t;
+using string = std::string;
+
+{{#classes}}
+class {{name}};
+{{/classes}}
+
+{{#enums}}
+enum class {{name}} {
+{{#members}}
+	{{name}},
+{{/members}}
+};
+{{/enums}}
+
+{{#structs}}
+struct {{name}} {
+{{#members}}
+	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
+{{/members}}
+void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
+{{#members}}
+	if (kiwi_data.{{name}}() != nullptr) {
+	{{#isEnum}}
+		{{name}} = static_cast<{{type}}>(*kiwi_data.{{name}}());
+	{{/isEnum}}
+	{{#isString}}
+		{{name}} = *kiwi_data.{{name}}()->c_str();
+	{{/isString}}	
+	{{#isBasicType}}
+		{{name}} = *kiwi_data.{{name}}();
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		{{name}}.setWithKiwiData(*kiwi_data.{{name}}());
+	{{/isComplexType}}	
+	}
+{{/members}}
+}
+};
+{{/structs}}
+
+{{#classes}}
+class {{name}} {{#mixins}}: public {{.}}{{/mixins}} {
+private:
+{{#members}}
+	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
+{{/members}}
+
+public:
+{{#members}}
+	{{&type}} get_{{name}}() {
+		return {{name}};
+	};
+	void set_{{name}} (const {{&type}}& value) {
+		{{name}} = value;
+	};
+{{/members}}
+void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
+{{#members}}
+	if (kiwi_data.{{name}}() != nullptr) {
+{{^isArray}}
+	{{#isEnum}}
+		{{name}} = static_cast<{{type}}>(*kiwi_data.{{name}}());
+	{{/isEnum}}
+	{{#isString}}
+		{{name}} = *kiwi_data.{{name}}()->c_str();
+	{{/isString}}	
+	{{#isBasicType}}
+		{{name}} = *kiwi_data.{{name}}();
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		{{name}}.setWithKiwiData(*kiwi_data.{{name}}());
+	{{/isComplexType}}	
+{{/isArray}}
+{{#isArray}}
+	{{name}}.clear();
+	for (auto& item : *kiwi_data.{{name}}()) {
+	{{#isEnum}}
+		{{name}}.push_back(static_cast<{{type}}>(item));
+	{{/isEnum}}
+	{{#isString}}
+		{{name}}.push_back(*item->c_str());
+	{{/isString}}	
+	{{#isBasicType}}
+		{{name}}.push_back(item);
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		{{name}}.push_back({{typeInArray}}());
+		{{name}}.back().setWithKiwiData(item);
+	{{/isComplexType}}	
+	}
+{{/isArray}}
+  }
+{{/members}}
+}
+};
+{{/classes}}
