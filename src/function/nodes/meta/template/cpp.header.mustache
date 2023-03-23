@@ -26,20 +26,20 @@ struct {{name}} {
 {{#members}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
 {{/members}}
-void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
+void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 {{#members}}
-	if (kiwi_data.{{name}}() != nullptr) {
+	if (change.{{name}}() != nullptr) {
 	{{#isEnum}}
-		{{name}} = static_cast<{{type}}>(*kiwi_data.{{name}}());
+		{{name}} = static_cast<{{type}}>(*change.{{name}}());
 	{{/isEnum}}
 	{{#isString}}
-		{{name}} = *kiwi_data.{{name}}()->c_str();
+		{{name}} = *change.{{name}}()->c_str();
 	{{/isString}}	
 	{{#isBasicType}}
-		{{name}} = *kiwi_data.{{name}}();
+		{{name}} = *change.{{name}}();
 	{{/isBasicType}}	
 	{{#isComplexType}}
-		{{name}}.setWithKiwiData(*kiwi_data.{{name}}());
+		{{name}}.applyChange(*change.{{name}}());
 	{{/isComplexType}}	
 	}
 {{/members}}
@@ -63,26 +63,26 @@ public:
 		{{name}} = value;
 	};
 {{/members}}
-void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
+void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 {{#members}}
-	if (kiwi_data.{{name}}() != nullptr) {
+	if (change.{{name}}() != nullptr) {
 {{^isArray}}
 	{{#isEnum}}
-		{{name}} = static_cast<{{type}}>(*kiwi_data.{{name}}());
+		{{name}} = static_cast<{{type}}>(*change.{{name}}());
 	{{/isEnum}}
 	{{#isString}}
-		{{name}} = *kiwi_data.{{name}}()->c_str();
+		{{name}} = *change.{{name}}()->c_str();
 	{{/isString}}	
 	{{#isBasicType}}
-		{{name}} = *kiwi_data.{{name}}();
+		{{name}} = *change.{{name}}();
 	{{/isBasicType}}	
 	{{#isComplexType}}
-		{{name}}.setWithKiwiData(*kiwi_data.{{name}}());
+		{{name}}.applyChange(*change.{{name}}());
 	{{/isComplexType}}	
 {{/isArray}}
 {{#isArray}}
 	{{name}}.clear();
-	for (auto& item : *kiwi_data.{{name}}()) {
+	for (auto& item : *change.{{name}}()) {
 	{{#isEnum}}
 		{{name}}.push_back(static_cast<{{type}}>(item));
 	{{/isEnum}}
@@ -94,7 +94,7 @@ void setWithKiwiData(const Desaina_Kiwi::{{kiwiChangeType}}& kiwi_data) {
 	{{/isBasicType}}	
 	{{#isComplexType}}
 		{{name}}.push_back({{typeInArray}}());
-		{{name}}.back().setWithKiwiData(item);
+		{{name}}.back().applyChange(item);
 	{{/isComplexType}}	
 	}
 {{/isArray}}
