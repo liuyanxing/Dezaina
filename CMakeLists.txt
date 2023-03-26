@@ -4,6 +4,7 @@ project(Desaina)
 set(SOURCE src/main.cpp)
 
 add_executable(Desaina ${SOURCE})
+add_dependencies(Desaina build_skia)
 
 set(INCLUDE_DIR
 		${PROJECT_SOURCE_DIR}/src/function/nodes/pre_include
@@ -12,3 +13,5 @@ set(INCLUDE_DIR
 	)
 
 target_include_directories(Desaina PUBLIC ${INCLUDE_DIR})
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/depends.cmake)
