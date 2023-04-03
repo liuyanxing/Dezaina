@@ -2,23 +2,21 @@ include(FetchContent)
 set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps)
-set(skia_SOURCE_DIR, ${FETCHCONTENT_BASE_DIR}/skia)
-set(skia_BINARY_DIR, ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/skia_lib)
 
-# message(STATUS "Fetching skia")
-# FetchContent_Declare(
-# 	skia
-# 	GIT_REPOSITORY https://github.com/google/skia.git
-# 	GIT_TAG				  chrome/m113
-# 	GIT_SHALLOW			TRUE
-# 	GIT_PROGRESS		TRUE
-# 	USES_TERMINAL_DOWNLOAD	TRUE
-# 	SOURCE_DIR			${CMAKE_CURRENT_SOURCE_DIR}/deps/skia
-# )
+message(STATUS "Fetching skia")
+FetchContent_Declare(
+	skia
+	GIT_REPOSITORY https://github.com/google/skia.git
+	GIT_TAG				  chrome/m113
+	GIT_SHALLOW			TRUE
+	GIT_PROGRESS		TRUE
+	USES_TERMINAL_DOWNLOAD	TRUE
+	SOURCE_DIR			${CMAKE_CURRENT_SOURCE_DIR}/deps/skia
+)
 
-# if (NOT skia_POPULATED)
-# 	FetchContent_Populate(skia)
-# endif()
+if (NOT skia_POPULATED)
+	FetchContent_Populate(skia)
+endif()
 
 # execute_process(
 # 		COMMAND_ERROR_IS_FATAL ANY
@@ -27,15 +25,17 @@ set(skia_BINARY_DIR, ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/skia_lib)
 # )
 # list(TRANSFORM gn_arch REPLACE "x86_64" "amd64")
 
-set(gn_path bin/gn.exe)
+set(gn_path bin/gn)
 
 add_custom_target(
 		build_skia
 		WORKING_DIRECTORY ${skia_SOURCE_DIR}
-		# COMMAND "${gn_path};gen;${skia_BINARY_DIR}/$<CONFIG>;--args=is_debug=$<IF:$<CONFIG:Debug>,true,false> is_official_build=false is_component_build=false skia_use_system_freetype2=false skia_use_freetype=true $<$<PLATFORM_ID:Windows>:extra_cflags=[\"/MD$<$<CONFIG:Debug>:d>\"]>>"
-		COMMAND ""
-		COMMAND ninja -C ${skia_BINARY_DIR}/$<CONFIG> skia skunicode skshaper skparagraph
+		COMMAND python tools/git-sync-deps
+		COMMAND "${gn_path};gen;${skia_BINARY_DIR}/$<CONFIG>;--args=is_debug=$<IF:$<CONFIG:Debug>,true,false> is_official_build=false is_component_build=false skia_use_system_freetype2=false skia_use_freetype=true"
+		# COMMAND ninja -C ${skia_BINARY_DIR}/$<CONFIG> skia skunicode skshaper skparagraph
 		VERBATIM
 		COMMAND_EXPAND_LISTS
 		USES_TERMINAL
 )
+
+set(SKIA_INCLUDE_DIR ${skia_SOURCE_DIR})
