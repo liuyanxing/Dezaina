@@ -1,3 +1,7 @@
+#pragma once
+
+#include "command.h"
+
 class CommandSystem
 {
 public:

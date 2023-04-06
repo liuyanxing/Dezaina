@@ -1,4 +1,4 @@
-interface RectangleNode extends
+interface RectangleNodeBase extends
     DefaultShapeMixin,
     ConstraintMixin,
     CornerMixin,
@@ -6,12 +6,12 @@ interface RectangleNode extends
     IndividualStrokesMixin {
 }
 
-interface FrameNode extends DefaultFrameMixin {
+interface FrameNodeBase extends DefaultFrameMixin {
 }
 
-interface PageNode extends BaseNodeMixin {
+interface PageNodeBase extends BaseNodeMixin {
   backgrounds: ReadonlyArray<Paint>
 }
 
-interface DocumentNode extends BaseNodeMixin {
+interface DocumentNodeBase extends BaseNodeMixin {
 }

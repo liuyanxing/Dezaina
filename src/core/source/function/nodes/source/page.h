@@ -1,7 +1,7 @@
 #include "desaina_node.h"
 
-class Page : public PageNode {
+class PageNode : public PageNodeBase {
 public:
-  Page();
-  ~Page();
+  PageNode();
+  ~PageNode();
 };
