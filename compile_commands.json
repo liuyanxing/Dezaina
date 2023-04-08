@@ -1,49 +1,61 @@
 [
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/desaina.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/desaina.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/desaina.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/desaina.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/desaina.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/desaina.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/animation/run.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/animation/run.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/animation/run.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/animation/run.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/function/animation/run.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/animation/run.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/command_system/command.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/command_system/command.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/command_system/command.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/command_system/command.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/function/command_system/command.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/command_system/command.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/input/mouse.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/input/mouse.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/input/mouse.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/input/mouse.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/function/input/mouse.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/input/mouse.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/nodes/source/document.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/document.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/nodes/source/document.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/document.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/document.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/nodes/source/document.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/nodes/source/page.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/page.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/nodes/source/frame.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/frame.cpp",
+  "file": "/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/frame.cpp",
+  "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/nodes/source/frame.cpp.o"
+},
+{
+  "directory": "/home/lyx/Documents/Dezaina/build/src/core",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/nodes/source/page.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/page.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/page.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/nodes/source/page.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/render/canvas.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/render/canvas.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/nodes/source/rectangle.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/rectangle.cpp",
+  "file": "/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source/rectangle.cpp",
+  "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/nodes/source/rectangle.cpp.o"
+},
+{
+  "directory": "/home/lyx/Documents/Dezaina/build/src/core",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/function/render/canvas.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/function/render/canvas.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/function/render/canvas.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/function/render/canvas.cpp.o"
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/core",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/resource/resouce.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/resource/resouce.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -g -std=gnu++20 -o CMakeFiles/DesainaCore.dir/source/resource/resouce.cpp.o -c /home/lyx/Documents/Dezaina/src/core/source/resource/resouce.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/core/source/resource/resouce.cpp",
   "output": "src/core/CMakeFiles/DesainaCore.dir/source/resource/resouce.cpp.o"
 },
@@ -85,7 +97,7 @@
 },
 {
   "directory": "/home/lyx/Documents/Dezaina/build/src/ui/native",
-  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/deps/skia/include -I/home/lyx/Documents/Dezaina/deps/sdl-build/include -I/home/lyx/Documents/Dezaina/deps/sdl-build/include-config-debug -I/home/lyx/Documents/Dezaina/deps/imgui -I/home/lyx/Documents/Dezaina/deps/sdl/include -g -std=gnu++20 -o CMakeFiles/DesainaUI.dir/source/main.cpp.o -c /home/lyx/Documents/Dezaina/src/ui/native/source/main.cpp",
+  "command": "/usr/bin/clang++  -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/include_gen -I/home/lyx/Documents/Dezaina/src/core/source/function/nodes/source -I/home/lyx/Documents/Dezaina/src/core/source/third_party/kiwi/include -I/home/lyx/Documents/Dezaina/src/core/source -I/home/lyx/Documents/Dezaina/src -I/home/lyx/Documents/Dezaina/deps/skia/include -I/home/lyx/Documents/Dezaina/deps/sdl-build/include -I/home/lyx/Documents/Dezaina/deps/sdl-build/include-config-debug -I/home/lyx/Documents/Dezaina/deps/imgui -I/home/lyx/Documents/Dezaina/deps/sdl/include -g -std=gnu++20 -o CMakeFiles/DesainaUI.dir/source/main.cpp.o -c /home/lyx/Documents/Dezaina/src/ui/native/source/main.cpp",
   "file": "/home/lyx/Documents/Dezaina/src/ui/native/source/main.cpp",
   "output": "src/ui/native/CMakeFiles/DesainaUI.dir/source/main.cpp.o"
 },

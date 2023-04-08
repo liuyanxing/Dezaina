@@ -42,15 +42,15 @@ public:
 	void set_loaded(bool loaded) {
 		isLoaded = loaded;
 	}
-
 	bool is_loaded() const {
 		return isLoaded;
 	}
-
 	void addNodeToMap(Node* node) {
 		auto guid = node->get_id();
 		idNodeMap_[guid] = node;
 	}
+
+	void buildDocTree();
 
 private:
 	bool isLoaded = false;
