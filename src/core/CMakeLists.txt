@@ -9,7 +9,8 @@ set(TARGET_INCLUE_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/source/function/nodes/include_gen
 	${CMAKE_CURRENT_SOURCE_DIR}/source/function/nodes/source
 	${CMAKE_CURRENT_SOURCE_DIR}/source/third_party/kiwi/include
-	${PROJECT_SOURCE_DIR}/src/base
+	${CMAKE_CURRENT_SOURCE_DIR}/source
+	${PROJECT_SOURCE_DIR}/src
 	${SKIA_INCLUDE_DIR})
 set(TARGET_LINK_LIBS skia)
 
