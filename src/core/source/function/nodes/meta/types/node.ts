@@ -1,4 +1,5 @@
 interface RectangleNodeBase extends
+    BaseNodeMixin,
     DefaultShapeMixin,
     ConstraintMixin,
     CornerMixin,

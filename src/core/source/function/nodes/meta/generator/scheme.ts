@@ -34,6 +34,22 @@ function uniqueMembers(members: Member[]) {
   return Array.from(map.values());
 }
 
+function removeKiwiMark(name: string) {
+  return name.replace(/(_kiwi|_KiwiOnly)$/, "");
+}
+
+function removeMembersTypeMark(members: Member[]) {
+  return members.map((member) => {
+    if (!member.type) {
+      return member;
+    }
+    return {
+      ...member,
+      type: removeKiwiMark(member.type),
+    };
+  });
+}
+
 function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
   const interfaceMap: Map<string, DInterface> = new Map();
   for (const interf of interfaces) {
@@ -63,6 +79,7 @@ function mixinInterfacByGroup(group: string[][], interfaces: DInterface[]) {
     }
     
     item.members = uniqueMembers(item.members);
+    item.members = removeMembersTypeMark(item.members);
     item.members = item.members.map((member, index) => ({
       ...member,
       index: index + 1,
@@ -81,8 +98,9 @@ function getSchemaData(interfaces: DInterface[], enums: DEnum[]) {
       }
       return { ...member, type };
     });
+
     return {
-      name: item.name,
+      name: removeKiwiMark(item.name),
       members,
       isStruct: item.isStruct,
     };

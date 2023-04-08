@@ -27,6 +27,10 @@ export function sortInterfaceByExtends(interfaces: DInterface[]) {
   return result;
 }
 
+function isKiwiOnlyInterface(interf: DInterface) {
+  return interf.name.endsWith("_KiwiOnly") || interf.mixins.some((mixin) => mixin.endsWith("_KiwiOnly"));
+}
+
 export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDeclaraction[], template: string) {
   const schemaPath = path.join(outDir, schemaFileName);
   const schemaHppPath = path.join(outDir, schemaHppFileName);
@@ -45,7 +49,7 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
   });
 
   const interfaces = declars.filter(
-    (dInterface) => dInterface.type === DeclaractionType.Interface
+    (dInterface) => dInterface.type === DeclaractionType.Interface && !isKiwiOnlyInterface(dInterface as DInterface)
   ) as DInterface[];
   const cppInterfaces = interfaces.map((item) => {
     const members = item.members.map((member) => {

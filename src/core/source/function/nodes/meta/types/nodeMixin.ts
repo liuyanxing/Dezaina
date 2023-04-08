@@ -1,8 +1,24 @@
 interface NodeChange_kiwi {}
+
+enum NodeType {
+  NONE,
+  DOCUMENT,
+  CANVAS,
+  GROUP,
+  FRAME,
+  BOOLEAN_OPERATION,
+  VECTOR,
+  STAR,
+  LINE,
+  ELLIPSE,
+  RECTANGLE,
+}
+
 interface BaseNodeMixin extends NodeChange_kiwi {
-  id: string
-  parent: GUID
-  name: string
+  id: GUID;
+  parent: GUID;
+  name: string;
+  type: NodeType;
 }
 
 interface SceneNodeMixin {
@@ -35,8 +51,7 @@ interface RectangleCornerMixin {
   bottomRightRadius: float | 0;
 }
 
-interface DefaultShapeMixin
-	extends BaseNodeMixin,
+interface DefaultShapeMixin extends 
 		SceneNodeMixin,
 		LayoutMixin,
 		EffectMixin,
