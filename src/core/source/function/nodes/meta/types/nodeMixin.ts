@@ -21,6 +21,13 @@ interface BaseNodeMixin extends NodeChange_kiwi {
   type: NodeType;
 }
 
+interface BaseNodeMixin_pointer {}
+
+interface ChildrenMixin_CppOnly extends BaseNodeMixin {
+  children: Array<BaseNodeMixin_pointer>;
+  appendChild_function: "void appendChild(BaseNodeMixin* node);"
+}
+
 interface SceneNodeMixin {
   visible: bool | true;
   locked: bool | false;

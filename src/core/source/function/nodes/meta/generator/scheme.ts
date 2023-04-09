@@ -11,6 +11,7 @@ import fs from "fs";
 import path from "path";
 import { outDir, schemaFileName } from "../const";
 
+ 
 function groupByExtends(interfaces: DInterface[]) {
   const graph = new Graph();
   for (const interf of interfaces) {
@@ -113,10 +114,20 @@ function getSchemaData(interfaces: DInterface[], enums: DEnum[]) {
   return schemaData;
 }
 
+function isCppOnlyInterface(interf: DInterface) {
+  return interf.name.endsWith("_CppOnly");
+}
+
+function removeCppOnlyMixin(interf: DInterface) {
+  interf.mixins = interf.mixins.filter(mixin => !mixin.endsWith("_CppOnly"));
+}
+ 
 export function genKiwiSchema(declars: DDeclaraction[], template: string) {
-  const interfaces = declars.filter(
-    (dInterface) => dInterface.type === DeclaractionType.Interface
+  let declarsCopy = structuredClone(declars);
+  let interfaces = declarsCopy.filter(
+    (dInterface) => dInterface.type === DeclaractionType.Interface && !isCppOnlyInterface(dInterface as DInterface)
   ) as DInterface[];
+  interfaces.forEach(removeCppOnlyMixin);
   const enums = declars.filter(
     (dInterface) => dInterface.type === DeclaractionType.Enum
   ) as DEnum[];
