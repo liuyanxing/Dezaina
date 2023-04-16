@@ -50,26 +50,26 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 {{/structs}}
 
 {{#classes}}
-class {{name}} {{#mixins}}: public {{.}}{{/mixins}} {
+class {{name}} {{#mixins}}: {{.}}{{/mixins}} {
 private:
 {{#members}}
 {{^isFunction}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
-{{/isFunction}}
-{{#isFunction}}
-	{{defaultValue}}
 {{/isFunction}}
 {{/members}}
 
 public:
 {{#members}}
 {{^isFunction}}
-	{{&type}} get_{{name}}() {
+	{{&type}}& get_{{name}}() {
 		return {{name}};
 	};
 	void set_{{name}} (const {{&type}}& value) {
 		{{name}} = value;
 	};
+{{/isFunction}}
+{{#isFunction}}
+	{{defaultValue}}
 {{/isFunction}}
 {{/members}}
 

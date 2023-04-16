@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <optional>
+#include <functional>
 #include <unordered_map>
 #include "base/map.h"
 #include "base/class_tool.h"
@@ -26,7 +27,6 @@ public:
 	Document();
 	~Document();
 	void close();
-	void appendChild(std::shared_ptr<PageNode>& page);
 
 	template<typename T>
 	T* createNode() {
@@ -52,6 +52,9 @@ public:
 
 	void buildDocTree();
 	void builPath();
+
+	void iterateNode(Node* node, std::function<bool(Node*)> func);
+	void iterateChildren(Node* node, std::function<bool(Node*)> func);
 
 private:
 	bool isLoaded = false;

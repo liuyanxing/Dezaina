@@ -53,6 +53,9 @@ function getInterfaceMembers(node: ts.InterfaceDeclaration): Member[] {
         throw new Error("unkonw member");
       }
       if (res.type) {
+        if (res.type.includes("_pointer")) {
+          res.isPointer = true;
+        }
         res.type = remvoeMark(res.type);
       }
       return res;

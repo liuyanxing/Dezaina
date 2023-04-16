@@ -1,5 +1,6 @@
 #include "desaina_kiwi.h"
 #include "desaina_node.h"
+#include "util/node_children.h"
 #include "document.h"
 #include "page.h"
 
@@ -13,7 +14,7 @@ void Document::buildDocTree() {
 		auto parentNodeOrNull = getValueFromMap(idNodeMap_, parentId);
 		if (parentNodeOrNull.has_value()) {
 			auto parentNode = parentNodeOrNull.value();
-			parentNode->appendChild(node);
+			util::appendChild(parentNode, node);
 		}
 	}
 }

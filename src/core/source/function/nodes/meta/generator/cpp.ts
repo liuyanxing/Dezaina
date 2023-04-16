@@ -63,6 +63,9 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
   const cppInterfaces = interfaces.map((item) => {
     const members = item.members.map((member) => {
       let type = member.type;
+      if (member.isPointer) {
+        type = type + "*";
+      }
       if (member.isArray) {
         type = "std::vector<" + type + ">";
       }
@@ -73,7 +76,7 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
       name,
       kiwiChangeType: kiwiChangeMap[name],
       members,
-      mixins: item.mixins.length ? item.mixins.map(mixin => remvoeMark(mixin)).join(", ") : null,
+      mixins: item.mixins.length ? item.mixins.map(mixin => "public " + remvoeMark(mixin)).join(", ") : null,
       isStruct: item.isStruct,
     };
   });
