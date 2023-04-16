@@ -121,6 +121,10 @@ function isCppOnlyInterface(interf: DInterface) {
 function removeCppOnlyMixin(interf: DInterface) {
   interf.mixins = interf.mixins.filter(mixin => !mixin.endsWith("_CppOnly"));
 }
+
+function removeCppOnlyMember(interf: DInterface) {
+  interf.members = interf.members.filter(member => !member.isFunction);
+}
  
 export function genKiwiSchema(declars: DDeclaraction[], template: string) {
   let declarsCopy = structuredClone(declars);
@@ -128,6 +132,7 @@ export function genKiwiSchema(declars: DDeclaraction[], template: string) {
     (dInterface) => dInterface.type === DeclaractionType.Interface && !isCppOnlyInterface(dInterface as DInterface)
   ) as DInterface[];
   interfaces.forEach(removeCppOnlyMixin);
+  interfaces.forEach(removeCppOnlyMember);
   const enums = declars.filter(
     (dInterface) => dInterface.type === DeclaractionType.Enum
   ) as DEnum[];

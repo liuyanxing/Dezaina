@@ -38,5 +38,5 @@ endif()
 		# USES_TERMINAL
 # )
 
-set(SKIA_INCLUDE_DIR ${skia_SOURCE_DIR}/include)
+set(SKIA_INCLUDE_DIR ${skia_SOURCE_DIR})
 set(SKIA_LIB_DIR ${skia_BINARY_DIR}/$<CONFIG>)

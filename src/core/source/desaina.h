@@ -34,6 +34,8 @@ class Desaina {
 				return false;
 			}
 			document.set_loaded(true);
+			document.buildDocTree();
+			document.builPath();
 			return true;
 		};
 

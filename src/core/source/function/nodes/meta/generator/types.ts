@@ -5,6 +5,8 @@ export interface Member {
   type?: string;
   typeInArray?: string;
   isArray?: boolean;
+  isFunction?: boolean;
+  isPointer?: boolean;
   defaultValue?: DefalutValue;
   index?: number;
   isEnum?: boolean;

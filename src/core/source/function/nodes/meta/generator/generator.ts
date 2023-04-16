@@ -53,7 +53,6 @@ function main() {
   sortDeclarationsByDepends(declars);
   const [filteredDeclars, mixinedInterfaces] = genKiwiSchema(declars, getScahemTemplate());
   genCppHeader(filteredDeclars, mixinedInterfaces, getCppHeaderTemplate());
-  // genCppSource(declars, getCppSourceTemplate());
   moveOutFiles();
 }
 

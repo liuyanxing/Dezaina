@@ -53,20 +53,30 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 class {{name}} {{#mixins}}: public {{.}}{{/mixins}} {
 private:
 {{#members}}
+{{^isFunction}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
+{{/isFunction}}
+{{#isFunction}}
+	{{defaultValue}}
+{{/isFunction}}
 {{/members}}
 
 public:
 {{#members}}
+{{^isFunction}}
 	{{&type}} get_{{name}}() {
 		return {{name}};
 	};
 	void set_{{name}} (const {{&type}}& value) {
 		{{name}} = value;
 	};
+{{/isFunction}}
 {{/members}}
+
+{{#kiwiChangeType}}
 void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 {{#members}}
+{{^isFunction}}
 	if (change.{{name}}() != nullptr) {
 {{^isArray}}
 	{{#isEnum}}
@@ -101,7 +111,10 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 	}
 {{/isArray}}
   }
+{{/isFunction}}
 {{/members}}
 }
+{{/kiwiChangeType}}
+
 };
 {{/classes}}

@@ -51,6 +51,7 @@ public:
 	}
 
 	void buildDocTree();
+	void builPath();
 
 private:
 	bool isLoaded = false;

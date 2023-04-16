@@ -6,6 +6,7 @@ import {
   getNameText,
   isStringKeyWord,
   getTypeAndDefaultValeFrom,
+  remvoeMark,
 } from "./util";
 
 function getInterfaceMembers(node: ts.InterfaceDeclaration): Member[] {
@@ -13,10 +14,14 @@ function getInterfaceMembers(node: ts.InterfaceDeclaration): Member[] {
     .map((mem) => {
       const member = mem as ts.PropertySignature;
       const name = getNameText(member.name as ts.Identifier);
+      if (!member.type) {
+        throw new Error("member type error");
+      }
       const type = member.type!;
       let isArray = false;
+      let res: Member = { name: remvoeMark(name) };
       if (isStringKeyWord(type as ts.Node)) {
-        return { name, type: "string", isArray };
+        res =  { ...res, type: "string", isArray };
       } else if (ts.isTypeReferenceNode(type as ts.Node)) {
         let typeRef = type as ts.TypeReferenceNode;
         let typeName = getNameText(typeRef.typeName as ts.Identifier);
@@ -28,13 +33,29 @@ function getInterfaceMembers(node: ts.InterfaceDeclaration): Member[] {
           typeRef = typeRef.typeArguments[0] as ts.TypeReferenceNode;
           typeName = getNameText(typeRef.typeName as ts.Identifier);
         }
-        return { name, type: typeName, isArray };
+        res = { ...res, type: typeName, isArray };
       } else if (ts.isUnionTypeNode(type as ts.Node)) {
         const typeRef = type as ts.UnionTypeNode;
         const [typeName, defaultValue] = getTypeAndDefaultValeFrom(typeRef);
         return { name, type: typeName, defaultValue, isArray };
+      } else if (ts.isLiteralTypeNode(type as ts.Node)) {
+        if (name.endsWith("_function")) {
+          const literalType = member.type as ts.LiteralTypeNode;
+          const stringLiteral = literalType.literal as ts.StringLiteral;
+          res = {
+            ...res,
+            type: "function",
+            defaultValue: stringLiteral.text,
+            isFunction: true,
+          };
+        }
+      } else {
+        throw new Error("unkonw member");
       }
-      throw new Error("unkonw member");
+      if (res.type) {
+        res.type = remvoeMark(res.type);
+      }
+      return res;
     })
     .filter((member) => !!member);
 }

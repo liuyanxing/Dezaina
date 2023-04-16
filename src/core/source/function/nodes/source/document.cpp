@@ -13,7 +13,7 @@ void Document::buildDocTree() {
 		auto parentNodeOrNull = getValueFromMap(idNodeMap_, parentId);
 		if (parentNodeOrNull.has_value()) {
 			auto parentNode = parentNodeOrNull.value();
-			// parentNode->appendChild(node);
+			parentNode->appendChild(node);
 		}
 	}
 }

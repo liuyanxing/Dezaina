@@ -3,6 +3,7 @@ import { writeFileSync } from "fs";
 import { DDeclaraction, DeclaractionType, DEnum, DInterface } from "./types";
 import { execSync } from "child_process";
 import { desainaHppFileName, desainaSourceFileName, outDir, schemaFileName, schemaHppFileName } from "../const";
+import { remvoeMark } from "./util";
 import path from "path";
 
 export function sortInterfaceByExtends(interfaces: DInterface[]) {
@@ -31,6 +32,10 @@ function isKiwiOnlyInterface(interf: DInterface) {
   return interf.name.endsWith("_KiwiOnly") || interf.mixins.some((mixin) => mixin.endsWith("_KiwiOnly"));
 }
 
+function isPointer(interf: DInterface) {
+  return interf.name.includes("_pointer");
+}
+
 export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDeclaraction[], template: string) {
   const schemaPath = path.join(outDir, schemaFileName);
   const schemaHppPath = path.join(outDir, schemaHppFileName);
@@ -49,7 +54,11 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
   });
 
   const interfaces = declars.filter(
-    (dInterface) => dInterface.type === DeclaractionType.Interface && !isKiwiOnlyInterface(dInterface as DInterface)
+    (dInterface) => {
+      return dInterface.type === DeclaractionType.Interface
+        && !isKiwiOnlyInterface(dInterface as DInterface)
+        && !isPointer(dInterface as DInterface);
+    }
   ) as DInterface[];
   const cppInterfaces = interfaces.map((item) => {
     const members = item.members.map((member) => {
@@ -59,11 +68,12 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
       }
       return { ...member, type, typeInArray: member.type };
     });
+    const name = remvoeMark(item.name); 
     return {
-      name: item.name,
-      kiwiChangeType: kiwiChangeMap[item.name],
+      name,
+      kiwiChangeType: kiwiChangeMap[name],
       members,
-      mixins: item.mixins.length ? item.mixins.join(", ") : null,
+      mixins: item.mixins.length ? item.mixins.map(mixin => remvoeMark(mixin)).join(", ") : null,
       isStruct: item.isStruct,
     };
   });

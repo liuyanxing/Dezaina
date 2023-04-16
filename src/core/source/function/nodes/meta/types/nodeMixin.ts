@@ -19,11 +19,15 @@ interface BaseNodeMixin extends NodeChange_kiwi {
   parent: GUID;
   name: string;
   type: NodeType;
+  isDocument_function: "virtual bool isDocument() { return false; };"
+  isPage_function: "virtual bool isPage() { return false; };"
+  isFrame_function: "virtual bool isFrame() { return false; };;"
+  isRect_function: "virtual bool isRect() { return false; };;"
 }
 
 interface BaseNodeMixin_pointer {}
 
-interface ChildrenMixin_CppOnly extends BaseNodeMixin {
+interface ChildrenMixin_CppOnly {
   children: Array<BaseNodeMixin_pointer>;
   appendChild_function: "void appendChild(BaseNodeMixin* node);"
 }
@@ -58,11 +62,12 @@ interface RectangleCornerMixin {
   bottomRightRadius: float | 0;
 }
 
-interface DefaultShapeMixin extends 
-		SceneNodeMixin,
-		LayoutMixin,
-		EffectMixin,
-		GeometryMixin {}
+interface DefaultShapeMixin extends
+    BaseNodeMixin,
+    SceneNodeMixin,
+    GeometryMixin,
+    LayoutMixin
+    {}
 
 interface EffectMixin {
   effects: ReadonlyArray<Effect>
@@ -93,6 +98,7 @@ enum CounterAxisAlignItems {
 interface BaseFrameMixin extends BaseNodeMixin,
     SceneNodeMixin,
     GeometryMixin,
+    ChildrenMixin_CppOnly,
     CornerMixin,
     RectangleCornerMixin,
     EffectMixin,

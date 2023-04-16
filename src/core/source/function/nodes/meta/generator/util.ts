@@ -34,3 +34,8 @@ export function getTypeAndDefaultValeFrom(
   }
   return [getNameText(typeNode.typeName as Identifier), value];
 }
+
+export function remvoeMark(name: string) {
+  return name.replace(/_(\w+)$/, "");
+}
+  
