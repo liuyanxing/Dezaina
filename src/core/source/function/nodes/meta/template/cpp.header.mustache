@@ -43,11 +43,30 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 	}
 {{/members}}
 }
+
+void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {
+{{#members}}
+	{{#isEnum}}
+		change.set_{{name}}(static_cast<Desaina_Kiwi::{{type}}>({{name}}));
+	{{/isEnum}}
+	{{#isString}}
+		change.set_{{name}}(kiwi::String({{name}}.c_str()));
+	{{/isString}}	
+	{{#isBasicType}}
+		change.set_{{name}}({{name}});
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		auto* {{name}}_change = pool.allocate<Desaina_Kiwi::{{type}}>();
+		{{name}}.toChange(*{{name}}_change, pool);
+	{{/isComplexType}}	
+{{/members}}
+}
+
 };
 {{/structs}}
 
 {{#classes}}
-class {{name}} {{#mixins}}: {{.}}{{/mixins}} {
+class {{name}} {{#extends}}: {{.}}{{/extends}} {
 private:
 {{#members}}
 {{^isFunction}}
@@ -111,7 +130,52 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 {{/isFunction}}
 {{/members}}
 }
-{{/kiwiChangeType}}
 
+void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {
+{{#members}}
+{{^isFunction}}
+{{^isArray}}
+	{{#isEnum}}
+		change.set_{{name}}(static_cast<Desaina_Kiwi::{{type}}>({{name}}));
+	{{/isEnum}}
+	{{#isString}}
+		change.set_{{name}}(kiwi::String({{name}}.c_str()));
+	{{/isString}}	
+	{{#isBasicType}}
+		change.set_{{name}}({{name}});
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		auto* {{name}}_change = pool.allocate<Desaina_Kiwi::{{type}}>();
+		{{name}}.toChange(*{{name}}_change, pool);
+		change.set_{{name}}({{name}}_change);
+	{{/isComplexType}}	
+{{/isArray}}
+{{#isArray}}
+	auto {{name}}_change = change.set_{{name}}(pool, {{name}}.size());
+	for (int i = 0; i < {{name}}.size(); i++) {
+		auto& item = {{name}}[i];
+		auto& change_item = {{name}}_change[i];
+	{{#isEnum}}
+		change_item = static_cast<Desaina_Kiwi::{{typeInArray}}>(item);
+	{{/isEnum}}
+	{{#isString}}
+		change_item->set_{{name}}(kiwi::String(item.c_str()));
+	{{/isString}}	
+	{{#isBasicType}}
+		change_item = item;
+	{{/isBasicType}}	
+	{{#isComplexType}}
+		item.toChange(change_item, pool);
+	{{/isComplexType}}	
+	}
+{{/isArray}}
+{{/isFunction}}
+{{/members}}
+{{#kiwiMixins}}
+	{{.}}::toChange(change, pool);
+{{/kiwiMixins}}
+}
+
+{{/kiwiChangeType}}
 };
 {{/classes}}

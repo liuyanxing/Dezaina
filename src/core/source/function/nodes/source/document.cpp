@@ -27,12 +27,6 @@ void Document::createDefaultFile() {
 	appendChild(page);
 }
 
-void Document::encode(Desaina_Kiwi::Message &message, kiwi::MemoryPool &pool) {
-	message.set_type(Desaina_Kiwi::MessageType::NODE_CHANGES);
-	auto& nodeChanges = message.set_nodeChanges(pool, 1);
-	auto* nodeChange = nodeChanges.begin();
-}
-
 void Document::builPath() {}
 
 void Document::close() {}

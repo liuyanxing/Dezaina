@@ -76,8 +76,9 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
       name,
       kiwiChangeType: kiwiChangeMap[name],
       members,
-      mixins: item.mixins.length ? item.mixins.map(mixin => "public " + remvoeMark(mixin)).join(", ") : null,
+      extends: item.mixins.length ? item.mixins.map(mixin => "public " + remvoeMark(mixin)).join(", ") : null,
       isStruct: item.isStruct,
+      kiwiMixins: item.mixins.filter((item) => !!kiwiChangeMap[item]),
     };
   });
 
