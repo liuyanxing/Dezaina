@@ -29,7 +29,7 @@ interface BaseNodeMixin_pointer {}
 
 interface ChildrenMixin_CppOnly {
   children: Array<BaseNodeMixin_pointer>;
-  appendChild_function: "void appendChild(BaseNodeMixin* node);"
+  appendChild_function: "void appendChild(BaseNodeMixin* node) { children.push_back(node); }"
 }
 
 interface SceneNodeMixin {
