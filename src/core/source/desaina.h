@@ -2,18 +2,10 @@
 
 #include "desaina_node.h"
 #include "document.h"
+#include "kiwi.h"
 #include <stdint.h>
-
-class IdGenerator {
-public:
-	IdGenerator(uint32_t sessionId);
-  GUID genId() {
-		return { sessionId, localId++ };
-	}
-private:
-	uint32_t sessionId;
-	uint32_t localId = 0;
-};
+#include "services/id_generator.h"
+#include "services/services.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -21,12 +13,16 @@ struct DesainaOption {
 
 class Desaina {
 	public:
-		Desaina(DesainaOption option): sessionId(option.sessionId), idGenerator(option.sessionId) {};
-		~Desaina();
+		Desaina(DesainaOption option):
+			sessionId_(option.sessionId),
+			services({new IdGenerator(option.sessionId)}),
+			document(&services) {};
+		~Desaina() = default;
 		void tick();
 		bool processMessage(uint8_t *buffer, uint32_t size);
-		void applyNodeChanges(Desaina_Kiwi::Message message);
-		void applyNodeChange(Desaina_Kiwi::NodeChange node_change);
+		bool processMessage(kiwi::ByteBuffer& buffer);
+		void applyNodeChanges(const Desaina_Kiwi::Message& message);
+		void applyNodeChange(const Desaina_Kiwi::NodeChange& node_change);
 
 		bool loadDocument(uint8_t* buffer, uint32_t size) {
 			bool is_loaded = processMessage(buffer, size);
@@ -39,8 +35,8 @@ class Desaina {
 			return true;
 		};
 
-		IdGenerator idGenerator;
-	private:
 		Document document;
-		uint32_t sessionId = 0;
+		Services services;
+	private:
+		uint32_t sessionId_ = 0;
 };

@@ -15,24 +15,35 @@
 #include "frame.h"
 #include "rectangle.h"
 
+#include "services/services.h"
+
 constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;
 
 using Node = BaseNodeMixin;
 using NodeMapType = std::unordered_map<GUID, Node*>;
 
+class Desaina;
+
 class Document : public DocumentNodeBase
 {
 public:
-	Document();
-	~Document();
+	Document(Services* services): services_(services) {};
+	~Document() = default;
 	void close();
 
 	template<typename T>
-	T* createNode() {
+	T* createNode(const GUID& id) {
 		void* ptr = nodePool.allocate();
 		new (ptr) T();
+		static_cast<Node*>(ptr)->set_id(id);
 		return static_cast<T*>(ptr);
+	};
+
+	template<typename T>
+	T* createNode() {
+		auto id = services_->idGenerator->genId();
+		return createNode<T>(id);
 	};
 
 	std::optional<Node*> getNodeById(GUID id) {
@@ -42,13 +53,18 @@ public:
 	void set_loaded(bool loaded) {
 		isLoaded = loaded;
 	}
+
 	bool is_loaded() const {
 		return isLoaded;
 	}
+
 	void addNodeToMap(Node* node) {
 		auto guid = node->get_id();
 		idNodeMap_[guid] = node;
 	}
+
+	void createDefaultFile();
+	void encode(Desaina_Kiwi::Message& message, kiwi::MemoryPool& pool);
 
 	void buildDocTree();
 	void builPath();
@@ -61,4 +77,5 @@ private:
 	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMapType idNodeMap_;
+	Services* services_;
 };

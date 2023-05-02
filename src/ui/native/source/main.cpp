@@ -1,9 +1,13 @@
 #include <iostream>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_opengl.h"
+#include "desaina.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+
+#include "create_node_panel.h"
+#include "file_panel.h"
 
 int main() {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER)) {
@@ -48,6 +52,8 @@ int main() {
 	// Main loop
 	bool done = false;
 
+	Desaina desaina{{0}};
+
 	while (!done) {
 		// Poll and handle events (inputs, window resize, etc.)
 		// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
@@ -88,6 +94,9 @@ int main() {
 
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 				ImGui::End();
+
+				CreateNodePanel(&desaina);
+				CreateFilePanel(&desaina);
 		}
 
 		// Rendering

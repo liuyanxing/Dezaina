@@ -26,7 +26,15 @@ public:
 		free_list = free_list->next;
 		return static_cast<void*>(free_list);
 	};
-	void grow();
+	void grow() {
+		size_t old_size = nodes.size();
+		nodes.resize(old_size * 2);
+		for (size_t i = old_size; i < old_size * 2 - 1; ++i) {
+			nodes[i].next = &nodes[i + 1];
+		}
+		nodes[old_size * 2 - 1].next = nullptr;
+		free_list = &nodes[old_size];
+	};
 	~NodePool() = default;
 
 private:
