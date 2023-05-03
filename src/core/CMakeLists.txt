@@ -17,9 +17,14 @@ set(TARGET_LINK_LIBS skia)
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.cpp")
 add_library(${TARGET_NAME} STATIC ${SOURCE_FILES})
 
+target_compile_definitions(${TARGET_NAME} PUBLIC
+	SK_GL
+)
+
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 20)
 
 target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})
 target_link_directories(${TARGET_NAME} PUBLIC ${TARGET_LINK_DIRS})
 
 target_link_libraries(${TARGET_NAME} PUBLIC ${TARGET_LINK_LIBS})
+

@@ -1,4 +1,6 @@
 #include "include/core/SkMatrix.h"
+#include "include/core/SkRefCnt.h"
+#include "include/core/SkSurface.h"
 
 class SceneNode;
 
@@ -12,6 +14,8 @@ class Canvas {
 public:
 		Canvas(CanvasOptions options) : width_(options.width), height_(options.height), devicePixelRatio_(options.devicePixelRatio) {};
 		~Canvas();
+
+		void createSurface();
 
 		void drawNode(SceneNode *node);
 
@@ -30,4 +34,7 @@ private:
 		int devicePixelRatio_;
 		void *buffer_;
 		SkMatrix viewport_;
+		sk_sp<SkSurface> surface_{nullptr};
+		SkCanvas* canvas_{nullptr};
+		
 };

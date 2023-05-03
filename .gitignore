@@ -38,4 +38,6 @@ build
 compile_db_temp
 deps
 
-*ini
+*.ini
+
+compile_commands.json
