@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <fstream>
+#include <memory>
 #include "desaina.h"
 #include "imgui.h"
 
@@ -20,6 +21,21 @@ inline void CreateFilePanel(Desaina* desaina) {
 			assert(false);
 		}
 		file.write((char*)buffer.data(), buffer.size());
+	}
+
+	if (ImGui::Button("load file from local")) {
+		std::fstream file;
+		file.open("test.desaina", std::ios::in | std::ios::binary);
+		if (!file.is_open()) {
+			assert(false);
+		}
+		file.seekg(0, std::ios::end);
+		auto size = file.tellg();
+		std::shared_ptr<char[]> data(new char[size]);
+		file.seekg(0, std::ios::beg);
+		file.read(data.get(), size);
+		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data.get()), size);
+		desaina->processMessage(buffer);
 	}
 
 	ImGui::End();

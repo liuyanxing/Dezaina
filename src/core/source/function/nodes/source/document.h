@@ -28,7 +28,9 @@ class Desaina;
 class Document : public DocumentNodeBase
 {
 public:
-	Document(Services* services): services_(services) {};
+	Document(Services* services): services_(services) {
+		set_type(NodeType::DOCUMENT);
+	};
 	~Document() = default;
 	void close();
 
