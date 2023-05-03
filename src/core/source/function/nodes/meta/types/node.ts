@@ -4,18 +4,22 @@ interface RectangleNodeBase extends
     CornerMixin,
     RectangleCornerMixin,
     IndividualStrokesMixin {
-  isRect_function: "virtual bool isRect() { return true; };;"
+  isRect_function: "virtual bool isRect() { return true; };";
+  encode_function: "void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) { toChange(change, pool); }";
 }
 
 interface FrameNodeBase extends DefaultFrameMixin {
-  isFrame_function: "virtual bool isFrame() { return true; };;"
+  isFrame_function: "virtual bool isFrame() { return true; };";
+  encode_function: "void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) { toChange(change, pool); }";
 }
 
 interface PageNodeBase extends BaseNodeMixin, ChildrenMixin_CppOnly {
   backgrounds: ReadonlyArray<Paint>
-  isPage_function: "bool isPage() { return true; };"
+  isPage_function: "bool isPage() { return true; };";
+  encode_function: "void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) { toChange(change, pool); }";
 }
 
 interface DocumentNodeBase extends BaseNodeMixin, ChildrenMixin_CppOnly {
   isDocument_function: "bool isDocument() { return true; };"
+  encode_function: "void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) { toChange(change, pool); }";
 }

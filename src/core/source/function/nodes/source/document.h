@@ -50,6 +50,10 @@ public:
 		return getValueFromMap(idNodeMap_, id);
 	}
 
+	void iterateNode(Node* node, std::function<bool(Node*)> func);
+	void iterateChildren(Node* node, std::function<bool(Node*)> func);
+	std::vector<Node*> getAllNodes();
+
 	void set_loaded(bool loaded) {
 		isLoaded = loaded;
 	}
@@ -68,9 +72,6 @@ public:
 
 	void buildDocTree();
 	void builPath();
-
-	void iterateNode(Node* node, std::function<bool(Node*)> func);
-	void iterateChildren(Node* node, std::function<bool(Node*)> func);
 
 private:
 	bool isLoaded = false;

@@ -24,4 +24,8 @@ namespace util {
 		NodeChildren& children = getChildren(parent);
 		children.push_back(child);
 	}
+
+	inline bool isContainer(Node* node) {
+		return node->isDocument() || node->isPage() || node->isFrame();
+	}
 } // util

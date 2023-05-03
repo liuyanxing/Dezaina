@@ -19,6 +19,7 @@ interface BaseNodeMixin extends NodeChange_kiwi {
   parent: GUID;
   name: string;
   type: NodeType;
+  encode_function: "virtual void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {};";
   isDocument_function: "virtual bool isDocument() { return false; };"
   isPage_function: "virtual bool isPage() { return false; };"
   isFrame_function: "virtual bool isFrame() { return false; };;"
@@ -122,4 +123,5 @@ interface BaseFrameMixin extends BaseNodeMixin,
   clipsContent: bool | true;
 }
 
-interface DefaultFrameMixin extends BaseFrameMixin {}
+interface DefaultFrameMixin extends BaseFrameMixin {
+}

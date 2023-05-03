@@ -35,6 +35,8 @@ class Desaina {
 			return true;
 		};
 
+		bool encode(kiwi::ByteBuffer& buffer);
+
 		Document document;
 		Services services;
 	private:

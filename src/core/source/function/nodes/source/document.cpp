@@ -27,6 +27,35 @@ void Document::createDefaultFile() {
 	appendChild(page);
 }
 
+void Document::iterateNode(Node *node, std::function<bool (Node *)> func) {
+	if (!func(node)) {
+		return;
+	}
+	if (util::isContainer(node)) {
+		iterateChildren(node, func);
+	}
+}
+
+void Document::iterateChildren(Node *node, std::function<bool (Node *)> func) {
+	if (!util::isContainer(node)) {
+		return;
+	}
+	auto children = util::getChildren(node);
+	for (auto child : children) {
+		iterateNode(child, func);
+	}
+}
+
+std::vector<Node*> Document::getAllNodes() {
+	std::vector<Node*> nodes;
+	nodes.reserve(idNodeMap_.size());
+	iterateNode(this, [&nodes](Node* node) {
+		nodes.push_back(node);
+		return true;
+	});
+	return nodes;
+}
+
 void Document::builPath() {}
 
 void Document::close() {}

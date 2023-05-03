@@ -1,3 +1,4 @@
+#include <cstdint>
 #define IMPLEMENT_KIWI_H
 #define IMPLEMENT_SCHEMA_H
 
@@ -72,4 +73,19 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 	}
 
 	node->applyChange(node_change);
+}
+
+bool Desaina::encode(kiwi::ByteBuffer &buffer) {
+	kiwi::MemoryPool pool;
+	Desaina_Kiwi::Message message;
+	message.set_type(Desaina_Kiwi::MessageType::NODE_CHANGES);
+	auto allNodes = document.getAllNodes();
+	auto& nodeChanges = message.set_nodeChanges(pool, allNodes.size());
+
+	for (uint32_t i = 0; i < allNodes.size(); ++i) {
+		auto& nodeChange = nodeChanges[i];
+		allNodes[i]->encode(nodeChange, pool);
+	}
+
+	return message.encode(buffer);
 }
