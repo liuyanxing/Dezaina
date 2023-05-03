@@ -16,7 +16,7 @@ function setMemberType(declars: DDeclaraction[]) {
         m.isEnum = true;
       } else if (m.type === "string") {
         m.isString = true;
-      } else if (["number", "boolean", "float"].includes(m.type!)) {
+      } else if (["number", "boolean", "float", "uint"].includes(m.type!)) {
         m.isBasicType = true;
       }
     });
