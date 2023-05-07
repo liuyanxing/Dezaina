@@ -1,6 +1,6 @@
 interface DimensionAndPositionMixin {
-  readonly width: float | 100;
-  readonly height: float | 100;
+  width: float | 100;
+  height: float | 100;
   transform: Matrix
 }
 
@@ -13,8 +13,8 @@ enum ConstraintType {
 }
 
 interface Constraints {
-  readonly horizontal: ConstraintType
-  readonly vertical: ConstraintType
+  horizontal: ConstraintType
+  vertical: ConstraintType
 }
 
 enum LayoutAlignType{
@@ -31,6 +31,4 @@ interface ConstraintMixin {
 
 interface LayoutMixin extends DimensionAndPositionMixin {
   rotation: float | 0;
-  layoutAlign: LayoutAlignType
-  layoutGrow: uint
 }

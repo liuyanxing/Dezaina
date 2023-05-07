@@ -53,6 +53,7 @@ int main() {
 	bool done = false;
 
 	Desaina desaina{{0}};
+	desaina.canvas.initCanvas({1280, 720, 1});
 
 	while (!done) {
 		// Poll and handle events (inputs, window resize, etc.)
@@ -98,6 +99,8 @@ int main() {
 				CreateNodePanel(&desaina);
 				CreateFilePanel(&desaina);
 		}
+
+		desaina.tick();
 
 		// Rendering
 		ImGui::Render();

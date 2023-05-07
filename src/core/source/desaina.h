@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "services/id_generator.h"
 #include "services/services.h"
+#include "function/render/canvas.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -16,7 +17,8 @@ class Desaina {
 		Desaina(DesainaOption option):
 			sessionId_(option.sessionId),
 			services({new IdGenerator(option.sessionId)}),
-			document(&services) {};
+			document(&services),
+			canvas(&document) {};
 		~Desaina() = default;
 		void tick();
 		bool processMessage(uint8_t *buffer, uint32_t size);
@@ -39,6 +41,7 @@ class Desaina {
 
 		Document document;
 		Services services;
+		Canvas canvas;
 	private:
 		uint32_t sessionId_ = 0;
 };

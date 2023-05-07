@@ -89,3 +89,7 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 
 	return message.encode(buffer);
 }
+
+void Desaina::tick() {
+	canvas.tick();
+}

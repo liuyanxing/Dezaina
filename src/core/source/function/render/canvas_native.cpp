@@ -3,7 +3,7 @@
 #include "include/gpu/GrDirectContext.h"
 
 
-void Canvas::createSurface() {
+bool Canvas::createSurface() {
     sk_sp<const GrGLInterface> interface = nullptr;
     
     sk_sp<GrDirectContext> context = GrDirectContext::MakeGL(interface);
@@ -13,7 +13,8 @@ void Canvas::createSurface() {
 
     if (!surface_) {
         SkDebugf("SkSurface::MakeRenderTarget returned null\n");
-        return;
+        return false;
     }
     canvas_ = surface_->getCanvas();
+    return true;
 }

@@ -69,6 +69,10 @@ public:
 		idNodeMap_[guid] = node;
 	}
 
+	PageNode* getCurPage() {
+		return curPage_;
+	}
+
 	void createDefaultFile();
 	void encode(Desaina_Kiwi::Message& message, kiwi::MemoryPool& pool);
 
@@ -80,5 +84,6 @@ private:
 	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMapType idNodeMap_;
-	Services* services_;
+	Services* services_{nullptr};
+	PageNode* curPage_{nullptr};
 };
