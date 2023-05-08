@@ -25,6 +25,8 @@ public:
 			devicePixelRatio_ = devicePixelRatio;
 			width_ = width * devicePixelRatio_;
 			height_ = height * devicePixelRatio_;
+			projection_matrix_.setScale(devicePixelRatio_, devicePixelRatio_, width_ / 2., height_ / 2.);
+			vp_matrix_ = view_matrix_ * projection_matrix_;
 		};
 
 		bool createSurface();
@@ -40,6 +42,10 @@ public:
 		int height() const;
 		void *buffer() const;
 
+		SkMatrix getVPMatrix() const {
+			return vp_matrix_;
+		};
+
 		void clear();
 		void tick();
 private:
@@ -47,7 +53,9 @@ private:
 		int height_;
 		int devicePixelRatio_;
 		void *buffer_;
-		SkMatrix viewport_;
+		SkMatrix view_matrix_;
+		SkMatrix projection_matrix_;
+		SkMatrix vp_matrix_;
 		sk_sp<SkSurface> surface_{nullptr};
 		SkCanvas* canvas_{nullptr};
 		Document* document_{nullptr};

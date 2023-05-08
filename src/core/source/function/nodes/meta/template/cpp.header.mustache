@@ -77,7 +77,7 @@ private:
 public:
 {{#members}}
 {{^isFunction}}
-	{{&type}}& get_{{name}}() const {
+	const {{&type}}& get_{{name}}() const {
 		return {{name}};
 	};
 	void set_{{name}} (const {{&type}}& value) {

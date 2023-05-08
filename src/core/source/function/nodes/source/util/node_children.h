@@ -2,7 +2,7 @@
 
 using NodeChildren = std::vector<Node*>;
 namespace util {
-	inline NodeChildren& getChildren(const Node* parent) {
+	inline const NodeChildren& getChildren(const Node* parent) {
 		if (parent->isDocument()) {
 			auto document = static_cast<const Document*>(parent);
 			return document->get_children();
@@ -21,8 +21,21 @@ namespace util {
 	}
 
 	inline void appendChild(Node* parent, Node* child) {
-		NodeChildren& children = getChildren(parent);
-		children.push_back(child);
+		if (parent->isDocument()) {
+			auto document = static_cast<Document*>(parent);
+			document->appendChild(child);
+		}
+		else if (parent->isPage()) {
+			auto page = static_cast<PageNode*>(parent);
+			page->appendChild(child);
+		}
+		else if (parent->isFrame()) {
+			auto frame = static_cast<FrameNodeBase*>(parent);
+			frame->appendChild(child);
+		}
+		else {
+			assert(false);
+		}
 	}
 
 	inline bool isContainer(const Node* node) {
