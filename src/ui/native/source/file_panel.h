@@ -34,8 +34,8 @@ inline void CreateFilePanel(Desaina* desaina) {
 		std::shared_ptr<char[]> data(new char[size]);
 		file.seekg(0, std::ios::beg);
 		file.read(data.get(), size);
-		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data.get()), size);
-		desaina->processMessage(buffer);
+		desaina->loadDocument(reinterpret_cast<uint8_t*>(data.get()), size);
+		desaina->document.setDefaultPage();
 	}
 
 	ImGui::End();

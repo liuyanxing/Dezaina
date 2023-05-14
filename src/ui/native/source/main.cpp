@@ -100,8 +100,6 @@ int main() {
 				CreateFilePanel(&desaina);
 		}
 
-		desaina.tick();
-
 		// Rendering
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);

@@ -20,11 +20,7 @@ interface BaseNodeMixin extends NodeChange_kiwi {
   name: string;
   type: NodeType;
   encode_function: "virtual void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {};";
-  isDocument_function: "virtual bool isDocument() const { return false; };"
-  isPage_function: "virtual bool isPage() const { return false; };"
-  isFrame_function: "virtual bool isFrame() const { return false;};"
-  isRect_function: "virtual bool isRect() const { return false; };"
-  isSceneNode_function: "virtual bool isSceneNode() const { return false; };"
+  delete_function: "virtual ~BaseNodeMixin() = default;";
 }
 
 interface BaseNodeMixin_pointer {}

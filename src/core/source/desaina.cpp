@@ -91,5 +91,12 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 }
 
 void Desaina::tick() {
+	if (!document.is_loaded()) {
+
+	}
 	canvas.tick();
+}
+
+void Desaina::loadDefaultDocument() {
+
 }

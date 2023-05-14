@@ -30,14 +30,15 @@ class Document : public DocumentNodeBase
 public:
 	Document(Services* services): services_(services) {
 		set_type(NodeType::DOCUMENT);
+		auto id = services->idGenerator->genId();
+		set_id(id);
 	};
 	~Document() = default;
 	void close();
 
 	template<typename T>
 	T* createNode(const GUID& id) {
-		void* ptr = nodePool.allocate();
-		new (ptr) T();
+		void* ptr = new T();
 		static_cast<Node*>(ptr)->set_id(id);
 		return static_cast<T*>(ptr);
 	};
@@ -72,6 +73,10 @@ public:
 	PageNode* getCurPage() {
 		return curPage_;
 	}
+	void setDefaultPage() {
+		const auto& children_ref = get_children();
+		curPage_ = static_cast<PageNode*>(children_ref[0]);
+	}
 
 	void createDefaultFile();
 	void encode(Desaina_Kiwi::Message& message, kiwi::MemoryPool& pool);
@@ -81,7 +86,6 @@ public:
 
 private:
 	bool isLoaded = false;
-	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMapType idNodeMap_;
 	Services* services_{nullptr};

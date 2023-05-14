@@ -37,10 +37,12 @@ class Desaina {
 			return true;
 		};
 
+		void loadDefaultDocument();
+
 		bool encode(kiwi::ByteBuffer& buffer);
 
-		Document document;
 		Services services;
+		Document document;
 		Canvas canvas;
 	private:
 		uint32_t sessionId_ = 0;

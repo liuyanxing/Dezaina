@@ -19,6 +19,7 @@ add_library(${TARGET_NAME} STATIC ${SOURCE_FILES})
 
 target_compile_definitions(${TARGET_NAME} PUBLIC
 	SK_GL
+	SK_GANESH
 )
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 20)

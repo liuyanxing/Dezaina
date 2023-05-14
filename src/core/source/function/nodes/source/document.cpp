@@ -1,15 +1,16 @@
 #include "desaina_kiwi.h"
 #include "desaina.h"
 #include "desaina_node.h"
+#include "rectangle.h"
 #include "util/node_children.h"
 #include "document.h"
 #include "page.h"
 
 void Document::buildDocTree() {
-	for (auto& [_, node] : idNodeMap_) {
+	for (auto& [id, node] : idNodeMap_) {
 		const auto parentId = node->get_parent();
 		// 0 is the document node
-		if (parentId.localId == 0) {
+		if (id.localId == 0) {
 			continue;
 		}
 		auto parentNodeOrNull = getValueFromMap(idNodeMap_, parentId);
@@ -24,6 +25,8 @@ void Document::createDefaultFile() {
 	set_name("new file");
 	auto page = createNode<PageNode>();
 	page->set_name("page 1");
+	auto rect = createNode<RectangleNode>();
+	page->appendChild(rect);
 	appendChild(page);
 }
 

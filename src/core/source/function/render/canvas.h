@@ -1,5 +1,10 @@
+#include "include/core/SkCanvas.h"
+
 #include "document.h"
+#include "include/core/SkColor.h"
 #include "include/core/SkMatrix.h"
+#include "include/core/SkPaint.h"
+#include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkSurface.h"
 #include "page.h"
@@ -19,6 +24,11 @@ public:
 
 			onWindowResize(width, height, devicePixelRatio);
 			createSurface();
+			SkPaint paint;
+			paint.setColor(SK_ColorRED);
+			// canvas_->drawRect(SkRect::MakeXYWH(0, 0, 100, 100), paint);
+			canvas_->clear(SK_ColorWHITE);
+			surface_->flush();
 		};
 
 		void onWindowResize(int width, int height, int devicePixelRatio) {
@@ -26,7 +36,7 @@ public:
 			width_ = width * devicePixelRatio_;
 			height_ = height * devicePixelRatio_;
 			projection_matrix_.setScale(devicePixelRatio_, devicePixelRatio_, width_ / 2., height_ / 2.);
-			vp_matrix_ = view_matrix_ * projection_matrix_;
+			vp_matrix_ = projection_matrix_ * view_matrix_ ;
 		};
 
 		bool createSurface();

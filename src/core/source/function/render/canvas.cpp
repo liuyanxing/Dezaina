@@ -5,13 +5,16 @@
 #include "page.h"
 #include "rectangle.h"
 #include "util/node_children.h"
+#include "util/node_type.h"
 #include "util/skia.h"
 
 void Canvas::tick() {
 	if (document_->is_loaded()) {
 		clear();
 		if (document_->getCurPage() != nullptr) {
+			canvas_->setMatrix(vp_matrix_);
 			drawNode(document_->getCurPage());
+			surface_->flush();
 		}
 	}
 }
@@ -23,8 +26,8 @@ void Canvas::drawNode(const Node *node) {
 		return;
 	}
 	
-	if (!node->isSceneNode()) {
-		if (!node->isPage()) {
+	if (!util::isSceneNode(node)) {
+		if (!util::isPage(node)) {
 			return;
 		}
 
@@ -33,8 +36,9 @@ void Canvas::drawNode(const Node *node) {
 		for (const auto& child : children) {
 			drawNode(child);
 		}
+		return;
 	}
-	if (node->isFrame()) {
+	if (util::isFrame(node)) {
 		auto frame = static_cast<const FrameNode*>(node);
 	  canvas_->concat(util::toSkiaMatrix(frame->get_transform()))	;
 		SkPaint paint;
@@ -47,11 +51,11 @@ void Canvas::drawNode(const Node *node) {
 		return;
 	}
 
-	if (node->isRect()) {
+	if (util::isRectangle(node)) {
 		auto rect = static_cast<const RectangleNode*>(node);
-	  canvas_->concat(util::toSkiaMatrix(rect->get_transform()))	;
+	  canvas_->concat(util::toSkiaMatrix(rect->get_transform()));
 		SkPaint paint;
-		paint.setColor(SK_ColorDKGRAY);
+		paint.setColor(SK_ColorRED);
 		canvas_->drawRect(SkRect::MakeXYWH(0, 0, rect->get_width(), rect->get_height()), paint);
 		return;
 	}
@@ -59,5 +63,5 @@ void Canvas::drawNode(const Node *node) {
 };
 
 void Canvas::clear() {
-	canvas_->clear(SK_ColorWHITE);
+	canvas_->clear(SK_ColorRED);
 }
