@@ -2,6 +2,8 @@
 #include "canvas.h"
 
 #include "include/core/SkColor.h"
+#include "include/core/SkPaint.h"
+#include "include/core/SkRect.h"
 #include "page.h"
 #include "rectangle.h"
 #include "util/node_children.h"

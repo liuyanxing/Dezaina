@@ -4,10 +4,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/depends.cmake)
+
 set(TARGET_INCLUE_DIRS
 	${PROJECT_SOURCE_DIR}/src/
 	${SDL_INCLUDE_DIR}
-	${imgui_SOURCE_DIR})
+	${imgui_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include
+	)
 set(TARGET_LINK_LIBS
 	DesainaCore
 	${SDL_LIBRARIES}
@@ -15,12 +18,15 @@ set(TARGET_LINK_LIBS
 	GL)
 
 file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "*.h")
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
+			${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp
+			${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/src/*.c
+			)
 add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 20)
 
-# target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})
+target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})
 # target_link_directories(${TARGET_NAME} PUBLIC ${TARGET_LINK_DIRS})
 
 target_link_libraries(${TARGET_NAME} PUBLIC ${TARGET_LINK_LIBS})

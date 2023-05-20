@@ -1,10 +1,10 @@
 #include <iostream>
 #include "SDL2/SDL.h"
-#include "SDL2/SDL_opengl.h"
 #include "desaina.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "glad/glad.h"
 
 #include "create_node_panel.h"
 #include "file_panel.h"
@@ -31,6 +31,11 @@ int main() {
 	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
+
+	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		throw(std::string("Failed to initialize GLAD"));
+	}
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -105,6 +110,7 @@ int main() {
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
+		desaina.tick();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		SDL_GL_SwapWindow(window);
 	}

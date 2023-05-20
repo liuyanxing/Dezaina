@@ -24,11 +24,6 @@ public:
 
 			onWindowResize(width, height, devicePixelRatio);
 			createSurface();
-			SkPaint paint;
-			paint.setColor(SK_ColorRED);
-			// canvas_->drawRect(SkRect::MakeXYWH(0, 0, 100, 100), paint);
-			canvas_->clear(SK_ColorWHITE);
-			surface_->flush();
 		};
 
 		void onWindowResize(int width, int height, int devicePixelRatio) {
