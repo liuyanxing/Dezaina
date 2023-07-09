@@ -56,6 +56,33 @@ std::vector<Node*> Document::getAllNodes() {
 	return nodes;
 }
 
+void Document::consumeEvent(const Event& event) {
+  
+  if (event.type() <= EventType::MOUSE) {
+    consumeMouseEvent(event);
+  }
+}
+
+void Document::iterateChildrenWithPoint(Node* node, const SkPoint& point, std::function<bool(Node*)> func) {
+  if (!util::isContainer(node)) {
+    return;
+  }
+  auto children = util::getChildren(node);
+  for (auto child : children) {
+    if (child->isPointInside(pointerX_, pointerY_)) {
+      iterateNode(child, func);
+    }
+  }
+}
+
+void Document::consumeMouseEvent(const Event& event) {
+
+}
+
+void Document::handlePointerDown(const Event& event) {
+
+}
+
 void Document::builPath() {}
 
 void Document::close() {}

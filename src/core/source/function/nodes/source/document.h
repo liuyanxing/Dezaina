@@ -14,6 +14,7 @@
 #include "page.h"
 #include "frame.h"
 #include "rectangle.h"
+#include "event.h"
 
 #include "services/services.h"
 
@@ -25,7 +26,7 @@ using NodeMapType = std::unordered_map<GUID, Node*>;
 
 class Desaina;
 
-class Document : public DocumentNodeBase
+class Document : public DocumentNodeBase, public EventConsumer
 {
 public:
 	Document(Services* services): services_(services) {
