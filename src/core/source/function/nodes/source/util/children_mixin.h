@@ -1,6 +1,6 @@
 #include "RtreeHitester"
 
-class ChildrenMixin {
+class ContainerMixin {
 public:
   std::vector<Node*> children;
   void appendChild(BaseNodeMixin* node) { children.push_back(node); }

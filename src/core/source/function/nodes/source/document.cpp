@@ -63,16 +63,18 @@ void Document::consumeEvent(const Event& event) {
   }
 }
 
-void Document::iterateChildrenWithPoint(Node* node, const SkPoint& point, std::function<bool(Node*)> func) {
+void Document::iterateChildrenWithPoint(Node* node, const SkPoint& point, std::function<bool(Node*, type)> func) {
   if (!util::isContainer(node)) {
     return;
   }
-  auto children = util::getChildren(node);
-  for (auto child : children) {
-    if (child->isPointInside(pointerX_, pointerY_)) {
-      iterateNode(child, func);
-    }
+  auto container = util::getContainer(node);
+  auto child = constainer.getChildWithPoint(point);
+  if (!child) {
+    return;
   }
+  func(child, down);
+  iterateChildren(node, point, func)
+  func(child, up);
 }
 
 void Document::consumeMouseEvent(const Event& event) {
