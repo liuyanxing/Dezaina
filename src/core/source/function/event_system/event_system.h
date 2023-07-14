@@ -1,3 +1,4 @@
+#include <vector>
 #include "event.h"
 
 class EventConsumer {
@@ -31,4 +32,4 @@ public:
 
 private:
   std::vector<EventConsumer*> consumers_;
-}
+};
