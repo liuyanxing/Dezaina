@@ -7,4 +7,4 @@ struct MouseEvent : public UIEvent {
   };
   int button;
   int buttons;
-}
+};

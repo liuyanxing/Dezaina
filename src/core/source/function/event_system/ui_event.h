@@ -19,4 +19,4 @@ struct UIEvent : public Event {
   };
   int x;
   int y;
-}
+};

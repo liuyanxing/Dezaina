@@ -7,17 +7,20 @@ enum class EventType {
 };
 
 struct Event {
-  class Builder {
-    public:
-      Builder(EventType type) {
-        event_.type = type;
-      };
+  EventType type;  
+  class Builder;
+};
 
-      Event finish() {
-        return event_;
-      };
-  
-    private:
-      Event event_;
+class Event::Builder {
+public:
+  Builder(EventType type) {
+    event_.type = type;
   };
-}
+
+  Event finish() {
+    return event_;
+  };
+
+private:
+  Event event_;
+};
