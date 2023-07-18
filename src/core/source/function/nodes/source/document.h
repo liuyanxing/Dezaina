@@ -15,6 +15,7 @@
 #include "frame.h"
 #include "rectangle.h"
 #include "event.h"
+#include "mouse_event_emmiter.h"
 
 #include "services/services.h"
 
@@ -26,8 +27,7 @@ using NodeMapType = std::unordered_map<GUID, Node*>;
 
 class Desaina;
 
-class Document : public DocumentNodeBase, public EventConsumer
-{
+class Document : public DocumentNodeBase {
 public:
 	Document(Services* services): services_(services) {
 		set_type(NodeType::DOCUMENT);
@@ -76,10 +76,14 @@ public:
 	void buildDocTree();
 	void builPath();
 
+  void bindEvents();
+
 private:
 	bool isLoaded = false;
 	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMapType idNodeMap_;
 	Services* services_;
+  std::unique_ptr<Editor> editor_ = nullptr;
+  MouseEventEmmiter mouseEventEmmiter_;
 };

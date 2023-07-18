@@ -81,11 +81,20 @@ void Document::consumeMouseEvent(const Event& event) {
 
 }
 
-void Document::handlePointerDown(const Event& event) {
+void Document::handleMouseDown(const Event& event) {
 
 }
 
 void Document::builPath() {}
+
+void Document::bindEvents() {
+  mouseEventEmmiter_.addEventListener<MouseDownEvent>([this](const Event& event) {
+    handlehandleMouseDownDown(event);
+  });
+  mouseEventEmmiter_.addEventListener<MouseDownHover>([this](const Event& event) {
+    handlehandleMouseDownDown(event);
+  });
+}
 
 void Document::close() {}
 

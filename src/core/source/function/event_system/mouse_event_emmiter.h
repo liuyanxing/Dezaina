@@ -33,8 +33,5 @@ public:
 private:
   SimpleHitTester hitTester_;
   HitTestNode* nodeOnMouseDown_ = nullptr;
-  std::vector<std::function<void(MouseEvent)>> mouseDownEventListeners_;
-  std::vector<std::function<void(MouseEvent)>> mouseUpEventListeners_;
-  std::vector<std::function<void(MouseEvent)>> mouseMoveEventListeners_;
-  std::vector<std::function<void(MouseEvent)>> mouseDragEventListeners_;
+  std::vector<std::function<void(MouseEvent)>> listeners_;
 };

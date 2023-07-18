@@ -1,9 +1,10 @@
 #include <vector>
 #include "event.h"
+#include "mouse_event.h"
 
 class EventConsumer {
 public:
-  virtual void consumeEvent(Event event) = 0;
+  virtual void consumeEvent(const Event& event) = 0;
 };
 
 class EventSystem {
@@ -19,7 +20,7 @@ public:
     dispatchEvent(event);
   }
 
-  void dispatchEvent(Event event) {
+  void dispatchEvent(const Event& event) {
     for (const auto& consumer : consumers_) {
       consumer->consumeEvent(event);
     }
