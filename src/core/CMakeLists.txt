@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/depends.cmake)
 set(TARGET_LINK_DIRS ${SKIA_LIB_DIR})
 set(TARGET_INCLUE_DIRS
+	${CMAKE_CURRENT_SOURCE_DIR}/source/function
 	${CMAKE_CURRENT_SOURCE_DIR}/source/function/nodes/include_gen
 	${CMAKE_CURRENT_SOURCE_DIR}/source/function/nodes/source
 	${CMAKE_CURRENT_SOURCE_DIR}/source/third_party/kiwi/include

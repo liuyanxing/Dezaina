@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include "event.h"
 #include "mouse_event.h"
@@ -15,8 +17,7 @@ public:
     builder.setY(y);
     builder.setButton(button);
     builder.setButtons(buttons);
-    builder.build();
-    auto event = builder.finish();
+    auto event = builder.build();
     dispatchEvent(event);
   }
 

@@ -1,3 +1,6 @@
+#pragma once
+
+#include <functional>
 enum class EventType {
   kNone = 0,
   kWindowClose, kWindowResize, kWindowFocus, kWindowLostFocus, kWindowMoved,
@@ -11,13 +14,18 @@ struct Event {
   class Builder;
 };
 
+struct EventListener {
+  std::function<void(const Event& event)> func;
+  EventType type;
+};
+
 class Event::Builder {
 public:
   Builder(EventType type) {
     event_.type = type;
   };
 
-  Event finish() {
+  Event build() {
     return event_;
   };
 

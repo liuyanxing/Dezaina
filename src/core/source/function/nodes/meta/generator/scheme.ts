@@ -1,4 +1,5 @@
 import Mustache from "mustache";
+import cloneDeep from "lodash/cloneDeep";
 import {
   DDeclaraction,
   DeclaractionType,
@@ -127,7 +128,8 @@ function removeCppOnlyMember(interf: DInterface) {
 }
  
 export function genKiwiSchema(declars: DDeclaraction[], template: string) {
-  let declarsCopy = structuredClone(declars);
+  // let declarsCopy = structuredClone(declars);
+  let declarsCopy = cloneDeep(declars);
   let interfaces = declarsCopy.filter(
     (dInterface) => dInterface.type === DeclaractionType.Interface && !isCppOnlyInterface(dInterface as DInterface)
   ) as DInterface[];

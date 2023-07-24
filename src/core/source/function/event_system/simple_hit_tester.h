@@ -1,15 +1,17 @@
+#pragma once
+
 #include "hit_tester.h"
 
 class SimpleHitTester : public HitTester {
 public:
-  std::vector<HitTestNode*> getNodeContainsPoint(const SkPoint& point) override {
+  HitTestNode* getNodeContainsPoint(const SkPoint& point) override {
     std::vector<HitTestNode*> nodes;
     for (auto& node : nodes_) {
-      if (node.area.contains(point)) {
-        nodes.push_back(&node);
+      if (node.area.contains(point.x(), point.y())) {
+        return &node;
       }
     }
-    return nodes;
+    return nullptr;
   }
 
   std::vector<HitTestNode*> getNodesIntersectWithRect(const SkRect& rect) override {
@@ -32,6 +34,14 @@ public:
         nodes_.erase(iter);
         break;
       }
+    }
+  }
+
+
+  void build(const std::vector<HitTestNode*>& nodes) {
+    nodes_.clear();
+    for (auto& node : nodes) {
+      nodes_.push_back(*node);
     }
   }
 

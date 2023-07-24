@@ -14,8 +14,8 @@
 #include "page.h"
 #include "frame.h"
 #include "rectangle.h"
-#include "event.h"
-#include "mouse_event_emmiter.h"
+#include "function/event_system/mouse_event_emmiter.h"
+#include "editor/editor.h"
 
 #include "services/services.h"
 

@@ -1,6 +1,2 @@
-#include "mouse_event_emmiter.h"
-
-class editor {
-private:
-	MouseEventEmmiter mouseEventEmitter_;
+class Editor {
 };

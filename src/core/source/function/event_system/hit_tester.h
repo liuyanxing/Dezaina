@@ -1,5 +1,7 @@
-// a member of container node
+#pragma once
+
 #include <vector>
+#include "include/core/SkRect.h"
 struct HitTestNode {
   int index = 0;
   SkRect area;
@@ -13,7 +15,7 @@ struct HitTestNode {
 
 class HitTester {
 public:
-  virtual std::vector<HitTestNode*> getNodeContainsPoint(const SkPoint& point) = 0;
+  virtual HitTestNode* getNodeContainsPoint(const SkPoint& point) = 0;
   virtual std::vector<HitTestNode*> getNodesIntersectWithRect(const SkRect& point) = 0;
   virtual void insertNode(HitTestNode* node) = 0;
   virtual void deleteNode(HitTestNode* node) = 0;

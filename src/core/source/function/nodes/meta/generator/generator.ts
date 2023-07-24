@@ -20,7 +20,19 @@ function concatDirFiles(dir: string) {
 }
 
 function moveOutFiles() {
-  fs.cpSync(outDir, nodeIncludeDir, { recursive: true });
+  const sourceDir = outDir;
+  const targetDir = nodeIncludeDir;
+
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir);
+  }
+
+  fs.readdirSync(sourceDir).forEach(file => {
+    const sourceFilePath = `${sourceDir}/${file}`;
+    const targetFilePath = `${targetDir}/${file}`;
+
+    fs.copyFileSync(sourceFilePath, targetFilePath);
+  });
 }
 
 function sortDeclarationsByDepends(declars: DDeclaraction[]) {
