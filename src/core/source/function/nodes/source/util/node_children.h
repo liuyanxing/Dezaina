@@ -28,4 +28,19 @@ namespace util {
 	inline bool isContainer(Node* node) {
 		return node->isDocument() || node->isPage() || node->isFrame();
 	}
+
+  inline Node* getRootContainer(Node* node) {
+    if (node->isDocument()) {
+      return node;
+    }
+    else if (node->isPage()) {
+      return node;
+    }
+    else if (node->isFrame()) {
+      return node;
+    }
+    else {
+      assert(false);
+    }
+  }
 } // util

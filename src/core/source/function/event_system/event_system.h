@@ -4,13 +4,21 @@
 #include "event.h"
 #include "mouse_event.h"
 
-class EventConsumer {
-public:
-  virtual void consumeEvent(const Event& event) = 0;
-};
-
 class EventSystem {
 public:
+  void dispatchEvent(const Event& event) {
+    for (const auto& consumer : consumers_) {
+      if (consumer.type == event.type) {
+        consumer.func(&event);
+      }
+    }
+  }
+
+  void addEventListener(const EventListener& consumer) {
+    consumers_.push_back(consumer);
+  }
+
+private:
   void dispatchMouseEvent(float x, float y, EventType type, int button, int buttons) {
     MouseEvent::Builder builder(type);
     builder.setX(x);
@@ -21,17 +29,6 @@ public:
     dispatchEvent(event);
   }
 
-  void dispatchEvent(const Event& event) {
-    for (const auto& consumer : consumers_) {
-      consumer->consumeEvent(event);
-    }
-  }
 
-  // make sure consumer exists in the lifetime of the program
-  void addConsumer(EventConsumer* consumer) {
-    consumers_.push_back(consumer);
-  }
-
-private:
-  std::vector<EventConsumer*> consumers_;
+  std::vector<EventListener> consumers_;
 };

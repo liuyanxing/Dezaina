@@ -9,12 +9,12 @@
 #include <unordered_map>
 #include "base/map.h"
 #include "base/class_tool.h"
+#include "event_system/event.h"
 #include "guid.h"
 #include "node_pool.h"
 #include "page.h"
 #include "frame.h"
 #include "rectangle.h"
-#include "function/event_system/mouse_event_emmiter.h"
 #include "editor/editor.h"
 
 #include "services/services.h"
@@ -57,12 +57,12 @@ public:
 	void iterateChildren(Node* node, std::function<bool(Node*)> func);
 	std::vector<Node*> getAllNodes();
 
-	void set_loaded(bool loaded) {
-		isLoaded = loaded;
+	void setLoaded(bool loaded) {
+		isLoaded_ = loaded;
 	}
 
 	bool is_loaded() const {
-		return isLoaded;
+		return isLoaded_;
 	}
 
 	void addNodeToMap(Node* node) {
@@ -77,13 +77,17 @@ public:
 	void builPath();
 
   void bindEvents();
+  void onEvents(Event* event);
+  
+  void addEventListener(EventType type, const ListenerFunc& func) {
+  }
 
 private:
-	bool isLoaded = false;
+	bool isLoaded_ = false;
 	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMapType idNodeMap_;
 	Services* services_;
   std::unique_ptr<Editor> editor_ = nullptr;
-  MouseEventEmmiter mouseEventEmmiter_;
+  PageNode* currentPage_ = nullptr;
 };

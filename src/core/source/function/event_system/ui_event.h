@@ -4,8 +4,12 @@
 
 struct UIEvent : public Event {
   class Builder;
-  int x;
-  int y;
+  float x;
+  float y;
+  float local_x;
+  float local_y;
+  float client_x;
+  float client_y;
 };
 
 class UIEvent::Builder : public Event::Builder {

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "id_generator.h"
+#include <memory>
 
 struct Services {
-	IdGenerator* idGenerator;
+  std::unique_ptr<IdGenerator> idGenerator = nullptr;
 };

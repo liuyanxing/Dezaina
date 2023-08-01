@@ -56,44 +56,15 @@ std::vector<Node*> Document::getAllNodes() {
 	return nodes;
 }
 
-void Document::consumeEvent(const Event& event) {
-  
-  if (event.type() <= EventType::MOUSE) {
-    consumeMouseEvent(event);
-  }
-}
-
-void Document::iterateChildrenWithPoint(Node* node, const SkPoint& point, std::function<bool(Node*, type)> func) {
-  if (!util::isContainer(node)) {
-    return;
-  }
-  auto container = util::getContainer(node);
-  auto child = constainer.getChildWithPoint(point);
-  if (!child) {
-    return;
-  }
-  func(child, down);
-  iterateChildren(node, point, func)
-  func(child, up);
-}
-
-void Document::consumeMouseEvent(const Event& event) {
-
-}
-
-void Document::handleMouseDown(const Event& event) {
-
-}
-
 void Document::builPath() {}
 
-void Document::bindEvents() {
-  mouseEventEmmiter_.addEventListener<MouseDownEvent>([this](const Event& event) {
-    handlehandleMouseDownDown(event);
-  });
-  mouseEventEmmiter_.addEventListener<MouseDownHover>([this](const Event& event) {
-    handlehandleMouseDownDown(event);
-  });
+void Document::bindEvents() {}
+
+void Document::onEvents(Event *event) {
+  if (editor_) {
+    editor_.get()->onEvent(event);
+  }
+
 }
 
 void Document::close() {}

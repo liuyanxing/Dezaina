@@ -1,5 +1,6 @@
 #pragma once
 
+#include "document.h"
 #include <functional>
 enum class EventType {
   kNone = 0,
@@ -7,17 +8,24 @@ enum class EventType {
   kAppTick, kAppUpdate, kAppRender,
   kKeyPressed, kKeyReleased, kKeyTyped,
   kMouseDown, kMouseUp, kMouseMove,
+  kAny,
 };
 
 struct Event {
   EventType type;  
+  Node* target;
   class Builder;
+  bool isMouseEvnet() const {
+    return type == EventType::kMouseDown || type == EventType::kMouseUp || type == EventType::kMouseMove;
+  }
 };
 
+using ListenerFunc = std::function<void(const Event* event)>;
 struct EventListener {
-  std::function<void(const Event& event)> func;
   EventType type;
+  ListenerFunc func;
 };
+
 
 class Event::Builder {
 public:

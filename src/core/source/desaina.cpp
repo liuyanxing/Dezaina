@@ -1,3 +1,4 @@
+#include "event_system/event.h"
 #include <cstdint>
 #define IMPLEMENT_KIWI_H
 #define IMPLEMENT_SCHEMA_H
@@ -88,4 +89,9 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 	}
 
 	return message.encode(buffer);
+}
+
+void Desaina::buildEvents() {
+  eventSystem.addEventListener({EventType::kAny, [](const Event* event) {
+  }});
 }

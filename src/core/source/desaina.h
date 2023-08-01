@@ -3,23 +3,23 @@
 #include "desaina_node.h"
 #include "document.h"
 #include "kiwi.h"
+#include <memory>
 #include <stdint.h>
 #include "services/id_generator.h"
 #include "services/services.h"
-#include "event_system.h"
+#include "function/event_system/event_system.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
 };
 
-class Desaina : public EventSystem {
+class Desaina {
 	public:
 		Desaina(DesainaOption option):
 			sessionId_(option.sessionId),
-			services({new IdGenerator(option.sessionId)}),
+			services({std::make_unique<IdGenerator>(option.sessionId)}),
 			document(&services) {
-        eventSystem.addConsumer(this);
-        eventSystem.addConsumer(&document);
+        buildEvents();
       };
 		~Desaina() = default;
 		void tick();
@@ -33,11 +33,13 @@ class Desaina : public EventSystem {
 			if (!is_loaded) {
 				return false;
 			}
-			document.set_loaded(true);
+			document.setLoaded(true);
 			document.buildDocTree();
 			document.builPath();
 			return true;
 		};
+
+    void buildEvents();
 
 		bool encode(kiwi::ByteBuffer& buffer);
 

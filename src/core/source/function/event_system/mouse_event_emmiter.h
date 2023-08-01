@@ -16,7 +16,7 @@ public:
       nodeOnMouseDown_ = node;
       for (const auto& listener : listeners_) {
         if (listener.type == EventType::kMouseDown) {
-          listener.func(event);
+          listener.func(&event);
         }
       }
     }
