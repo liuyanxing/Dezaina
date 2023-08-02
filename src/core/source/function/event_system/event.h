@@ -1,7 +1,8 @@
 #pragma once
 
-#include "document.h"
+#include "desaina_node.h"
 #include <functional>
+
 enum class EventType {
   kNone = 0,
   kWindowClose, kWindowResize, kWindowFocus, kWindowLostFocus, kWindowMoved,
@@ -11,13 +12,19 @@ enum class EventType {
   kAny,
 };
 
+using Node = BaseNodeMixin;
 struct Event {
   EventType type;  
   Node* target;
   class Builder;
-  bool isMouseEvnet() const {
+  bool isMouseEvent() const {
+    return isMouseEvent(type);
+  }
+
+  static bool isMouseEvent(EventType type) {
     return type == EventType::kMouseDown || type == EventType::kMouseUp || type == EventType::kMouseMove;
   }
+
 };
 
 using ListenerFunc = std::function<void(const Event* event)>;

@@ -92,8 +92,8 @@ public:
 
   void addSelectedNode(Node* node) {
     selectedNodes_.push_back(node);
-    if (!editor_ || !editor_->isBoundEditor()) {
-      editor_ = std::make_unique<SelectBoundEditor>(this);
+    if (!editor_ || !editor_->isNodeEditor()) {
+      editor_ = std::make_unique<NodeEditor>(this);
     }
   }
 

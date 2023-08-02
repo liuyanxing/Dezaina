@@ -3,12 +3,10 @@
 #include <vector>
 #include "include/core/SkRect.h"
 struct HitTestNode {
-  int index = 0;
-  SkRect area;
-  static HitTestNode Make(int index, const SkRect& area) {
+  SkRect rect;
+  static HitTestNode Make(const SkRect& rect) {
     HitTestNode node;
-    node.index = index;
-    node.area = area;
+    node.rect = rect;
     return node;
   }
 };

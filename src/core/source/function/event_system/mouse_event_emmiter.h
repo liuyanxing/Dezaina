@@ -10,19 +10,19 @@
 
 class MouseEventEmmiter {
 public:
-  void dispatchEvent(MouseEvent event) {
+  void dispatchEvent(MouseEvent* event) {
     auto* node = hitTester_.getNodeContainsPoint(SkPoint::Make(0, 0));
-    if (event.type == EventType::kMouseDown) {
+    if (event->type == EventType::kMouseDown) {
       nodeOnMouseDown_ = node;
       for (const auto& listener : listeners_) {
         if (listener.type == EventType::kMouseDown) {
-          listener.func(&event);
+          listener.func(event);
         }
       }
     }
   }
 
-  void addEventListener(EventType type, const std::function<void(const Event& event)>& func) {
+  void addEventListener(EventType type, const ListenerFunc& func) {
     listeners_.emplace_back(type, func);
   }
 
