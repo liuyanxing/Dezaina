@@ -23,7 +23,7 @@ constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;
 
 using Node = BaseNodeMixin;
-using NodeMapType = std::unordered_map<GUID, Node*>;
+using NodeMap = std::unordered_map<GUID, Node*>;
 
 class Desaina;
 
@@ -82,12 +82,38 @@ public:
   void addEventListener(EventType type, const ListenerFunc& func) {
   }
 
+  void setHoverNode(Node* node) {
+    hoverNode_ = node;
+  }
+
+  Node* getHoverNode() {
+    return hoverNode_;
+  }
+
+  void addSelectedNode(Node* node) {
+    selectedNodes_.push_back(node);
+    if (!editor_ || !editor_->isBoundEditor()) {
+      editor_ = std::make_unique<SelectBoundEditor>(this);
+    }
+  }
+
+  std::vector<Node*> getSelectedNodes() {
+    return selectedNodes_;
+  }
+
+  void clearSelectedNodes() {
+    selectedNodes_.clear();
+    editor_ = nullptr;
+  }
+
 private:
 	bool isLoaded_ = false;
 	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
-	NodeMapType idNodeMap_;
+	NodeMap idNodeMap_;
 	Services* services_;
   std::unique_ptr<Editor> editor_ = nullptr;
   PageNode* currentPage_ = nullptr;
+  Node* hoverNode_ = nullptr;
+  std::vector<Node*> selectedNodes_{};
 };

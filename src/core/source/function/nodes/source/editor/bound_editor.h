@@ -1,3 +1,5 @@
+#pragma once
+
 #include "editor.h"
 #include <vector>
 
@@ -11,11 +13,11 @@ struct ControlNode : public HitTestNode {
 	ControlNodeType type;
 };
 
-
 class SelectBoundEditor : public Editor {
 public:
 	SelectBoundEditor(Document* document) {
 		document_ = document;
+    type = EditorType::kBound;
 		build();
 	};
 	void build() {

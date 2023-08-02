@@ -1,6 +1,9 @@
+#pragma once
+
 #include "document.h"
 #include "event_system/event.h"
 #include "event_system/mouse_event.h"
+#include <optional>
 
 class EventHandler {
 public:
@@ -25,5 +28,7 @@ public:
   virtual void onMouseMove(const MouseEvent* event) = 0;
   virtual void onMouseDown(const MouseEvent* event) = 0;
   virtual void onMouseUp(const MouseEvent* event) = 0;
+
   Document* document_;
+  std::optional<MouseEvent> dragStartEvent_ = std::nullopt;
 };
