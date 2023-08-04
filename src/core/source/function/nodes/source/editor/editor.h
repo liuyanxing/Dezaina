@@ -49,6 +49,8 @@ public:
     mouseEventEmmiter_.buildHitTester(nodes);
   }
 
+  Document* getDocument() { return document_; };
+
   EditorType type;
   Document* document_;
   MouseEventEmmiter mouseEventEmmiter_;

@@ -97,8 +97,8 @@ public:
     }
   }
 
-  std::vector<Node*> getSelectedNodes() {
-    return selectedNodes_;
+  const std::vector<Node*>* getSelectedNodes() {
+    return &selectedNodes_;
   }
 
   void clearSelectedNodes() {
