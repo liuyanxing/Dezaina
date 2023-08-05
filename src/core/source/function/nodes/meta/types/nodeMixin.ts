@@ -1,5 +1,3 @@
-interface NodeChange_kiwi {}
-
 enum NodeType {
   NONE,
   DOCUMENT,
@@ -14,7 +12,7 @@ enum NodeType {
   RECTANGLE,
 }
 
-interface BaseNodeMixin extends NodeChange_kiwi {
+interface BaseNodeMixin {
   id: GUID;
   parent: GUID;
   name: string;

@@ -10,7 +10,7 @@ import {
 import { Graph } from "../utils/graph";
 import fs from "fs";
 import path from "path";
-import { outDir, schemaFileName } from "../const";
+import { outDir } from "../const";
 
  
 function groupByExtends(interfaces: DInterface[]) {
@@ -142,7 +142,7 @@ export function genKiwiSchema(declars: DDeclaraction[], template: string) {
   const mixined = mixinInterfacByGroup(grouped, interfaces);
   const schemaData = getSchemaData(mixined, enums);
   const reslut = Mustache.render(template, schemaData);
-  fs.writeFileSync(path.join(outDir, schemaFileName), reslut);
+  // fs.writeFileSync(path.join(outDir, schemaFileName), reslut);
   const res = declars.filter(declar => !declar.name.endsWith("_kiwi"))
   res.forEach(declar => {
     if (declar.type === DeclaractionType.Interface) {

@@ -2,7 +2,7 @@ import Mustache from "mustache";
 import { writeFileSync } from "fs";
 import { DDeclaraction, DeclaractionType, DEnum, DInterface } from "./types";
 import { execSync } from "child_process";
-import { desainaHppFileName, desainaSourceFileName, outDir, schemaFileName, schemaHppFileName } from "../const";
+import { desainaHppFileName, desainaSourceFileName, outDir, schemaFilePath, schemaHppFileName } from "../const";
 import { remvoeMark } from "./util";
 import path from "path";
 
@@ -37,9 +37,8 @@ function isPointer(interf: DInterface) {
 }
 
 export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDeclaraction[], template: string) {
-  const schemaPath = path.join(outDir, schemaFileName);
   const schemaHppPath = path.join(outDir, schemaHppFileName);
-  execSync(`kiwic --schema ${schemaPath} --cpp ${schemaHppPath}`, {
+  execSync(`kiwic --schema ${schemaFilePath} --cpp ${schemaHppPath}`, {
     cwd: __dirname,
   });
   const kiwiChangeMap: { [key: string]: string } = {};
