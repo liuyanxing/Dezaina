@@ -37,10 +37,10 @@ function isPointer(interf: DInterface) {
 }
 
 export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDeclaraction[], template: string) {
-  const schemaHppPath = path.join(outDir, schemaHppFileName);
-  execSync(`kiwic --schema ${schemaFilePath} --cpp ${schemaHppPath}`, {
-    cwd: __dirname,
-  });
+  // const schemaHppPath = path.join(outDir, schemaHppFileName);
+  // execSync(`kiwic --schema ${schemaFilePath} --cpp ${schemaHppPath}`, {
+  //   cwd: __dirname,
+  // });
   const kiwiChangeMap: { [key: string]: string } = {};
   mixinedInterfaces.forEach((item) => {
     if (item.type === DeclaractionType.Interface) {

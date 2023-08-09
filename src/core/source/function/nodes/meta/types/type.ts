@@ -28,18 +28,12 @@ enum NumberUnits {
   PIXELS,
   PERCENT,
 }
-interface KiwiNumber {
+interface Number {
   value: float | 0;
   units: NumberUnits;
 }
 
-interface RGB {
-  r: float | 0;
-  g: float | 0;
-  b: float | 0;
-}
-
-interface RGBA {
+interface Color {
   r: float | 0;
   g: float | 0;
   b: float | 0;
@@ -80,7 +74,7 @@ interface Effect {
 }
 
 interface DropShadowEffect extends Effect {
-  readonly color: RGBA
+  readonly color: Color
   readonly offset: Vector
   readonly radius: float | 0;
   readonly spread?: float | 0;
@@ -90,7 +84,7 @@ interface DropShadowEffect extends Effect {
 }
 
 interface InnerShadowEffect extends Effect {
-  readonly color: RGBA
+  readonly color: Color
   readonly offset: Vector
   readonly radius: float | 10
   readonly spread: float | 0;
@@ -112,16 +106,16 @@ enum PaintType {
   IMAGE,
 }
 
-enum ScaleMode{
-  FILL,
+enum ImageScaleMode{
+  STRETCH,
   FIT,
-  CROP,
+  FILL,
   TILE,
 }
 
 interface ColorStop {
   position: float | 0;
-  color: RGBA
+  color: Color
 }
 
 interface Paint {
@@ -132,20 +126,17 @@ interface Paint {
 }
 
 interface SolidPaint extends Paint {
-  color: RGB
+  color: Color
 }
 
 interface GradientPaint extends Paint{
-  gradientTransform: Matrix
-  gradientStops: ReadonlyArray<ColorStop>
+  transform: Matrix
+  stops: ReadonlyArray<ColorStop>
 }
 
 interface ImagePaint extends Paint {
-  scaleMode: ScaleMode
-  imageHash: string
-  imageTransform: Matrix
-  scalingFactor: float
-  rotation: float
+  imageScaleMode: ImageScaleMode
+  transform: Matrix
 }
 
 enum ConstraintType {
@@ -154,11 +145,6 @@ enum ConstraintType {
   MAX,
   STRETCH,
   SCALE,
-}
-
-interface Constraints {
-  horizontal: ConstraintType
-  vertical: ConstraintType
 }
 
 enum LayoutAlignType{
@@ -252,7 +238,7 @@ enum StrokeJoin {
   ROUND
 }
 
-enum Align {
+enum StrokeAlign {
   CENTER,
   INSIDE,
   OUTSIDE

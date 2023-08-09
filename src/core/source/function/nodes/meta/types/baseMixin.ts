@@ -41,13 +41,13 @@ interface MinimalStrokesMixin {
   styleIdForStrokeFill: StyleId
   strokeWeight: float | 0
   strokeJoin: StrokeJoin
-  strokeAlign: Align
+  strokeAlign: StrokeAlign
   dashPattern: ReadonlyArray<float>
   strokeGeometry: ReadonlyArray<Path>
 }
 
 interface MinimalFillsMixin {
-  fills: ReadonlyArray<Paint>
+  fillPaints: ReadonlyArray<Paint>
   styleIdForStrokeFill: StyleId
 }
 
