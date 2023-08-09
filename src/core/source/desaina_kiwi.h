@@ -1,5 +1,6 @@
 #include "kiwi.h"
 
+namespace Desaina_Kiwi {
 class BinarySchema {
 public:
   bool parse(kiwi::ByteBuffer &bb);
@@ -30803,3 +30804,5 @@ bool NodeFieldMapEntry::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, c
 }
 
 #endif
+
+}
