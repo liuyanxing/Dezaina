@@ -1,19 +1,21 @@
+#include "base_type.h"
+
 #include "document.h"
 
-using NodeChildren = std::vector<Node*>;
+using NodeChildren = vector<Node*>;
 namespace util {
 	inline NodeChildren& getChildren(Node* parent) {
 		if (parent->isDocument()) {
 			auto document = static_cast<Document*>(parent);
-			return document->get_children();
+			return document->getChildren();
 		}
 		else if (parent->isPage()) {
 			auto page = static_cast<PageNode*>(parent);
-			return page->get_children();
+			return page->getChildren();
 		}
 		else if (parent->isFrame()) {
-			auto frame = static_cast<FrameNodeBase*>(parent);
-			return frame->get_children();
+			auto frame = static_cast<FrameNode*>(parent);
+			return frame->getChildren();
 		}
 		else {
 			assert(false);

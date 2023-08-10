@@ -45,7 +45,7 @@ void Desaina::applyNodeChanges(const Desaina_Kiwi::Message& message) {
 
 void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 	GUID id;
-	auto* guid = node_change.id();
+	auto* guid = node_change.guid();
 	id.applyChange(*guid);
 	auto node_or_null = document.getNodeById(id);
 	Node* node;

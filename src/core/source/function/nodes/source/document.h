@@ -2,7 +2,6 @@
 
 #include "desaina_node.h"
 #include <cstdint>
-#include <vector>
 #include <memory>
 #include <optional>
 #include <functional>
@@ -16,21 +15,22 @@
 #include "frame.h"
 #include "rectangle.h"
 #include "editor/editor.h"
+#include "base_type.h"
+#include "container_node_base.h"
 
 #include "services/services.h"
 
 constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;
 
-using Node = BaseNodeMixin;
 using NodeMap = std::unordered_map<GUID, Node*>;
 
 class Desaina;
 
-class Document : public DocumentNodeBase {
+class Document : public DocumentNodeBase, public ContainerNodeBase {
 public:
 	Document(Services* services): services_(services) {
-		set_type(NodeType::DOCUMENT);
+    set_type(NodeType::DOCUMENT);
 	};
 	~Document() = default;
 	void close();
@@ -39,7 +39,7 @@ public:
 	T* createNode(const GUID& id) {
 		void* ptr = nodePool.allocate();
 		new (ptr) T();
-		static_cast<Node*>(ptr)->set_id(id);
+		static_cast<Node*>(ptr)->set_guid(id);
 		return static_cast<T*>(ptr);
 	};
 
@@ -66,7 +66,7 @@ public:
 	}
 
 	void addNodeToMap(Node* node) {
-		auto guid = node->get_id();
+		auto guid = node->get_guid();
 		idNodeMap_[guid] = node;
 	}
 
@@ -108,12 +108,11 @@ public:
 
 private:
 	bool isLoaded_ = false;
-	std::vector<std::shared_ptr<PageNode>> children;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMap idNodeMap_;
 	Services* services_;
   std::unique_ptr<Editor> editor_ = nullptr;
   PageNode* currentPage_ = nullptr;
   Node* hoverNode_ = nullptr;
-  std::vector<Node*> selectedNodes_{};
+  vector<Node*> selectedNodes_{};
 };

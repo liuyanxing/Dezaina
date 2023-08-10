@@ -1,8 +1,8 @@
 #pragma once
 
-#include "desaina_node.h"
+#include "container_node_base.h"
 
-class FrameNode : public FrameNodeBase {
+class FrameNode : public FrameNodeBase, public ContainerNodeBase {
 public:
 	FrameNode() {
 		set_type(NodeType::FRAME);

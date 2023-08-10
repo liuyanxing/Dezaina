@@ -3,7 +3,7 @@
 #include <cstdint>
 
 inline uint32_t hashGUID(const GUID& guid) {
-	return (guid.sessionId << (31 - 12)) + guid.localId;
+	return (guid.get_sessionID() << (31 - 12)) + guid.get_localID();
 }
 
 namespace std {

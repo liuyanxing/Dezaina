@@ -1,8 +1,8 @@
 #pragma once
 
-#include "desaina_node.h"
+#include "container_node_base.h"
 
-class PageNode : public PageNodeBase {
+class PageNode : public PageNodeBase, public ContainerNodeBase {
 public:
 	PageNode() {
 		set_type(NodeType::CANVAS);

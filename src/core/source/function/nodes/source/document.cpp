@@ -21,7 +21,7 @@ void Document::buildDocTree() {
 }
 
 void Document::createDefaultFile() {
-	set_name("new file");
+  set_name("new file");
 	auto page = createNode<PageNode>();
 	page->set_name("page 1");
 	appendChild(page);

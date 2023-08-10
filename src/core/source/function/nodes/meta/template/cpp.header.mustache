@@ -80,8 +80,8 @@ public:
 	{{&type}}& get_{{name}}() {
 		return {{name}};
 	};
-	void set_{{name}} (const {{&type}}& value) {
-		{{name}} = value;
+	void set_{{name}} (const {{&type}}& val) {
+		{{name}} = val;
 	};
 {{/isFunction}}
 {{#isFunction}}
@@ -129,6 +129,9 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
   }
 {{/isFunction}}
 {{/members}}
+{{#kiwiMixins}}
+	{{.}}::applyChange(change);
+{{/kiwiMixins}}
 }
 
 void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {
