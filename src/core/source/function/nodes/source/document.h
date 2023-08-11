@@ -19,6 +19,7 @@
 #include "container_node_base.h"
 
 #include "services/services.h"
+#include "editor/node_editor.h"
 
 constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;

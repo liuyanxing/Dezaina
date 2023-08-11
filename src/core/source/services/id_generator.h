@@ -6,7 +6,10 @@ class IdGenerator {
 public:
 	IdGenerator(uint32_t sessionId): sessionId_(sessionId){};
   GUID genId() {
-		return { sessionId_, localId_++ };
+    GUID id{};
+    id.set_sessionID(sessionId_);
+    id.set_localID(localId_++);
+    return id;
 	}
 private:
 	uint32_t sessionId_;

@@ -20,7 +20,7 @@ namespace desaina_change {
 		}
 	};
 
-	void createMessageBuffer(NodeType type, kiwi::ByteBuffer& buffer, Desaina* desaina) {
+	void createNodeChangeMessage(NodeType type, kiwi::ByteBuffer& buffer, Desaina* desaina) {
 		kiwi::MemoryPool pool;
 		Desaina_Kiwi::Message message;
 		message.set_type(Desaina_Kiwi::MessageType::NODE_CHANGES);
@@ -29,9 +29,9 @@ namespace desaina_change {
 		setNodeType(nodeChange, type);
 		auto* guid = pool.allocate<Desaina_Kiwi::GUID>();
 		auto id = desaina->services.idGenerator->genId();
-		guid->set_localId(id.localId);
-		guid->set_sessionId(id.sessionId);
-		nodeChange->set_id(guid);
+		guid->set_localID(id.get_localID());
+		guid->set_sessionID(id.get_sessionID());
+		nodeChange->set_guid(guid);
 		message.encode(buffer);
 	}
 }

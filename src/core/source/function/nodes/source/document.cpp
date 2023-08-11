@@ -1,17 +1,15 @@
-#include "desaina_kiwi.h"
-#include "desaina.h"
-#include "desaina_node.h"
-#include "util/node_children.h"
+#include "node_type.h"
 #include "document.h"
 #include "page.h"
+#include "util/container.h"
 
 void Document::buildDocTree() {
 	for (auto& [_, node] : idNodeMap_) {
-		const auto parentId = node->get_parent();
-		// 0 is the document node
-		if (parentId.localId == 0) {
+		if (node->isDocument()) {
 			continue;
 		}
+
+		const auto parentId = node->get_parentIndex().get_guid();
 		auto parentNodeOrNull = getValueFromMap(idNodeMap_, parentId);
 		if (parentNodeOrNull.has_value()) {
 			auto parentNode = parentNodeOrNull.value();

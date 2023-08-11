@@ -23,7 +23,7 @@ public:
   }
 
   void addEventListener(EventType type, const ListenerFunc& func) {
-    listeners_.emplace_back(type, func);
+    listeners_.push_back({type, func});
   }
 
   void addHitTestNode(HitTestNode* node) {

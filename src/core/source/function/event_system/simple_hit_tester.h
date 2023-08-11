@@ -7,7 +7,7 @@ public:
   HitTestNode* getNodeContainsPoint(const SkPoint& point) override {
     std::vector<HitTestNode*> nodes;
     for (auto& node : nodes_) {
-      if (node.area.contains(point.x(), point.y())) {
+      if (node.rect.contains(point.x(), point.y())) {
         return &node;
       }
     }
@@ -17,7 +17,7 @@ public:
   std::vector<HitTestNode*> getNodesIntersectWithRect(const SkRect& rect) override {
     std::vector<HitTestNode*> nodes;
     for (auto& node : nodes_) {
-      if (node.area.intersects(rect)) {
+      if (node.rect.intersects(rect)) {
         nodes.push_back(&node);
       }
     }
@@ -29,12 +29,6 @@ public:
   }
 
   void deleteNode(HitTestNode* node) override {
-    for (auto iter = nodes_.begin(); iter != nodes_.end(); iter++) {
-      if (iter->index == node->index) {
-        nodes_.erase(iter);
-        break;
-      }
-    }
   }
 
 

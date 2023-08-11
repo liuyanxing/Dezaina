@@ -1,3 +1,5 @@
+#pragma once
+
 #include "kiwi.h"
 
 namespace Desaina_Kiwi {

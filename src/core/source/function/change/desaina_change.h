@@ -4,5 +4,5 @@
 #include "desaina.h"
 
 namespace desaina_change {
-	void createMessageBuffer(NodeType type, kiwi::ByteBuffer& buffer, Desaina* desaina);
+	void createNodeChangeMessage(NodeType type, kiwi::ByteBuffer& buffer, Desaina* desaina);
 }
