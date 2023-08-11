@@ -19,7 +19,9 @@ set(TARGET_LINK_LIBS skia)
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.cpp")
 add_library(${TARGET_NAME} STATIC ${SOURCE_FILES})
 
-add_dependencies(${TARGET_NAME} build_skia)
+if (BUILD_SKIA)
+  add_dependencies(${TARGET_NAME} build_skia)
+endif()
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 20)
 
