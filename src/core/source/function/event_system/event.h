@@ -1,7 +1,7 @@
 #pragma once
 
-#include "desaina_node.h"
 #include <functional>
+#include "node_type.h"
 
 enum class EventType {
   kNone = 0,
@@ -12,7 +12,6 @@ enum class EventType {
   kAny,
 };
 
-using Node = BaseNodeMixin;
 struct Event {
   EventType type;  
   Node* target;

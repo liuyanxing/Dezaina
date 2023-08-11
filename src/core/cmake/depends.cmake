@@ -31,7 +31,7 @@ add_custom_target(
 		build_skia
 		WORKING_DIRECTORY ${skia_SOURCE_DIR}
 		COMMAND python tools/git-sync-deps
-		COMMAND "${gn_path};gen;${skia_BINARY_DIR}/$<CONFIG>;--args=is_debug=$<IF:$<CONFIG:Debug>,true,false> is_official_build=false is_component_build=false skia_use_system_freetype2=false skia_use_freetype=true"
+		COMMAND "${gn_path};gen;${skia_BINARY_DIR}/$<CONFIG>;--args=is_debug=true is_official_build=false is_component_build=false skia_use_system_freetype2=false skia_use_freetype=true"
 		COMMAND ninja -C ${skia_BINARY_DIR}/$<CONFIG> skia skunicode skshaper skparagraph
 		VERBATIM
 		COMMAND_EXPAND_LISTS

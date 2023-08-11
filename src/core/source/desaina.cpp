@@ -1,8 +1,9 @@
-#include "event_system/event.h"
-#include <cstdint>
+
 #define IMPLEMENT_KIWI_H
 #define IMPLEMENT_SCHEMA_H
 
+#include "event_system/event.h"
+#include <cstdint>
 #include "desaina_node.h"
 #include "desaina.h"
 

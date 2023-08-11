@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/depends.cmake)
+
 set(TARGET_LINK_DIRS ${SKIA_LIB_DIR})
 set(TARGET_INCLUE_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/source/function
@@ -17,6 +18,8 @@ set(TARGET_LINK_LIBS skia)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.cpp")
 add_library(${TARGET_NAME} STATIC ${SOURCE_FILES})
+
+add_dependencies(${TARGET_NAME} build_skia)
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 20)
 
