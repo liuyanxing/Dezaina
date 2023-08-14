@@ -1,8 +1,10 @@
-#pragma once
-
 #include "kiwi.h"
 
 namespace Desaina_Kiwi {
+
+#ifndef INCLUDE_DESAINA_KIWI_H
+#define INCLUDE_DESAINA_KIWI_H
+
 class BinarySchema {
 public:
   bool parse(kiwi::ByteBuffer &bb);
@@ -14,7 +16,9 @@ public:
   bool skipFontMetaDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipFontVariationField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTextDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipDerivedTextDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipHyperlinkBoxField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipMentionBoxField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipBaselineField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipGlyphField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipDecorationField(kiwi::ByteBuffer &bb, uint32_t id) const;
@@ -55,8 +59,10 @@ public:
   bool skipConnectorTextMidpointField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipLibraryMoveInfoField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipLibraryMoveHistoryItemField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipDeveloperRelatedLinkField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipWidgetPointerField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipEditInfoField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipSectionStatusInfoField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipNodeChangeField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipVideoPlaybackField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipWidgetHoverStyleField(kiwi::ByteBuffer &bb, uint32_t id) const;
@@ -67,6 +73,8 @@ public:
   bool skipVariableDataMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipVariableModeBySetMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipVariableModeBySetMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipCodeSyntaxMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipCodeSyntaxMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTableRowColumnPositionMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTableRowColumnPositionMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTableRowColumnSizeMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
@@ -92,6 +100,7 @@ public:
   bool skipStateGroupPropertyValueOrderField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTextListDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTextLineDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipDerivedTextLineDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipPrototypeInteractionField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipPrototypeEventField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipPrototypeVariableTargetField(kiwi::ByteBuffer &bb, uint32_t id) const;
@@ -100,6 +109,7 @@ public:
   bool skipPrototypeStartingPointField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipKeyTriggerField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipHyperlinkField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipMentionField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipEmbedDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipStampDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipLinkPreviewDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
@@ -123,6 +133,7 @@ public:
   bool skipCursorReactionField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipTimerInfoField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipMusicInfoField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipPresenterNominationField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipPresenterInfoField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipClientBroadcastField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipMessageField(kiwi::ByteBuffer &bb, uint32_t id) const;
@@ -141,6 +152,12 @@ public:
   bool skipMigrationStatusField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipNodeFieldMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
   bool skipNodeFieldMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipARIAAttributeAnyValueField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipARIAAttributeDataField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipARIAAttributesMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipARIAAttributesMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipHandoffStatusMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const;
+  bool skipHandoffStatusMapField(kiwi::ByteBuffer &bb, uint32_t id) const;
 
 private:
   kiwi::BinarySchema _schema;
@@ -151,7 +168,9 @@ private:
   uint32_t _indexFontMetaData = 0;
   uint32_t _indexFontVariation = 0;
   uint32_t _indexTextData = 0;
+  uint32_t _indexDerivedTextData = 0;
   uint32_t _indexHyperlinkBox = 0;
+  uint32_t _indexMentionBox = 0;
   uint32_t _indexBaseline = 0;
   uint32_t _indexGlyph = 0;
   uint32_t _indexDecoration = 0;
@@ -192,8 +211,10 @@ private:
   uint32_t _indexConnectorTextMidpoint = 0;
   uint32_t _indexLibraryMoveInfo = 0;
   uint32_t _indexLibraryMoveHistoryItem = 0;
+  uint32_t _indexDeveloperRelatedLink = 0;
   uint32_t _indexWidgetPointer = 0;
   uint32_t _indexEditInfo = 0;
+  uint32_t _indexSectionStatusInfo = 0;
   uint32_t _indexNodeChange = 0;
   uint32_t _indexVideoPlayback = 0;
   uint32_t _indexWidgetHoverStyle = 0;
@@ -204,6 +225,8 @@ private:
   uint32_t _indexVariableDataMapEntry = 0;
   uint32_t _indexVariableModeBySetMap = 0;
   uint32_t _indexVariableModeBySetMapEntry = 0;
+  uint32_t _indexCodeSyntaxMap = 0;
+  uint32_t _indexCodeSyntaxMapEntry = 0;
   uint32_t _indexTableRowColumnPositionMap = 0;
   uint32_t _indexTableRowColumnPositionMapEntry = 0;
   uint32_t _indexTableRowColumnSizeMap = 0;
@@ -229,6 +252,7 @@ private:
   uint32_t _indexStateGroupPropertyValueOrder = 0;
   uint32_t _indexTextListData = 0;
   uint32_t _indexTextLineData = 0;
+  uint32_t _indexDerivedTextLineData = 0;
   uint32_t _indexPrototypeInteraction = 0;
   uint32_t _indexPrototypeEvent = 0;
   uint32_t _indexPrototypeVariableTarget = 0;
@@ -237,6 +261,7 @@ private:
   uint32_t _indexPrototypeStartingPoint = 0;
   uint32_t _indexKeyTrigger = 0;
   uint32_t _indexHyperlink = 0;
+  uint32_t _indexMention = 0;
   uint32_t _indexEmbedData = 0;
   uint32_t _indexStampData = 0;
   uint32_t _indexLinkPreviewData = 0;
@@ -260,6 +285,7 @@ private:
   uint32_t _indexCursorReaction = 0;
   uint32_t _indexTimerInfo = 0;
   uint32_t _indexMusicInfo = 0;
+  uint32_t _indexPresenterNomination = 0;
   uint32_t _indexPresenterInfo = 0;
   uint32_t _indexClientBroadcast = 0;
   uint32_t _indexMessage = 0;
@@ -278,6 +304,12 @@ private:
   uint32_t _indexMigrationStatus = 0;
   uint32_t _indexNodeFieldMap = 0;
   uint32_t _indexNodeFieldMapEntry = 0;
+  uint32_t _indexARIAAttributeAnyValue = 0;
+  uint32_t _indexARIAAttributeData = 0;
+  uint32_t _indexARIAAttributesMap = 0;
+  uint32_t _indexARIAAttributesMapEntry = 0;
+  uint32_t _indexHandoffStatusMapEntry = 0;
+  uint32_t _indexHandoffStatusMap = 0;
 };
 
 enum class MessageType : uint32_t {
@@ -297,6 +329,8 @@ enum class MessageType : uint32_t {
   DIFF = 13,
   CLIENT_BROADCAST = 14,
   JOIN_START_JOURNALED = 15,
+  STREAM_START = 16,
+  STREAM_END = 17,
 };
 
 enum class Axis : uint32_t {
@@ -352,6 +386,7 @@ enum class NodeType : uint32_t {
   TABLE = 29,
   TABLE_CELL = 30,
   VARIABLE_SET = 31,
+  SLIDE = 32,
 };
 
 enum class ShapeWithTextType : uint32_t {
@@ -367,6 +402,24 @@ enum class ShapeWithTextType : uint32_t {
   ENG_QUEUE = 9,
   ENG_FILE = 10,
   ENG_FOLDER = 11,
+  TRAPEZOID = 12,
+  PREDEFINED_PROCESS = 13,
+  SHIELD = 14,
+  DOCUMENT_SINGLE = 15,
+  DOCUMENT_MULTIPLE = 16,
+  MANUAL_INPUT = 17,
+  HEXAGON = 18,
+  CHEVRON = 19,
+  PENTAGON = 20,
+  OCTAGON = 21,
+  STAR = 22,
+  PLUS = 23,
+  ARROW_LEFT = 24,
+  ARROW_RIGHT = 25,
+  SUMMING_JUNCTION = 26,
+  OR = 27,
+  SPEECH_BUBBLE = 28,
+  INTERNAL_STORAGE = 29,
 };
 
 enum class BlendMode : uint32_t {
@@ -603,6 +656,7 @@ enum class StackJustify : uint32_t {
   CENTER = 1,
   MAX = 2,
   SPACE_EVENLY = 3,
+  SPACE_BETWEEN = 4,
 };
 
 enum class StackSize : uint32_t {
@@ -619,6 +673,11 @@ enum class StackPositioning : uint32_t {
 enum class StackWrap : uint32_t {
   NO_WRAP = 0,
   WRAP = 1,
+};
+
+enum class StackCounterAlignContent : uint32_t {
+  AUTO = 0,
+  SPACE_BETWEEN = 1,
 };
 
 enum class ConnectionType : uint32_t {
@@ -647,6 +706,8 @@ enum class InteractionType : uint32_t {
   ON_VOICE = 11,
   ON_MEDIA_HIT = 12,
   ON_MEDIA_END = 13,
+  MOUSE_ENTER = 14,
+  MOUSE_LEAVE = 15,
 };
 
 enum class TransitionType : uint32_t {
@@ -1019,6 +1080,12 @@ enum class NavigationType : uint32_t {
   SCROLL_TO = 4,
 };
 
+enum class ExportColorProfile : uint32_t {
+  DOCUMENT = 0,
+  SRGB = 1,
+  DISPLAY_P3_V4 = 2,
+};
+
 enum class ExportSVGIDMode : uint32_t {
   IF_NEEDED = 0,
   ALWAYS = 1,
@@ -1047,6 +1114,7 @@ enum class ConnectorMagnet : uint32_t {
   LEFT = 3,
   BOTTOM = 4,
   RIGHT = 5,
+  CENTER = 6,
 };
 
 enum class ConnectorTextSection : uint32_t {
@@ -1062,12 +1130,18 @@ enum class ConnectorLineStyle : uint32_t {
 enum class EditorType : uint32_t {
   DESIGN = 0,
   WHITEBOARD = 1,
+  SLIDES = 2,
 };
 
 enum class MaskType : uint32_t {
   ALPHA = 0,
   OUTLINE = 1,
   LUMINANCE = 2,
+};
+
+enum class SectionStatus : uint32_t {
+  NONE = 0,
+  BUILD = 1,
 };
 
 enum class MediaAction : uint32_t {
@@ -1107,6 +1181,10 @@ enum class VariableField : uint32_t {
   BORDER_RIGHT_WEIGHT = 21,
   VARIANT_PROPERTIES = 22,
   STACK_COUNTER_SPACING = 23,
+  MIN_WIDTH = 24,
+  MAX_WIDTH = 25,
+  MIN_HEIGHT = 26,
+  MAX_HEIGHT = 27,
 };
 
 enum class AgendaItemType : uint32_t {
@@ -1195,6 +1273,12 @@ enum class LineType : uint32_t {
   HEADER = 4,
 };
 
+enum class SourceDirectionality : uint32_t {
+  AUTO = 0,
+  LTR = 1,
+  RTL = 2,
+};
+
 enum class Directionality : uint32_t {
   LTR = 0,
   RTL = 1,
@@ -1211,6 +1295,11 @@ enum class TriggerDevice : uint32_t {
   XBOX_ONE = 2,
   PS4 = 3,
   SWITCH_PRO = 4,
+};
+
+enum class MentionSource : uint32_t {
+  DEFAULT = 0,
+  COPY_DUPLICATE = 1,
 };
 
 enum class TransitionDirection : uint32_t {
@@ -1272,6 +1361,25 @@ enum class ExpressionFunction : uint32_t {
   STRINGIFY = 14,
   TERNARY = 15,
   VAR_MODE_LOOKUP = 16,
+};
+
+enum class VariableScope : uint32_t {
+  ALL_SCOPES = 0,
+  TEXT_CONTENT = 1,
+  CORNER_RADIUS = 2,
+  WIDTH_HEIGHT = 3,
+  GAP = 4,
+  ALL_FILLS = 5,
+  FRAME_FILL = 6,
+  SHAPE_FILL = 7,
+  TEXT_FILL = 8,
+  STROKE = 9,
+};
+
+enum class CodeSyntaxPlatform : uint32_t {
+  WEB = 0,
+  ANDROID = 1,
+  iOS = 2,
 };
 
 enum class HTMLTag : uint32_t {
@@ -1355,6 +1463,35 @@ enum class HTMLTag : uint32_t {
 
 enum class ARIARole : uint32_t {
   AUTO = 0,
+  NONE = 52,
+  APPLICATION = 30,
+  BANNER = 67,
+  COMPLEMENTARY = 68,
+  CONTENTINFO = 69,
+  FORM = 70,
+  MAIN = 71,
+  NAVIGATION = 72,
+  REGION = 73,
+  SEARCH = 74,
+  SEPARATOR = 13,
+  ARTICLE = 31,
+  COLUMNHEADER = 35,
+  DEFINITION = 36,
+  DIRECTORY = 38,
+  DOCUMENT = 39,
+  GROUP = 44,
+  HEADING = 45,
+  IMG = 46,
+  LIST = 48,
+  LISTITEM = 49,
+  MATH = 50,
+  NOTE = 53,
+  PRESENTATION = 55,
+  ROW = 56,
+  ROWGROUP = 57,
+  ROWHEADER = 58,
+  TABLE = 62,
+  TOOLBAR = 65,
   BUTTON = 1,
   CHECKBOX = 2,
   GRIDCELL = 3,
@@ -1366,11 +1503,8 @@ enum class ARIARole : uint32_t {
   PROGRESSBAR = 9,
   RADIO = 10,
   SCROLLBAR = 11,
-  SEARCHBOX = 12,
-  SEPARATOR = 13,
   SLIDER = 14,
   SPINBUTTON = 15,
-  SWITCH = 16,
   TAB = 17,
   TABPANEL = 18,
   TEXTBOX = 19,
@@ -1384,51 +1518,7 @@ enum class ARIARole : uint32_t {
   TABLIST = 27,
   TREE = 28,
   TREEGRID = 29,
-  APPLICATION = 30,
-  ARTICLE = 31,
-  BLOCKQUOTE = 32,
-  CAPTION = 33,
-  CELL = 34,
-  COLUMNHEADER = 35,
-  DEFINITION = 36,
-  DELETION = 37,
-  DIRECTORY = 38,
-  DOCUMENT = 39,
-  EMPHASIS = 40,
-  FEED = 41,
-  FIGURE = 42,
-  GENERIC = 43,
-  GROUP = 44,
-  HEADING = 45,
-  IMG = 46,
-  INSERTION = 47,
-  LIST = 48,
-  LISTITEM = 49,
-  MATH = 50,
-  METER = 51,
-  NONE = 52,
-  NOTE = 53,
-  PARAGRAPH = 54,
-  PRESENTATION = 55,
-  ROW = 56,
-  ROWGROUP = 57,
-  ROWHEADER = 58,
-  STRONG = 59,
-  SUBSCRIPT = 60,
-  SUPERSCRIPT = 61,
-  TABLE = 62,
-  TERM = 63,
-  TIME = 64,
-  TOOLBAR = 65,
   TOOLTIP = 66,
-  BANNER = 67,
-  COMPLEMENTARY = 68,
-  CONTENTINFO = 69,
-  FORM = 70,
-  MAIN = 71,
-  NAVIGATION = 72,
-  REGION = 73,
-  SEARCH = 74,
   ALERT = 75,
   LOG = 76,
   MARQUEE = 77,
@@ -1436,6 +1526,62 @@ enum class ARIARole : uint32_t {
   TIMER = 79,
   ALERTDIALOG = 80,
   DIALOG = 81,
+  SEARCHBOX = 12,
+  SWITCH = 16,
+  BLOCKQUOTE = 32,
+  CAPTION = 33,
+  CELL = 34,
+  DELETION = 37,
+  EMPHASIS = 40,
+  FEED = 41,
+  FIGURE = 42,
+  GENERIC = 43,
+  INSERTION = 47,
+  METER = 51,
+  PARAGRAPH = 54,
+  STRONG = 59,
+  SUBSCRIPT = 60,
+  SUPERSCRIPT = 61,
+  TERM = 63,
+  TIME = 64,
+  IMAGE = 82,
+  HEADING_1 = 83,
+  HEADING_2 = 84,
+  HEADING_3 = 85,
+  HEADING_4 = 86,
+  HEADING_5 = 87,
+  HEADING_6 = 88,
+  HEADER = 89,
+  FOOTER = 90,
+  SIDEBAR = 91,
+  SECTION = 92,
+  MAINCONTENT = 93,
+  TABLE_CELL = 94,
+  WIDGET = 95,
+};
+
+enum class ColorProfile : uint32_t {
+  SRGB = 0,
+  DISPLAY_P3 = 1,
+};
+
+enum class DocumentColorProfile : uint32_t {
+  LEGACY = 0,
+  SRGB = 1,
+  DISPLAY_P3 = 2,
+};
+
+enum class ChildReadingDirection : uint32_t {
+  NONE = 0,
+  LEFT_TO_RIGHT = 1,
+  RIGHT_TO_LEFT = 2,
+};
+
+enum class ARIAAttributeDataType : uint32_t {
+  BOOLEAN = 0,
+  STRING = 1,
+  FLOAT = 2,
+  INT = 3,
 };
 
 class GUID;
@@ -1458,7 +1604,9 @@ class Paint;
 class FontMetaData;
 class FontVariation;
 class TextData;
+class DerivedTextData;
 class HyperlinkBox;
+class MentionBox;
 class Baseline;
 class Glyph;
 class Decoration;
@@ -1499,8 +1647,10 @@ class ConnectorControlPoint;
 class ConnectorTextMidpoint;
 class LibraryMoveInfo;
 class LibraryMoveHistoryItem;
+class DeveloperRelatedLink;
 class WidgetPointer;
 class EditInfo;
+class SectionStatusInfo;
 class NodeChange;
 class VideoPlayback;
 class WidgetHoverStyle;
@@ -1511,6 +1661,8 @@ class VariableDataMap;
 class VariableDataMapEntry;
 class VariableModeBySetMap;
 class VariableModeBySetMapEntry;
+class CodeSyntaxMap;
+class CodeSyntaxMapEntry;
 class TableRowColumnPositionMap;
 class TableRowColumnPositionMapEntry;
 class TableRowColumnSizeMap;
@@ -1536,6 +1688,7 @@ class InternalDataForTest;
 class StateGroupPropertyValueOrder;
 class TextListData;
 class TextLineData;
+class DerivedTextLineData;
 class PrototypeInteraction;
 class PrototypeEvent;
 class PrototypeVariableTarget;
@@ -1544,6 +1697,7 @@ class PrototypeAction;
 class PrototypeStartingPoint;
 class KeyTrigger;
 class Hyperlink;
+class Mention;
 class EmbedData;
 class StampData;
 class LinkPreviewData;
@@ -1570,6 +1724,7 @@ class NodeChangesMetadata;
 class CursorReaction;
 class TimerInfo;
 class MusicInfo;
+class PresenterNomination;
 class PresenterInfo;
 class ClientBroadcast;
 class Message;
@@ -1588,6 +1743,12 @@ class OptionalVector;
 class MigrationStatus;
 class NodeFieldMap;
 class NodeFieldMapEntry;
+class ARIAAttributeAnyValue;
+class ARIAAttributeData;
+class ARIAAttributesMap;
+class ARIAAttributesMapEntry;
+class HandoffStatusMapEntry;
+class HandoffStatusMap;
 
 class GUID {
 public:
@@ -2092,6 +2253,10 @@ public:
   const ImageScaleMode *imageScaleMode() const;
   void set_imageScaleMode(const ImageScaleMode &value);
 
+  bool *imageShouldColorManage();
+  const bool *imageShouldColorManage() const;
+  void set_imageShouldColorManage(const bool &value);
+
   float *rotation();
   const float *rotation() const;
   void set_rotation(const float &value);
@@ -2154,6 +2319,7 @@ private:
   uint32_t _data_originalImageWidth = {};
   uint32_t _data_originalImageHeight = {};
   bool _data_visible = {};
+  bool _data_imageShouldColorManage = {};
 };
 
 class FontMetaData {
@@ -2286,6 +2452,18 @@ public:
   const kiwi::Array<float> *logicalIndexToCharacterOffsetMap() const;
   kiwi::Array<float> &set_logicalIndexToCharacterOffsetMap(kiwi::MemoryPool &pool, uint32_t count);
 
+  float *minContentHeight();
+  const float *minContentHeight() const;
+  void set_minContentHeight(const float &value);
+
+  kiwi::Array<MentionBox> *mentionBoxes();
+  const kiwi::Array<MentionBox> *mentionBoxes() const;
+  kiwi::Array<MentionBox> &set_mentionBoxes(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<DerivedTextLineData> *derivedLines();
+  const kiwi::Array<DerivedTextLineData> *derivedLines() const;
+  kiwi::Array<DerivedTextLineData> &set_derivedLines(kiwi::MemoryPool &pool, uint32_t count);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -2304,7 +2482,81 @@ private:
   kiwi::Array<HyperlinkBox> _data_hyperlinkBoxes = {};
   kiwi::Array<TextLineData> _data_lines = {};
   kiwi::Array<float> _data_logicalIndexToCharacterOffsetMap = {};
+  kiwi::Array<MentionBox> _data_mentionBoxes = {};
+  kiwi::Array<DerivedTextLineData> _data_derivedLines = {};
   uint32_t _data_layoutVersion = {};
+  int32_t _data_truncationStartIndex = {};
+  float _data_truncatedHeight = {};
+  float _data_minContentHeight = {};
+};
+
+class DerivedTextData {
+public:
+  DerivedTextData() { (void)_flags; }
+
+  Vector *layoutSize();
+  const Vector *layoutSize() const;
+  void set_layoutSize(Vector *value);
+
+  kiwi::Array<Baseline> *baselines();
+  const kiwi::Array<Baseline> *baselines() const;
+  kiwi::Array<Baseline> &set_baselines(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<Glyph> *glyphs();
+  const kiwi::Array<Glyph> *glyphs() const;
+  kiwi::Array<Glyph> &set_glyphs(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<Decoration> *decorations();
+  const kiwi::Array<Decoration> *decorations() const;
+  kiwi::Array<Decoration> &set_decorations(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<Blockquote> *blockquotes();
+  const kiwi::Array<Blockquote> *blockquotes() const;
+  kiwi::Array<Blockquote> &set_blockquotes(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<FontMetaData> *fontMetaData();
+  const kiwi::Array<FontMetaData> *fontMetaData() const;
+  kiwi::Array<FontMetaData> &set_fontMetaData(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<HyperlinkBox> *hyperlinkBoxes();
+  const kiwi::Array<HyperlinkBox> *hyperlinkBoxes() const;
+  kiwi::Array<HyperlinkBox> &set_hyperlinkBoxes(kiwi::MemoryPool &pool, uint32_t count);
+
+  int32_t *truncationStartIndex();
+  const int32_t *truncationStartIndex() const;
+  void set_truncationStartIndex(const int32_t &value);
+
+  float *truncatedHeight();
+  const float *truncatedHeight() const;
+  void set_truncatedHeight(const float &value);
+
+  kiwi::Array<float> *logicalIndexToCharacterOffsetMap();
+  const kiwi::Array<float> *logicalIndexToCharacterOffsetMap() const;
+  kiwi::Array<float> &set_logicalIndexToCharacterOffsetMap(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<MentionBox> *mentionBoxes();
+  const kiwi::Array<MentionBox> *mentionBoxes() const;
+  kiwi::Array<MentionBox> &set_mentionBoxes(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::Array<DerivedTextLineData> *derivedLines();
+  const kiwi::Array<DerivedTextLineData> *derivedLines() const;
+  kiwi::Array<DerivedTextLineData> &set_derivedLines(kiwi::MemoryPool &pool, uint32_t count);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  Vector *_data_layoutSize = {};
+  kiwi::Array<Baseline> _data_baselines = {};
+  kiwi::Array<Glyph> _data_glyphs = {};
+  kiwi::Array<Decoration> _data_decorations = {};
+  kiwi::Array<Blockquote> _data_blockquotes = {};
+  kiwi::Array<FontMetaData> _data_fontMetaData = {};
+  kiwi::Array<HyperlinkBox> _data_hyperlinkBoxes = {};
+  kiwi::Array<float> _data_logicalIndexToCharacterOffsetMap = {};
+  kiwi::Array<MentionBox> _data_mentionBoxes = {};
+  kiwi::Array<DerivedTextLineData> _data_derivedLines = {};
   int32_t _data_truncationStartIndex = {};
   float _data_truncatedHeight = {};
 };
@@ -2340,6 +2592,42 @@ private:
   int32_t _data_hyperlinkID = {};
 };
 
+class MentionBox {
+public:
+  MentionBox() { (void)_flags; }
+
+  Rect *bounds();
+  const Rect *bounds() const;
+  void set_bounds(Rect *value);
+
+  uint32_t *startIndex();
+  const uint32_t *startIndex() const;
+  void set_startIndex(const uint32_t &value);
+
+  uint32_t *endIndex();
+  const uint32_t *endIndex() const;
+  void set_endIndex(const uint32_t &value);
+
+  bool *isValid();
+  const bool *isValid() const;
+  void set_isValid(const bool &value);
+
+  uint32_t *mentionKey();
+  const uint32_t *mentionKey() const;
+  void set_mentionKey(const uint32_t &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  Rect *_data_bounds = {};
+  uint32_t _data_startIndex = {};
+  uint32_t _data_endIndex = {};
+  uint32_t _data_mentionKey = {};
+  bool _data_isValid = {};
+};
+
 class Baseline {
 public:
   Baseline() { (void)_flags; }
@@ -2364,6 +2652,10 @@ public:
   const float *lineAscent() const;
   void set_lineAscent(const float &value);
 
+  float *ignoreLeadingTrim();
+  const float *ignoreLeadingTrim() const;
+  void set_ignoreLeadingTrim(const float &value);
+
   uint32_t *firstCharacter();
   const uint32_t *firstCharacter() const;
   void set_firstCharacter(const uint32_t &value);
@@ -2382,6 +2674,7 @@ private:
   float _data_lineY = {};
   float _data_lineHeight = {};
   float _data_lineAscent = {};
+  float _data_ignoreLeadingTrim = {};
   uint32_t _data_firstCharacter = {};
   uint32_t _data_endCharacter = {};
 };
@@ -2414,12 +2707,17 @@ public:
   const float *advance() const;
   void set_advance(const float &value);
 
+  kiwi::Array<uint32_t> *emojiCodePoints();
+  const kiwi::Array<uint32_t> *emojiCodePoints() const;
+  kiwi::Array<uint32_t> &set_emojiCodePoints(kiwi::MemoryPool &pool, uint32_t count);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
 private:
   uint32_t _flags[1] = {};
   Vector *_data_position = {};
+  kiwi::Array<uint32_t> _data_emojiCodePoints = {};
   uint32_t _data_commandsBlob = {};
   uint32_t _data_styleID = {};
   float _data_fontSize = {};
@@ -3034,6 +3332,10 @@ public:
   const bool *useAbsoluteBounds() const;
   void set_useAbsoluteBounds(const bool &value);
 
+  ExportColorProfile *colorProfile();
+  const ExportColorProfile *colorProfile() const;
+  void set_colorProfile(const ExportColorProfile &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -3043,6 +3345,7 @@ private:
   ImageType _data_imageType = {};
   ExportConstraint *_data_constraint = {};
   ExportSVGIDMode _data_svgIDMode = {};
+  ExportColorProfile _data_colorProfile = {};
   bool _data_svgDataName = {};
   bool _data_svgOutlineText = {};
   bool _data_contentsOnly = {};
@@ -3445,6 +3748,37 @@ private:
   kiwi::String _data_sourceComponentKey = {};
 };
 
+class DeveloperRelatedLink {
+public:
+  DeveloperRelatedLink() { (void)_flags; }
+
+  kiwi::String *nodeId();
+  const kiwi::String *nodeId() const;
+  void set_nodeId(const kiwi::String &value);
+
+  kiwi::String *fileKey();
+  const kiwi::String *fileKey() const;
+  void set_fileKey(const kiwi::String &value);
+
+  kiwi::String *linkName();
+  const kiwi::String *linkName() const;
+  void set_linkName(const kiwi::String &value);
+
+  kiwi::String *linkUrl();
+  const kiwi::String *linkUrl() const;
+  void set_linkUrl(const kiwi::String &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  kiwi::String _data_nodeId = {};
+  kiwi::String _data_fileKey = {};
+  kiwi::String _data_linkName = {};
+  kiwi::String _data_linkUrl = {};
+};
+
 class WidgetPointer {
 public:
   WidgetPointer() { (void)_flags; }
@@ -3469,12 +3803,43 @@ public:
   const kiwi::String *timestampIso8601() const;
   void set_timestampIso8601(const kiwi::String &value);
 
+  kiwi::String *userId();
+  const kiwi::String *userId() const;
+  void set_userId(const kiwi::String &value);
+
+  uint32_t *lastEditedAt();
+  const uint32_t *lastEditedAt() const;
+  void set_lastEditedAt(const uint32_t &value);
+
+  uint32_t *createdAt();
+  const uint32_t *createdAt() const;
+  void set_createdAt(const uint32_t &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
 private:
   uint32_t _flags[1] = {};
   kiwi::String _data_timestampIso8601 = {};
+  kiwi::String _data_userId = {};
+  uint32_t _data_lastEditedAt = {};
+  uint32_t _data_createdAt = {};
+};
+
+class SectionStatusInfo {
+public:
+  SectionStatusInfo() { (void)_flags; }
+
+  SectionStatus *status();
+  const SectionStatus *status() const;
+  void set_status(const SectionStatus &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  SectionStatus _data_status = {};
 };
 
 class NodeChange {
@@ -3588,6 +3953,14 @@ public:
   kiwi::String *sortPosition();
   const kiwi::String *sortPosition() const;
   void set_sortPosition(const kiwi::String &value);
+
+  SharedStyleMasterData *ojansSuperSecretNodeField();
+  const SharedStyleMasterData *ojansSuperSecretNodeField() const;
+  void set_ojansSuperSecretNodeField(SharedStyleMasterData *value);
+
+  SharedStyleMasterData *sevMoonlitLilyData();
+  const SharedStyleMasterData *sevMoonlitLilyData() const;
+  void set_sevMoonlitLilyData(SharedStyleMasterData *value);
 
   GUID *inheritFillStyleID();
   const GUID *inheritFillStyleID() const;
@@ -3841,6 +4214,10 @@ public:
   const uint32_t *textDataTag() const;
   void set_textDataTag(const uint32_t &value);
 
+  DerivedTextData *derivedTextData();
+  const DerivedTextData *derivedTextData() const;
+  void set_derivedTextData(DerivedTextData *value);
+
   bool *fontVariantCommonLigatures();
   const bool *fontVariantCommonLigatures() const;
   void set_fontVariantCommonLigatures(const bool &value);
@@ -3897,13 +4274,25 @@ public:
   const LeadingTrim *leadingTrim() const;
   void set_leadingTrim(const LeadingTrim &value);
 
-  bool *hangingQuote();
-  const bool *hangingQuote() const;
-  void set_hangingQuote(const bool &value);
+  bool *hangingPunctuation();
+  const bool *hangingPunctuation() const;
+  void set_hangingPunctuation(const bool &value);
 
   bool *hangingList();
   const bool *hangingList() const;
   void set_hangingList(const bool &value);
+
+  int32_t *maxLines();
+  const int32_t *maxLines() const;
+  void set_maxLines(const int32_t &value);
+
+  SectionStatus *sectionStatus();
+  const SectionStatus *sectionStatus() const;
+  void set_sectionStatus(const SectionStatus &value);
+
+  SectionStatusInfo *sectionStatusInfo();
+  const SectionStatusInfo *sectionStatusInfo() const;
+  void set_sectionStatusInfo(SectionStatusInfo *value);
 
   uint32_t *textUserLayoutVersion();
   const uint32_t *textUserLayoutVersion() const;
@@ -3920,6 +4309,10 @@ public:
   Hyperlink *hyperlink();
   const Hyperlink *hyperlink() const;
   void set_hyperlink(Hyperlink *value);
+
+  Mention *mention();
+  const Mention *mention() const;
+  void set_mention(Mention *value);
 
   kiwi::Array<FontVariation> *fontVariations();
   const kiwi::Array<FontVariation> *fontVariations() const;
@@ -4293,6 +4686,14 @@ public:
   const OptionalVector *maxSize() const;
   void set_maxSize(OptionalVector *value);
 
+  StackCounterAlignContent *stackCounterAlignContent();
+  const StackCounterAlignContent *stackCounterAlignContent() const;
+  void set_stackCounterAlignContent(const StackCounterAlignContent &value);
+
+  bool *isSnakeGameBoard();
+  const bool *isSnakeGameBoard() const;
+  void set_isSnakeGameBoard(const bool &value);
+
   GUID *transitionNodeID();
   const GUID *transitionNodeID() const;
   void set_transitionNodeID(GUID *value);
@@ -4480,6 +4881,10 @@ public:
   bool *isWidgetStickable();
   const bool *isWidgetStickable() const;
   void set_isWidgetStickable(const bool &value);
+
+  bool *shouldHideCursorsOnWidgetHover();
+  const bool *shouldHideCursorsOnWidgetHover() const;
+  void set_shouldHideCursorsOnWidgetHover(const bool &value);
 
   WidgetMetadata *widgetMetadata();
   const WidgetMetadata *widgetMetadata() const;
@@ -4777,9 +5182,9 @@ public:
   const bool *simplifyInstancePanels() const;
   void set_simplifyInstancePanels(const bool &value);
 
-  HTMLTag *htmlTag();
-  const HTMLTag *htmlTag() const;
-  void set_htmlTag(const HTMLTag &value);
+  HTMLTag *accessibleHTMLTag();
+  const HTMLTag *accessibleHTMLTag() const;
+  void set_accessibleHTMLTag(const HTMLTag &value);
 
   ARIARole *ariaRole();
   const ARIARole *ariaRole() const;
@@ -4817,6 +5222,22 @@ public:
   const VariableDataValues *variableDataValues() const;
   void set_variableDataValues(VariableDataValues *value);
 
+  kiwi::String *variableTokenName();
+  const kiwi::String *variableTokenName() const;
+  void set_variableTokenName(const kiwi::String &value);
+
+  kiwi::Array<VariableScope> *variableScopes();
+  const kiwi::Array<VariableScope> *variableScopes() const;
+  kiwi::Array<VariableScope> &set_variableScopes(kiwi::MemoryPool &pool, uint32_t count);
+
+  CodeSyntaxMap *codeSyntax();
+  const CodeSyntaxMap *codeSyntax() const;
+  void set_codeSyntax(CodeSyntaxMap *value);
+
+  HandoffStatusMap *handoffStatusMap();
+  const HandoffStatusMap *handoffStatusMap() const;
+  void set_handoffStatusMap(HandoffStatusMap *value);
+
   AgendaPositionMap *agendaPositionMap();
   const AgendaPositionMap *agendaPositionMap() const;
   void set_agendaPositionMap(AgendaPositionMap *value);
@@ -4837,11 +5258,43 @@ public:
   const EditInfo *editInfo() const;
   void set_editInfo(EditInfo *value);
 
+  ColorProfile *colorProfile();
+  const ColorProfile *colorProfile() const;
+  void set_colorProfile(const ColorProfile &value);
+
+  SymbolId *detachedSymbolId();
+  const SymbolId *detachedSymbolId() const;
+  void set_detachedSymbolId(SymbolId *value);
+
+  ChildReadingDirection *childReadingDirection();
+  const ChildReadingDirection *childReadingDirection() const;
+  void set_childReadingDirection(const ChildReadingDirection &value);
+
+  kiwi::String *readingIndex();
+  const kiwi::String *readingIndex() const;
+  void set_readingIndex(const kiwi::String &value);
+
+  DocumentColorProfile *documentColorProfile();
+  const DocumentColorProfile *documentColorProfile() const;
+  void set_documentColorProfile(const DocumentColorProfile &value);
+
+  kiwi::Array<DeveloperRelatedLink> *developerRelatedLinks();
+  const kiwi::Array<DeveloperRelatedLink> *developerRelatedLinks() const;
+  kiwi::Array<DeveloperRelatedLink> &set_developerRelatedLinks(kiwi::MemoryPool &pool, uint32_t count);
+
+  kiwi::String *slideActiveThemeLibKey();
+  const kiwi::String *slideActiveThemeLibKey() const;
+  void set_slideActiveThemeLibKey(const kiwi::String &value);
+
+  ARIAAttributesMap *ariaAttributes();
+  const ARIAAttributesMap *ariaAttributes() const;
+  void set_ariaAttributes(ARIAAttributesMap *value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
 private:
-  uint32_t _flags[11] = {};
+  uint32_t _flags[12] = {};
   GUID *_data_guid = {};
   NodePhase _data_phase = {};
   ParentIndex *_data_parentIndex = {};
@@ -4857,6 +5310,8 @@ private:
   SharedStyleMasterData *_data_sharedStyleMasterData = {};
   SharedStyleReference *_data_sharedStyleReference = {};
   kiwi::String _data_sortPosition = {};
+  SharedStyleMasterData *_data_ojansSuperSecretNodeField = {};
+  SharedStyleMasterData *_data_sevMoonlitLilyData = {};
   GUID *_data_inheritFillStyleID = {};
   GUID *_data_inheritStrokeStyleID = {};
   GUID *_data_inheritTextStyleID = {};
@@ -4900,6 +5355,7 @@ private:
   Number *_data_lineHeight = {};
   FontName *_data_fontName = {};
   TextData *_data_textData = {};
+  DerivedTextData *_data_derivedTextData = {};
   FontVariantNumericFigure _data_fontVariantNumericFigure = {};
   FontVariantNumericSpacing _data_fontVariantNumericSpacing = {};
   FontVariantNumericFraction _data_fontVariantNumericFraction = {};
@@ -4908,9 +5364,12 @@ private:
   Number *_data_letterSpacing = {};
   kiwi::String _data_fontVersion = {};
   LeadingTrim _data_leadingTrim = {};
+  SectionStatus _data_sectionStatus = {};
+  SectionStatusInfo *_data_sectionStatusInfo = {};
   kiwi::Array<OpenTypeFeature> _data_toggledOnOTFeatures = {};
   kiwi::Array<OpenTypeFeature> _data_toggledOffOTFeatures = {};
   Hyperlink *_data_hyperlink = {};
+  Mention *_data_mention = {};
   kiwi::Array<FontVariation> _data_fontVariations = {};
   TextTruncation _data_textTruncation = {};
   BlendMode _data_blendMode = {};
@@ -4942,6 +5401,7 @@ private:
   StackWrap _data_stackWrap = {};
   OptionalVector *_data_minSize = {};
   OptionalVector *_data_maxSize = {};
+  StackCounterAlignContent _data_stackCounterAlignContent = {};
   GUID *_data_transitionNodeID = {};
   GUID *_data_prototypeStartNodeID = {};
   Color *_data_prototypeBackgroundColor = {};
@@ -5016,7 +5476,7 @@ private:
   EmbedData *_data_embedData = {};
   RichMediaData *_data_richMediaData = {};
   MultiplayerMap *_data_renderedSyncedState = {};
-  HTMLTag _data_htmlTag = {};
+  HTMLTag _data_accessibleHTMLTag = {};
   ARIARole _data_ariaRole = {};
   kiwi::String _data_accessibleLabel = {};
   VariableData *_data_variableData = {};
@@ -5026,10 +5486,22 @@ private:
   VariableSetID *_data_variableSetID = {};
   VariableResolvedDataType _data_variableResolvedType = {};
   VariableDataValues *_data_variableDataValues = {};
+  kiwi::String _data_variableTokenName = {};
+  kiwi::Array<VariableScope> _data_variableScopes = {};
+  CodeSyntaxMap *_data_codeSyntax = {};
+  HandoffStatusMap *_data_handoffStatusMap = {};
   AgendaPositionMap *_data_agendaPositionMap = {};
   AgendaMetadataMap *_data_agendaMetadataMap = {};
   MigrationStatus *_data_migrationStatus = {};
   EditInfo *_data_editInfo = {};
+  ColorProfile _data_colorProfile = {};
+  SymbolId *_data_detachedSymbolId = {};
+  ChildReadingDirection _data_childReadingDirection = {};
+  kiwi::String _data_readingIndex = {};
+  DocumentColorProfile _data_documentColorProfile = {};
+  kiwi::Array<DeveloperRelatedLink> _data_developerRelatedLinks = {};
+  kiwi::String _data_slideActiveThemeLibKey = {};
+  ARIAAttributesMap *_data_ariaAttributes = {};
   uint32_t _data_guidTag = {};
   uint32_t _data_phaseTag = {};
   uint32_t _data_parentIndexTag = {};
@@ -5053,6 +5525,7 @@ private:
   uint32_t _data_lineHeightTag = {};
   uint32_t _data_fontNameTag = {};
   uint32_t _data_textDataTag = {};
+  int32_t _data_maxLines = {};
   uint32_t _data_textUserLayoutVersion = {};
   uint32_t _data_textBidiVersion = {};
   uint32_t _data_visibleTag = {};
@@ -5143,7 +5616,7 @@ private:
   bool _data_fontVariantHistoricalLigatures = {};
   bool _data_fontVariantOrdinal = {};
   bool _data_fontVariantSlashedZero = {};
-  bool _data_hangingQuote = {};
+  bool _data_hangingPunctuation = {};
   bool _data_hangingList = {};
   bool _data_hasHadRTLText = {};
   bool _data_visible = {};
@@ -5161,6 +5634,7 @@ private:
   bool _data_bordersTakeSpace = {};
   bool _data_borderStrokeWeightsIndependent = {};
   bool _data_stackReverseZIndex = {};
+  bool _data_isSnakeGameBoard = {};
   bool _data_transitionPreserveScroll = {};
   bool _data_interactionMaintained = {};
   bool _data_destinationIsOverlay = {};
@@ -5168,6 +5642,7 @@ private:
   bool _data_shapeTruncates = {};
   bool _data_sectionContentsHidden = {};
   bool _data_isWidgetStickable = {};
+  bool _data_shouldHideCursorsOnWidgetHover = {};
   bool _data_autoRename = {};
   bool _data_backgroundEnabled = {};
   bool _data_exportContentsOnly = {};
@@ -5385,6 +5860,43 @@ private:
   uint32_t _flags[1] = {};
   VariableSetID *_data_variableSetID = {};
   GUID *_data_variableModeID = {};
+};
+
+class CodeSyntaxMap {
+public:
+  CodeSyntaxMap() { (void)_flags; }
+
+  kiwi::Array<CodeSyntaxMapEntry> *entries();
+  const kiwi::Array<CodeSyntaxMapEntry> *entries() const;
+  kiwi::Array<CodeSyntaxMapEntry> &set_entries(kiwi::MemoryPool &pool, uint32_t count);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  kiwi::Array<CodeSyntaxMapEntry> _data_entries = {};
+};
+
+class CodeSyntaxMapEntry {
+public:
+  CodeSyntaxMapEntry() { (void)_flags; }
+
+  CodeSyntaxPlatform *platform();
+  const CodeSyntaxPlatform *platform() const;
+  void set_platform(const CodeSyntaxPlatform &value);
+
+  kiwi::String *value();
+  const kiwi::String *value() const;
+  void set_value(const kiwi::String &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  CodeSyntaxPlatform _data_platform = {};
+  kiwi::String _data_value = {};
 };
 
 class TableRowColumnPositionMap {
@@ -5888,6 +6400,10 @@ public:
   const kiwi::String *href() const;
   void set_href(const kiwi::String &value);
 
+  bool *allowCustomColor();
+  const bool *allowCustomColor() const;
+  void set_allowCustomColor(const bool &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -5901,6 +6417,7 @@ private:
   kiwi::String _data_selectedOption = {};
   kiwi::String _data_href = {};
   bool _data_isToggled = {};
+  bool _data_allowCustomColor = {};
 };
 
 class InternalDataForTest {
@@ -5983,6 +6500,10 @@ public:
   const int32_t *indentationLevel() const;
   void set_indentationLevel(const int32_t &value);
 
+  SourceDirectionality *sourceDirectionality();
+  const SourceDirectionality *sourceDirectionality() const;
+  void set_sourceDirectionality(const SourceDirectionality &value);
+
   Directionality *directionality();
   const Directionality *directionality() const;
   void set_directionality(const Directionality &value);
@@ -6013,6 +6534,7 @@ public:
 private:
   uint32_t _flags[1] = {};
   LineType _data_lineType = {};
+  SourceDirectionality _data_sourceDirectionality = {};
   Directionality _data_directionality = {};
   DirectionalityIntent _data_directionalityIntent = {};
   int32_t _data_indentationLevel = {};
@@ -6020,6 +6542,22 @@ private:
   int32_t _data_consistencyStyleId = {};
   int32_t _data_listStartOffset = {};
   bool _data_isFirstLineOfList = {};
+};
+
+class DerivedTextLineData {
+public:
+  DerivedTextLineData() { (void)_flags; }
+
+  Directionality *directionality();
+  const Directionality *directionality() const;
+  void set_directionality(const Directionality &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  Directionality _data_directionality = {};
 };
 
 class PrototypeInteraction {
@@ -6042,6 +6580,10 @@ public:
   const bool *isDeleted() const;
   void set_isDeleted(const bool &value);
 
+  int32_t *stateManagementVersion();
+  const int32_t *stateManagementVersion() const;
+  void set_stateManagementVersion(const int32_t &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -6050,6 +6592,7 @@ private:
   GUID *_data_id = {};
   PrototypeEvent *_data_event = {};
   kiwi::Array<PrototypeAction> _data_actions = {};
+  int32_t _data_stateManagementVersion = {};
   bool _data_isDeleted = {};
 };
 
@@ -6123,12 +6666,17 @@ public:
   const kiwi::Array<PrototypeAction> *actions() const;
   kiwi::Array<PrototypeAction> &set_actions(kiwi::MemoryPool &pool, uint32_t count);
 
+  VariableData *condition();
+  const VariableData *condition() const;
+  void set_condition(VariableData *value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
 private:
   uint32_t _flags[1] = {};
   kiwi::Array<PrototypeAction> _data_actions = {};
+  VariableData *_data_condition = {};
 };
 
 class PrototypeAction {
@@ -6340,6 +6888,42 @@ private:
   GUID *_data_guid = {};
 };
 
+class Mention {
+public:
+  Mention() { (void)_flags; }
+
+  GUID *id();
+  const GUID *id() const;
+  void set_id(GUID *value);
+
+  kiwi::String *mentionedUserId();
+  const kiwi::String *mentionedUserId() const;
+  void set_mentionedUserId(const kiwi::String &value);
+
+  kiwi::String *mentionedByUserId();
+  const kiwi::String *mentionedByUserId() const;
+  void set_mentionedByUserId(const kiwi::String &value);
+
+  kiwi::String *fileKey();
+  const kiwi::String *fileKey() const;
+  void set_fileKey(const kiwi::String &value);
+
+  MentionSource *source();
+  const MentionSource *source() const;
+  void set_source(const MentionSource &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  GUID *_data_id = {};
+  kiwi::String _data_mentionedUserId = {};
+  kiwi::String _data_mentionedByUserId = {};
+  kiwi::String _data_fileKey = {};
+  MentionSource _data_source = {};
+};
+
 class EmbedData {
 public:
   EmbedData() { (void)_flags; }
@@ -6392,6 +6976,10 @@ public:
   const kiwi::String *description() const;
   void set_description(const kiwi::String &value);
 
+  kiwi::String *embedVersionId();
+  const kiwi::String *embedVersionId() const;
+  void set_embedVersionId(const kiwi::String &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -6407,6 +6995,7 @@ private:
   kiwi::String _data_provider = {};
   kiwi::String _data_originalText = {};
   kiwi::String _data_description = {};
+  kiwi::String _data_embedVersionId = {};
   float _data_width = {};
   float _data_height = {};
 };
@@ -6539,6 +7128,10 @@ public:
   const GUID *canvasGuid() const;
   void set_canvasGuid(GUID *value);
 
+  uint32_t *cursorHiddenReason();
+  const uint32_t *cursorHiddenReason() const;
+  void set_cursorHiddenReason(const uint32_t &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -6548,6 +7141,7 @@ private:
   Vector *_data_canvasSpaceLocation = {};
   Rect *_data_canvasSpaceSelectionBox = {};
   GUID *_data_canvasGuid = {};
+  uint32_t _data_cursorHiddenReason = {};
 };
 
 class Click {
@@ -6799,6 +7393,22 @@ public:
   const GUID *textNodeGuid() const;
   void set_textNodeGuid(GUID *value);
 
+  Vector *textSelectionRange();
+  const Vector *textSelectionRange() const;
+  void set_textSelectionRange(Vector *value);
+
+  GUID *textNodeOrContainingIfGuid();
+  const GUID *textNodeOrContainingIfGuid() const;
+  void set_textNodeOrContainingIfGuid(GUID *value);
+
+  GUID *tableCellRowId();
+  const GUID *tableCellRowId() const;
+  void set_tableCellRowId(GUID *value);
+
+  GUID *tableCellColId();
+  const GUID *tableCellColId() const;
+  void set_tableCellColId(GUID *value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -6807,6 +7417,10 @@ private:
   kiwi::Array<Rect> _data_selectionBoxes = {};
   GUID *_data_canvasGuid = {};
   GUID *_data_textNodeGuid = {};
+  Vector *_data_textSelectionRange = {};
+  GUID *_data_textNodeOrContainingIfGuid = {};
+  GUID *_data_tableCellRowId = {};
+  GUID *_data_tableCellColId = {};
 };
 
 class PlaybackChangeKeyframe {
@@ -7266,6 +7880,27 @@ private:
   bool _data_isStopped = {};
 };
 
+class PresenterNomination {
+public:
+  PresenterNomination() { (void)_flags; }
+
+  uint32_t *sessionID();
+  const uint32_t *sessionID() const;
+  void set_sessionID(const uint32_t &value);
+
+  bool *isCancelled();
+  const bool *isCancelled() const;
+  void set_isCancelled(const bool &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  uint32_t _data_sessionID = {};
+  bool _data_isCancelled = {};
+};
+
 class PresenterInfo {
 public:
   PresenterInfo() { (void)_flags; }
@@ -7274,11 +7909,16 @@ public:
   const uint32_t *sessionID() const;
   void set_sessionID(const uint32_t &value);
 
+  PresenterNomination *nomination();
+  const PresenterNomination *nomination() const;
+  void set_nomination(PresenterNomination *value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
 private:
   uint32_t _flags[1] = {};
+  PresenterNomination *_data_nomination = {};
   uint32_t _data_sessionID = {};
 };
 
@@ -7447,6 +8087,10 @@ public:
   const kiwi::Array<GUID> *publishedAssetGuids() const;
   kiwi::Array<GUID> &set_publishedAssetGuids(kiwi::MemoryPool &pool, uint32_t count);
 
+  bool *dirtyFromInitialLoad();
+  const bool *dirtyFromInitialLoad() const;
+  void set_dirtyFromInitialLoad(const bool &value);
+
   bool encode(kiwi::ByteBuffer &bb);
   bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
 
@@ -7482,6 +8126,7 @@ private:
   uint32_t _data_reconnectSequenceNumber = {};
   bool _data_pasteIsPartiallyOutsideEnclosingFrame = {};
   bool _data_isCut = {};
+  bool _data_dirtyFromInitialLoad = {};
 };
 
 class DiffChunk {
@@ -7884,6 +8529,133 @@ private:
   uint32_t _data_lastModifiedSequenceNumber = {};
 };
 
+class ARIAAttributeAnyValue {
+public:
+  ARIAAttributeAnyValue() { (void)_flags; }
+
+  bool *boolValue();
+  const bool *boolValue() const;
+  void set_boolValue(const bool &value);
+
+  kiwi::String *stringValue();
+  const kiwi::String *stringValue() const;
+  void set_stringValue(const kiwi::String &value);
+
+  float *floatValue();
+  const float *floatValue() const;
+  void set_floatValue(const float &value);
+
+  int32_t *intValue();
+  const int32_t *intValue() const;
+  void set_intValue(const int32_t &value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  kiwi::String _data_stringValue = {};
+  float _data_floatValue = {};
+  int32_t _data_intValue = {};
+  bool _data_boolValue = {};
+};
+
+class ARIAAttributeData {
+public:
+  ARIAAttributeData() { (void)_flags; }
+
+  ARIAAttributeDataType *type();
+  const ARIAAttributeDataType *type() const;
+  void set_type(const ARIAAttributeDataType &value);
+
+  ARIAAttributeAnyValue *value();
+  const ARIAAttributeAnyValue *value() const;
+  void set_value(ARIAAttributeAnyValue *value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  ARIAAttributeDataType _data_type = {};
+  ARIAAttributeAnyValue *_data_value = {};
+};
+
+class ARIAAttributesMap {
+public:
+  ARIAAttributesMap() { (void)_flags; }
+
+  kiwi::Array<ARIAAttributesMapEntry> *entries();
+  const kiwi::Array<ARIAAttributesMapEntry> *entries() const;
+  kiwi::Array<ARIAAttributesMapEntry> &set_entries(kiwi::MemoryPool &pool, uint32_t count);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  kiwi::Array<ARIAAttributesMapEntry> _data_entries = {};
+};
+
+class ARIAAttributesMapEntry {
+public:
+  ARIAAttributesMapEntry() { (void)_flags; }
+
+  kiwi::String *attribute();
+  const kiwi::String *attribute() const;
+  void set_attribute(const kiwi::String &value);
+
+  ARIAAttributeData *value();
+  const ARIAAttributeData *value() const;
+  void set_value(ARIAAttributeData *value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  kiwi::String _data_attribute = {};
+  ARIAAttributeData *_data_value = {};
+};
+
+class HandoffStatusMapEntry {
+public:
+  HandoffStatusMapEntry() { (void)_flags; }
+
+  GUID *guid();
+  const GUID *guid() const;
+  void set_guid(GUID *value);
+
+  SectionStatusInfo *handoffStatus();
+  const SectionStatusInfo *handoffStatus() const;
+  void set_handoffStatus(SectionStatusInfo *value);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  GUID *_data_guid = {};
+  SectionStatusInfo *_data_handoffStatus = {};
+};
+
+class HandoffStatusMap {
+public:
+  HandoffStatusMap() { (void)_flags; }
+
+  kiwi::Array<HandoffStatusMapEntry> *entries();
+  const kiwi::Array<HandoffStatusMapEntry> *entries() const;
+  kiwi::Array<HandoffStatusMapEntry> &set_entries(kiwi::MemoryPool &pool, uint32_t count);
+
+  bool encode(kiwi::ByteBuffer &bb);
+  bool decode(kiwi::ByteBuffer &bb, kiwi::MemoryPool &pool, const BinarySchema *schema = nullptr);
+
+private:
+  uint32_t _flags[1] = {};
+  kiwi::Array<HandoffStatusMapEntry> _data_entries = {};
+};
+
+#endif
 #ifdef IMPLEMENT_SCHEMA_H
 
 bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
@@ -7895,7 +8667,9 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("FontMetaData", _indexFontMetaData);
   _schema.findDefinition("FontVariation", _indexFontVariation);
   _schema.findDefinition("TextData", _indexTextData);
+  _schema.findDefinition("DerivedTextData", _indexDerivedTextData);
   _schema.findDefinition("HyperlinkBox", _indexHyperlinkBox);
+  _schema.findDefinition("MentionBox", _indexMentionBox);
   _schema.findDefinition("Baseline", _indexBaseline);
   _schema.findDefinition("Glyph", _indexGlyph);
   _schema.findDefinition("Decoration", _indexDecoration);
@@ -7936,8 +8710,10 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("ConnectorTextMidpoint", _indexConnectorTextMidpoint);
   _schema.findDefinition("LibraryMoveInfo", _indexLibraryMoveInfo);
   _schema.findDefinition("LibraryMoveHistoryItem", _indexLibraryMoveHistoryItem);
+  _schema.findDefinition("DeveloperRelatedLink", _indexDeveloperRelatedLink);
   _schema.findDefinition("WidgetPointer", _indexWidgetPointer);
   _schema.findDefinition("EditInfo", _indexEditInfo);
+  _schema.findDefinition("SectionStatusInfo", _indexSectionStatusInfo);
   _schema.findDefinition("NodeChange", _indexNodeChange);
   _schema.findDefinition("VideoPlayback", _indexVideoPlayback);
   _schema.findDefinition("WidgetHoverStyle", _indexWidgetHoverStyle);
@@ -7948,6 +8724,8 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("VariableDataMapEntry", _indexVariableDataMapEntry);
   _schema.findDefinition("VariableModeBySetMap", _indexVariableModeBySetMap);
   _schema.findDefinition("VariableModeBySetMapEntry", _indexVariableModeBySetMapEntry);
+  _schema.findDefinition("CodeSyntaxMap", _indexCodeSyntaxMap);
+  _schema.findDefinition("CodeSyntaxMapEntry", _indexCodeSyntaxMapEntry);
   _schema.findDefinition("TableRowColumnPositionMap", _indexTableRowColumnPositionMap);
   _schema.findDefinition("TableRowColumnPositionMapEntry", _indexTableRowColumnPositionMapEntry);
   _schema.findDefinition("TableRowColumnSizeMap", _indexTableRowColumnSizeMap);
@@ -7973,6 +8751,7 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("StateGroupPropertyValueOrder", _indexStateGroupPropertyValueOrder);
   _schema.findDefinition("TextListData", _indexTextListData);
   _schema.findDefinition("TextLineData", _indexTextLineData);
+  _schema.findDefinition("DerivedTextLineData", _indexDerivedTextLineData);
   _schema.findDefinition("PrototypeInteraction", _indexPrototypeInteraction);
   _schema.findDefinition("PrototypeEvent", _indexPrototypeEvent);
   _schema.findDefinition("PrototypeVariableTarget", _indexPrototypeVariableTarget);
@@ -7981,6 +8760,7 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("PrototypeStartingPoint", _indexPrototypeStartingPoint);
   _schema.findDefinition("KeyTrigger", _indexKeyTrigger);
   _schema.findDefinition("Hyperlink", _indexHyperlink);
+  _schema.findDefinition("Mention", _indexMention);
   _schema.findDefinition("EmbedData", _indexEmbedData);
   _schema.findDefinition("StampData", _indexStampData);
   _schema.findDefinition("LinkPreviewData", _indexLinkPreviewData);
@@ -8004,6 +8784,7 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("CursorReaction", _indexCursorReaction);
   _schema.findDefinition("TimerInfo", _indexTimerInfo);
   _schema.findDefinition("MusicInfo", _indexMusicInfo);
+  _schema.findDefinition("PresenterNomination", _indexPresenterNomination);
   _schema.findDefinition("PresenterInfo", _indexPresenterInfo);
   _schema.findDefinition("ClientBroadcast", _indexClientBroadcast);
   _schema.findDefinition("Message", _indexMessage);
@@ -8022,6 +8803,12 @@ bool BinarySchema::parse(kiwi::ByteBuffer &bb) {
   _schema.findDefinition("MigrationStatus", _indexMigrationStatus);
   _schema.findDefinition("NodeFieldMap", _indexNodeFieldMap);
   _schema.findDefinition("NodeFieldMapEntry", _indexNodeFieldMapEntry);
+  _schema.findDefinition("ARIAAttributeAnyValue", _indexARIAAttributeAnyValue);
+  _schema.findDefinition("ARIAAttributeData", _indexARIAAttributeData);
+  _schema.findDefinition("ARIAAttributesMap", _indexARIAAttributesMap);
+  _schema.findDefinition("ARIAAttributesMapEntry", _indexARIAAttributesMapEntry);
+  _schema.findDefinition("HandoffStatusMapEntry", _indexHandoffStatusMapEntry);
+  _schema.findDefinition("HandoffStatusMap", _indexHandoffStatusMap);
   return true;
 }
 
@@ -8053,8 +8840,16 @@ bool BinarySchema::skipTextDataField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexTextData, id);
 }
 
+bool BinarySchema::skipDerivedTextDataField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexDerivedTextData, id);
+}
+
 bool BinarySchema::skipHyperlinkBoxField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexHyperlinkBox, id);
+}
+
+bool BinarySchema::skipMentionBoxField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexMentionBox, id);
 }
 
 bool BinarySchema::skipBaselineField(kiwi::ByteBuffer &bb, uint32_t id) const {
@@ -8217,12 +9012,20 @@ bool BinarySchema::skipLibraryMoveHistoryItemField(kiwi::ByteBuffer &bb, uint32_
   return _schema.skipField(bb, _indexLibraryMoveHistoryItem, id);
 }
 
+bool BinarySchema::skipDeveloperRelatedLinkField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexDeveloperRelatedLink, id);
+}
+
 bool BinarySchema::skipWidgetPointerField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexWidgetPointer, id);
 }
 
 bool BinarySchema::skipEditInfoField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexEditInfo, id);
+}
+
+bool BinarySchema::skipSectionStatusInfoField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexSectionStatusInfo, id);
 }
 
 bool BinarySchema::skipNodeChangeField(kiwi::ByteBuffer &bb, uint32_t id) const {
@@ -8263,6 +9066,14 @@ bool BinarySchema::skipVariableModeBySetMapField(kiwi::ByteBuffer &bb, uint32_t 
 
 bool BinarySchema::skipVariableModeBySetMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexVariableModeBySetMapEntry, id);
+}
+
+bool BinarySchema::skipCodeSyntaxMapField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexCodeSyntaxMap, id);
+}
+
+bool BinarySchema::skipCodeSyntaxMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexCodeSyntaxMapEntry, id);
 }
 
 bool BinarySchema::skipTableRowColumnPositionMapField(kiwi::ByteBuffer &bb, uint32_t id) const {
@@ -8365,6 +9176,10 @@ bool BinarySchema::skipTextLineDataField(kiwi::ByteBuffer &bb, uint32_t id) cons
   return _schema.skipField(bb, _indexTextLineData, id);
 }
 
+bool BinarySchema::skipDerivedTextLineDataField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexDerivedTextLineData, id);
+}
+
 bool BinarySchema::skipPrototypeInteractionField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexPrototypeInteraction, id);
 }
@@ -8395,6 +9210,10 @@ bool BinarySchema::skipKeyTriggerField(kiwi::ByteBuffer &bb, uint32_t id) const 
 
 bool BinarySchema::skipHyperlinkField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexHyperlink, id);
+}
+
+bool BinarySchema::skipMentionField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexMention, id);
 }
 
 bool BinarySchema::skipEmbedDataField(kiwi::ByteBuffer &bb, uint32_t id) const {
@@ -8489,6 +9308,10 @@ bool BinarySchema::skipMusicInfoField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexMusicInfo, id);
 }
 
+bool BinarySchema::skipPresenterNominationField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexPresenterNomination, id);
+}
+
 bool BinarySchema::skipPresenterInfoField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexPresenterInfo, id);
 }
@@ -8559,6 +9382,30 @@ bool BinarySchema::skipNodeFieldMapField(kiwi::ByteBuffer &bb, uint32_t id) cons
 
 bool BinarySchema::skipNodeFieldMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const {
   return _schema.skipField(bb, _indexNodeFieldMapEntry, id);
+}
+
+bool BinarySchema::skipARIAAttributeAnyValueField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexARIAAttributeAnyValue, id);
+}
+
+bool BinarySchema::skipARIAAttributeDataField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexARIAAttributeData, id);
+}
+
+bool BinarySchema::skipARIAAttributesMapField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexARIAAttributesMap, id);
+}
+
+bool BinarySchema::skipARIAAttributesMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexARIAAttributesMapEntry, id);
+}
+
+bool BinarySchema::skipHandoffStatusMapEntryField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexHandoffStatusMapEntry, id);
+}
+
+bool BinarySchema::skipHandoffStatusMapField(kiwi::ByteBuffer &bb, uint32_t id) const {
+  return _schema.skipField(bb, _indexHandoffStatusMap, id);
 }
 
 uint32_t *GUID::sessionID() {
@@ -9830,28 +10677,40 @@ void Paint::set_imageScaleMode(const ImageScaleMode &value) {
   _flags[0] |= 2048; _data_imageScaleMode = value;
 }
 
+bool *Paint::imageShouldColorManage() {
+  return _flags[0] & 4096 ? &_data_imageShouldColorManage : nullptr;
+}
+
+const bool *Paint::imageShouldColorManage() const {
+  return _flags[0] & 4096 ? &_data_imageShouldColorManage : nullptr;
+}
+
+void Paint::set_imageShouldColorManage(const bool &value) {
+  _flags[0] |= 4096; _data_imageShouldColorManage = value;
+}
+
 float *Paint::rotation() {
-  return _flags[0] & 4096 ? &_data_rotation : nullptr;
+  return _flags[0] & 8192 ? &_data_rotation : nullptr;
 }
 
 const float *Paint::rotation() const {
-  return _flags[0] & 4096 ? &_data_rotation : nullptr;
+  return _flags[0] & 8192 ? &_data_rotation : nullptr;
 }
 
 void Paint::set_rotation(const float &value) {
-  _flags[0] |= 4096; _data_rotation = value;
+  _flags[0] |= 8192; _data_rotation = value;
 }
 
 float *Paint::scale() {
-  return _flags[0] & 8192 ? &_data_scale : nullptr;
+  return _flags[0] & 16384 ? &_data_scale : nullptr;
 }
 
 const float *Paint::scale() const {
-  return _flags[0] & 8192 ? &_data_scale : nullptr;
+  return _flags[0] & 16384 ? &_data_scale : nullptr;
 }
 
 void Paint::set_scale(const float &value) {
-  _flags[0] |= 8192; _data_scale = value;
+  _flags[0] |= 16384; _data_scale = value;
 }
 
 FilterColorAdjust *Paint::filterColorAdjust() {
@@ -9879,15 +10738,15 @@ void Paint::set_paintFilter(PaintFilterMessage *value) {
 }
 
 kiwi::Array<uint32_t> *Paint::emojiCodePoints() {
-  return _flags[0] & 65536 ? &_data_emojiCodePoints : nullptr;
+  return _flags[0] & 131072 ? &_data_emojiCodePoints : nullptr;
 }
 
 const kiwi::Array<uint32_t> *Paint::emojiCodePoints() const {
-  return _flags[0] & 65536 ? &_data_emojiCodePoints : nullptr;
+  return _flags[0] & 131072 ? &_data_emojiCodePoints : nullptr;
 }
 
 kiwi::Array<uint32_t> &Paint::set_emojiCodePoints(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[0] |= 65536; return _data_emojiCodePoints = pool.array<uint32_t>(count);
+  _flags[0] |= 131072; return _data_emojiCodePoints = pool.array<uint32_t>(count);
 }
 
 Video *Paint::video() {
@@ -9903,27 +10762,27 @@ void Paint::set_video(Video *value) {
 }
 
 uint32_t *Paint::originalImageWidth() {
-  return _flags[0] & 262144 ? &_data_originalImageWidth : nullptr;
+  return _flags[0] & 524288 ? &_data_originalImageWidth : nullptr;
 }
 
 const uint32_t *Paint::originalImageWidth() const {
-  return _flags[0] & 262144 ? &_data_originalImageWidth : nullptr;
+  return _flags[0] & 524288 ? &_data_originalImageWidth : nullptr;
 }
 
 void Paint::set_originalImageWidth(const uint32_t &value) {
-  _flags[0] |= 262144; _data_originalImageWidth = value;
+  _flags[0] |= 524288; _data_originalImageWidth = value;
 }
 
 uint32_t *Paint::originalImageHeight() {
-  return _flags[0] & 524288 ? &_data_originalImageHeight : nullptr;
+  return _flags[0] & 1048576 ? &_data_originalImageHeight : nullptr;
 }
 
 const uint32_t *Paint::originalImageHeight() const {
-  return _flags[0] & 524288 ? &_data_originalImageHeight : nullptr;
+  return _flags[0] & 1048576 ? &_data_originalImageHeight : nullptr;
 }
 
 void Paint::set_originalImageHeight(const uint32_t &value) {
-  _flags[0] |= 524288; _data_originalImageHeight = value;
+  _flags[0] |= 1048576; _data_originalImageHeight = value;
 }
 
 VariableData *Paint::colorVar() {
@@ -9987,6 +10846,10 @@ bool Paint::encode(kiwi::ByteBuffer &_bb) {
   if (imageScaleMode() != nullptr) {
     _bb.writeVarUint(10);
     _bb.writeVarUint(static_cast<uint32_t>(_data_imageScaleMode));
+  }
+  if (imageShouldColorManage() != nullptr) {
+    _bb.writeVarUint(22);
+    _bb.writeByte(_data_imageShouldColorManage);
   }
   if (rotation() != nullptr) {
     _bb.writeVarUint(11);
@@ -10095,6 +10958,11 @@ bool Paint::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinaryS
       case 10: {
         if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_imageScaleMode))) return false;
         set_imageScaleMode(_data_imageScaleMode);
+        break;
+      }
+      case 22: {
+        if (!_bb.readByte(_data_imageShouldColorManage)) return false;
+        set_imageShouldColorManage(_data_imageShouldColorManage);
         break;
       }
       case 11: {
@@ -10552,6 +11420,42 @@ kiwi::Array<float> &TextData::set_logicalIndexToCharacterOffsetMap(kiwi::MemoryP
   _flags[0] |= 32768; return _data_logicalIndexToCharacterOffsetMap = pool.array<float>(count);
 }
 
+float *TextData::minContentHeight() {
+  return _flags[0] & 65536 ? &_data_minContentHeight : nullptr;
+}
+
+const float *TextData::minContentHeight() const {
+  return _flags[0] & 65536 ? &_data_minContentHeight : nullptr;
+}
+
+void TextData::set_minContentHeight(const float &value) {
+  _flags[0] |= 65536; _data_minContentHeight = value;
+}
+
+kiwi::Array<MentionBox> *TextData::mentionBoxes() {
+  return _flags[0] & 131072 ? &_data_mentionBoxes : nullptr;
+}
+
+const kiwi::Array<MentionBox> *TextData::mentionBoxes() const {
+  return _flags[0] & 131072 ? &_data_mentionBoxes : nullptr;
+}
+
+kiwi::Array<MentionBox> &TextData::set_mentionBoxes(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 131072; return _data_mentionBoxes = pool.array<MentionBox>(count);
+}
+
+kiwi::Array<DerivedTextLineData> *TextData::derivedLines() {
+  return _flags[0] & 262144 ? &_data_derivedLines : nullptr;
+}
+
+const kiwi::Array<DerivedTextLineData> *TextData::derivedLines() const {
+  return _flags[0] & 262144 ? &_data_derivedLines : nullptr;
+}
+
+kiwi::Array<DerivedTextLineData> &TextData::set_derivedLines(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 262144; return _data_derivedLines = pool.array<DerivedTextLineData>(count);
+}
+
 bool TextData::encode(kiwi::ByteBuffer &_bb) {
   if (characters() != nullptr) {
     _bb.writeVarUint(1);
@@ -10627,6 +11531,20 @@ bool TextData::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(15);
     _bb.writeVarUint(_data_logicalIndexToCharacterOffsetMap.size());
     for (float &_it : _data_logicalIndexToCharacterOffsetMap) _bb.writeVarFloat(_it);
+  }
+  if (minContentHeight() != nullptr) {
+    _bb.writeVarUint(17);
+    _bb.writeVarFloat(_data_minContentHeight);
+  }
+  if (mentionBoxes() != nullptr) {
+    _bb.writeVarUint(18);
+    _bb.writeVarUint(_data_mentionBoxes.size());
+    for (MentionBox &_it : _data_mentionBoxes) if (!_it.encode(_bb)) return false;
+  }
+  if (derivedLines() != nullptr) {
+    _bb.writeVarUint(19);
+    _bb.writeVarUint(_data_derivedLines.size());
+    for (DerivedTextLineData &_it : _data_derivedLines) if (!_it.encode(_bb)) return false;
   }
   _bb.writeVarUint(0);
   return true;
@@ -10720,8 +11638,305 @@ bool TextData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bina
         for (float &_it : set_logicalIndexToCharacterOffsetMap(_pool, _count)) if (!_bb.readVarFloat(_it)) return false;
         break;
       }
+      case 17: {
+        if (!_bb.readVarFloat(_data_minContentHeight)) return false;
+        set_minContentHeight(_data_minContentHeight);
+        break;
+      }
+      case 18: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (MentionBox &_it : set_mentionBoxes(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 19: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (DerivedTextLineData &_it : set_derivedLines(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
       default: {
         if (!_schema || !_schema->skipTextDataField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+Vector *DerivedTextData::layoutSize() {
+  return _data_layoutSize;
+}
+
+const Vector *DerivedTextData::layoutSize() const {
+  return _data_layoutSize;
+}
+
+void DerivedTextData::set_layoutSize(Vector *value) {
+  _data_layoutSize = value;
+}
+
+kiwi::Array<Baseline> *DerivedTextData::baselines() {
+  return _flags[0] & 2 ? &_data_baselines : nullptr;
+}
+
+const kiwi::Array<Baseline> *DerivedTextData::baselines() const {
+  return _flags[0] & 2 ? &_data_baselines : nullptr;
+}
+
+kiwi::Array<Baseline> &DerivedTextData::set_baselines(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 2; return _data_baselines = pool.array<Baseline>(count);
+}
+
+kiwi::Array<Glyph> *DerivedTextData::glyphs() {
+  return _flags[0] & 4 ? &_data_glyphs : nullptr;
+}
+
+const kiwi::Array<Glyph> *DerivedTextData::glyphs() const {
+  return _flags[0] & 4 ? &_data_glyphs : nullptr;
+}
+
+kiwi::Array<Glyph> &DerivedTextData::set_glyphs(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 4; return _data_glyphs = pool.array<Glyph>(count);
+}
+
+kiwi::Array<Decoration> *DerivedTextData::decorations() {
+  return _flags[0] & 8 ? &_data_decorations : nullptr;
+}
+
+const kiwi::Array<Decoration> *DerivedTextData::decorations() const {
+  return _flags[0] & 8 ? &_data_decorations : nullptr;
+}
+
+kiwi::Array<Decoration> &DerivedTextData::set_decorations(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 8; return _data_decorations = pool.array<Decoration>(count);
+}
+
+kiwi::Array<Blockquote> *DerivedTextData::blockquotes() {
+  return _flags[0] & 16 ? &_data_blockquotes : nullptr;
+}
+
+const kiwi::Array<Blockquote> *DerivedTextData::blockquotes() const {
+  return _flags[0] & 16 ? &_data_blockquotes : nullptr;
+}
+
+kiwi::Array<Blockquote> &DerivedTextData::set_blockquotes(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 16; return _data_blockquotes = pool.array<Blockquote>(count);
+}
+
+kiwi::Array<FontMetaData> *DerivedTextData::fontMetaData() {
+  return _flags[0] & 32 ? &_data_fontMetaData : nullptr;
+}
+
+const kiwi::Array<FontMetaData> *DerivedTextData::fontMetaData() const {
+  return _flags[0] & 32 ? &_data_fontMetaData : nullptr;
+}
+
+kiwi::Array<FontMetaData> &DerivedTextData::set_fontMetaData(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 32; return _data_fontMetaData = pool.array<FontMetaData>(count);
+}
+
+kiwi::Array<HyperlinkBox> *DerivedTextData::hyperlinkBoxes() {
+  return _flags[0] & 64 ? &_data_hyperlinkBoxes : nullptr;
+}
+
+const kiwi::Array<HyperlinkBox> *DerivedTextData::hyperlinkBoxes() const {
+  return _flags[0] & 64 ? &_data_hyperlinkBoxes : nullptr;
+}
+
+kiwi::Array<HyperlinkBox> &DerivedTextData::set_hyperlinkBoxes(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 64; return _data_hyperlinkBoxes = pool.array<HyperlinkBox>(count);
+}
+
+int32_t *DerivedTextData::truncationStartIndex() {
+  return _flags[0] & 128 ? &_data_truncationStartIndex : nullptr;
+}
+
+const int32_t *DerivedTextData::truncationStartIndex() const {
+  return _flags[0] & 128 ? &_data_truncationStartIndex : nullptr;
+}
+
+void DerivedTextData::set_truncationStartIndex(const int32_t &value) {
+  _flags[0] |= 128; _data_truncationStartIndex = value;
+}
+
+float *DerivedTextData::truncatedHeight() {
+  return _flags[0] & 256 ? &_data_truncatedHeight : nullptr;
+}
+
+const float *DerivedTextData::truncatedHeight() const {
+  return _flags[0] & 256 ? &_data_truncatedHeight : nullptr;
+}
+
+void DerivedTextData::set_truncatedHeight(const float &value) {
+  _flags[0] |= 256; _data_truncatedHeight = value;
+}
+
+kiwi::Array<float> *DerivedTextData::logicalIndexToCharacterOffsetMap() {
+  return _flags[0] & 512 ? &_data_logicalIndexToCharacterOffsetMap : nullptr;
+}
+
+const kiwi::Array<float> *DerivedTextData::logicalIndexToCharacterOffsetMap() const {
+  return _flags[0] & 512 ? &_data_logicalIndexToCharacterOffsetMap : nullptr;
+}
+
+kiwi::Array<float> &DerivedTextData::set_logicalIndexToCharacterOffsetMap(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 512; return _data_logicalIndexToCharacterOffsetMap = pool.array<float>(count);
+}
+
+kiwi::Array<MentionBox> *DerivedTextData::mentionBoxes() {
+  return _flags[0] & 1024 ? &_data_mentionBoxes : nullptr;
+}
+
+const kiwi::Array<MentionBox> *DerivedTextData::mentionBoxes() const {
+  return _flags[0] & 1024 ? &_data_mentionBoxes : nullptr;
+}
+
+kiwi::Array<MentionBox> &DerivedTextData::set_mentionBoxes(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 1024; return _data_mentionBoxes = pool.array<MentionBox>(count);
+}
+
+kiwi::Array<DerivedTextLineData> *DerivedTextData::derivedLines() {
+  return _flags[0] & 2048 ? &_data_derivedLines : nullptr;
+}
+
+const kiwi::Array<DerivedTextLineData> *DerivedTextData::derivedLines() const {
+  return _flags[0] & 2048 ? &_data_derivedLines : nullptr;
+}
+
+kiwi::Array<DerivedTextLineData> &DerivedTextData::set_derivedLines(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 2048; return _data_derivedLines = pool.array<DerivedTextLineData>(count);
+}
+
+bool DerivedTextData::encode(kiwi::ByteBuffer &_bb) {
+  if (layoutSize() != nullptr) {
+    _bb.writeVarUint(1);
+    if (!_data_layoutSize->encode(_bb)) return false;
+  }
+  if (baselines() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeVarUint(_data_baselines.size());
+    for (Baseline &_it : _data_baselines) if (!_it.encode(_bb)) return false;
+  }
+  if (glyphs() != nullptr) {
+    _bb.writeVarUint(3);
+    _bb.writeVarUint(_data_glyphs.size());
+    for (Glyph &_it : _data_glyphs) if (!_it.encode(_bb)) return false;
+  }
+  if (decorations() != nullptr) {
+    _bb.writeVarUint(4);
+    _bb.writeVarUint(_data_decorations.size());
+    for (Decoration &_it : _data_decorations) if (!_it.encode(_bb)) return false;
+  }
+  if (blockquotes() != nullptr) {
+    _bb.writeVarUint(5);
+    _bb.writeVarUint(_data_blockquotes.size());
+    for (Blockquote &_it : _data_blockquotes) if (!_it.encode(_bb)) return false;
+  }
+  if (fontMetaData() != nullptr) {
+    _bb.writeVarUint(6);
+    _bb.writeVarUint(_data_fontMetaData.size());
+    for (FontMetaData &_it : _data_fontMetaData) if (!_it.encode(_bb)) return false;
+  }
+  if (hyperlinkBoxes() != nullptr) {
+    _bb.writeVarUint(7);
+    _bb.writeVarUint(_data_hyperlinkBoxes.size());
+    for (HyperlinkBox &_it : _data_hyperlinkBoxes) if (!_it.encode(_bb)) return false;
+  }
+  if (truncationStartIndex() != nullptr) {
+    _bb.writeVarUint(8);
+    _bb.writeVarInt(_data_truncationStartIndex);
+  }
+  if (truncatedHeight() != nullptr) {
+    _bb.writeVarUint(9);
+    _bb.writeVarFloat(_data_truncatedHeight);
+  }
+  if (logicalIndexToCharacterOffsetMap() != nullptr) {
+    _bb.writeVarUint(10);
+    _bb.writeVarUint(_data_logicalIndexToCharacterOffsetMap.size());
+    for (float &_it : _data_logicalIndexToCharacterOffsetMap) _bb.writeVarFloat(_it);
+  }
+  if (mentionBoxes() != nullptr) {
+    _bb.writeVarUint(11);
+    _bb.writeVarUint(_data_mentionBoxes.size());
+    for (MentionBox &_it : _data_mentionBoxes) if (!_it.encode(_bb)) return false;
+  }
+  if (derivedLines() != nullptr) {
+    _bb.writeVarUint(12);
+    _bb.writeVarUint(_data_derivedLines.size());
+    for (DerivedTextLineData &_it : _data_derivedLines) if (!_it.encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool DerivedTextData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        _data_layoutSize = _pool.allocate<Vector>();
+        if (!_data_layoutSize->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 2: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (Baseline &_it : set_baselines(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 3: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (Glyph &_it : set_glyphs(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 4: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (Decoration &_it : set_decorations(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 5: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (Blockquote &_it : set_blockquotes(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 6: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (FontMetaData &_it : set_fontMetaData(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 7: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (HyperlinkBox &_it : set_hyperlinkBoxes(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 8: {
+        if (!_bb.readVarInt(_data_truncationStartIndex)) return false;
+        set_truncationStartIndex(_data_truncationStartIndex);
+        break;
+      }
+      case 9: {
+        if (!_bb.readVarFloat(_data_truncatedHeight)) return false;
+        set_truncatedHeight(_data_truncatedHeight);
+        break;
+      }
+      case 10: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (float &_it : set_logicalIndexToCharacterOffsetMap(_pool, _count)) if (!_bb.readVarFloat(_it)) return false;
+        break;
+      }
+      case 11: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (MentionBox &_it : set_mentionBoxes(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 12: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (DerivedTextLineData &_it : set_derivedLines(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipDerivedTextDataField(_bb, _type)) return false;
         break;
       }
     }
@@ -10832,6 +12047,131 @@ bool HyperlinkBox::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const 
   }
 }
 
+Rect *MentionBox::bounds() {
+  return _data_bounds;
+}
+
+const Rect *MentionBox::bounds() const {
+  return _data_bounds;
+}
+
+void MentionBox::set_bounds(Rect *value) {
+  _data_bounds = value;
+}
+
+uint32_t *MentionBox::startIndex() {
+  return _flags[0] & 2 ? &_data_startIndex : nullptr;
+}
+
+const uint32_t *MentionBox::startIndex() const {
+  return _flags[0] & 2 ? &_data_startIndex : nullptr;
+}
+
+void MentionBox::set_startIndex(const uint32_t &value) {
+  _flags[0] |= 2; _data_startIndex = value;
+}
+
+uint32_t *MentionBox::endIndex() {
+  return _flags[0] & 4 ? &_data_endIndex : nullptr;
+}
+
+const uint32_t *MentionBox::endIndex() const {
+  return _flags[0] & 4 ? &_data_endIndex : nullptr;
+}
+
+void MentionBox::set_endIndex(const uint32_t &value) {
+  _flags[0] |= 4; _data_endIndex = value;
+}
+
+bool *MentionBox::isValid() {
+  return _flags[0] & 8 ? &_data_isValid : nullptr;
+}
+
+const bool *MentionBox::isValid() const {
+  return _flags[0] & 8 ? &_data_isValid : nullptr;
+}
+
+void MentionBox::set_isValid(const bool &value) {
+  _flags[0] |= 8; _data_isValid = value;
+}
+
+uint32_t *MentionBox::mentionKey() {
+  return _flags[0] & 16 ? &_data_mentionKey : nullptr;
+}
+
+const uint32_t *MentionBox::mentionKey() const {
+  return _flags[0] & 16 ? &_data_mentionKey : nullptr;
+}
+
+void MentionBox::set_mentionKey(const uint32_t &value) {
+  _flags[0] |= 16; _data_mentionKey = value;
+}
+
+bool MentionBox::encode(kiwi::ByteBuffer &_bb) {
+  if (bounds() != nullptr) {
+    _bb.writeVarUint(1);
+    if (!_data_bounds->encode(_bb)) return false;
+  }
+  if (startIndex() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeVarUint(_data_startIndex);
+  }
+  if (endIndex() != nullptr) {
+    _bb.writeVarUint(3);
+    _bb.writeVarUint(_data_endIndex);
+  }
+  if (isValid() != nullptr) {
+    _bb.writeVarUint(4);
+    _bb.writeByte(_data_isValid);
+  }
+  if (mentionKey() != nullptr) {
+    _bb.writeVarUint(5);
+    _bb.writeVarUint(_data_mentionKey);
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool MentionBox::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        _data_bounds = _pool.allocate<Rect>();
+        if (!_data_bounds->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 2: {
+        if (!_bb.readVarUint(_data_startIndex)) return false;
+        set_startIndex(_data_startIndex);
+        break;
+      }
+      case 3: {
+        if (!_bb.readVarUint(_data_endIndex)) return false;
+        set_endIndex(_data_endIndex);
+        break;
+      }
+      case 4: {
+        if (!_bb.readByte(_data_isValid)) return false;
+        set_isValid(_data_isValid);
+        break;
+      }
+      case 5: {
+        if (!_bb.readVarUint(_data_mentionKey)) return false;
+        set_mentionKey(_data_mentionKey);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipMentionBoxField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
 Vector *Baseline::position() {
   return _data_position;
 }
@@ -10892,28 +12232,40 @@ void Baseline::set_lineAscent(const float &value) {
   _flags[0] |= 16; _data_lineAscent = value;
 }
 
+float *Baseline::ignoreLeadingTrim() {
+  return _flags[0] & 32 ? &_data_ignoreLeadingTrim : nullptr;
+}
+
+const float *Baseline::ignoreLeadingTrim() const {
+  return _flags[0] & 32 ? &_data_ignoreLeadingTrim : nullptr;
+}
+
+void Baseline::set_ignoreLeadingTrim(const float &value) {
+  _flags[0] |= 32; _data_ignoreLeadingTrim = value;
+}
+
 uint32_t *Baseline::firstCharacter() {
-  return _flags[0] & 32 ? &_data_firstCharacter : nullptr;
+  return _flags[0] & 64 ? &_data_firstCharacter : nullptr;
 }
 
 const uint32_t *Baseline::firstCharacter() const {
-  return _flags[0] & 32 ? &_data_firstCharacter : nullptr;
+  return _flags[0] & 64 ? &_data_firstCharacter : nullptr;
 }
 
 void Baseline::set_firstCharacter(const uint32_t &value) {
-  _flags[0] |= 32; _data_firstCharacter = value;
+  _flags[0] |= 64; _data_firstCharacter = value;
 }
 
 uint32_t *Baseline::endCharacter() {
-  return _flags[0] & 64 ? &_data_endCharacter : nullptr;
+  return _flags[0] & 128 ? &_data_endCharacter : nullptr;
 }
 
 const uint32_t *Baseline::endCharacter() const {
-  return _flags[0] & 64 ? &_data_endCharacter : nullptr;
+  return _flags[0] & 128 ? &_data_endCharacter : nullptr;
 }
 
 void Baseline::set_endCharacter(const uint32_t &value) {
-  _flags[0] |= 64; _data_endCharacter = value;
+  _flags[0] |= 128; _data_endCharacter = value;
 }
 
 bool Baseline::encode(kiwi::ByteBuffer &_bb) {
@@ -10936,6 +12288,10 @@ bool Baseline::encode(kiwi::ByteBuffer &_bb) {
   if (lineAscent() != nullptr) {
     _bb.writeVarUint(7);
     _bb.writeVarFloat(_data_lineAscent);
+  }
+  if (ignoreLeadingTrim() != nullptr) {
+    _bb.writeVarUint(8);
+    _bb.writeVarFloat(_data_ignoreLeadingTrim);
   }
   if (firstCharacter() != nullptr) {
     _bb.writeVarUint(5);
@@ -10979,6 +12335,11 @@ bool Baseline::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bina
       case 7: {
         if (!_bb.readVarFloat(_data_lineAscent)) return false;
         set_lineAscent(_data_lineAscent);
+        break;
+      }
+      case 8: {
+        if (!_bb.readVarFloat(_data_ignoreLeadingTrim)) return false;
+        set_ignoreLeadingTrim(_data_ignoreLeadingTrim);
         break;
       }
       case 5: {
@@ -11071,6 +12432,18 @@ void Glyph::set_advance(const float &value) {
   _flags[0] |= 32; _data_advance = value;
 }
 
+kiwi::Array<uint32_t> *Glyph::emojiCodePoints() {
+  return _flags[0] & 64 ? &_data_emojiCodePoints : nullptr;
+}
+
+const kiwi::Array<uint32_t> *Glyph::emojiCodePoints() const {
+  return _flags[0] & 64 ? &_data_emojiCodePoints : nullptr;
+}
+
+kiwi::Array<uint32_t> &Glyph::set_emojiCodePoints(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 64; return _data_emojiCodePoints = pool.array<uint32_t>(count);
+}
+
 bool Glyph::encode(kiwi::ByteBuffer &_bb) {
   if (commandsBlob() != nullptr) {
     _bb.writeVarUint(1);
@@ -11096,11 +12469,17 @@ bool Glyph::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(6);
     _bb.writeVarFloat(_data_advance);
   }
+  if (emojiCodePoints() != nullptr) {
+    _bb.writeVarUint(7);
+    _bb.writeVarUint(_data_emojiCodePoints.size());
+    for (uint32_t &_it : _data_emojiCodePoints) _bb.writeVarUint(_it);
+  }
   _bb.writeVarUint(0);
   return true;
 }
 
 bool Glyph::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
   while (true) {
     uint32_t _type;
     if (!_bb.readVarUint(_type)) return false;
@@ -11135,6 +12514,11 @@ bool Glyph::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinaryS
       case 6: {
         if (!_bb.readVarFloat(_data_advance)) return false;
         set_advance(_data_advance);
+        break;
+      }
+      case 7: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (uint32_t &_it : set_emojiCodePoints(_pool, _count)) if (!_bb.readVarUint(_it)) return false;
         break;
       }
       default: {
@@ -13082,6 +14466,18 @@ void ExportSettings::set_useAbsoluteBounds(const bool &value) {
   _flags[0] |= 256; _data_useAbsoluteBounds = value;
 }
 
+ExportColorProfile *ExportSettings::colorProfile() {
+  return _flags[0] & 512 ? &_data_colorProfile : nullptr;
+}
+
+const ExportColorProfile *ExportSettings::colorProfile() const {
+  return _flags[0] & 512 ? &_data_colorProfile : nullptr;
+}
+
+void ExportSettings::set_colorProfile(const ExportColorProfile &value) {
+  _flags[0] |= 512; _data_colorProfile = value;
+}
+
 bool ExportSettings::encode(kiwi::ByteBuffer &_bb) {
   if (suffix() != nullptr) {
     _bb.writeVarUint(1);
@@ -13118,6 +14514,10 @@ bool ExportSettings::encode(kiwi::ByteBuffer &_bb) {
   if (useAbsoluteBounds() != nullptr) {
     _bb.writeVarUint(9);
     _bb.writeByte(_data_useAbsoluteBounds);
+  }
+  if (colorProfile() != nullptr) {
+    _bb.writeVarUint(10);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_colorProfile));
   }
   _bb.writeVarUint(0);
   return true;
@@ -13173,6 +14573,11 @@ bool ExportSettings::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, cons
       case 9: {
         if (!_bb.readByte(_data_useAbsoluteBounds)) return false;
         set_useAbsoluteBounds(_data_useAbsoluteBounds);
+        break;
+      }
+      case 10: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_colorProfile))) return false;
+        set_colorProfile(_data_colorProfile);
         break;
       }
       default: {
@@ -14449,6 +15854,110 @@ bool LibraryMoveHistoryItem::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_po
   }
 }
 
+kiwi::String *DeveloperRelatedLink::nodeId() {
+  return _flags[0] & 1 ? &_data_nodeId : nullptr;
+}
+
+const kiwi::String *DeveloperRelatedLink::nodeId() const {
+  return _flags[0] & 1 ? &_data_nodeId : nullptr;
+}
+
+void DeveloperRelatedLink::set_nodeId(const kiwi::String &value) {
+  _flags[0] |= 1; _data_nodeId = value;
+}
+
+kiwi::String *DeveloperRelatedLink::fileKey() {
+  return _flags[0] & 2 ? &_data_fileKey : nullptr;
+}
+
+const kiwi::String *DeveloperRelatedLink::fileKey() const {
+  return _flags[0] & 2 ? &_data_fileKey : nullptr;
+}
+
+void DeveloperRelatedLink::set_fileKey(const kiwi::String &value) {
+  _flags[0] |= 2; _data_fileKey = value;
+}
+
+kiwi::String *DeveloperRelatedLink::linkName() {
+  return _flags[0] & 4 ? &_data_linkName : nullptr;
+}
+
+const kiwi::String *DeveloperRelatedLink::linkName() const {
+  return _flags[0] & 4 ? &_data_linkName : nullptr;
+}
+
+void DeveloperRelatedLink::set_linkName(const kiwi::String &value) {
+  _flags[0] |= 4; _data_linkName = value;
+}
+
+kiwi::String *DeveloperRelatedLink::linkUrl() {
+  return _flags[0] & 8 ? &_data_linkUrl : nullptr;
+}
+
+const kiwi::String *DeveloperRelatedLink::linkUrl() const {
+  return _flags[0] & 8 ? &_data_linkUrl : nullptr;
+}
+
+void DeveloperRelatedLink::set_linkUrl(const kiwi::String &value) {
+  _flags[0] |= 8; _data_linkUrl = value;
+}
+
+bool DeveloperRelatedLink::encode(kiwi::ByteBuffer &_bb) {
+  if (nodeId() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeString(_data_nodeId.c_str());
+  }
+  if (fileKey() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeString(_data_fileKey.c_str());
+  }
+  if (linkName() != nullptr) {
+    _bb.writeVarUint(3);
+    _bb.writeString(_data_linkName.c_str());
+  }
+  if (linkUrl() != nullptr) {
+    _bb.writeVarUint(4);
+    _bb.writeString(_data_linkUrl.c_str());
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool DeveloperRelatedLink::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readString(_data_nodeId, _pool)) return false;
+        set_nodeId(_data_nodeId);
+        break;
+      }
+      case 2: {
+        if (!_bb.readString(_data_fileKey, _pool)) return false;
+        set_fileKey(_data_fileKey);
+        break;
+      }
+      case 3: {
+        if (!_bb.readString(_data_linkName, _pool)) return false;
+        set_linkName(_data_linkName);
+        break;
+      }
+      case 4: {
+        if (!_bb.readString(_data_linkUrl, _pool)) return false;
+        set_linkUrl(_data_linkUrl);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipDeveloperRelatedLinkField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
 GUID *WidgetPointer::nodeId() {
   return _data_nodeId;
 }
@@ -14502,10 +16011,58 @@ void EditInfo::set_timestampIso8601(const kiwi::String &value) {
   _flags[0] |= 1; _data_timestampIso8601 = value;
 }
 
+kiwi::String *EditInfo::userId() {
+  return _flags[0] & 2 ? &_data_userId : nullptr;
+}
+
+const kiwi::String *EditInfo::userId() const {
+  return _flags[0] & 2 ? &_data_userId : nullptr;
+}
+
+void EditInfo::set_userId(const kiwi::String &value) {
+  _flags[0] |= 2; _data_userId = value;
+}
+
+uint32_t *EditInfo::lastEditedAt() {
+  return _flags[0] & 4 ? &_data_lastEditedAt : nullptr;
+}
+
+const uint32_t *EditInfo::lastEditedAt() const {
+  return _flags[0] & 4 ? &_data_lastEditedAt : nullptr;
+}
+
+void EditInfo::set_lastEditedAt(const uint32_t &value) {
+  _flags[0] |= 4; _data_lastEditedAt = value;
+}
+
+uint32_t *EditInfo::createdAt() {
+  return _flags[0] & 8 ? &_data_createdAt : nullptr;
+}
+
+const uint32_t *EditInfo::createdAt() const {
+  return _flags[0] & 8 ? &_data_createdAt : nullptr;
+}
+
+void EditInfo::set_createdAt(const uint32_t &value) {
+  _flags[0] |= 8; _data_createdAt = value;
+}
+
 bool EditInfo::encode(kiwi::ByteBuffer &_bb) {
   if (timestampIso8601() != nullptr) {
     _bb.writeVarUint(1);
     _bb.writeString(_data_timestampIso8601.c_str());
+  }
+  if (userId() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeString(_data_userId.c_str());
+  }
+  if (lastEditedAt() != nullptr) {
+    _bb.writeVarUint(3);
+    _bb.writeVarUint(_data_lastEditedAt);
+  }
+  if (createdAt() != nullptr) {
+    _bb.writeVarUint(4);
+    _bb.writeVarUint(_data_createdAt);
   }
   _bb.writeVarUint(0);
   return true;
@@ -14523,8 +16080,64 @@ bool EditInfo::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bina
         set_timestampIso8601(_data_timestampIso8601);
         break;
       }
+      case 2: {
+        if (!_bb.readString(_data_userId, _pool)) return false;
+        set_userId(_data_userId);
+        break;
+      }
+      case 3: {
+        if (!_bb.readVarUint(_data_lastEditedAt)) return false;
+        set_lastEditedAt(_data_lastEditedAt);
+        break;
+      }
+      case 4: {
+        if (!_bb.readVarUint(_data_createdAt)) return false;
+        set_createdAt(_data_createdAt);
+        break;
+      }
       default: {
         if (!_schema || !_schema->skipEditInfoField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+SectionStatus *SectionStatusInfo::status() {
+  return _flags[0] & 1 ? &_data_status : nullptr;
+}
+
+const SectionStatus *SectionStatusInfo::status() const {
+  return _flags[0] & 1 ? &_data_status : nullptr;
+}
+
+void SectionStatusInfo::set_status(const SectionStatus &value) {
+  _flags[0] |= 1; _data_status = value;
+}
+
+bool SectionStatusInfo::encode(kiwi::ByteBuffer &_bb) {
+  if (status() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_status));
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool SectionStatusInfo::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_status))) return false;
+        set_status(_data_status);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipSectionStatusInfoField(_bb, _type)) return false;
         break;
       }
     }
@@ -14855,6 +16468,30 @@ void NodeChange::set_sortPosition(const kiwi::String &value) {
   _flags[0] |= 67108864; _data_sortPosition = value;
 }
 
+SharedStyleMasterData *NodeChange::ojansSuperSecretNodeField() {
+  return _data_ojansSuperSecretNodeField;
+}
+
+const SharedStyleMasterData *NodeChange::ojansSuperSecretNodeField() const {
+  return _data_ojansSuperSecretNodeField;
+}
+
+void NodeChange::set_ojansSuperSecretNodeField(SharedStyleMasterData *value) {
+  _data_ojansSuperSecretNodeField = value;
+}
+
+SharedStyleMasterData *NodeChange::sevMoonlitLilyData() {
+  return _data_sevMoonlitLilyData;
+}
+
+const SharedStyleMasterData *NodeChange::sevMoonlitLilyData() const {
+  return _data_sevMoonlitLilyData;
+}
+
+void NodeChange::set_sevMoonlitLilyData(SharedStyleMasterData *value) {
+  _data_sevMoonlitLilyData = value;
+}
+
 GUID *NodeChange::inheritFillStyleID() {
   return _data_inheritFillStyleID;
 }
@@ -15000,15 +16637,15 @@ void NodeChange::set_styleIdForGrid(StyleId *value) {
 }
 
 kiwi::Array<Paint> *NodeChange::backgroundPaints() {
-  return _flags[1] & 128 ? &_data_backgroundPaints : nullptr;
+  return _flags[1] & 512 ? &_data_backgroundPaints : nullptr;
 }
 
 const kiwi::Array<Paint> *NodeChange::backgroundPaints() const {
-  return _flags[1] & 128 ? &_data_backgroundPaints : nullptr;
+  return _flags[1] & 512 ? &_data_backgroundPaints : nullptr;
 }
 
 kiwi::Array<Paint> &NodeChange::set_backgroundPaints(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 128; return _data_backgroundPaints = pool.array<Paint>(count);
+  _flags[1] |= 512; return _data_backgroundPaints = pool.array<Paint>(count);
 }
 
 GUID *NodeChange::inheritFillStyleIDForBackground() {
@@ -15024,27 +16661,27 @@ void NodeChange::set_inheritFillStyleIDForBackground(GUID *value) {
 }
 
 bool *NodeChange::isStateGroup() {
-  return _flags[1] & 512 ? &_data_isStateGroup : nullptr;
+  return _flags[1] & 2048 ? &_data_isStateGroup : nullptr;
 }
 
 const bool *NodeChange::isStateGroup() const {
-  return _flags[1] & 512 ? &_data_isStateGroup : nullptr;
+  return _flags[1] & 2048 ? &_data_isStateGroup : nullptr;
 }
 
 void NodeChange::set_isStateGroup(const bool &value) {
-  _flags[1] |= 512; _data_isStateGroup = value;
+  _flags[1] |= 2048; _data_isStateGroup = value;
 }
 
 kiwi::Array<StateGroupPropertyValueOrder> *NodeChange::stateGroupPropertyValueOrders() {
-  return _flags[1] & 1024 ? &_data_stateGroupPropertyValueOrders : nullptr;
+  return _flags[1] & 4096 ? &_data_stateGroupPropertyValueOrders : nullptr;
 }
 
 const kiwi::Array<StateGroupPropertyValueOrder> *NodeChange::stateGroupPropertyValueOrders() const {
-  return _flags[1] & 1024 ? &_data_stateGroupPropertyValueOrders : nullptr;
+  return _flags[1] & 4096 ? &_data_stateGroupPropertyValueOrders : nullptr;
 }
 
 kiwi::Array<StateGroupPropertyValueOrder> &NodeChange::set_stateGroupPropertyValueOrders(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 1024; return _data_stateGroupPropertyValueOrders = pool.array<StateGroupPropertyValueOrder>(count);
+  _flags[1] |= 4096; return _data_stateGroupPropertyValueOrders = pool.array<StateGroupPropertyValueOrder>(count);
 }
 
 SharedSymbolReference *NodeChange::sharedSymbolReference() {
@@ -15060,39 +16697,39 @@ void NodeChange::set_sharedSymbolReference(SharedSymbolReference *value) {
 }
 
 bool *NodeChange::isSymbolPublishable() {
-  return _flags[1] & 4096 ? &_data_isSymbolPublishable : nullptr;
+  return _flags[1] & 16384 ? &_data_isSymbolPublishable : nullptr;
 }
 
 const bool *NodeChange::isSymbolPublishable() const {
-  return _flags[1] & 4096 ? &_data_isSymbolPublishable : nullptr;
+  return _flags[1] & 16384 ? &_data_isSymbolPublishable : nullptr;
 }
 
 void NodeChange::set_isSymbolPublishable(const bool &value) {
-  _flags[1] |= 4096; _data_isSymbolPublishable = value;
+  _flags[1] |= 16384; _data_isSymbolPublishable = value;
 }
 
 kiwi::Array<GUIDPathMapping> *NodeChange::sharedSymbolMappings() {
-  return _flags[1] & 8192 ? &_data_sharedSymbolMappings : nullptr;
+  return _flags[1] & 32768 ? &_data_sharedSymbolMappings : nullptr;
 }
 
 const kiwi::Array<GUIDPathMapping> *NodeChange::sharedSymbolMappings() const {
-  return _flags[1] & 8192 ? &_data_sharedSymbolMappings : nullptr;
+  return _flags[1] & 32768 ? &_data_sharedSymbolMappings : nullptr;
 }
 
 kiwi::Array<GUIDPathMapping> &NodeChange::set_sharedSymbolMappings(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 8192; return _data_sharedSymbolMappings = pool.array<GUIDPathMapping>(count);
+  _flags[1] |= 32768; return _data_sharedSymbolMappings = pool.array<GUIDPathMapping>(count);
 }
 
 kiwi::String *NodeChange::sharedSymbolVersion() {
-  return _flags[1] & 16384 ? &_data_sharedSymbolVersion : nullptr;
+  return _flags[1] & 65536 ? &_data_sharedSymbolVersion : nullptr;
 }
 
 const kiwi::String *NodeChange::sharedSymbolVersion() const {
-  return _flags[1] & 16384 ? &_data_sharedSymbolVersion : nullptr;
+  return _flags[1] & 65536 ? &_data_sharedSymbolVersion : nullptr;
 }
 
 void NodeChange::set_sharedSymbolVersion(const kiwi::String &value) {
-  _flags[1] |= 16384; _data_sharedSymbolVersion = value;
+  _flags[1] |= 65536; _data_sharedSymbolVersion = value;
 }
 
 SharedComponentMasterData *NodeChange::sharedComponentMasterData() {
@@ -15108,51 +16745,51 @@ void NodeChange::set_sharedComponentMasterData(SharedComponentMasterData *value)
 }
 
 kiwi::String *NodeChange::symbolDescription() {
-  return _flags[1] & 65536 ? &_data_symbolDescription : nullptr;
+  return _flags[1] & 262144 ? &_data_symbolDescription : nullptr;
 }
 
 const kiwi::String *NodeChange::symbolDescription() const {
-  return _flags[1] & 65536 ? &_data_symbolDescription : nullptr;
+  return _flags[1] & 262144 ? &_data_symbolDescription : nullptr;
 }
 
 void NodeChange::set_symbolDescription(const kiwi::String &value) {
-  _flags[1] |= 65536; _data_symbolDescription = value;
+  _flags[1] |= 262144; _data_symbolDescription = value;
 }
 
 kiwi::Array<GUIDPathMapping> *NodeChange::unflatteningMappings() {
-  return _flags[1] & 131072 ? &_data_unflatteningMappings : nullptr;
+  return _flags[1] & 524288 ? &_data_unflatteningMappings : nullptr;
 }
 
 const kiwi::Array<GUIDPathMapping> *NodeChange::unflatteningMappings() const {
-  return _flags[1] & 131072 ? &_data_unflatteningMappings : nullptr;
+  return _flags[1] & 524288 ? &_data_unflatteningMappings : nullptr;
 }
 
 kiwi::Array<GUIDPathMapping> &NodeChange::set_unflatteningMappings(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 131072; return _data_unflatteningMappings = pool.array<GUIDPathMapping>(count);
+  _flags[1] |= 524288; return _data_unflatteningMappings = pool.array<GUIDPathMapping>(count);
 }
 
 kiwi::Array<GUIDPathMapping> *NodeChange::forceUnflatteningMappings() {
-  return _flags[1] & 262144 ? &_data_forceUnflatteningMappings : nullptr;
+  return _flags[1] & 1048576 ? &_data_forceUnflatteningMappings : nullptr;
 }
 
 const kiwi::Array<GUIDPathMapping> *NodeChange::forceUnflatteningMappings() const {
-  return _flags[1] & 262144 ? &_data_forceUnflatteningMappings : nullptr;
+  return _flags[1] & 1048576 ? &_data_forceUnflatteningMappings : nullptr;
 }
 
 kiwi::Array<GUIDPathMapping> &NodeChange::set_forceUnflatteningMappings(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 262144; return _data_forceUnflatteningMappings = pool.array<GUIDPathMapping>(count);
+  _flags[1] |= 1048576; return _data_forceUnflatteningMappings = pool.array<GUIDPathMapping>(count);
 }
 
 kiwi::String *NodeChange::publishFile() {
-  return _flags[1] & 524288 ? &_data_publishFile : nullptr;
+  return _flags[1] & 2097152 ? &_data_publishFile : nullptr;
 }
 
 const kiwi::String *NodeChange::publishFile() const {
-  return _flags[1] & 524288 ? &_data_publishFile : nullptr;
+  return _flags[1] & 2097152 ? &_data_publishFile : nullptr;
 }
 
 void NodeChange::set_publishFile(const kiwi::String &value) {
-  _flags[1] |= 524288; _data_publishFile = value;
+  _flags[1] |= 2097152; _data_publishFile = value;
 }
 
 GUID *NodeChange::publishID() {
@@ -15168,75 +16805,75 @@ void NodeChange::set_publishID(GUID *value) {
 }
 
 kiwi::String *NodeChange::componentKey() {
-  return _flags[1] & 2097152 ? &_data_componentKey : nullptr;
+  return _flags[1] & 8388608 ? &_data_componentKey : nullptr;
 }
 
 const kiwi::String *NodeChange::componentKey() const {
-  return _flags[1] & 2097152 ? &_data_componentKey : nullptr;
+  return _flags[1] & 8388608 ? &_data_componentKey : nullptr;
 }
 
 void NodeChange::set_componentKey(const kiwi::String &value) {
-  _flags[1] |= 2097152; _data_componentKey = value;
+  _flags[1] |= 8388608; _data_componentKey = value;
 }
 
 bool *NodeChange::isC2() {
-  return _flags[1] & 4194304 ? &_data_isC2 : nullptr;
+  return _flags[1] & 16777216 ? &_data_isC2 : nullptr;
 }
 
 const bool *NodeChange::isC2() const {
-  return _flags[1] & 4194304 ? &_data_isC2 : nullptr;
+  return _flags[1] & 16777216 ? &_data_isC2 : nullptr;
 }
 
 void NodeChange::set_isC2(const bool &value) {
-  _flags[1] |= 4194304; _data_isC2 = value;
+  _flags[1] |= 16777216; _data_isC2 = value;
 }
 
 kiwi::String *NodeChange::publishedVersion() {
-  return _flags[1] & 8388608 ? &_data_publishedVersion : nullptr;
+  return _flags[1] & 33554432 ? &_data_publishedVersion : nullptr;
 }
 
 const kiwi::String *NodeChange::publishedVersion() const {
-  return _flags[1] & 8388608 ? &_data_publishedVersion : nullptr;
+  return _flags[1] & 33554432 ? &_data_publishedVersion : nullptr;
 }
 
 void NodeChange::set_publishedVersion(const kiwi::String &value) {
-  _flags[1] |= 8388608; _data_publishedVersion = value;
+  _flags[1] |= 33554432; _data_publishedVersion = value;
 }
 
 kiwi::String *NodeChange::originComponentKey() {
-  return _flags[1] & 16777216 ? &_data_originComponentKey : nullptr;
+  return _flags[1] & 67108864 ? &_data_originComponentKey : nullptr;
 }
 
 const kiwi::String *NodeChange::originComponentKey() const {
-  return _flags[1] & 16777216 ? &_data_originComponentKey : nullptr;
+  return _flags[1] & 67108864 ? &_data_originComponentKey : nullptr;
 }
 
 void NodeChange::set_originComponentKey(const kiwi::String &value) {
-  _flags[1] |= 16777216; _data_originComponentKey = value;
+  _flags[1] |= 67108864; _data_originComponentKey = value;
 }
 
 kiwi::Array<ComponentPropDef> *NodeChange::componentPropDefs() {
-  return _flags[1] & 33554432 ? &_data_componentPropDefs : nullptr;
+  return _flags[1] & 134217728 ? &_data_componentPropDefs : nullptr;
 }
 
 const kiwi::Array<ComponentPropDef> *NodeChange::componentPropDefs() const {
-  return _flags[1] & 33554432 ? &_data_componentPropDefs : nullptr;
+  return _flags[1] & 134217728 ? &_data_componentPropDefs : nullptr;
 }
 
 kiwi::Array<ComponentPropDef> &NodeChange::set_componentPropDefs(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 33554432; return _data_componentPropDefs = pool.array<ComponentPropDef>(count);
+  _flags[1] |= 134217728; return _data_componentPropDefs = pool.array<ComponentPropDef>(count);
 }
 
 kiwi::Array<ComponentPropRef> *NodeChange::componentPropRefs() {
-  return _flags[1] & 67108864 ? &_data_componentPropRefs : nullptr;
+  return _flags[1] & 268435456 ? &_data_componentPropRefs : nullptr;
 }
 
 const kiwi::Array<ComponentPropRef> *NodeChange::componentPropRefs() const {
-  return _flags[1] & 67108864 ? &_data_componentPropRefs : nullptr;
+  return _flags[1] & 268435456 ? &_data_componentPropRefs : nullptr;
 }
 
 kiwi::Array<ComponentPropRef> &NodeChange::set_componentPropRefs(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 67108864; return _data_componentPropRefs = pool.array<ComponentPropRef>(count);
+  _flags[1] |= 268435456; return _data_componentPropRefs = pool.array<ComponentPropRef>(count);
 }
 
 SymbolData *NodeChange::symbolData() {
@@ -15252,27 +16889,27 @@ void NodeChange::set_symbolData(SymbolData *value) {
 }
 
 uint32_t *NodeChange::symbolDataTag() {
-  return _flags[1] & 268435456 ? &_data_symbolDataTag : nullptr;
+  return _flags[1] & 1073741824 ? &_data_symbolDataTag : nullptr;
 }
 
 const uint32_t *NodeChange::symbolDataTag() const {
-  return _flags[1] & 268435456 ? &_data_symbolDataTag : nullptr;
+  return _flags[1] & 1073741824 ? &_data_symbolDataTag : nullptr;
 }
 
 void NodeChange::set_symbolDataTag(const uint32_t &value) {
-  _flags[1] |= 268435456; _data_symbolDataTag = value;
+  _flags[1] |= 1073741824; _data_symbolDataTag = value;
 }
 
 kiwi::Array<NodeChange> *NodeChange::derivedSymbolData() {
-  return _flags[1] & 536870912 ? &_data_derivedSymbolData : nullptr;
+  return _flags[1] & 2147483648 ? &_data_derivedSymbolData : nullptr;
 }
 
 const kiwi::Array<NodeChange> *NodeChange::derivedSymbolData() const {
-  return _flags[1] & 536870912 ? &_data_derivedSymbolData : nullptr;
+  return _flags[1] & 2147483648 ? &_data_derivedSymbolData : nullptr;
 }
 
 kiwi::Array<NodeChange> &NodeChange::set_derivedSymbolData(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 536870912; return _data_derivedSymbolData = pool.array<NodeChange>(count);
+  _flags[1] |= 2147483648; return _data_derivedSymbolData = pool.array<NodeChange>(count);
 }
 
 GUID *NodeChange::overriddenSymbolID() {
@@ -15288,51 +16925,51 @@ void NodeChange::set_overriddenSymbolID(GUID *value) {
 }
 
 kiwi::Array<ComponentPropAssignment> *NodeChange::componentPropAssignments() {
-  return _flags[1] & 2147483648 ? &_data_componentPropAssignments : nullptr;
+  return _flags[2] & 2 ? &_data_componentPropAssignments : nullptr;
 }
 
 const kiwi::Array<ComponentPropAssignment> *NodeChange::componentPropAssignments() const {
-  return _flags[1] & 2147483648 ? &_data_componentPropAssignments : nullptr;
+  return _flags[2] & 2 ? &_data_componentPropAssignments : nullptr;
 }
 
 kiwi::Array<ComponentPropAssignment> &NodeChange::set_componentPropAssignments(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[1] |= 2147483648; return _data_componentPropAssignments = pool.array<ComponentPropAssignment>(count);
+  _flags[2] |= 2; return _data_componentPropAssignments = pool.array<ComponentPropAssignment>(count);
 }
 
 bool *NodeChange::propsAreBubbled() {
-  return _flags[2] & 1 ? &_data_propsAreBubbled : nullptr;
+  return _flags[2] & 4 ? &_data_propsAreBubbled : nullptr;
 }
 
 const bool *NodeChange::propsAreBubbled() const {
-  return _flags[2] & 1 ? &_data_propsAreBubbled : nullptr;
+  return _flags[2] & 4 ? &_data_propsAreBubbled : nullptr;
 }
 
 void NodeChange::set_propsAreBubbled(const bool &value) {
-  _flags[2] |= 1; _data_propsAreBubbled = value;
+  _flags[2] |= 4; _data_propsAreBubbled = value;
 }
 
 kiwi::Array<InstanceOverrideStash> *NodeChange::overrideStash() {
-  return _flags[2] & 2 ? &_data_overrideStash : nullptr;
+  return _flags[2] & 8 ? &_data_overrideStash : nullptr;
 }
 
 const kiwi::Array<InstanceOverrideStash> *NodeChange::overrideStash() const {
-  return _flags[2] & 2 ? &_data_overrideStash : nullptr;
+  return _flags[2] & 8 ? &_data_overrideStash : nullptr;
 }
 
 kiwi::Array<InstanceOverrideStash> &NodeChange::set_overrideStash(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[2] |= 2; return _data_overrideStash = pool.array<InstanceOverrideStash>(count);
+  _flags[2] |= 8; return _data_overrideStash = pool.array<InstanceOverrideStash>(count);
 }
 
 kiwi::Array<InstanceOverrideStashV2> *NodeChange::overrideStashV2() {
-  return _flags[2] & 4 ? &_data_overrideStashV2 : nullptr;
+  return _flags[2] & 16 ? &_data_overrideStashV2 : nullptr;
 }
 
 const kiwi::Array<InstanceOverrideStashV2> *NodeChange::overrideStashV2() const {
-  return _flags[2] & 4 ? &_data_overrideStashV2 : nullptr;
+  return _flags[2] & 16 ? &_data_overrideStashV2 : nullptr;
 }
 
 kiwi::Array<InstanceOverrideStashV2> &NodeChange::set_overrideStashV2(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[2] |= 4; return _data_overrideStashV2 = pool.array<InstanceOverrideStashV2>(count);
+  _flags[2] |= 16; return _data_overrideStashV2 = pool.array<InstanceOverrideStashV2>(count);
 }
 
 GUIDPath *NodeChange::guidPath() {
@@ -15348,195 +16985,195 @@ void NodeChange::set_guidPath(GUIDPath *value) {
 }
 
 uint32_t *NodeChange::guidPathTag() {
-  return _flags[2] & 16 ? &_data_guidPathTag : nullptr;
+  return _flags[2] & 64 ? &_data_guidPathTag : nullptr;
 }
 
 const uint32_t *NodeChange::guidPathTag() const {
-  return _flags[2] & 16 ? &_data_guidPathTag : nullptr;
+  return _flags[2] & 64 ? &_data_guidPathTag : nullptr;
 }
 
 void NodeChange::set_guidPathTag(const uint32_t &value) {
-  _flags[2] |= 16; _data_guidPathTag = value;
+  _flags[2] |= 64; _data_guidPathTag = value;
 }
 
 int32_t *NodeChange::overrideLevel() {
-  return _flags[2] & 32 ? &_data_overrideLevel : nullptr;
+  return _flags[2] & 128 ? &_data_overrideLevel : nullptr;
 }
 
 const int32_t *NodeChange::overrideLevel() const {
-  return _flags[2] & 32 ? &_data_overrideLevel : nullptr;
+  return _flags[2] & 128 ? &_data_overrideLevel : nullptr;
 }
 
 void NodeChange::set_overrideLevel(const int32_t &value) {
-  _flags[2] |= 32; _data_overrideLevel = value;
+  _flags[2] |= 128; _data_overrideLevel = value;
 }
 
 float *NodeChange::fontSize() {
-  return _flags[2] & 64 ? &_data_fontSize : nullptr;
+  return _flags[2] & 256 ? &_data_fontSize : nullptr;
 }
 
 const float *NodeChange::fontSize() const {
-  return _flags[2] & 64 ? &_data_fontSize : nullptr;
+  return _flags[2] & 256 ? &_data_fontSize : nullptr;
 }
 
 void NodeChange::set_fontSize(const float &value) {
-  _flags[2] |= 64; _data_fontSize = value;
+  _flags[2] |= 256; _data_fontSize = value;
 }
 
 uint32_t *NodeChange::fontSizeTag() {
-  return _flags[2] & 128 ? &_data_fontSizeTag : nullptr;
+  return _flags[2] & 512 ? &_data_fontSizeTag : nullptr;
 }
 
 const uint32_t *NodeChange::fontSizeTag() const {
-  return _flags[2] & 128 ? &_data_fontSizeTag : nullptr;
+  return _flags[2] & 512 ? &_data_fontSizeTag : nullptr;
 }
 
 void NodeChange::set_fontSizeTag(const uint32_t &value) {
-  _flags[2] |= 128; _data_fontSizeTag = value;
+  _flags[2] |= 512; _data_fontSizeTag = value;
 }
 
 float *NodeChange::paragraphIndent() {
-  return _flags[2] & 256 ? &_data_paragraphIndent : nullptr;
+  return _flags[2] & 1024 ? &_data_paragraphIndent : nullptr;
 }
 
 const float *NodeChange::paragraphIndent() const {
-  return _flags[2] & 256 ? &_data_paragraphIndent : nullptr;
+  return _flags[2] & 1024 ? &_data_paragraphIndent : nullptr;
 }
 
 void NodeChange::set_paragraphIndent(const float &value) {
-  _flags[2] |= 256; _data_paragraphIndent = value;
+  _flags[2] |= 1024; _data_paragraphIndent = value;
 }
 
 uint32_t *NodeChange::paragraphIndentTag() {
-  return _flags[2] & 512 ? &_data_paragraphIndentTag : nullptr;
+  return _flags[2] & 2048 ? &_data_paragraphIndentTag : nullptr;
 }
 
 const uint32_t *NodeChange::paragraphIndentTag() const {
-  return _flags[2] & 512 ? &_data_paragraphIndentTag : nullptr;
+  return _flags[2] & 2048 ? &_data_paragraphIndentTag : nullptr;
 }
 
 void NodeChange::set_paragraphIndentTag(const uint32_t &value) {
-  _flags[2] |= 512; _data_paragraphIndentTag = value;
+  _flags[2] |= 2048; _data_paragraphIndentTag = value;
 }
 
 float *NodeChange::paragraphSpacing() {
-  return _flags[2] & 1024 ? &_data_paragraphSpacing : nullptr;
+  return _flags[2] & 4096 ? &_data_paragraphSpacing : nullptr;
 }
 
 const float *NodeChange::paragraphSpacing() const {
-  return _flags[2] & 1024 ? &_data_paragraphSpacing : nullptr;
+  return _flags[2] & 4096 ? &_data_paragraphSpacing : nullptr;
 }
 
 void NodeChange::set_paragraphSpacing(const float &value) {
-  _flags[2] |= 1024; _data_paragraphSpacing = value;
+  _flags[2] |= 4096; _data_paragraphSpacing = value;
 }
 
 uint32_t *NodeChange::paragraphSpacingTag() {
-  return _flags[2] & 2048 ? &_data_paragraphSpacingTag : nullptr;
+  return _flags[2] & 8192 ? &_data_paragraphSpacingTag : nullptr;
 }
 
 const uint32_t *NodeChange::paragraphSpacingTag() const {
-  return _flags[2] & 2048 ? &_data_paragraphSpacingTag : nullptr;
+  return _flags[2] & 8192 ? &_data_paragraphSpacingTag : nullptr;
 }
 
 void NodeChange::set_paragraphSpacingTag(const uint32_t &value) {
-  _flags[2] |= 2048; _data_paragraphSpacingTag = value;
+  _flags[2] |= 8192; _data_paragraphSpacingTag = value;
 }
 
 TextAlignHorizontal *NodeChange::textAlignHorizontal() {
-  return _flags[2] & 4096 ? &_data_textAlignHorizontal : nullptr;
+  return _flags[2] & 16384 ? &_data_textAlignHorizontal : nullptr;
 }
 
 const TextAlignHorizontal *NodeChange::textAlignHorizontal() const {
-  return _flags[2] & 4096 ? &_data_textAlignHorizontal : nullptr;
+  return _flags[2] & 16384 ? &_data_textAlignHorizontal : nullptr;
 }
 
 void NodeChange::set_textAlignHorizontal(const TextAlignHorizontal &value) {
-  _flags[2] |= 4096; _data_textAlignHorizontal = value;
+  _flags[2] |= 16384; _data_textAlignHorizontal = value;
 }
 
 uint32_t *NodeChange::textAlignHorizontalTag() {
-  return _flags[2] & 8192 ? &_data_textAlignHorizontalTag : nullptr;
+  return _flags[2] & 32768 ? &_data_textAlignHorizontalTag : nullptr;
 }
 
 const uint32_t *NodeChange::textAlignHorizontalTag() const {
-  return _flags[2] & 8192 ? &_data_textAlignHorizontalTag : nullptr;
+  return _flags[2] & 32768 ? &_data_textAlignHorizontalTag : nullptr;
 }
 
 void NodeChange::set_textAlignHorizontalTag(const uint32_t &value) {
-  _flags[2] |= 8192; _data_textAlignHorizontalTag = value;
+  _flags[2] |= 32768; _data_textAlignHorizontalTag = value;
 }
 
 TextAlignVertical *NodeChange::textAlignVertical() {
-  return _flags[2] & 16384 ? &_data_textAlignVertical : nullptr;
+  return _flags[2] & 65536 ? &_data_textAlignVertical : nullptr;
 }
 
 const TextAlignVertical *NodeChange::textAlignVertical() const {
-  return _flags[2] & 16384 ? &_data_textAlignVertical : nullptr;
+  return _flags[2] & 65536 ? &_data_textAlignVertical : nullptr;
 }
 
 void NodeChange::set_textAlignVertical(const TextAlignVertical &value) {
-  _flags[2] |= 16384; _data_textAlignVertical = value;
+  _flags[2] |= 65536; _data_textAlignVertical = value;
 }
 
 uint32_t *NodeChange::textAlignVerticalTag() {
-  return _flags[2] & 32768 ? &_data_textAlignVerticalTag : nullptr;
+  return _flags[2] & 131072 ? &_data_textAlignVerticalTag : nullptr;
 }
 
 const uint32_t *NodeChange::textAlignVerticalTag() const {
-  return _flags[2] & 32768 ? &_data_textAlignVerticalTag : nullptr;
+  return _flags[2] & 131072 ? &_data_textAlignVerticalTag : nullptr;
 }
 
 void NodeChange::set_textAlignVerticalTag(const uint32_t &value) {
-  _flags[2] |= 32768; _data_textAlignVerticalTag = value;
+  _flags[2] |= 131072; _data_textAlignVerticalTag = value;
 }
 
 TextCase *NodeChange::textCase() {
-  return _flags[2] & 65536 ? &_data_textCase : nullptr;
+  return _flags[2] & 262144 ? &_data_textCase : nullptr;
 }
 
 const TextCase *NodeChange::textCase() const {
-  return _flags[2] & 65536 ? &_data_textCase : nullptr;
+  return _flags[2] & 262144 ? &_data_textCase : nullptr;
 }
 
 void NodeChange::set_textCase(const TextCase &value) {
-  _flags[2] |= 65536; _data_textCase = value;
+  _flags[2] |= 262144; _data_textCase = value;
 }
 
 uint32_t *NodeChange::textCaseTag() {
-  return _flags[2] & 131072 ? &_data_textCaseTag : nullptr;
+  return _flags[2] & 524288 ? &_data_textCaseTag : nullptr;
 }
 
 const uint32_t *NodeChange::textCaseTag() const {
-  return _flags[2] & 131072 ? &_data_textCaseTag : nullptr;
+  return _flags[2] & 524288 ? &_data_textCaseTag : nullptr;
 }
 
 void NodeChange::set_textCaseTag(const uint32_t &value) {
-  _flags[2] |= 131072; _data_textCaseTag = value;
+  _flags[2] |= 524288; _data_textCaseTag = value;
 }
 
 TextDecoration *NodeChange::textDecoration() {
-  return _flags[2] & 262144 ? &_data_textDecoration : nullptr;
+  return _flags[2] & 1048576 ? &_data_textDecoration : nullptr;
 }
 
 const TextDecoration *NodeChange::textDecoration() const {
-  return _flags[2] & 262144 ? &_data_textDecoration : nullptr;
+  return _flags[2] & 1048576 ? &_data_textDecoration : nullptr;
 }
 
 void NodeChange::set_textDecoration(const TextDecoration &value) {
-  _flags[2] |= 262144; _data_textDecoration = value;
+  _flags[2] |= 1048576; _data_textDecoration = value;
 }
 
 uint32_t *NodeChange::textDecorationTag() {
-  return _flags[2] & 524288 ? &_data_textDecorationTag : nullptr;
+  return _flags[2] & 2097152 ? &_data_textDecorationTag : nullptr;
 }
 
 const uint32_t *NodeChange::textDecorationTag() const {
-  return _flags[2] & 524288 ? &_data_textDecorationTag : nullptr;
+  return _flags[2] & 2097152 ? &_data_textDecorationTag : nullptr;
 }
 
 void NodeChange::set_textDecorationTag(const uint32_t &value) {
-  _flags[2] |= 524288; _data_textDecorationTag = value;
+  _flags[2] |= 2097152; _data_textDecorationTag = value;
 }
 
 Number *NodeChange::lineHeight() {
@@ -15552,15 +17189,15 @@ void NodeChange::set_lineHeight(Number *value) {
 }
 
 uint32_t *NodeChange::lineHeightTag() {
-  return _flags[2] & 2097152 ? &_data_lineHeightTag : nullptr;
+  return _flags[2] & 8388608 ? &_data_lineHeightTag : nullptr;
 }
 
 const uint32_t *NodeChange::lineHeightTag() const {
-  return _flags[2] & 2097152 ? &_data_lineHeightTag : nullptr;
+  return _flags[2] & 8388608 ? &_data_lineHeightTag : nullptr;
 }
 
 void NodeChange::set_lineHeightTag(const uint32_t &value) {
-  _flags[2] |= 2097152; _data_lineHeightTag = value;
+  _flags[2] |= 8388608; _data_lineHeightTag = value;
 }
 
 FontName *NodeChange::fontName() {
@@ -15576,15 +17213,15 @@ void NodeChange::set_fontName(FontName *value) {
 }
 
 uint32_t *NodeChange::fontNameTag() {
-  return _flags[2] & 8388608 ? &_data_fontNameTag : nullptr;
+  return _flags[2] & 33554432 ? &_data_fontNameTag : nullptr;
 }
 
 const uint32_t *NodeChange::fontNameTag() const {
-  return _flags[2] & 8388608 ? &_data_fontNameTag : nullptr;
+  return _flags[2] & 33554432 ? &_data_fontNameTag : nullptr;
 }
 
 void NodeChange::set_fontNameTag(const uint32_t &value) {
-  _flags[2] |= 8388608; _data_fontNameTag = value;
+  _flags[2] |= 33554432; _data_fontNameTag = value;
 }
 
 TextData *NodeChange::textData() {
@@ -15600,147 +17237,159 @@ void NodeChange::set_textData(TextData *value) {
 }
 
 uint32_t *NodeChange::textDataTag() {
-  return _flags[2] & 33554432 ? &_data_textDataTag : nullptr;
+  return _flags[2] & 134217728 ? &_data_textDataTag : nullptr;
 }
 
 const uint32_t *NodeChange::textDataTag() const {
-  return _flags[2] & 33554432 ? &_data_textDataTag : nullptr;
+  return _flags[2] & 134217728 ? &_data_textDataTag : nullptr;
 }
 
 void NodeChange::set_textDataTag(const uint32_t &value) {
-  _flags[2] |= 33554432; _data_textDataTag = value;
+  _flags[2] |= 134217728; _data_textDataTag = value;
+}
+
+DerivedTextData *NodeChange::derivedTextData() {
+  return _data_derivedTextData;
+}
+
+const DerivedTextData *NodeChange::derivedTextData() const {
+  return _data_derivedTextData;
+}
+
+void NodeChange::set_derivedTextData(DerivedTextData *value) {
+  _data_derivedTextData = value;
 }
 
 bool *NodeChange::fontVariantCommonLigatures() {
-  return _flags[2] & 67108864 ? &_data_fontVariantCommonLigatures : nullptr;
+  return _flags[2] & 536870912 ? &_data_fontVariantCommonLigatures : nullptr;
 }
 
 const bool *NodeChange::fontVariantCommonLigatures() const {
-  return _flags[2] & 67108864 ? &_data_fontVariantCommonLigatures : nullptr;
+  return _flags[2] & 536870912 ? &_data_fontVariantCommonLigatures : nullptr;
 }
 
 void NodeChange::set_fontVariantCommonLigatures(const bool &value) {
-  _flags[2] |= 67108864; _data_fontVariantCommonLigatures = value;
+  _flags[2] |= 536870912; _data_fontVariantCommonLigatures = value;
 }
 
 bool *NodeChange::fontVariantContextualLigatures() {
-  return _flags[2] & 134217728 ? &_data_fontVariantContextualLigatures : nullptr;
+  return _flags[2] & 1073741824 ? &_data_fontVariantContextualLigatures : nullptr;
 }
 
 const bool *NodeChange::fontVariantContextualLigatures() const {
-  return _flags[2] & 134217728 ? &_data_fontVariantContextualLigatures : nullptr;
+  return _flags[2] & 1073741824 ? &_data_fontVariantContextualLigatures : nullptr;
 }
 
 void NodeChange::set_fontVariantContextualLigatures(const bool &value) {
-  _flags[2] |= 134217728; _data_fontVariantContextualLigatures = value;
+  _flags[2] |= 1073741824; _data_fontVariantContextualLigatures = value;
 }
 
 bool *NodeChange::fontVariantDiscretionaryLigatures() {
-  return _flags[2] & 268435456 ? &_data_fontVariantDiscretionaryLigatures : nullptr;
+  return _flags[2] & 2147483648 ? &_data_fontVariantDiscretionaryLigatures : nullptr;
 }
 
 const bool *NodeChange::fontVariantDiscretionaryLigatures() const {
-  return _flags[2] & 268435456 ? &_data_fontVariantDiscretionaryLigatures : nullptr;
+  return _flags[2] & 2147483648 ? &_data_fontVariantDiscretionaryLigatures : nullptr;
 }
 
 void NodeChange::set_fontVariantDiscretionaryLigatures(const bool &value) {
-  _flags[2] |= 268435456; _data_fontVariantDiscretionaryLigatures = value;
+  _flags[2] |= 2147483648; _data_fontVariantDiscretionaryLigatures = value;
 }
 
 bool *NodeChange::fontVariantHistoricalLigatures() {
-  return _flags[2] & 536870912 ? &_data_fontVariantHistoricalLigatures : nullptr;
+  return _flags[3] & 1 ? &_data_fontVariantHistoricalLigatures : nullptr;
 }
 
 const bool *NodeChange::fontVariantHistoricalLigatures() const {
-  return _flags[2] & 536870912 ? &_data_fontVariantHistoricalLigatures : nullptr;
+  return _flags[3] & 1 ? &_data_fontVariantHistoricalLigatures : nullptr;
 }
 
 void NodeChange::set_fontVariantHistoricalLigatures(const bool &value) {
-  _flags[2] |= 536870912; _data_fontVariantHistoricalLigatures = value;
+  _flags[3] |= 1; _data_fontVariantHistoricalLigatures = value;
 }
 
 bool *NodeChange::fontVariantOrdinal() {
-  return _flags[2] & 1073741824 ? &_data_fontVariantOrdinal : nullptr;
+  return _flags[3] & 2 ? &_data_fontVariantOrdinal : nullptr;
 }
 
 const bool *NodeChange::fontVariantOrdinal() const {
-  return _flags[2] & 1073741824 ? &_data_fontVariantOrdinal : nullptr;
+  return _flags[3] & 2 ? &_data_fontVariantOrdinal : nullptr;
 }
 
 void NodeChange::set_fontVariantOrdinal(const bool &value) {
-  _flags[2] |= 1073741824; _data_fontVariantOrdinal = value;
+  _flags[3] |= 2; _data_fontVariantOrdinal = value;
 }
 
 bool *NodeChange::fontVariantSlashedZero() {
-  return _flags[2] & 2147483648 ? &_data_fontVariantSlashedZero : nullptr;
+  return _flags[3] & 4 ? &_data_fontVariantSlashedZero : nullptr;
 }
 
 const bool *NodeChange::fontVariantSlashedZero() const {
-  return _flags[2] & 2147483648 ? &_data_fontVariantSlashedZero : nullptr;
+  return _flags[3] & 4 ? &_data_fontVariantSlashedZero : nullptr;
 }
 
 void NodeChange::set_fontVariantSlashedZero(const bool &value) {
-  _flags[2] |= 2147483648; _data_fontVariantSlashedZero = value;
+  _flags[3] |= 4; _data_fontVariantSlashedZero = value;
 }
 
 FontVariantNumericFigure *NodeChange::fontVariantNumericFigure() {
-  return _flags[3] & 1 ? &_data_fontVariantNumericFigure : nullptr;
+  return _flags[3] & 8 ? &_data_fontVariantNumericFigure : nullptr;
 }
 
 const FontVariantNumericFigure *NodeChange::fontVariantNumericFigure() const {
-  return _flags[3] & 1 ? &_data_fontVariantNumericFigure : nullptr;
+  return _flags[3] & 8 ? &_data_fontVariantNumericFigure : nullptr;
 }
 
 void NodeChange::set_fontVariantNumericFigure(const FontVariantNumericFigure &value) {
-  _flags[3] |= 1; _data_fontVariantNumericFigure = value;
+  _flags[3] |= 8; _data_fontVariantNumericFigure = value;
 }
 
 FontVariantNumericSpacing *NodeChange::fontVariantNumericSpacing() {
-  return _flags[3] & 2 ? &_data_fontVariantNumericSpacing : nullptr;
+  return _flags[3] & 16 ? &_data_fontVariantNumericSpacing : nullptr;
 }
 
 const FontVariantNumericSpacing *NodeChange::fontVariantNumericSpacing() const {
-  return _flags[3] & 2 ? &_data_fontVariantNumericSpacing : nullptr;
+  return _flags[3] & 16 ? &_data_fontVariantNumericSpacing : nullptr;
 }
 
 void NodeChange::set_fontVariantNumericSpacing(const FontVariantNumericSpacing &value) {
-  _flags[3] |= 2; _data_fontVariantNumericSpacing = value;
+  _flags[3] |= 16; _data_fontVariantNumericSpacing = value;
 }
 
 FontVariantNumericFraction *NodeChange::fontVariantNumericFraction() {
-  return _flags[3] & 4 ? &_data_fontVariantNumericFraction : nullptr;
+  return _flags[3] & 32 ? &_data_fontVariantNumericFraction : nullptr;
 }
 
 const FontVariantNumericFraction *NodeChange::fontVariantNumericFraction() const {
-  return _flags[3] & 4 ? &_data_fontVariantNumericFraction : nullptr;
+  return _flags[3] & 32 ? &_data_fontVariantNumericFraction : nullptr;
 }
 
 void NodeChange::set_fontVariantNumericFraction(const FontVariantNumericFraction &value) {
-  _flags[3] |= 4; _data_fontVariantNumericFraction = value;
+  _flags[3] |= 32; _data_fontVariantNumericFraction = value;
 }
 
 FontVariantCaps *NodeChange::fontVariantCaps() {
-  return _flags[3] & 8 ? &_data_fontVariantCaps : nullptr;
+  return _flags[3] & 64 ? &_data_fontVariantCaps : nullptr;
 }
 
 const FontVariantCaps *NodeChange::fontVariantCaps() const {
-  return _flags[3] & 8 ? &_data_fontVariantCaps : nullptr;
+  return _flags[3] & 64 ? &_data_fontVariantCaps : nullptr;
 }
 
 void NodeChange::set_fontVariantCaps(const FontVariantCaps &value) {
-  _flags[3] |= 8; _data_fontVariantCaps = value;
+  _flags[3] |= 64; _data_fontVariantCaps = value;
 }
 
 FontVariantPosition *NodeChange::fontVariantPosition() {
-  return _flags[3] & 16 ? &_data_fontVariantPosition : nullptr;
+  return _flags[3] & 128 ? &_data_fontVariantPosition : nullptr;
 }
 
 const FontVariantPosition *NodeChange::fontVariantPosition() const {
-  return _flags[3] & 16 ? &_data_fontVariantPosition : nullptr;
+  return _flags[3] & 128 ? &_data_fontVariantPosition : nullptr;
 }
 
 void NodeChange::set_fontVariantPosition(const FontVariantPosition &value) {
-  _flags[3] |= 16; _data_fontVariantPosition = value;
+  _flags[3] |= 128; _data_fontVariantPosition = value;
 }
 
 Number *NodeChange::letterSpacing() {
@@ -15756,87 +17405,123 @@ void NodeChange::set_letterSpacing(Number *value) {
 }
 
 kiwi::String *NodeChange::fontVersion() {
-  return _flags[3] & 64 ? &_data_fontVersion : nullptr;
+  return _flags[3] & 512 ? &_data_fontVersion : nullptr;
 }
 
 const kiwi::String *NodeChange::fontVersion() const {
-  return _flags[3] & 64 ? &_data_fontVersion : nullptr;
+  return _flags[3] & 512 ? &_data_fontVersion : nullptr;
 }
 
 void NodeChange::set_fontVersion(const kiwi::String &value) {
-  _flags[3] |= 64; _data_fontVersion = value;
+  _flags[3] |= 512; _data_fontVersion = value;
 }
 
 LeadingTrim *NodeChange::leadingTrim() {
-  return _flags[3] & 128 ? &_data_leadingTrim : nullptr;
+  return _flags[3] & 1024 ? &_data_leadingTrim : nullptr;
 }
 
 const LeadingTrim *NodeChange::leadingTrim() const {
-  return _flags[3] & 128 ? &_data_leadingTrim : nullptr;
+  return _flags[3] & 1024 ? &_data_leadingTrim : nullptr;
 }
 
 void NodeChange::set_leadingTrim(const LeadingTrim &value) {
-  _flags[3] |= 128; _data_leadingTrim = value;
+  _flags[3] |= 1024; _data_leadingTrim = value;
 }
 
-bool *NodeChange::hangingQuote() {
-  return _flags[3] & 256 ? &_data_hangingQuote : nullptr;
+bool *NodeChange::hangingPunctuation() {
+  return _flags[3] & 2048 ? &_data_hangingPunctuation : nullptr;
 }
 
-const bool *NodeChange::hangingQuote() const {
-  return _flags[3] & 256 ? &_data_hangingQuote : nullptr;
+const bool *NodeChange::hangingPunctuation() const {
+  return _flags[3] & 2048 ? &_data_hangingPunctuation : nullptr;
 }
 
-void NodeChange::set_hangingQuote(const bool &value) {
-  _flags[3] |= 256; _data_hangingQuote = value;
+void NodeChange::set_hangingPunctuation(const bool &value) {
+  _flags[3] |= 2048; _data_hangingPunctuation = value;
 }
 
 bool *NodeChange::hangingList() {
-  return _flags[3] & 512 ? &_data_hangingList : nullptr;
+  return _flags[3] & 4096 ? &_data_hangingList : nullptr;
 }
 
 const bool *NodeChange::hangingList() const {
-  return _flags[3] & 512 ? &_data_hangingList : nullptr;
+  return _flags[3] & 4096 ? &_data_hangingList : nullptr;
 }
 
 void NodeChange::set_hangingList(const bool &value) {
-  _flags[3] |= 512; _data_hangingList = value;
+  _flags[3] |= 4096; _data_hangingList = value;
+}
+
+int32_t *NodeChange::maxLines() {
+  return _flags[3] & 8192 ? &_data_maxLines : nullptr;
+}
+
+const int32_t *NodeChange::maxLines() const {
+  return _flags[3] & 8192 ? &_data_maxLines : nullptr;
+}
+
+void NodeChange::set_maxLines(const int32_t &value) {
+  _flags[3] |= 8192; _data_maxLines = value;
+}
+
+SectionStatus *NodeChange::sectionStatus() {
+  return _flags[3] & 16384 ? &_data_sectionStatus : nullptr;
+}
+
+const SectionStatus *NodeChange::sectionStatus() const {
+  return _flags[3] & 16384 ? &_data_sectionStatus : nullptr;
+}
+
+void NodeChange::set_sectionStatus(const SectionStatus &value) {
+  _flags[3] |= 16384; _data_sectionStatus = value;
+}
+
+SectionStatusInfo *NodeChange::sectionStatusInfo() {
+  return _data_sectionStatusInfo;
+}
+
+const SectionStatusInfo *NodeChange::sectionStatusInfo() const {
+  return _data_sectionStatusInfo;
+}
+
+void NodeChange::set_sectionStatusInfo(SectionStatusInfo *value) {
+  _data_sectionStatusInfo = value;
 }
 
 uint32_t *NodeChange::textUserLayoutVersion() {
-  return _flags[3] & 1024 ? &_data_textUserLayoutVersion : nullptr;
+  return _flags[3] & 65536 ? &_data_textUserLayoutVersion : nullptr;
 }
 
 const uint32_t *NodeChange::textUserLayoutVersion() const {
-  return _flags[3] & 1024 ? &_data_textUserLayoutVersion : nullptr;
+  return _flags[3] & 65536 ? &_data_textUserLayoutVersion : nullptr;
 }
 
 void NodeChange::set_textUserLayoutVersion(const uint32_t &value) {
-  _flags[3] |= 1024; _data_textUserLayoutVersion = value;
+  _flags[3] |= 65536; _data_textUserLayoutVersion = value;
 }
 
 kiwi::Array<OpenTypeFeature> *NodeChange::toggledOnOTFeatures() {
-  return _flags[3] & 2048 ? &_data_toggledOnOTFeatures : nullptr;
+  return _flags[3] & 131072 ? &_data_toggledOnOTFeatures : nullptr;
 }
 
 const kiwi::Array<OpenTypeFeature> *NodeChange::toggledOnOTFeatures() const {
-  return _flags[3] & 2048 ? &_data_toggledOnOTFeatures : nullptr;
+  return _flags[3] & 131072 ? &_data_toggledOnOTFeatures : nullptr;
 }
 
 kiwi::Array<OpenTypeFeature> &NodeChange::set_toggledOnOTFeatures(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[3] |= 2048; return _data_toggledOnOTFeatures = pool.array<OpenTypeFeature>(count);
+  _flags[3] |= 131072; return _data_toggledOnOTFeatures = pool.array<OpenTypeFeature>(count);
 }
 
 kiwi::Array<OpenTypeFeature> *NodeChange::toggledOffOTFeatures() {
-  return _flags[3] & 4096 ? &_data_toggledOffOTFeatures : nullptr;
+  return _flags[3] & 262144 ? &_data_toggledOffOTFeatures : nullptr;
 }
 
 const kiwi::Array<OpenTypeFeature> *NodeChange::toggledOffOTFeatures() const {
-  return _flags[3] & 4096 ? &_data_toggledOffOTFeatures : nullptr;
+  return _flags[3] & 262144 ? &_data_toggledOffOTFeatures : nullptr;
 }
 
 kiwi::Array<OpenTypeFeature> &NodeChange::set_toggledOffOTFeatures(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[3] |= 4096; return _data_toggledOffOTFeatures = pool.array<OpenTypeFeature>(count);
+  _flags[3] |= 262144; return _data_toggledOffOTFeatures = pool.array<OpenTypeFeature>(count);
 }
 
 Hyperlink *NodeChange::hyperlink() {
@@ -15851,148 +17536,160 @@ void NodeChange::set_hyperlink(Hyperlink *value) {
   _data_hyperlink = value;
 }
 
+Mention *NodeChange::mention() {
+  return _data_mention;
+}
+
+const Mention *NodeChange::mention() const {
+  return _data_mention;
+}
+
+void NodeChange::set_mention(Mention *value) {
+  _data_mention = value;
+}
+
 kiwi::Array<FontVariation> *NodeChange::fontVariations() {
-  return _flags[3] & 16384 ? &_data_fontVariations : nullptr;
+  return _flags[3] & 2097152 ? &_data_fontVariations : nullptr;
 }
 
 const kiwi::Array<FontVariation> *NodeChange::fontVariations() const {
-  return _flags[3] & 16384 ? &_data_fontVariations : nullptr;
+  return _flags[3] & 2097152 ? &_data_fontVariations : nullptr;
 }
 
 kiwi::Array<FontVariation> &NodeChange::set_fontVariations(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[3] |= 16384; return _data_fontVariations = pool.array<FontVariation>(count);
+  _flags[3] |= 2097152; return _data_fontVariations = pool.array<FontVariation>(count);
 }
 
 uint32_t *NodeChange::textBidiVersion() {
-  return _flags[3] & 32768 ? &_data_textBidiVersion : nullptr;
+  return _flags[3] & 4194304 ? &_data_textBidiVersion : nullptr;
 }
 
 const uint32_t *NodeChange::textBidiVersion() const {
-  return _flags[3] & 32768 ? &_data_textBidiVersion : nullptr;
+  return _flags[3] & 4194304 ? &_data_textBidiVersion : nullptr;
 }
 
 void NodeChange::set_textBidiVersion(const uint32_t &value) {
-  _flags[3] |= 32768; _data_textBidiVersion = value;
+  _flags[3] |= 4194304; _data_textBidiVersion = value;
 }
 
 TextTruncation *NodeChange::textTruncation() {
-  return _flags[3] & 65536 ? &_data_textTruncation : nullptr;
+  return _flags[3] & 8388608 ? &_data_textTruncation : nullptr;
 }
 
 const TextTruncation *NodeChange::textTruncation() const {
-  return _flags[3] & 65536 ? &_data_textTruncation : nullptr;
+  return _flags[3] & 8388608 ? &_data_textTruncation : nullptr;
 }
 
 void NodeChange::set_textTruncation(const TextTruncation &value) {
-  _flags[3] |= 65536; _data_textTruncation = value;
+  _flags[3] |= 8388608; _data_textTruncation = value;
 }
 
 bool *NodeChange::hasHadRTLText() {
-  return _flags[3] & 131072 ? &_data_hasHadRTLText : nullptr;
+  return _flags[3] & 16777216 ? &_data_hasHadRTLText : nullptr;
 }
 
 const bool *NodeChange::hasHadRTLText() const {
-  return _flags[3] & 131072 ? &_data_hasHadRTLText : nullptr;
+  return _flags[3] & 16777216 ? &_data_hasHadRTLText : nullptr;
 }
 
 void NodeChange::set_hasHadRTLText(const bool &value) {
-  _flags[3] |= 131072; _data_hasHadRTLText = value;
+  _flags[3] |= 16777216; _data_hasHadRTLText = value;
 }
 
 bool *NodeChange::visible() {
-  return _flags[3] & 262144 ? &_data_visible : nullptr;
+  return _flags[3] & 33554432 ? &_data_visible : nullptr;
 }
 
 const bool *NodeChange::visible() const {
-  return _flags[3] & 262144 ? &_data_visible : nullptr;
+  return _flags[3] & 33554432 ? &_data_visible : nullptr;
 }
 
 void NodeChange::set_visible(const bool &value) {
-  _flags[3] |= 262144; _data_visible = value;
+  _flags[3] |= 33554432; _data_visible = value;
 }
 
 uint32_t *NodeChange::visibleTag() {
-  return _flags[3] & 524288 ? &_data_visibleTag : nullptr;
+  return _flags[3] & 67108864 ? &_data_visibleTag : nullptr;
 }
 
 const uint32_t *NodeChange::visibleTag() const {
-  return _flags[3] & 524288 ? &_data_visibleTag : nullptr;
+  return _flags[3] & 67108864 ? &_data_visibleTag : nullptr;
 }
 
 void NodeChange::set_visibleTag(const uint32_t &value) {
-  _flags[3] |= 524288; _data_visibleTag = value;
+  _flags[3] |= 67108864; _data_visibleTag = value;
 }
 
 bool *NodeChange::locked() {
-  return _flags[3] & 1048576 ? &_data_locked : nullptr;
+  return _flags[3] & 134217728 ? &_data_locked : nullptr;
 }
 
 const bool *NodeChange::locked() const {
-  return _flags[3] & 1048576 ? &_data_locked : nullptr;
+  return _flags[3] & 134217728 ? &_data_locked : nullptr;
 }
 
 void NodeChange::set_locked(const bool &value) {
-  _flags[3] |= 1048576; _data_locked = value;
+  _flags[3] |= 134217728; _data_locked = value;
 }
 
 uint32_t *NodeChange::lockedTag() {
-  return _flags[3] & 2097152 ? &_data_lockedTag : nullptr;
+  return _flags[3] & 268435456 ? &_data_lockedTag : nullptr;
 }
 
 const uint32_t *NodeChange::lockedTag() const {
-  return _flags[3] & 2097152 ? &_data_lockedTag : nullptr;
+  return _flags[3] & 268435456 ? &_data_lockedTag : nullptr;
 }
 
 void NodeChange::set_lockedTag(const uint32_t &value) {
-  _flags[3] |= 2097152; _data_lockedTag = value;
+  _flags[3] |= 268435456; _data_lockedTag = value;
 }
 
 float *NodeChange::opacity() {
-  return _flags[3] & 4194304 ? &_data_opacity : nullptr;
+  return _flags[3] & 536870912 ? &_data_opacity : nullptr;
 }
 
 const float *NodeChange::opacity() const {
-  return _flags[3] & 4194304 ? &_data_opacity : nullptr;
+  return _flags[3] & 536870912 ? &_data_opacity : nullptr;
 }
 
 void NodeChange::set_opacity(const float &value) {
-  _flags[3] |= 4194304; _data_opacity = value;
+  _flags[3] |= 536870912; _data_opacity = value;
 }
 
 uint32_t *NodeChange::opacityTag() {
-  return _flags[3] & 8388608 ? &_data_opacityTag : nullptr;
+  return _flags[3] & 1073741824 ? &_data_opacityTag : nullptr;
 }
 
 const uint32_t *NodeChange::opacityTag() const {
-  return _flags[3] & 8388608 ? &_data_opacityTag : nullptr;
+  return _flags[3] & 1073741824 ? &_data_opacityTag : nullptr;
 }
 
 void NodeChange::set_opacityTag(const uint32_t &value) {
-  _flags[3] |= 8388608; _data_opacityTag = value;
+  _flags[3] |= 1073741824; _data_opacityTag = value;
 }
 
 BlendMode *NodeChange::blendMode() {
-  return _flags[3] & 16777216 ? &_data_blendMode : nullptr;
+  return _flags[3] & 2147483648 ? &_data_blendMode : nullptr;
 }
 
 const BlendMode *NodeChange::blendMode() const {
-  return _flags[3] & 16777216 ? &_data_blendMode : nullptr;
+  return _flags[3] & 2147483648 ? &_data_blendMode : nullptr;
 }
 
 void NodeChange::set_blendMode(const BlendMode &value) {
-  _flags[3] |= 16777216; _data_blendMode = value;
+  _flags[3] |= 2147483648; _data_blendMode = value;
 }
 
 uint32_t *NodeChange::blendModeTag() {
-  return _flags[3] & 33554432 ? &_data_blendModeTag : nullptr;
+  return _flags[4] & 1 ? &_data_blendModeTag : nullptr;
 }
 
 const uint32_t *NodeChange::blendModeTag() const {
-  return _flags[3] & 33554432 ? &_data_blendModeTag : nullptr;
+  return _flags[4] & 1 ? &_data_blendModeTag : nullptr;
 }
 
 void NodeChange::set_blendModeTag(const uint32_t &value) {
-  _flags[3] |= 33554432; _data_blendModeTag = value;
+  _flags[4] |= 1; _data_blendModeTag = value;
 }
 
 Vector *NodeChange::size() {
@@ -16008,15 +17705,15 @@ void NodeChange::set_size(Vector *value) {
 }
 
 uint32_t *NodeChange::sizeTag() {
-  return _flags[3] & 134217728 ? &_data_sizeTag : nullptr;
+  return _flags[4] & 4 ? &_data_sizeTag : nullptr;
 }
 
 const uint32_t *NodeChange::sizeTag() const {
-  return _flags[3] & 134217728 ? &_data_sizeTag : nullptr;
+  return _flags[4] & 4 ? &_data_sizeTag : nullptr;
 }
 
 void NodeChange::set_sizeTag(const uint32_t &value) {
-  _flags[3] |= 134217728; _data_sizeTag = value;
+  _flags[4] |= 4; _data_sizeTag = value;
 }
 
 Matrix *NodeChange::transform() {
@@ -16032,315 +17729,315 @@ void NodeChange::set_transform(Matrix *value) {
 }
 
 uint32_t *NodeChange::transformTag() {
-  return _flags[3] & 536870912 ? &_data_transformTag : nullptr;
+  return _flags[4] & 16 ? &_data_transformTag : nullptr;
 }
 
 const uint32_t *NodeChange::transformTag() const {
-  return _flags[3] & 536870912 ? &_data_transformTag : nullptr;
+  return _flags[4] & 16 ? &_data_transformTag : nullptr;
 }
 
 void NodeChange::set_transformTag(const uint32_t &value) {
-  _flags[3] |= 536870912; _data_transformTag = value;
+  _flags[4] |= 16; _data_transformTag = value;
 }
 
 kiwi::Array<float> *NodeChange::dashPattern() {
-  return _flags[3] & 1073741824 ? &_data_dashPattern : nullptr;
+  return _flags[4] & 32 ? &_data_dashPattern : nullptr;
 }
 
 const kiwi::Array<float> *NodeChange::dashPattern() const {
-  return _flags[3] & 1073741824 ? &_data_dashPattern : nullptr;
+  return _flags[4] & 32 ? &_data_dashPattern : nullptr;
 }
 
 kiwi::Array<float> &NodeChange::set_dashPattern(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[3] |= 1073741824; return _data_dashPattern = pool.array<float>(count);
+  _flags[4] |= 32; return _data_dashPattern = pool.array<float>(count);
 }
 
 uint32_t *NodeChange::dashPatternTag() {
-  return _flags[3] & 2147483648 ? &_data_dashPatternTag : nullptr;
+  return _flags[4] & 64 ? &_data_dashPatternTag : nullptr;
 }
 
 const uint32_t *NodeChange::dashPatternTag() const {
-  return _flags[3] & 2147483648 ? &_data_dashPatternTag : nullptr;
+  return _flags[4] & 64 ? &_data_dashPatternTag : nullptr;
 }
 
 void NodeChange::set_dashPatternTag(const uint32_t &value) {
-  _flags[3] |= 2147483648; _data_dashPatternTag = value;
+  _flags[4] |= 64; _data_dashPatternTag = value;
 }
 
 bool *NodeChange::mask() {
-  return _flags[4] & 1 ? &_data_mask : nullptr;
+  return _flags[4] & 128 ? &_data_mask : nullptr;
 }
 
 const bool *NodeChange::mask() const {
-  return _flags[4] & 1 ? &_data_mask : nullptr;
+  return _flags[4] & 128 ? &_data_mask : nullptr;
 }
 
 void NodeChange::set_mask(const bool &value) {
-  _flags[4] |= 1; _data_mask = value;
+  _flags[4] |= 128; _data_mask = value;
 }
 
 uint32_t *NodeChange::maskTag() {
-  return _flags[4] & 2 ? &_data_maskTag : nullptr;
+  return _flags[4] & 256 ? &_data_maskTag : nullptr;
 }
 
 const uint32_t *NodeChange::maskTag() const {
-  return _flags[4] & 2 ? &_data_maskTag : nullptr;
+  return _flags[4] & 256 ? &_data_maskTag : nullptr;
 }
 
 void NodeChange::set_maskTag(const uint32_t &value) {
-  _flags[4] |= 2; _data_maskTag = value;
+  _flags[4] |= 256; _data_maskTag = value;
 }
 
 bool *NodeChange::maskIsOutline() {
-  return _flags[4] & 4 ? &_data_maskIsOutline : nullptr;
+  return _flags[4] & 512 ? &_data_maskIsOutline : nullptr;
 }
 
 const bool *NodeChange::maskIsOutline() const {
-  return _flags[4] & 4 ? &_data_maskIsOutline : nullptr;
+  return _flags[4] & 512 ? &_data_maskIsOutline : nullptr;
 }
 
 void NodeChange::set_maskIsOutline(const bool &value) {
-  _flags[4] |= 4; _data_maskIsOutline = value;
+  _flags[4] |= 512; _data_maskIsOutline = value;
 }
 
 uint32_t *NodeChange::maskIsOutlineTag() {
-  return _flags[4] & 8 ? &_data_maskIsOutlineTag : nullptr;
+  return _flags[4] & 1024 ? &_data_maskIsOutlineTag : nullptr;
 }
 
 const uint32_t *NodeChange::maskIsOutlineTag() const {
-  return _flags[4] & 8 ? &_data_maskIsOutlineTag : nullptr;
+  return _flags[4] & 1024 ? &_data_maskIsOutlineTag : nullptr;
 }
 
 void NodeChange::set_maskIsOutlineTag(const uint32_t &value) {
-  _flags[4] |= 8; _data_maskIsOutlineTag = value;
+  _flags[4] |= 1024; _data_maskIsOutlineTag = value;
 }
 
 MaskType *NodeChange::maskType() {
-  return _flags[4] & 16 ? &_data_maskType : nullptr;
+  return _flags[4] & 2048 ? &_data_maskType : nullptr;
 }
 
 const MaskType *NodeChange::maskType() const {
-  return _flags[4] & 16 ? &_data_maskType : nullptr;
+  return _flags[4] & 2048 ? &_data_maskType : nullptr;
 }
 
 void NodeChange::set_maskType(const MaskType &value) {
-  _flags[4] |= 16; _data_maskType = value;
+  _flags[4] |= 2048; _data_maskType = value;
 }
 
 float *NodeChange::backgroundOpacity() {
-  return _flags[4] & 32 ? &_data_backgroundOpacity : nullptr;
+  return _flags[4] & 4096 ? &_data_backgroundOpacity : nullptr;
 }
 
 const float *NodeChange::backgroundOpacity() const {
-  return _flags[4] & 32 ? &_data_backgroundOpacity : nullptr;
+  return _flags[4] & 4096 ? &_data_backgroundOpacity : nullptr;
 }
 
 void NodeChange::set_backgroundOpacity(const float &value) {
-  _flags[4] |= 32; _data_backgroundOpacity = value;
+  _flags[4] |= 4096; _data_backgroundOpacity = value;
 }
 
 uint32_t *NodeChange::backgroundOpacityTag() {
-  return _flags[4] & 64 ? &_data_backgroundOpacityTag : nullptr;
+  return _flags[4] & 8192 ? &_data_backgroundOpacityTag : nullptr;
 }
 
 const uint32_t *NodeChange::backgroundOpacityTag() const {
-  return _flags[4] & 64 ? &_data_backgroundOpacityTag : nullptr;
+  return _flags[4] & 8192 ? &_data_backgroundOpacityTag : nullptr;
 }
 
 void NodeChange::set_backgroundOpacityTag(const uint32_t &value) {
-  _flags[4] |= 64; _data_backgroundOpacityTag = value;
+  _flags[4] |= 8192; _data_backgroundOpacityTag = value;
 }
 
 float *NodeChange::cornerRadius() {
-  return _flags[4] & 128 ? &_data_cornerRadius : nullptr;
+  return _flags[4] & 16384 ? &_data_cornerRadius : nullptr;
 }
 
 const float *NodeChange::cornerRadius() const {
-  return _flags[4] & 128 ? &_data_cornerRadius : nullptr;
+  return _flags[4] & 16384 ? &_data_cornerRadius : nullptr;
 }
 
 void NodeChange::set_cornerRadius(const float &value) {
-  _flags[4] |= 128; _data_cornerRadius = value;
+  _flags[4] |= 16384; _data_cornerRadius = value;
 }
 
 uint32_t *NodeChange::cornerRadiusTag() {
-  return _flags[4] & 256 ? &_data_cornerRadiusTag : nullptr;
+  return _flags[4] & 32768 ? &_data_cornerRadiusTag : nullptr;
 }
 
 const uint32_t *NodeChange::cornerRadiusTag() const {
-  return _flags[4] & 256 ? &_data_cornerRadiusTag : nullptr;
+  return _flags[4] & 32768 ? &_data_cornerRadiusTag : nullptr;
 }
 
 void NodeChange::set_cornerRadiusTag(const uint32_t &value) {
-  _flags[4] |= 256; _data_cornerRadiusTag = value;
+  _flags[4] |= 32768; _data_cornerRadiusTag = value;
 }
 
 float *NodeChange::strokeWeight() {
-  return _flags[4] & 512 ? &_data_strokeWeight : nullptr;
+  return _flags[4] & 65536 ? &_data_strokeWeight : nullptr;
 }
 
 const float *NodeChange::strokeWeight() const {
-  return _flags[4] & 512 ? &_data_strokeWeight : nullptr;
+  return _flags[4] & 65536 ? &_data_strokeWeight : nullptr;
 }
 
 void NodeChange::set_strokeWeight(const float &value) {
-  _flags[4] |= 512; _data_strokeWeight = value;
+  _flags[4] |= 65536; _data_strokeWeight = value;
 }
 
 uint32_t *NodeChange::strokeWeightTag() {
-  return _flags[4] & 1024 ? &_data_strokeWeightTag : nullptr;
+  return _flags[4] & 131072 ? &_data_strokeWeightTag : nullptr;
 }
 
 const uint32_t *NodeChange::strokeWeightTag() const {
-  return _flags[4] & 1024 ? &_data_strokeWeightTag : nullptr;
+  return _flags[4] & 131072 ? &_data_strokeWeightTag : nullptr;
 }
 
 void NodeChange::set_strokeWeightTag(const uint32_t &value) {
-  _flags[4] |= 1024; _data_strokeWeightTag = value;
+  _flags[4] |= 131072; _data_strokeWeightTag = value;
 }
 
 StrokeAlign *NodeChange::strokeAlign() {
-  return _flags[4] & 2048 ? &_data_strokeAlign : nullptr;
+  return _flags[4] & 262144 ? &_data_strokeAlign : nullptr;
 }
 
 const StrokeAlign *NodeChange::strokeAlign() const {
-  return _flags[4] & 2048 ? &_data_strokeAlign : nullptr;
+  return _flags[4] & 262144 ? &_data_strokeAlign : nullptr;
 }
 
 void NodeChange::set_strokeAlign(const StrokeAlign &value) {
-  _flags[4] |= 2048; _data_strokeAlign = value;
+  _flags[4] |= 262144; _data_strokeAlign = value;
 }
 
 uint32_t *NodeChange::strokeAlignTag() {
-  return _flags[4] & 4096 ? &_data_strokeAlignTag : nullptr;
+  return _flags[4] & 524288 ? &_data_strokeAlignTag : nullptr;
 }
 
 const uint32_t *NodeChange::strokeAlignTag() const {
-  return _flags[4] & 4096 ? &_data_strokeAlignTag : nullptr;
+  return _flags[4] & 524288 ? &_data_strokeAlignTag : nullptr;
 }
 
 void NodeChange::set_strokeAlignTag(const uint32_t &value) {
-  _flags[4] |= 4096; _data_strokeAlignTag = value;
+  _flags[4] |= 524288; _data_strokeAlignTag = value;
 }
 
 StrokeCap *NodeChange::strokeCap() {
-  return _flags[4] & 8192 ? &_data_strokeCap : nullptr;
+  return _flags[4] & 1048576 ? &_data_strokeCap : nullptr;
 }
 
 const StrokeCap *NodeChange::strokeCap() const {
-  return _flags[4] & 8192 ? &_data_strokeCap : nullptr;
+  return _flags[4] & 1048576 ? &_data_strokeCap : nullptr;
 }
 
 void NodeChange::set_strokeCap(const StrokeCap &value) {
-  _flags[4] |= 8192; _data_strokeCap = value;
+  _flags[4] |= 1048576; _data_strokeCap = value;
 }
 
 uint32_t *NodeChange::strokeCapTag() {
-  return _flags[4] & 16384 ? &_data_strokeCapTag : nullptr;
+  return _flags[4] & 2097152 ? &_data_strokeCapTag : nullptr;
 }
 
 const uint32_t *NodeChange::strokeCapTag() const {
-  return _flags[4] & 16384 ? &_data_strokeCapTag : nullptr;
+  return _flags[4] & 2097152 ? &_data_strokeCapTag : nullptr;
 }
 
 void NodeChange::set_strokeCapTag(const uint32_t &value) {
-  _flags[4] |= 16384; _data_strokeCapTag = value;
+  _flags[4] |= 2097152; _data_strokeCapTag = value;
 }
 
 StrokeJoin *NodeChange::strokeJoin() {
-  return _flags[4] & 32768 ? &_data_strokeJoin : nullptr;
+  return _flags[4] & 4194304 ? &_data_strokeJoin : nullptr;
 }
 
 const StrokeJoin *NodeChange::strokeJoin() const {
-  return _flags[4] & 32768 ? &_data_strokeJoin : nullptr;
+  return _flags[4] & 4194304 ? &_data_strokeJoin : nullptr;
 }
 
 void NodeChange::set_strokeJoin(const StrokeJoin &value) {
-  _flags[4] |= 32768; _data_strokeJoin = value;
+  _flags[4] |= 4194304; _data_strokeJoin = value;
 }
 
 uint32_t *NodeChange::strokeJoinTag() {
-  return _flags[4] & 65536 ? &_data_strokeJoinTag : nullptr;
+  return _flags[4] & 8388608 ? &_data_strokeJoinTag : nullptr;
 }
 
 const uint32_t *NodeChange::strokeJoinTag() const {
-  return _flags[4] & 65536 ? &_data_strokeJoinTag : nullptr;
+  return _flags[4] & 8388608 ? &_data_strokeJoinTag : nullptr;
 }
 
 void NodeChange::set_strokeJoinTag(const uint32_t &value) {
-  _flags[4] |= 65536; _data_strokeJoinTag = value;
+  _flags[4] |= 8388608; _data_strokeJoinTag = value;
 }
 
 kiwi::Array<Paint> *NodeChange::fillPaints() {
-  return _flags[4] & 131072 ? &_data_fillPaints : nullptr;
+  return _flags[4] & 16777216 ? &_data_fillPaints : nullptr;
 }
 
 const kiwi::Array<Paint> *NodeChange::fillPaints() const {
-  return _flags[4] & 131072 ? &_data_fillPaints : nullptr;
+  return _flags[4] & 16777216 ? &_data_fillPaints : nullptr;
 }
 
 kiwi::Array<Paint> &NodeChange::set_fillPaints(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[4] |= 131072; return _data_fillPaints = pool.array<Paint>(count);
+  _flags[4] |= 16777216; return _data_fillPaints = pool.array<Paint>(count);
 }
 
 uint32_t *NodeChange::fillPaintsTag() {
-  return _flags[4] & 262144 ? &_data_fillPaintsTag : nullptr;
+  return _flags[4] & 33554432 ? &_data_fillPaintsTag : nullptr;
 }
 
 const uint32_t *NodeChange::fillPaintsTag() const {
-  return _flags[4] & 262144 ? &_data_fillPaintsTag : nullptr;
+  return _flags[4] & 33554432 ? &_data_fillPaintsTag : nullptr;
 }
 
 void NodeChange::set_fillPaintsTag(const uint32_t &value) {
-  _flags[4] |= 262144; _data_fillPaintsTag = value;
+  _flags[4] |= 33554432; _data_fillPaintsTag = value;
 }
 
 kiwi::Array<Paint> *NodeChange::strokePaints() {
-  return _flags[4] & 524288 ? &_data_strokePaints : nullptr;
+  return _flags[4] & 67108864 ? &_data_strokePaints : nullptr;
 }
 
 const kiwi::Array<Paint> *NodeChange::strokePaints() const {
-  return _flags[4] & 524288 ? &_data_strokePaints : nullptr;
+  return _flags[4] & 67108864 ? &_data_strokePaints : nullptr;
 }
 
 kiwi::Array<Paint> &NodeChange::set_strokePaints(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[4] |= 524288; return _data_strokePaints = pool.array<Paint>(count);
+  _flags[4] |= 67108864; return _data_strokePaints = pool.array<Paint>(count);
 }
 
 uint32_t *NodeChange::strokePaintsTag() {
-  return _flags[4] & 1048576 ? &_data_strokePaintsTag : nullptr;
+  return _flags[4] & 134217728 ? &_data_strokePaintsTag : nullptr;
 }
 
 const uint32_t *NodeChange::strokePaintsTag() const {
-  return _flags[4] & 1048576 ? &_data_strokePaintsTag : nullptr;
+  return _flags[4] & 134217728 ? &_data_strokePaintsTag : nullptr;
 }
 
 void NodeChange::set_strokePaintsTag(const uint32_t &value) {
-  _flags[4] |= 1048576; _data_strokePaintsTag = value;
+  _flags[4] |= 134217728; _data_strokePaintsTag = value;
 }
 
 kiwi::Array<Effect> *NodeChange::effects() {
-  return _flags[4] & 2097152 ? &_data_effects : nullptr;
+  return _flags[4] & 268435456 ? &_data_effects : nullptr;
 }
 
 const kiwi::Array<Effect> *NodeChange::effects() const {
-  return _flags[4] & 2097152 ? &_data_effects : nullptr;
+  return _flags[4] & 268435456 ? &_data_effects : nullptr;
 }
 
 kiwi::Array<Effect> &NodeChange::set_effects(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[4] |= 2097152; return _data_effects = pool.array<Effect>(count);
+  _flags[4] |= 268435456; return _data_effects = pool.array<Effect>(count);
 }
 
 uint32_t *NodeChange::effectsTag() {
-  return _flags[4] & 4194304 ? &_data_effectsTag : nullptr;
+  return _flags[4] & 536870912 ? &_data_effectsTag : nullptr;
 }
 
 const uint32_t *NodeChange::effectsTag() const {
-  return _flags[4] & 4194304 ? &_data_effectsTag : nullptr;
+  return _flags[4] & 536870912 ? &_data_effectsTag : nullptr;
 }
 
 void NodeChange::set_effectsTag(const uint32_t &value) {
-  _flags[4] |= 4194304; _data_effectsTag = value;
+  _flags[4] |= 536870912; _data_effectsTag = value;
 }
 
 Color *NodeChange::backgroundColor() {
@@ -16356,591 +18053,591 @@ void NodeChange::set_backgroundColor(Color *value) {
 }
 
 uint32_t *NodeChange::backgroundColorTag() {
-  return _flags[4] & 16777216 ? &_data_backgroundColorTag : nullptr;
+  return _flags[4] & 2147483648 ? &_data_backgroundColorTag : nullptr;
 }
 
 const uint32_t *NodeChange::backgroundColorTag() const {
-  return _flags[4] & 16777216 ? &_data_backgroundColorTag : nullptr;
+  return _flags[4] & 2147483648 ? &_data_backgroundColorTag : nullptr;
 }
 
 void NodeChange::set_backgroundColorTag(const uint32_t &value) {
-  _flags[4] |= 16777216; _data_backgroundColorTag = value;
+  _flags[4] |= 2147483648; _data_backgroundColorTag = value;
 }
 
 kiwi::Array<Path> *NodeChange::fillGeometry() {
-  return _flags[4] & 33554432 ? &_data_fillGeometry : nullptr;
+  return _flags[5] & 1 ? &_data_fillGeometry : nullptr;
 }
 
 const kiwi::Array<Path> *NodeChange::fillGeometry() const {
-  return _flags[4] & 33554432 ? &_data_fillGeometry : nullptr;
+  return _flags[5] & 1 ? &_data_fillGeometry : nullptr;
 }
 
 kiwi::Array<Path> &NodeChange::set_fillGeometry(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[4] |= 33554432; return _data_fillGeometry = pool.array<Path>(count);
+  _flags[5] |= 1; return _data_fillGeometry = pool.array<Path>(count);
 }
 
 uint32_t *NodeChange::fillGeometryTag() {
-  return _flags[4] & 67108864 ? &_data_fillGeometryTag : nullptr;
+  return _flags[5] & 2 ? &_data_fillGeometryTag : nullptr;
 }
 
 const uint32_t *NodeChange::fillGeometryTag() const {
-  return _flags[4] & 67108864 ? &_data_fillGeometryTag : nullptr;
+  return _flags[5] & 2 ? &_data_fillGeometryTag : nullptr;
 }
 
 void NodeChange::set_fillGeometryTag(const uint32_t &value) {
-  _flags[4] |= 67108864; _data_fillGeometryTag = value;
+  _flags[5] |= 2; _data_fillGeometryTag = value;
 }
 
 kiwi::Array<Path> *NodeChange::strokeGeometry() {
-  return _flags[4] & 134217728 ? &_data_strokeGeometry : nullptr;
+  return _flags[5] & 4 ? &_data_strokeGeometry : nullptr;
 }
 
 const kiwi::Array<Path> *NodeChange::strokeGeometry() const {
-  return _flags[4] & 134217728 ? &_data_strokeGeometry : nullptr;
+  return _flags[5] & 4 ? &_data_strokeGeometry : nullptr;
 }
 
 kiwi::Array<Path> &NodeChange::set_strokeGeometry(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[4] |= 134217728; return _data_strokeGeometry = pool.array<Path>(count);
+  _flags[5] |= 4; return _data_strokeGeometry = pool.array<Path>(count);
 }
 
 uint32_t *NodeChange::strokeGeometryTag() {
-  return _flags[4] & 268435456 ? &_data_strokeGeometryTag : nullptr;
+  return _flags[5] & 8 ? &_data_strokeGeometryTag : nullptr;
 }
 
 const uint32_t *NodeChange::strokeGeometryTag() const {
-  return _flags[4] & 268435456 ? &_data_strokeGeometryTag : nullptr;
+  return _flags[5] & 8 ? &_data_strokeGeometryTag : nullptr;
 }
 
 void NodeChange::set_strokeGeometryTag(const uint32_t &value) {
-  _flags[4] |= 268435456; _data_strokeGeometryTag = value;
+  _flags[5] |= 8; _data_strokeGeometryTag = value;
 }
 
 float *NodeChange::rectangleTopLeftCornerRadius() {
-  return _flags[4] & 536870912 ? &_data_rectangleTopLeftCornerRadius : nullptr;
+  return _flags[5] & 16 ? &_data_rectangleTopLeftCornerRadius : nullptr;
 }
 
 const float *NodeChange::rectangleTopLeftCornerRadius() const {
-  return _flags[4] & 536870912 ? &_data_rectangleTopLeftCornerRadius : nullptr;
+  return _flags[5] & 16 ? &_data_rectangleTopLeftCornerRadius : nullptr;
 }
 
 void NodeChange::set_rectangleTopLeftCornerRadius(const float &value) {
-  _flags[4] |= 536870912; _data_rectangleTopLeftCornerRadius = value;
+  _flags[5] |= 16; _data_rectangleTopLeftCornerRadius = value;
 }
 
 float *NodeChange::rectangleTopRightCornerRadius() {
-  return _flags[4] & 1073741824 ? &_data_rectangleTopRightCornerRadius : nullptr;
+  return _flags[5] & 32 ? &_data_rectangleTopRightCornerRadius : nullptr;
 }
 
 const float *NodeChange::rectangleTopRightCornerRadius() const {
-  return _flags[4] & 1073741824 ? &_data_rectangleTopRightCornerRadius : nullptr;
+  return _flags[5] & 32 ? &_data_rectangleTopRightCornerRadius : nullptr;
 }
 
 void NodeChange::set_rectangleTopRightCornerRadius(const float &value) {
-  _flags[4] |= 1073741824; _data_rectangleTopRightCornerRadius = value;
+  _flags[5] |= 32; _data_rectangleTopRightCornerRadius = value;
 }
 
 float *NodeChange::rectangleBottomLeftCornerRadius() {
-  return _flags[4] & 2147483648 ? &_data_rectangleBottomLeftCornerRadius : nullptr;
+  return _flags[5] & 64 ? &_data_rectangleBottomLeftCornerRadius : nullptr;
 }
 
 const float *NodeChange::rectangleBottomLeftCornerRadius() const {
-  return _flags[4] & 2147483648 ? &_data_rectangleBottomLeftCornerRadius : nullptr;
+  return _flags[5] & 64 ? &_data_rectangleBottomLeftCornerRadius : nullptr;
 }
 
 void NodeChange::set_rectangleBottomLeftCornerRadius(const float &value) {
-  _flags[4] |= 2147483648; _data_rectangleBottomLeftCornerRadius = value;
+  _flags[5] |= 64; _data_rectangleBottomLeftCornerRadius = value;
 }
 
 float *NodeChange::rectangleBottomRightCornerRadius() {
-  return _flags[5] & 1 ? &_data_rectangleBottomRightCornerRadius : nullptr;
+  return _flags[5] & 128 ? &_data_rectangleBottomRightCornerRadius : nullptr;
 }
 
 const float *NodeChange::rectangleBottomRightCornerRadius() const {
-  return _flags[5] & 1 ? &_data_rectangleBottomRightCornerRadius : nullptr;
+  return _flags[5] & 128 ? &_data_rectangleBottomRightCornerRadius : nullptr;
 }
 
 void NodeChange::set_rectangleBottomRightCornerRadius(const float &value) {
-  _flags[5] |= 1; _data_rectangleBottomRightCornerRadius = value;
+  _flags[5] |= 128; _data_rectangleBottomRightCornerRadius = value;
 }
 
 bool *NodeChange::rectangleCornerRadiiIndependent() {
-  return _flags[5] & 2 ? &_data_rectangleCornerRadiiIndependent : nullptr;
+  return _flags[5] & 256 ? &_data_rectangleCornerRadiiIndependent : nullptr;
 }
 
 const bool *NodeChange::rectangleCornerRadiiIndependent() const {
-  return _flags[5] & 2 ? &_data_rectangleCornerRadiiIndependent : nullptr;
+  return _flags[5] & 256 ? &_data_rectangleCornerRadiiIndependent : nullptr;
 }
 
 void NodeChange::set_rectangleCornerRadiiIndependent(const bool &value) {
-  _flags[5] |= 2; _data_rectangleCornerRadiiIndependent = value;
+  _flags[5] |= 256; _data_rectangleCornerRadiiIndependent = value;
 }
 
 bool *NodeChange::rectangleCornerToolIndependent() {
-  return _flags[5] & 4 ? &_data_rectangleCornerToolIndependent : nullptr;
+  return _flags[5] & 512 ? &_data_rectangleCornerToolIndependent : nullptr;
 }
 
 const bool *NodeChange::rectangleCornerToolIndependent() const {
-  return _flags[5] & 4 ? &_data_rectangleCornerToolIndependent : nullptr;
+  return _flags[5] & 512 ? &_data_rectangleCornerToolIndependent : nullptr;
 }
 
 void NodeChange::set_rectangleCornerToolIndependent(const bool &value) {
-  _flags[5] |= 4; _data_rectangleCornerToolIndependent = value;
+  _flags[5] |= 512; _data_rectangleCornerToolIndependent = value;
 }
 
 bool *NodeChange::proportionsConstrained() {
-  return _flags[5] & 8 ? &_data_proportionsConstrained : nullptr;
+  return _flags[5] & 1024 ? &_data_proportionsConstrained : nullptr;
 }
 
 const bool *NodeChange::proportionsConstrained() const {
-  return _flags[5] & 8 ? &_data_proportionsConstrained : nullptr;
+  return _flags[5] & 1024 ? &_data_proportionsConstrained : nullptr;
 }
 
 void NodeChange::set_proportionsConstrained(const bool &value) {
-  _flags[5] |= 8; _data_proportionsConstrained = value;
+  _flags[5] |= 1024; _data_proportionsConstrained = value;
 }
 
 bool *NodeChange::useAbsoluteBounds() {
-  return _flags[5] & 16 ? &_data_useAbsoluteBounds : nullptr;
+  return _flags[5] & 2048 ? &_data_useAbsoluteBounds : nullptr;
 }
 
 const bool *NodeChange::useAbsoluteBounds() const {
-  return _flags[5] & 16 ? &_data_useAbsoluteBounds : nullptr;
+  return _flags[5] & 2048 ? &_data_useAbsoluteBounds : nullptr;
 }
 
 void NodeChange::set_useAbsoluteBounds(const bool &value) {
-  _flags[5] |= 16; _data_useAbsoluteBounds = value;
+  _flags[5] |= 2048; _data_useAbsoluteBounds = value;
 }
 
 bool *NodeChange::borderTopHidden() {
-  return _flags[5] & 32 ? &_data_borderTopHidden : nullptr;
+  return _flags[5] & 4096 ? &_data_borderTopHidden : nullptr;
 }
 
 const bool *NodeChange::borderTopHidden() const {
-  return _flags[5] & 32 ? &_data_borderTopHidden : nullptr;
+  return _flags[5] & 4096 ? &_data_borderTopHidden : nullptr;
 }
 
 void NodeChange::set_borderTopHidden(const bool &value) {
-  _flags[5] |= 32; _data_borderTopHidden = value;
+  _flags[5] |= 4096; _data_borderTopHidden = value;
 }
 
 bool *NodeChange::borderBottomHidden() {
-  return _flags[5] & 64 ? &_data_borderBottomHidden : nullptr;
+  return _flags[5] & 8192 ? &_data_borderBottomHidden : nullptr;
 }
 
 const bool *NodeChange::borderBottomHidden() const {
-  return _flags[5] & 64 ? &_data_borderBottomHidden : nullptr;
+  return _flags[5] & 8192 ? &_data_borderBottomHidden : nullptr;
 }
 
 void NodeChange::set_borderBottomHidden(const bool &value) {
-  _flags[5] |= 64; _data_borderBottomHidden = value;
+  _flags[5] |= 8192; _data_borderBottomHidden = value;
 }
 
 bool *NodeChange::borderLeftHidden() {
-  return _flags[5] & 128 ? &_data_borderLeftHidden : nullptr;
+  return _flags[5] & 16384 ? &_data_borderLeftHidden : nullptr;
 }
 
 const bool *NodeChange::borderLeftHidden() const {
-  return _flags[5] & 128 ? &_data_borderLeftHidden : nullptr;
+  return _flags[5] & 16384 ? &_data_borderLeftHidden : nullptr;
 }
 
 void NodeChange::set_borderLeftHidden(const bool &value) {
-  _flags[5] |= 128; _data_borderLeftHidden = value;
+  _flags[5] |= 16384; _data_borderLeftHidden = value;
 }
 
 bool *NodeChange::borderRightHidden() {
-  return _flags[5] & 256 ? &_data_borderRightHidden : nullptr;
+  return _flags[5] & 32768 ? &_data_borderRightHidden : nullptr;
 }
 
 const bool *NodeChange::borderRightHidden() const {
-  return _flags[5] & 256 ? &_data_borderRightHidden : nullptr;
+  return _flags[5] & 32768 ? &_data_borderRightHidden : nullptr;
 }
 
 void NodeChange::set_borderRightHidden(const bool &value) {
-  _flags[5] |= 256; _data_borderRightHidden = value;
+  _flags[5] |= 32768; _data_borderRightHidden = value;
 }
 
 bool *NodeChange::bordersTakeSpace() {
-  return _flags[5] & 512 ? &_data_bordersTakeSpace : nullptr;
+  return _flags[5] & 65536 ? &_data_bordersTakeSpace : nullptr;
 }
 
 const bool *NodeChange::bordersTakeSpace() const {
-  return _flags[5] & 512 ? &_data_bordersTakeSpace : nullptr;
+  return _flags[5] & 65536 ? &_data_bordersTakeSpace : nullptr;
 }
 
 void NodeChange::set_bordersTakeSpace(const bool &value) {
-  _flags[5] |= 512; _data_bordersTakeSpace = value;
+  _flags[5] |= 65536; _data_bordersTakeSpace = value;
 }
 
 float *NodeChange::borderTopWeight() {
-  return _flags[5] & 1024 ? &_data_borderTopWeight : nullptr;
+  return _flags[5] & 131072 ? &_data_borderTopWeight : nullptr;
 }
 
 const float *NodeChange::borderTopWeight() const {
-  return _flags[5] & 1024 ? &_data_borderTopWeight : nullptr;
+  return _flags[5] & 131072 ? &_data_borderTopWeight : nullptr;
 }
 
 void NodeChange::set_borderTopWeight(const float &value) {
-  _flags[5] |= 1024; _data_borderTopWeight = value;
+  _flags[5] |= 131072; _data_borderTopWeight = value;
 }
 
 float *NodeChange::borderBottomWeight() {
-  return _flags[5] & 2048 ? &_data_borderBottomWeight : nullptr;
+  return _flags[5] & 262144 ? &_data_borderBottomWeight : nullptr;
 }
 
 const float *NodeChange::borderBottomWeight() const {
-  return _flags[5] & 2048 ? &_data_borderBottomWeight : nullptr;
+  return _flags[5] & 262144 ? &_data_borderBottomWeight : nullptr;
 }
 
 void NodeChange::set_borderBottomWeight(const float &value) {
-  _flags[5] |= 2048; _data_borderBottomWeight = value;
+  _flags[5] |= 262144; _data_borderBottomWeight = value;
 }
 
 float *NodeChange::borderLeftWeight() {
-  return _flags[5] & 4096 ? &_data_borderLeftWeight : nullptr;
+  return _flags[5] & 524288 ? &_data_borderLeftWeight : nullptr;
 }
 
 const float *NodeChange::borderLeftWeight() const {
-  return _flags[5] & 4096 ? &_data_borderLeftWeight : nullptr;
+  return _flags[5] & 524288 ? &_data_borderLeftWeight : nullptr;
 }
 
 void NodeChange::set_borderLeftWeight(const float &value) {
-  _flags[5] |= 4096; _data_borderLeftWeight = value;
+  _flags[5] |= 524288; _data_borderLeftWeight = value;
 }
 
 float *NodeChange::borderRightWeight() {
-  return _flags[5] & 8192 ? &_data_borderRightWeight : nullptr;
+  return _flags[5] & 1048576 ? &_data_borderRightWeight : nullptr;
 }
 
 const float *NodeChange::borderRightWeight() const {
-  return _flags[5] & 8192 ? &_data_borderRightWeight : nullptr;
+  return _flags[5] & 1048576 ? &_data_borderRightWeight : nullptr;
 }
 
 void NodeChange::set_borderRightWeight(const float &value) {
-  _flags[5] |= 8192; _data_borderRightWeight = value;
+  _flags[5] |= 1048576; _data_borderRightWeight = value;
 }
 
 bool *NodeChange::borderStrokeWeightsIndependent() {
-  return _flags[5] & 16384 ? &_data_borderStrokeWeightsIndependent : nullptr;
+  return _flags[5] & 2097152 ? &_data_borderStrokeWeightsIndependent : nullptr;
 }
 
 const bool *NodeChange::borderStrokeWeightsIndependent() const {
-  return _flags[5] & 16384 ? &_data_borderStrokeWeightsIndependent : nullptr;
+  return _flags[5] & 2097152 ? &_data_borderStrokeWeightsIndependent : nullptr;
 }
 
 void NodeChange::set_borderStrokeWeightsIndependent(const bool &value) {
-  _flags[5] |= 16384; _data_borderStrokeWeightsIndependent = value;
+  _flags[5] |= 2097152; _data_borderStrokeWeightsIndependent = value;
 }
 
 ConstraintType *NodeChange::horizontalConstraint() {
-  return _flags[5] & 32768 ? &_data_horizontalConstraint : nullptr;
+  return _flags[5] & 4194304 ? &_data_horizontalConstraint : nullptr;
 }
 
 const ConstraintType *NodeChange::horizontalConstraint() const {
-  return _flags[5] & 32768 ? &_data_horizontalConstraint : nullptr;
+  return _flags[5] & 4194304 ? &_data_horizontalConstraint : nullptr;
 }
 
 void NodeChange::set_horizontalConstraint(const ConstraintType &value) {
-  _flags[5] |= 32768; _data_horizontalConstraint = value;
+  _flags[5] |= 4194304; _data_horizontalConstraint = value;
 }
 
 uint32_t *NodeChange::horizontalConstraintTag() {
-  return _flags[5] & 65536 ? &_data_horizontalConstraintTag : nullptr;
+  return _flags[5] & 8388608 ? &_data_horizontalConstraintTag : nullptr;
 }
 
 const uint32_t *NodeChange::horizontalConstraintTag() const {
-  return _flags[5] & 65536 ? &_data_horizontalConstraintTag : nullptr;
+  return _flags[5] & 8388608 ? &_data_horizontalConstraintTag : nullptr;
 }
 
 void NodeChange::set_horizontalConstraintTag(const uint32_t &value) {
-  _flags[5] |= 65536; _data_horizontalConstraintTag = value;
+  _flags[5] |= 8388608; _data_horizontalConstraintTag = value;
 }
 
 StackMode *NodeChange::stackMode() {
-  return _flags[5] & 131072 ? &_data_stackMode : nullptr;
+  return _flags[5] & 16777216 ? &_data_stackMode : nullptr;
 }
 
 const StackMode *NodeChange::stackMode() const {
-  return _flags[5] & 131072 ? &_data_stackMode : nullptr;
+  return _flags[5] & 16777216 ? &_data_stackMode : nullptr;
 }
 
 void NodeChange::set_stackMode(const StackMode &value) {
-  _flags[5] |= 131072; _data_stackMode = value;
+  _flags[5] |= 16777216; _data_stackMode = value;
 }
 
 uint32_t *NodeChange::stackModeTag() {
-  return _flags[5] & 262144 ? &_data_stackModeTag : nullptr;
+  return _flags[5] & 33554432 ? &_data_stackModeTag : nullptr;
 }
 
 const uint32_t *NodeChange::stackModeTag() const {
-  return _flags[5] & 262144 ? &_data_stackModeTag : nullptr;
+  return _flags[5] & 33554432 ? &_data_stackModeTag : nullptr;
 }
 
 void NodeChange::set_stackModeTag(const uint32_t &value) {
-  _flags[5] |= 262144; _data_stackModeTag = value;
+  _flags[5] |= 33554432; _data_stackModeTag = value;
 }
 
 float *NodeChange::stackSpacing() {
-  return _flags[5] & 524288 ? &_data_stackSpacing : nullptr;
+  return _flags[5] & 67108864 ? &_data_stackSpacing : nullptr;
 }
 
 const float *NodeChange::stackSpacing() const {
-  return _flags[5] & 524288 ? &_data_stackSpacing : nullptr;
+  return _flags[5] & 67108864 ? &_data_stackSpacing : nullptr;
 }
 
 void NodeChange::set_stackSpacing(const float &value) {
-  _flags[5] |= 524288; _data_stackSpacing = value;
+  _flags[5] |= 67108864; _data_stackSpacing = value;
 }
 
 uint32_t *NodeChange::stackSpacingTag() {
-  return _flags[5] & 1048576 ? &_data_stackSpacingTag : nullptr;
+  return _flags[5] & 134217728 ? &_data_stackSpacingTag : nullptr;
 }
 
 const uint32_t *NodeChange::stackSpacingTag() const {
-  return _flags[5] & 1048576 ? &_data_stackSpacingTag : nullptr;
+  return _flags[5] & 134217728 ? &_data_stackSpacingTag : nullptr;
 }
 
 void NodeChange::set_stackSpacingTag(const uint32_t &value) {
-  _flags[5] |= 1048576; _data_stackSpacingTag = value;
+  _flags[5] |= 134217728; _data_stackSpacingTag = value;
 }
 
 float *NodeChange::stackPadding() {
-  return _flags[5] & 2097152 ? &_data_stackPadding : nullptr;
+  return _flags[5] & 268435456 ? &_data_stackPadding : nullptr;
 }
 
 const float *NodeChange::stackPadding() const {
-  return _flags[5] & 2097152 ? &_data_stackPadding : nullptr;
+  return _flags[5] & 268435456 ? &_data_stackPadding : nullptr;
 }
 
 void NodeChange::set_stackPadding(const float &value) {
-  _flags[5] |= 2097152; _data_stackPadding = value;
+  _flags[5] |= 268435456; _data_stackPadding = value;
 }
 
 uint32_t *NodeChange::stackPaddingTag() {
-  return _flags[5] & 4194304 ? &_data_stackPaddingTag : nullptr;
+  return _flags[5] & 536870912 ? &_data_stackPaddingTag : nullptr;
 }
 
 const uint32_t *NodeChange::stackPaddingTag() const {
-  return _flags[5] & 4194304 ? &_data_stackPaddingTag : nullptr;
+  return _flags[5] & 536870912 ? &_data_stackPaddingTag : nullptr;
 }
 
 void NodeChange::set_stackPaddingTag(const uint32_t &value) {
-  _flags[5] |= 4194304; _data_stackPaddingTag = value;
+  _flags[5] |= 536870912; _data_stackPaddingTag = value;
 }
 
 StackCounterAlign *NodeChange::stackCounterAlign() {
-  return _flags[5] & 8388608 ? &_data_stackCounterAlign : nullptr;
+  return _flags[5] & 1073741824 ? &_data_stackCounterAlign : nullptr;
 }
 
 const StackCounterAlign *NodeChange::stackCounterAlign() const {
-  return _flags[5] & 8388608 ? &_data_stackCounterAlign : nullptr;
+  return _flags[5] & 1073741824 ? &_data_stackCounterAlign : nullptr;
 }
 
 void NodeChange::set_stackCounterAlign(const StackCounterAlign &value) {
-  _flags[5] |= 8388608; _data_stackCounterAlign = value;
+  _flags[5] |= 1073741824; _data_stackCounterAlign = value;
 }
 
 StackJustify *NodeChange::stackJustify() {
-  return _flags[5] & 16777216 ? &_data_stackJustify : nullptr;
+  return _flags[5] & 2147483648 ? &_data_stackJustify : nullptr;
 }
 
 const StackJustify *NodeChange::stackJustify() const {
-  return _flags[5] & 16777216 ? &_data_stackJustify : nullptr;
+  return _flags[5] & 2147483648 ? &_data_stackJustify : nullptr;
 }
 
 void NodeChange::set_stackJustify(const StackJustify &value) {
-  _flags[5] |= 16777216; _data_stackJustify = value;
+  _flags[5] |= 2147483648; _data_stackJustify = value;
 }
 
 StackAlign *NodeChange::stackAlign() {
-  return _flags[5] & 33554432 ? &_data_stackAlign : nullptr;
+  return _flags[6] & 1 ? &_data_stackAlign : nullptr;
 }
 
 const StackAlign *NodeChange::stackAlign() const {
-  return _flags[5] & 33554432 ? &_data_stackAlign : nullptr;
+  return _flags[6] & 1 ? &_data_stackAlign : nullptr;
 }
 
 void NodeChange::set_stackAlign(const StackAlign &value) {
-  _flags[5] |= 33554432; _data_stackAlign = value;
+  _flags[6] |= 1; _data_stackAlign = value;
 }
 
 float *NodeChange::stackHorizontalPadding() {
-  return _flags[5] & 67108864 ? &_data_stackHorizontalPadding : nullptr;
+  return _flags[6] & 2 ? &_data_stackHorizontalPadding : nullptr;
 }
 
 const float *NodeChange::stackHorizontalPadding() const {
-  return _flags[5] & 67108864 ? &_data_stackHorizontalPadding : nullptr;
+  return _flags[6] & 2 ? &_data_stackHorizontalPadding : nullptr;
 }
 
 void NodeChange::set_stackHorizontalPadding(const float &value) {
-  _flags[5] |= 67108864; _data_stackHorizontalPadding = value;
+  _flags[6] |= 2; _data_stackHorizontalPadding = value;
 }
 
 float *NodeChange::stackVerticalPadding() {
-  return _flags[5] & 134217728 ? &_data_stackVerticalPadding : nullptr;
+  return _flags[6] & 4 ? &_data_stackVerticalPadding : nullptr;
 }
 
 const float *NodeChange::stackVerticalPadding() const {
-  return _flags[5] & 134217728 ? &_data_stackVerticalPadding : nullptr;
+  return _flags[6] & 4 ? &_data_stackVerticalPadding : nullptr;
 }
 
 void NodeChange::set_stackVerticalPadding(const float &value) {
-  _flags[5] |= 134217728; _data_stackVerticalPadding = value;
+  _flags[6] |= 4; _data_stackVerticalPadding = value;
 }
 
 StackSize *NodeChange::stackWidth() {
-  return _flags[5] & 268435456 ? &_data_stackWidth : nullptr;
+  return _flags[6] & 8 ? &_data_stackWidth : nullptr;
 }
 
 const StackSize *NodeChange::stackWidth() const {
-  return _flags[5] & 268435456 ? &_data_stackWidth : nullptr;
+  return _flags[6] & 8 ? &_data_stackWidth : nullptr;
 }
 
 void NodeChange::set_stackWidth(const StackSize &value) {
-  _flags[5] |= 268435456; _data_stackWidth = value;
+  _flags[6] |= 8; _data_stackWidth = value;
 }
 
 StackSize *NodeChange::stackHeight() {
-  return _flags[5] & 536870912 ? &_data_stackHeight : nullptr;
+  return _flags[6] & 16 ? &_data_stackHeight : nullptr;
 }
 
 const StackSize *NodeChange::stackHeight() const {
-  return _flags[5] & 536870912 ? &_data_stackHeight : nullptr;
+  return _flags[6] & 16 ? &_data_stackHeight : nullptr;
 }
 
 void NodeChange::set_stackHeight(const StackSize &value) {
-  _flags[5] |= 536870912; _data_stackHeight = value;
+  _flags[6] |= 16; _data_stackHeight = value;
 }
 
 StackSize *NodeChange::stackPrimarySizing() {
-  return _flags[5] & 1073741824 ? &_data_stackPrimarySizing : nullptr;
+  return _flags[6] & 32 ? &_data_stackPrimarySizing : nullptr;
 }
 
 const StackSize *NodeChange::stackPrimarySizing() const {
-  return _flags[5] & 1073741824 ? &_data_stackPrimarySizing : nullptr;
+  return _flags[6] & 32 ? &_data_stackPrimarySizing : nullptr;
 }
 
 void NodeChange::set_stackPrimarySizing(const StackSize &value) {
-  _flags[5] |= 1073741824; _data_stackPrimarySizing = value;
+  _flags[6] |= 32; _data_stackPrimarySizing = value;
 }
 
 StackJustify *NodeChange::stackPrimaryAlignItems() {
-  return _flags[5] & 2147483648 ? &_data_stackPrimaryAlignItems : nullptr;
+  return _flags[6] & 64 ? &_data_stackPrimaryAlignItems : nullptr;
 }
 
 const StackJustify *NodeChange::stackPrimaryAlignItems() const {
-  return _flags[5] & 2147483648 ? &_data_stackPrimaryAlignItems : nullptr;
+  return _flags[6] & 64 ? &_data_stackPrimaryAlignItems : nullptr;
 }
 
 void NodeChange::set_stackPrimaryAlignItems(const StackJustify &value) {
-  _flags[5] |= 2147483648; _data_stackPrimaryAlignItems = value;
+  _flags[6] |= 64; _data_stackPrimaryAlignItems = value;
 }
 
 StackAlign *NodeChange::stackCounterAlignItems() {
-  return _flags[6] & 1 ? &_data_stackCounterAlignItems : nullptr;
+  return _flags[6] & 128 ? &_data_stackCounterAlignItems : nullptr;
 }
 
 const StackAlign *NodeChange::stackCounterAlignItems() const {
-  return _flags[6] & 1 ? &_data_stackCounterAlignItems : nullptr;
+  return _flags[6] & 128 ? &_data_stackCounterAlignItems : nullptr;
 }
 
 void NodeChange::set_stackCounterAlignItems(const StackAlign &value) {
-  _flags[6] |= 1; _data_stackCounterAlignItems = value;
+  _flags[6] |= 128; _data_stackCounterAlignItems = value;
 }
 
 float *NodeChange::stackChildPrimaryGrow() {
-  return _flags[6] & 2 ? &_data_stackChildPrimaryGrow : nullptr;
+  return _flags[6] & 256 ? &_data_stackChildPrimaryGrow : nullptr;
 }
 
 const float *NodeChange::stackChildPrimaryGrow() const {
-  return _flags[6] & 2 ? &_data_stackChildPrimaryGrow : nullptr;
+  return _flags[6] & 256 ? &_data_stackChildPrimaryGrow : nullptr;
 }
 
 void NodeChange::set_stackChildPrimaryGrow(const float &value) {
-  _flags[6] |= 2; _data_stackChildPrimaryGrow = value;
+  _flags[6] |= 256; _data_stackChildPrimaryGrow = value;
 }
 
 float *NodeChange::stackPaddingRight() {
-  return _flags[6] & 4 ? &_data_stackPaddingRight : nullptr;
+  return _flags[6] & 512 ? &_data_stackPaddingRight : nullptr;
 }
 
 const float *NodeChange::stackPaddingRight() const {
-  return _flags[6] & 4 ? &_data_stackPaddingRight : nullptr;
+  return _flags[6] & 512 ? &_data_stackPaddingRight : nullptr;
 }
 
 void NodeChange::set_stackPaddingRight(const float &value) {
-  _flags[6] |= 4; _data_stackPaddingRight = value;
+  _flags[6] |= 512; _data_stackPaddingRight = value;
 }
 
 float *NodeChange::stackPaddingBottom() {
-  return _flags[6] & 8 ? &_data_stackPaddingBottom : nullptr;
+  return _flags[6] & 1024 ? &_data_stackPaddingBottom : nullptr;
 }
 
 const float *NodeChange::stackPaddingBottom() const {
-  return _flags[6] & 8 ? &_data_stackPaddingBottom : nullptr;
+  return _flags[6] & 1024 ? &_data_stackPaddingBottom : nullptr;
 }
 
 void NodeChange::set_stackPaddingBottom(const float &value) {
-  _flags[6] |= 8; _data_stackPaddingBottom = value;
+  _flags[6] |= 1024; _data_stackPaddingBottom = value;
 }
 
 StackCounterAlign *NodeChange::stackChildAlignSelf() {
-  return _flags[6] & 16 ? &_data_stackChildAlignSelf : nullptr;
+  return _flags[6] & 2048 ? &_data_stackChildAlignSelf : nullptr;
 }
 
 const StackCounterAlign *NodeChange::stackChildAlignSelf() const {
-  return _flags[6] & 16 ? &_data_stackChildAlignSelf : nullptr;
+  return _flags[6] & 2048 ? &_data_stackChildAlignSelf : nullptr;
 }
 
 void NodeChange::set_stackChildAlignSelf(const StackCounterAlign &value) {
-  _flags[6] |= 16; _data_stackChildAlignSelf = value;
+  _flags[6] |= 2048; _data_stackChildAlignSelf = value;
 }
 
 StackPositioning *NodeChange::stackPositioning() {
-  return _flags[6] & 32 ? &_data_stackPositioning : nullptr;
+  return _flags[6] & 4096 ? &_data_stackPositioning : nullptr;
 }
 
 const StackPositioning *NodeChange::stackPositioning() const {
-  return _flags[6] & 32 ? &_data_stackPositioning : nullptr;
+  return _flags[6] & 4096 ? &_data_stackPositioning : nullptr;
 }
 
 void NodeChange::set_stackPositioning(const StackPositioning &value) {
-  _flags[6] |= 32; _data_stackPositioning = value;
+  _flags[6] |= 4096; _data_stackPositioning = value;
 }
 
 bool *NodeChange::stackReverseZIndex() {
-  return _flags[6] & 64 ? &_data_stackReverseZIndex : nullptr;
+  return _flags[6] & 8192 ? &_data_stackReverseZIndex : nullptr;
 }
 
 const bool *NodeChange::stackReverseZIndex() const {
-  return _flags[6] & 64 ? &_data_stackReverseZIndex : nullptr;
+  return _flags[6] & 8192 ? &_data_stackReverseZIndex : nullptr;
 }
 
 void NodeChange::set_stackReverseZIndex(const bool &value) {
-  _flags[6] |= 64; _data_stackReverseZIndex = value;
+  _flags[6] |= 8192; _data_stackReverseZIndex = value;
 }
 
 StackWrap *NodeChange::stackWrap() {
-  return _flags[6] & 128 ? &_data_stackWrap : nullptr;
+  return _flags[6] & 16384 ? &_data_stackWrap : nullptr;
 }
 
 const StackWrap *NodeChange::stackWrap() const {
-  return _flags[6] & 128 ? &_data_stackWrap : nullptr;
+  return _flags[6] & 16384 ? &_data_stackWrap : nullptr;
 }
 
 void NodeChange::set_stackWrap(const StackWrap &value) {
-  _flags[6] |= 128; _data_stackWrap = value;
+  _flags[6] |= 16384; _data_stackWrap = value;
 }
 
 float *NodeChange::stackCounterSpacing() {
-  return _flags[6] & 256 ? &_data_stackCounterSpacing : nullptr;
+  return _flags[6] & 32768 ? &_data_stackCounterSpacing : nullptr;
 }
 
 const float *NodeChange::stackCounterSpacing() const {
-  return _flags[6] & 256 ? &_data_stackCounterSpacing : nullptr;
+  return _flags[6] & 32768 ? &_data_stackCounterSpacing : nullptr;
 }
 
 void NodeChange::set_stackCounterSpacing(const float &value) {
-  _flags[6] |= 256; _data_stackCounterSpacing = value;
+  _flags[6] |= 32768; _data_stackCounterSpacing = value;
 }
 
 OptionalVector *NodeChange::minSize() {
@@ -16965,6 +18662,30 @@ const OptionalVector *NodeChange::maxSize() const {
 
 void NodeChange::set_maxSize(OptionalVector *value) {
   _data_maxSize = value;
+}
+
+StackCounterAlignContent *NodeChange::stackCounterAlignContent() {
+  return _flags[6] & 262144 ? &_data_stackCounterAlignContent : nullptr;
+}
+
+const StackCounterAlignContent *NodeChange::stackCounterAlignContent() const {
+  return _flags[6] & 262144 ? &_data_stackCounterAlignContent : nullptr;
+}
+
+void NodeChange::set_stackCounterAlignContent(const StackCounterAlignContent &value) {
+  _flags[6] |= 262144; _data_stackCounterAlignContent = value;
+}
+
+bool *NodeChange::isSnakeGameBoard() {
+  return _flags[6] & 524288 ? &_data_isSnakeGameBoard : nullptr;
+}
+
+const bool *NodeChange::isSnakeGameBoard() const {
+  return _flags[6] & 524288 ? &_data_isSnakeGameBoard : nullptr;
+}
+
+void NodeChange::set_isSnakeGameBoard(const bool &value) {
+  _flags[6] |= 524288; _data_isSnakeGameBoard = value;
 }
 
 GUID *NodeChange::transitionNodeID() {
@@ -17016,75 +18737,75 @@ void NodeChange::set_transitionInfo(TransitionInfo *value) {
 }
 
 TransitionType *NodeChange::transitionType() {
-  return _flags[6] & 32768 ? &_data_transitionType : nullptr;
+  return _flags[6] & 16777216 ? &_data_transitionType : nullptr;
 }
 
 const TransitionType *NodeChange::transitionType() const {
-  return _flags[6] & 32768 ? &_data_transitionType : nullptr;
+  return _flags[6] & 16777216 ? &_data_transitionType : nullptr;
 }
 
 void NodeChange::set_transitionType(const TransitionType &value) {
-  _flags[6] |= 32768; _data_transitionType = value;
+  _flags[6] |= 16777216; _data_transitionType = value;
 }
 
 float *NodeChange::transitionDuration() {
-  return _flags[6] & 65536 ? &_data_transitionDuration : nullptr;
+  return _flags[6] & 33554432 ? &_data_transitionDuration : nullptr;
 }
 
 const float *NodeChange::transitionDuration() const {
-  return _flags[6] & 65536 ? &_data_transitionDuration : nullptr;
+  return _flags[6] & 33554432 ? &_data_transitionDuration : nullptr;
 }
 
 void NodeChange::set_transitionDuration(const float &value) {
-  _flags[6] |= 65536; _data_transitionDuration = value;
+  _flags[6] |= 33554432; _data_transitionDuration = value;
 }
 
 EasingType *NodeChange::easingType() {
-  return _flags[6] & 131072 ? &_data_easingType : nullptr;
+  return _flags[6] & 67108864 ? &_data_easingType : nullptr;
 }
 
 const EasingType *NodeChange::easingType() const {
-  return _flags[6] & 131072 ? &_data_easingType : nullptr;
+  return _flags[6] & 67108864 ? &_data_easingType : nullptr;
 }
 
 void NodeChange::set_easingType(const EasingType &value) {
-  _flags[6] |= 131072; _data_easingType = value;
+  _flags[6] |= 67108864; _data_easingType = value;
 }
 
 bool *NodeChange::transitionPreserveScroll() {
-  return _flags[6] & 262144 ? &_data_transitionPreserveScroll : nullptr;
+  return _flags[6] & 134217728 ? &_data_transitionPreserveScroll : nullptr;
 }
 
 const bool *NodeChange::transitionPreserveScroll() const {
-  return _flags[6] & 262144 ? &_data_transitionPreserveScroll : nullptr;
+  return _flags[6] & 134217728 ? &_data_transitionPreserveScroll : nullptr;
 }
 
 void NodeChange::set_transitionPreserveScroll(const bool &value) {
-  _flags[6] |= 262144; _data_transitionPreserveScroll = value;
+  _flags[6] |= 134217728; _data_transitionPreserveScroll = value;
 }
 
 ConnectionType *NodeChange::connectionType() {
-  return _flags[6] & 524288 ? &_data_connectionType : nullptr;
+  return _flags[6] & 268435456 ? &_data_connectionType : nullptr;
 }
 
 const ConnectionType *NodeChange::connectionType() const {
-  return _flags[6] & 524288 ? &_data_connectionType : nullptr;
+  return _flags[6] & 268435456 ? &_data_connectionType : nullptr;
 }
 
 void NodeChange::set_connectionType(const ConnectionType &value) {
-  _flags[6] |= 524288; _data_connectionType = value;
+  _flags[6] |= 268435456; _data_connectionType = value;
 }
 
 kiwi::String *NodeChange::connectionURL() {
-  return _flags[6] & 1048576 ? &_data_connectionURL : nullptr;
+  return _flags[6] & 536870912 ? &_data_connectionURL : nullptr;
 }
 
 const kiwi::String *NodeChange::connectionURL() const {
-  return _flags[6] & 1048576 ? &_data_connectionURL : nullptr;
+  return _flags[6] & 536870912 ? &_data_connectionURL : nullptr;
 }
 
 void NodeChange::set_connectionURL(const kiwi::String &value) {
-  _flags[6] |= 1048576; _data_connectionURL = value;
+  _flags[6] |= 536870912; _data_connectionURL = value;
 }
 
 PrototypeDevice *NodeChange::prototypeDevice() {
@@ -17100,87 +18821,87 @@ void NodeChange::set_prototypeDevice(PrototypeDevice *value) {
 }
 
 InteractionType *NodeChange::interactionType() {
-  return _flags[6] & 4194304 ? &_data_interactionType : nullptr;
+  return _flags[6] & 2147483648 ? &_data_interactionType : nullptr;
 }
 
 const InteractionType *NodeChange::interactionType() const {
-  return _flags[6] & 4194304 ? &_data_interactionType : nullptr;
+  return _flags[6] & 2147483648 ? &_data_interactionType : nullptr;
 }
 
 void NodeChange::set_interactionType(const InteractionType &value) {
-  _flags[6] |= 4194304; _data_interactionType = value;
+  _flags[6] |= 2147483648; _data_interactionType = value;
 }
 
 float *NodeChange::transitionTimeout() {
-  return _flags[6] & 8388608 ? &_data_transitionTimeout : nullptr;
+  return _flags[7] & 1 ? &_data_transitionTimeout : nullptr;
 }
 
 const float *NodeChange::transitionTimeout() const {
-  return _flags[6] & 8388608 ? &_data_transitionTimeout : nullptr;
+  return _flags[7] & 1 ? &_data_transitionTimeout : nullptr;
 }
 
 void NodeChange::set_transitionTimeout(const float &value) {
-  _flags[6] |= 8388608; _data_transitionTimeout = value;
+  _flags[7] |= 1; _data_transitionTimeout = value;
 }
 
 bool *NodeChange::interactionMaintained() {
-  return _flags[6] & 16777216 ? &_data_interactionMaintained : nullptr;
+  return _flags[7] & 2 ? &_data_interactionMaintained : nullptr;
 }
 
 const bool *NodeChange::interactionMaintained() const {
-  return _flags[6] & 16777216 ? &_data_interactionMaintained : nullptr;
+  return _flags[7] & 2 ? &_data_interactionMaintained : nullptr;
 }
 
 void NodeChange::set_interactionMaintained(const bool &value) {
-  _flags[6] |= 16777216; _data_interactionMaintained = value;
+  _flags[7] |= 2; _data_interactionMaintained = value;
 }
 
 float *NodeChange::interactionDuration() {
-  return _flags[6] & 33554432 ? &_data_interactionDuration : nullptr;
+  return _flags[7] & 4 ? &_data_interactionDuration : nullptr;
 }
 
 const float *NodeChange::interactionDuration() const {
-  return _flags[6] & 33554432 ? &_data_interactionDuration : nullptr;
+  return _flags[7] & 4 ? &_data_interactionDuration : nullptr;
 }
 
 void NodeChange::set_interactionDuration(const float &value) {
-  _flags[6] |= 33554432; _data_interactionDuration = value;
+  _flags[7] |= 4; _data_interactionDuration = value;
 }
 
 bool *NodeChange::destinationIsOverlay() {
-  return _flags[6] & 67108864 ? &_data_destinationIsOverlay : nullptr;
+  return _flags[7] & 8 ? &_data_destinationIsOverlay : nullptr;
 }
 
 const bool *NodeChange::destinationIsOverlay() const {
-  return _flags[6] & 67108864 ? &_data_destinationIsOverlay : nullptr;
+  return _flags[7] & 8 ? &_data_destinationIsOverlay : nullptr;
 }
 
 void NodeChange::set_destinationIsOverlay(const bool &value) {
-  _flags[6] |= 67108864; _data_destinationIsOverlay = value;
+  _flags[7] |= 8; _data_destinationIsOverlay = value;
 }
 
 bool *NodeChange::transitionShouldSmartAnimate() {
-  return _flags[6] & 134217728 ? &_data_transitionShouldSmartAnimate : nullptr;
+  return _flags[7] & 16 ? &_data_transitionShouldSmartAnimate : nullptr;
 }
 
 const bool *NodeChange::transitionShouldSmartAnimate() const {
-  return _flags[6] & 134217728 ? &_data_transitionShouldSmartAnimate : nullptr;
+  return _flags[7] & 16 ? &_data_transitionShouldSmartAnimate : nullptr;
 }
 
 void NodeChange::set_transitionShouldSmartAnimate(const bool &value) {
-  _flags[6] |= 134217728; _data_transitionShouldSmartAnimate = value;
+  _flags[7] |= 16; _data_transitionShouldSmartAnimate = value;
 }
 
 kiwi::Array<PrototypeInteraction> *NodeChange::prototypeInteractions() {
-  return _flags[6] & 268435456 ? &_data_prototypeInteractions : nullptr;
+  return _flags[7] & 32 ? &_data_prototypeInteractions : nullptr;
 }
 
 const kiwi::Array<PrototypeInteraction> *NodeChange::prototypeInteractions() const {
-  return _flags[6] & 268435456 ? &_data_prototypeInteractions : nullptr;
+  return _flags[7] & 32 ? &_data_prototypeInteractions : nullptr;
 }
 
 kiwi::Array<PrototypeInteraction> &NodeChange::set_prototypeInteractions(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[6] |= 268435456; return _data_prototypeInteractions = pool.array<PrototypeInteraction>(count);
+  _flags[7] |= 32; return _data_prototypeInteractions = pool.array<PrototypeInteraction>(count);
 }
 
 PrototypeStartingPoint *NodeChange::prototypeStartingPoint() {
@@ -17196,27 +18917,27 @@ void NodeChange::set_prototypeStartingPoint(PrototypeStartingPoint *value) {
 }
 
 kiwi::Array<PluginData> *NodeChange::pluginData() {
-  return _flags[6] & 1073741824 ? &_data_pluginData : nullptr;
+  return _flags[7] & 128 ? &_data_pluginData : nullptr;
 }
 
 const kiwi::Array<PluginData> *NodeChange::pluginData() const {
-  return _flags[6] & 1073741824 ? &_data_pluginData : nullptr;
+  return _flags[7] & 128 ? &_data_pluginData : nullptr;
 }
 
 kiwi::Array<PluginData> &NodeChange::set_pluginData(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[6] |= 1073741824; return _data_pluginData = pool.array<PluginData>(count);
+  _flags[7] |= 128; return _data_pluginData = pool.array<PluginData>(count);
 }
 
 kiwi::Array<PluginRelaunchData> *NodeChange::pluginRelaunchData() {
-  return _flags[6] & 2147483648 ? &_data_pluginRelaunchData : nullptr;
+  return _flags[7] & 256 ? &_data_pluginRelaunchData : nullptr;
 }
 
 const kiwi::Array<PluginRelaunchData> *NodeChange::pluginRelaunchData() const {
-  return _flags[6] & 2147483648 ? &_data_pluginRelaunchData : nullptr;
+  return _flags[7] & 256 ? &_data_pluginRelaunchData : nullptr;
 }
 
 kiwi::Array<PluginRelaunchData> &NodeChange::set_pluginRelaunchData(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[6] |= 2147483648; return _data_pluginRelaunchData = pool.array<PluginRelaunchData>(count);
+  _flags[7] |= 256; return _data_pluginRelaunchData = pool.array<PluginRelaunchData>(count);
 }
 
 ConnectorEndpoint *NodeChange::connectorStart() {
@@ -17244,51 +18965,51 @@ void NodeChange::set_connectorEnd(ConnectorEndpoint *value) {
 }
 
 ConnectorLineStyle *NodeChange::connectorLineStyle() {
-  return _flags[7] & 4 ? &_data_connectorLineStyle : nullptr;
+  return _flags[7] & 2048 ? &_data_connectorLineStyle : nullptr;
 }
 
 const ConnectorLineStyle *NodeChange::connectorLineStyle() const {
-  return _flags[7] & 4 ? &_data_connectorLineStyle : nullptr;
+  return _flags[7] & 2048 ? &_data_connectorLineStyle : nullptr;
 }
 
 void NodeChange::set_connectorLineStyle(const ConnectorLineStyle &value) {
-  _flags[7] |= 4; _data_connectorLineStyle = value;
+  _flags[7] |= 2048; _data_connectorLineStyle = value;
 }
 
 StrokeCap *NodeChange::connectorStartCap() {
-  return _flags[7] & 8 ? &_data_connectorStartCap : nullptr;
+  return _flags[7] & 4096 ? &_data_connectorStartCap : nullptr;
 }
 
 const StrokeCap *NodeChange::connectorStartCap() const {
-  return _flags[7] & 8 ? &_data_connectorStartCap : nullptr;
+  return _flags[7] & 4096 ? &_data_connectorStartCap : nullptr;
 }
 
 void NodeChange::set_connectorStartCap(const StrokeCap &value) {
-  _flags[7] |= 8; _data_connectorStartCap = value;
+  _flags[7] |= 4096; _data_connectorStartCap = value;
 }
 
 StrokeCap *NodeChange::connectorEndCap() {
-  return _flags[7] & 16 ? &_data_connectorEndCap : nullptr;
+  return _flags[7] & 8192 ? &_data_connectorEndCap : nullptr;
 }
 
 const StrokeCap *NodeChange::connectorEndCap() const {
-  return _flags[7] & 16 ? &_data_connectorEndCap : nullptr;
+  return _flags[7] & 8192 ? &_data_connectorEndCap : nullptr;
 }
 
 void NodeChange::set_connectorEndCap(const StrokeCap &value) {
-  _flags[7] |= 16; _data_connectorEndCap = value;
+  _flags[7] |= 8192; _data_connectorEndCap = value;
 }
 
 kiwi::Array<ConnectorControlPoint> *NodeChange::connectorControlPoints() {
-  return _flags[7] & 32 ? &_data_connectorControlPoints : nullptr;
+  return _flags[7] & 16384 ? &_data_connectorControlPoints : nullptr;
 }
 
 const kiwi::Array<ConnectorControlPoint> *NodeChange::connectorControlPoints() const {
-  return _flags[7] & 32 ? &_data_connectorControlPoints : nullptr;
+  return _flags[7] & 16384 ? &_data_connectorControlPoints : nullptr;
 }
 
 kiwi::Array<ConnectorControlPoint> &NodeChange::set_connectorControlPoints(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[7] |= 32; return _data_connectorControlPoints = pool.array<ConnectorControlPoint>(count);
+  _flags[7] |= 16384; return _data_connectorControlPoints = pool.array<ConnectorControlPoint>(count);
 }
 
 ConnectorTextMidpoint *NodeChange::connectorTextMidpoint() {
@@ -17304,27 +19025,27 @@ void NodeChange::set_connectorTextMidpoint(ConnectorTextMidpoint *value) {
 }
 
 ShapeWithTextType *NodeChange::shapeWithTextType() {
-  return _flags[7] & 128 ? &_data_shapeWithTextType : nullptr;
+  return _flags[7] & 65536 ? &_data_shapeWithTextType : nullptr;
 }
 
 const ShapeWithTextType *NodeChange::shapeWithTextType() const {
-  return _flags[7] & 128 ? &_data_shapeWithTextType : nullptr;
+  return _flags[7] & 65536 ? &_data_shapeWithTextType : nullptr;
 }
 
 void NodeChange::set_shapeWithTextType(const ShapeWithTextType &value) {
-  _flags[7] |= 128; _data_shapeWithTextType = value;
+  _flags[7] |= 65536; _data_shapeWithTextType = value;
 }
 
 float *NodeChange::shapeUserHeight() {
-  return _flags[7] & 256 ? &_data_shapeUserHeight : nullptr;
+  return _flags[7] & 131072 ? &_data_shapeUserHeight : nullptr;
 }
 
 const float *NodeChange::shapeUserHeight() const {
-  return _flags[7] & 256 ? &_data_shapeUserHeight : nullptr;
+  return _flags[7] & 131072 ? &_data_shapeUserHeight : nullptr;
 }
 
 void NodeChange::set_shapeUserHeight(const float &value) {
-  _flags[7] |= 256; _data_shapeUserHeight = value;
+  _flags[7] |= 131072; _data_shapeUserHeight = value;
 }
 
 DerivedImmutableFrameData *NodeChange::derivedImmutableFrameData() {
@@ -17364,15 +19085,15 @@ void NodeChange::set_nodeGenerationData(NodeGenerationData *value) {
 }
 
 CodeBlockLanguage *NodeChange::codeBlockLanguage() {
-  return _flags[7] & 4096 ? &_data_codeBlockLanguage : nullptr;
+  return _flags[7] & 2097152 ? &_data_codeBlockLanguage : nullptr;
 }
 
 const CodeBlockLanguage *NodeChange::codeBlockLanguage() const {
-  return _flags[7] & 4096 ? &_data_codeBlockLanguage : nullptr;
+  return _flags[7] & 2097152 ? &_data_codeBlockLanguage : nullptr;
 }
 
 void NodeChange::set_codeBlockLanguage(const CodeBlockLanguage &value) {
-  _flags[7] |= 4096; _data_codeBlockLanguage = value;
+  _flags[7] |= 2097152; _data_codeBlockLanguage = value;
 }
 
 LinkPreviewData *NodeChange::linkPreviewData() {
@@ -17388,27 +19109,27 @@ void NodeChange::set_linkPreviewData(LinkPreviewData *value) {
 }
 
 bool *NodeChange::shapeTruncates() {
-  return _flags[7] & 16384 ? &_data_shapeTruncates : nullptr;
+  return _flags[7] & 8388608 ? &_data_shapeTruncates : nullptr;
 }
 
 const bool *NodeChange::shapeTruncates() const {
-  return _flags[7] & 16384 ? &_data_shapeTruncates : nullptr;
+  return _flags[7] & 8388608 ? &_data_shapeTruncates : nullptr;
 }
 
 void NodeChange::set_shapeTruncates(const bool &value) {
-  _flags[7] |= 16384; _data_shapeTruncates = value;
+  _flags[7] |= 8388608; _data_shapeTruncates = value;
 }
 
 bool *NodeChange::sectionContentsHidden() {
-  return _flags[7] & 32768 ? &_data_sectionContentsHidden : nullptr;
+  return _flags[7] & 16777216 ? &_data_sectionContentsHidden : nullptr;
 }
 
 const bool *NodeChange::sectionContentsHidden() const {
-  return _flags[7] & 32768 ? &_data_sectionContentsHidden : nullptr;
+  return _flags[7] & 16777216 ? &_data_sectionContentsHidden : nullptr;
 }
 
 void NodeChange::set_sectionContentsHidden(const bool &value) {
-  _flags[7] |= 32768; _data_sectionContentsHidden = value;
+  _flags[7] |= 16777216; _data_sectionContentsHidden = value;
 }
 
 VideoPlayback *NodeChange::videoPlayback() {
@@ -17448,15 +19169,15 @@ void NodeChange::set_widgetSyncedState(MultiplayerMap *value) {
 }
 
 uint32_t *NodeChange::widgetSyncCursor() {
-  return _flags[7] & 524288 ? &_data_widgetSyncCursor : nullptr;
+  return _flags[7] & 268435456 ? &_data_widgetSyncCursor : nullptr;
 }
 
 const uint32_t *NodeChange::widgetSyncCursor() const {
-  return _flags[7] & 524288 ? &_data_widgetSyncCursor : nullptr;
+  return _flags[7] & 268435456 ? &_data_widgetSyncCursor : nullptr;
 }
 
 void NodeChange::set_widgetSyncCursor(const uint32_t &value) {
-  _flags[7] |= 524288; _data_widgetSyncCursor = value;
+  _flags[7] |= 268435456; _data_widgetSyncCursor = value;
 }
 
 WidgetDerivedSubtreeCursor *NodeChange::widgetDerivedSubtreeCursor() {
@@ -17484,27 +19205,27 @@ void NodeChange::set_widgetCachedAncestor(WidgetPointer *value) {
 }
 
 WidgetInputBehavior *NodeChange::widgetInputBehavior() {
-  return _flags[7] & 4194304 ? &_data_widgetInputBehavior : nullptr;
+  return _flags[7] & 2147483648 ? &_data_widgetInputBehavior : nullptr;
 }
 
 const WidgetInputBehavior *NodeChange::widgetInputBehavior() const {
-  return _flags[7] & 4194304 ? &_data_widgetInputBehavior : nullptr;
+  return _flags[7] & 2147483648 ? &_data_widgetInputBehavior : nullptr;
 }
 
 void NodeChange::set_widgetInputBehavior(const WidgetInputBehavior &value) {
-  _flags[7] |= 4194304; _data_widgetInputBehavior = value;
+  _flags[7] |= 2147483648; _data_widgetInputBehavior = value;
 }
 
 kiwi::String *NodeChange::widgetTooltip() {
-  return _flags[7] & 8388608 ? &_data_widgetTooltip : nullptr;
+  return _flags[8] & 1 ? &_data_widgetTooltip : nullptr;
 }
 
 const kiwi::String *NodeChange::widgetTooltip() const {
-  return _flags[7] & 8388608 ? &_data_widgetTooltip : nullptr;
+  return _flags[8] & 1 ? &_data_widgetTooltip : nullptr;
 }
 
 void NodeChange::set_widgetTooltip(const kiwi::String &value) {
-  _flags[7] |= 8388608; _data_widgetTooltip = value;
+  _flags[8] |= 1; _data_widgetTooltip = value;
 }
 
 WidgetHoverStyle *NodeChange::widgetHoverStyle() {
@@ -17520,15 +19241,27 @@ void NodeChange::set_widgetHoverStyle(WidgetHoverStyle *value) {
 }
 
 bool *NodeChange::isWidgetStickable() {
-  return _flags[7] & 33554432 ? &_data_isWidgetStickable : nullptr;
+  return _flags[8] & 4 ? &_data_isWidgetStickable : nullptr;
 }
 
 const bool *NodeChange::isWidgetStickable() const {
-  return _flags[7] & 33554432 ? &_data_isWidgetStickable : nullptr;
+  return _flags[8] & 4 ? &_data_isWidgetStickable : nullptr;
 }
 
 void NodeChange::set_isWidgetStickable(const bool &value) {
-  _flags[7] |= 33554432; _data_isWidgetStickable = value;
+  _flags[8] |= 4; _data_isWidgetStickable = value;
+}
+
+bool *NodeChange::shouldHideCursorsOnWidgetHover() {
+  return _flags[8] & 8 ? &_data_shouldHideCursorsOnWidgetHover : nullptr;
+}
+
+const bool *NodeChange::shouldHideCursorsOnWidgetHover() const {
+  return _flags[8] & 8 ? &_data_shouldHideCursorsOnWidgetHover : nullptr;
+}
+
+void NodeChange::set_shouldHideCursorsOnWidgetHover(const bool &value) {
+  _flags[8] |= 8; _data_shouldHideCursorsOnWidgetHover = value;
 }
 
 WidgetMetadata *NodeChange::widgetMetadata() {
@@ -17544,27 +19277,27 @@ void NodeChange::set_widgetMetadata(WidgetMetadata *value) {
 }
 
 kiwi::Array<WidgetEvent> *NodeChange::widgetEvents() {
-  return _flags[7] & 134217728 ? &_data_widgetEvents : nullptr;
+  return _flags[8] & 32 ? &_data_widgetEvents : nullptr;
 }
 
 const kiwi::Array<WidgetEvent> *NodeChange::widgetEvents() const {
-  return _flags[7] & 134217728 ? &_data_widgetEvents : nullptr;
+  return _flags[8] & 32 ? &_data_widgetEvents : nullptr;
 }
 
 kiwi::Array<WidgetEvent> &NodeChange::set_widgetEvents(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[7] |= 134217728; return _data_widgetEvents = pool.array<WidgetEvent>(count);
+  _flags[8] |= 32; return _data_widgetEvents = pool.array<WidgetEvent>(count);
 }
 
 kiwi::Array<WidgetPropertyMenuItem> *NodeChange::widgetPropertyMenuItems() {
-  return _flags[7] & 268435456 ? &_data_widgetPropertyMenuItems : nullptr;
+  return _flags[8] & 64 ? &_data_widgetPropertyMenuItems : nullptr;
 }
 
 const kiwi::Array<WidgetPropertyMenuItem> *NodeChange::widgetPropertyMenuItems() const {
-  return _flags[7] & 268435456 ? &_data_widgetPropertyMenuItems : nullptr;
+  return _flags[8] & 64 ? &_data_widgetPropertyMenuItems : nullptr;
 }
 
 kiwi::Array<WidgetPropertyMenuItem> &NodeChange::set_widgetPropertyMenuItems(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[7] |= 268435456; return _data_widgetPropertyMenuItems = pool.array<WidgetPropertyMenuItem>(count);
+  _flags[8] |= 64; return _data_widgetPropertyMenuItems = pool.array<WidgetPropertyMenuItem>(count);
 }
 
 TableRowColumnPositionMap *NodeChange::tableRowPositions() {
@@ -17616,15 +19349,15 @@ void NodeChange::set_tableColumnWidths(TableRowColumnSizeMap *value) {
 }
 
 InternalEnumForTest *NodeChange::internalEnumForTest() {
-  return _flags[8] & 2 ? &_data_internalEnumForTest : nullptr;
+  return _flags[8] & 2048 ? &_data_internalEnumForTest : nullptr;
 }
 
 const InternalEnumForTest *NodeChange::internalEnumForTest() const {
-  return _flags[8] & 2 ? &_data_internalEnumForTest : nullptr;
+  return _flags[8] & 2048 ? &_data_internalEnumForTest : nullptr;
 }
 
 void NodeChange::set_internalEnumForTest(const InternalEnumForTest &value) {
-  _flags[8] |= 2; _data_internalEnumForTest = value;
+  _flags[8] |= 2048; _data_internalEnumForTest = value;
 }
 
 InternalDataForTest *NodeChange::internalDataForTest() {
@@ -17640,315 +19373,315 @@ void NodeChange::set_internalDataForTest(InternalDataForTest *value) {
 }
 
 uint32_t *NodeChange::count() {
-  return _flags[8] & 8 ? &_data_count : nullptr;
+  return _flags[8] & 8192 ? &_data_count : nullptr;
 }
 
 const uint32_t *NodeChange::count() const {
-  return _flags[8] & 8 ? &_data_count : nullptr;
+  return _flags[8] & 8192 ? &_data_count : nullptr;
 }
 
 void NodeChange::set_count(const uint32_t &value) {
-  _flags[8] |= 8; _data_count = value;
+  _flags[8] |= 8192; _data_count = value;
 }
 
 uint32_t *NodeChange::countTag() {
-  return _flags[8] & 16 ? &_data_countTag : nullptr;
+  return _flags[8] & 16384 ? &_data_countTag : nullptr;
 }
 
 const uint32_t *NodeChange::countTag() const {
-  return _flags[8] & 16 ? &_data_countTag : nullptr;
+  return _flags[8] & 16384 ? &_data_countTag : nullptr;
 }
 
 void NodeChange::set_countTag(const uint32_t &value) {
-  _flags[8] |= 16; _data_countTag = value;
+  _flags[8] |= 16384; _data_countTag = value;
 }
 
 bool *NodeChange::autoRename() {
-  return _flags[8] & 32 ? &_data_autoRename : nullptr;
+  return _flags[8] & 32768 ? &_data_autoRename : nullptr;
 }
 
 const bool *NodeChange::autoRename() const {
-  return _flags[8] & 32 ? &_data_autoRename : nullptr;
+  return _flags[8] & 32768 ? &_data_autoRename : nullptr;
 }
 
 void NodeChange::set_autoRename(const bool &value) {
-  _flags[8] |= 32; _data_autoRename = value;
+  _flags[8] |= 32768; _data_autoRename = value;
 }
 
 uint32_t *NodeChange::autoRenameTag() {
-  return _flags[8] & 64 ? &_data_autoRenameTag : nullptr;
+  return _flags[8] & 65536 ? &_data_autoRenameTag : nullptr;
 }
 
 const uint32_t *NodeChange::autoRenameTag() const {
-  return _flags[8] & 64 ? &_data_autoRenameTag : nullptr;
+  return _flags[8] & 65536 ? &_data_autoRenameTag : nullptr;
 }
 
 void NodeChange::set_autoRenameTag(const uint32_t &value) {
-  _flags[8] |= 64; _data_autoRenameTag = value;
+  _flags[8] |= 65536; _data_autoRenameTag = value;
 }
 
 bool *NodeChange::backgroundEnabled() {
-  return _flags[8] & 128 ? &_data_backgroundEnabled : nullptr;
+  return _flags[8] & 131072 ? &_data_backgroundEnabled : nullptr;
 }
 
 const bool *NodeChange::backgroundEnabled() const {
-  return _flags[8] & 128 ? &_data_backgroundEnabled : nullptr;
+  return _flags[8] & 131072 ? &_data_backgroundEnabled : nullptr;
 }
 
 void NodeChange::set_backgroundEnabled(const bool &value) {
-  _flags[8] |= 128; _data_backgroundEnabled = value;
+  _flags[8] |= 131072; _data_backgroundEnabled = value;
 }
 
 uint32_t *NodeChange::backgroundEnabledTag() {
-  return _flags[8] & 256 ? &_data_backgroundEnabledTag : nullptr;
+  return _flags[8] & 262144 ? &_data_backgroundEnabledTag : nullptr;
 }
 
 const uint32_t *NodeChange::backgroundEnabledTag() const {
-  return _flags[8] & 256 ? &_data_backgroundEnabledTag : nullptr;
+  return _flags[8] & 262144 ? &_data_backgroundEnabledTag : nullptr;
 }
 
 void NodeChange::set_backgroundEnabledTag(const uint32_t &value) {
-  _flags[8] |= 256; _data_backgroundEnabledTag = value;
+  _flags[8] |= 262144; _data_backgroundEnabledTag = value;
 }
 
 bool *NodeChange::exportContentsOnly() {
-  return _flags[8] & 512 ? &_data_exportContentsOnly : nullptr;
+  return _flags[8] & 524288 ? &_data_exportContentsOnly : nullptr;
 }
 
 const bool *NodeChange::exportContentsOnly() const {
-  return _flags[8] & 512 ? &_data_exportContentsOnly : nullptr;
+  return _flags[8] & 524288 ? &_data_exportContentsOnly : nullptr;
 }
 
 void NodeChange::set_exportContentsOnly(const bool &value) {
-  _flags[8] |= 512; _data_exportContentsOnly = value;
+  _flags[8] |= 524288; _data_exportContentsOnly = value;
 }
 
 uint32_t *NodeChange::exportContentsOnlyTag() {
-  return _flags[8] & 1024 ? &_data_exportContentsOnlyTag : nullptr;
+  return _flags[8] & 1048576 ? &_data_exportContentsOnlyTag : nullptr;
 }
 
 const uint32_t *NodeChange::exportContentsOnlyTag() const {
-  return _flags[8] & 1024 ? &_data_exportContentsOnlyTag : nullptr;
+  return _flags[8] & 1048576 ? &_data_exportContentsOnlyTag : nullptr;
 }
 
 void NodeChange::set_exportContentsOnlyTag(const uint32_t &value) {
-  _flags[8] |= 1024; _data_exportContentsOnlyTag = value;
+  _flags[8] |= 1048576; _data_exportContentsOnlyTag = value;
 }
 
 float *NodeChange::starInnerScale() {
-  return _flags[8] & 2048 ? &_data_starInnerScale : nullptr;
+  return _flags[8] & 2097152 ? &_data_starInnerScale : nullptr;
 }
 
 const float *NodeChange::starInnerScale() const {
-  return _flags[8] & 2048 ? &_data_starInnerScale : nullptr;
+  return _flags[8] & 2097152 ? &_data_starInnerScale : nullptr;
 }
 
 void NodeChange::set_starInnerScale(const float &value) {
-  _flags[8] |= 2048; _data_starInnerScale = value;
+  _flags[8] |= 2097152; _data_starInnerScale = value;
 }
 
 uint32_t *NodeChange::starInnerScaleTag() {
-  return _flags[8] & 4096 ? &_data_starInnerScaleTag : nullptr;
+  return _flags[8] & 4194304 ? &_data_starInnerScaleTag : nullptr;
 }
 
 const uint32_t *NodeChange::starInnerScaleTag() const {
-  return _flags[8] & 4096 ? &_data_starInnerScaleTag : nullptr;
+  return _flags[8] & 4194304 ? &_data_starInnerScaleTag : nullptr;
 }
 
 void NodeChange::set_starInnerScaleTag(const uint32_t &value) {
-  _flags[8] |= 4096; _data_starInnerScaleTag = value;
+  _flags[8] |= 4194304; _data_starInnerScaleTag = value;
 }
 
 float *NodeChange::miterLimit() {
-  return _flags[8] & 8192 ? &_data_miterLimit : nullptr;
+  return _flags[8] & 8388608 ? &_data_miterLimit : nullptr;
 }
 
 const float *NodeChange::miterLimit() const {
-  return _flags[8] & 8192 ? &_data_miterLimit : nullptr;
+  return _flags[8] & 8388608 ? &_data_miterLimit : nullptr;
 }
 
 void NodeChange::set_miterLimit(const float &value) {
-  _flags[8] |= 8192; _data_miterLimit = value;
+  _flags[8] |= 8388608; _data_miterLimit = value;
 }
 
 uint32_t *NodeChange::miterLimitTag() {
-  return _flags[8] & 16384 ? &_data_miterLimitTag : nullptr;
+  return _flags[8] & 16777216 ? &_data_miterLimitTag : nullptr;
 }
 
 const uint32_t *NodeChange::miterLimitTag() const {
-  return _flags[8] & 16384 ? &_data_miterLimitTag : nullptr;
+  return _flags[8] & 16777216 ? &_data_miterLimitTag : nullptr;
 }
 
 void NodeChange::set_miterLimitTag(const uint32_t &value) {
-  _flags[8] |= 16384; _data_miterLimitTag = value;
+  _flags[8] |= 16777216; _data_miterLimitTag = value;
 }
 
 float *NodeChange::textTracking() {
-  return _flags[8] & 32768 ? &_data_textTracking : nullptr;
+  return _flags[8] & 33554432 ? &_data_textTracking : nullptr;
 }
 
 const float *NodeChange::textTracking() const {
-  return _flags[8] & 32768 ? &_data_textTracking : nullptr;
+  return _flags[8] & 33554432 ? &_data_textTracking : nullptr;
 }
 
 void NodeChange::set_textTracking(const float &value) {
-  _flags[8] |= 32768; _data_textTracking = value;
+  _flags[8] |= 33554432; _data_textTracking = value;
 }
 
 uint32_t *NodeChange::textTrackingTag() {
-  return _flags[8] & 65536 ? &_data_textTrackingTag : nullptr;
+  return _flags[8] & 67108864 ? &_data_textTrackingTag : nullptr;
 }
 
 const uint32_t *NodeChange::textTrackingTag() const {
-  return _flags[8] & 65536 ? &_data_textTrackingTag : nullptr;
+  return _flags[8] & 67108864 ? &_data_textTrackingTag : nullptr;
 }
 
 void NodeChange::set_textTrackingTag(const uint32_t &value) {
-  _flags[8] |= 65536; _data_textTrackingTag = value;
+  _flags[8] |= 67108864; _data_textTrackingTag = value;
 }
 
 BooleanOperation *NodeChange::booleanOperation() {
-  return _flags[8] & 131072 ? &_data_booleanOperation : nullptr;
+  return _flags[8] & 134217728 ? &_data_booleanOperation : nullptr;
 }
 
 const BooleanOperation *NodeChange::booleanOperation() const {
-  return _flags[8] & 131072 ? &_data_booleanOperation : nullptr;
+  return _flags[8] & 134217728 ? &_data_booleanOperation : nullptr;
 }
 
 void NodeChange::set_booleanOperation(const BooleanOperation &value) {
-  _flags[8] |= 131072; _data_booleanOperation = value;
+  _flags[8] |= 134217728; _data_booleanOperation = value;
 }
 
 uint32_t *NodeChange::booleanOperationTag() {
-  return _flags[8] & 262144 ? &_data_booleanOperationTag : nullptr;
+  return _flags[8] & 268435456 ? &_data_booleanOperationTag : nullptr;
 }
 
 const uint32_t *NodeChange::booleanOperationTag() const {
-  return _flags[8] & 262144 ? &_data_booleanOperationTag : nullptr;
+  return _flags[8] & 268435456 ? &_data_booleanOperationTag : nullptr;
 }
 
 void NodeChange::set_booleanOperationTag(const uint32_t &value) {
-  _flags[8] |= 262144; _data_booleanOperationTag = value;
+  _flags[8] |= 268435456; _data_booleanOperationTag = value;
 }
 
 ConstraintType *NodeChange::verticalConstraint() {
-  return _flags[8] & 524288 ? &_data_verticalConstraint : nullptr;
+  return _flags[8] & 536870912 ? &_data_verticalConstraint : nullptr;
 }
 
 const ConstraintType *NodeChange::verticalConstraint() const {
-  return _flags[8] & 524288 ? &_data_verticalConstraint : nullptr;
+  return _flags[8] & 536870912 ? &_data_verticalConstraint : nullptr;
 }
 
 void NodeChange::set_verticalConstraint(const ConstraintType &value) {
-  _flags[8] |= 524288; _data_verticalConstraint = value;
+  _flags[8] |= 536870912; _data_verticalConstraint = value;
 }
 
 uint32_t *NodeChange::verticalConstraintTag() {
-  return _flags[8] & 1048576 ? &_data_verticalConstraintTag : nullptr;
+  return _flags[8] & 1073741824 ? &_data_verticalConstraintTag : nullptr;
 }
 
 const uint32_t *NodeChange::verticalConstraintTag() const {
-  return _flags[8] & 1048576 ? &_data_verticalConstraintTag : nullptr;
+  return _flags[8] & 1073741824 ? &_data_verticalConstraintTag : nullptr;
 }
 
 void NodeChange::set_verticalConstraintTag(const uint32_t &value) {
-  _flags[8] |= 1048576; _data_verticalConstraintTag = value;
+  _flags[8] |= 1073741824; _data_verticalConstraintTag = value;
 }
 
 VectorMirror *NodeChange::handleMirroring() {
-  return _flags[8] & 2097152 ? &_data_handleMirroring : nullptr;
+  return _flags[8] & 2147483648 ? &_data_handleMirroring : nullptr;
 }
 
 const VectorMirror *NodeChange::handleMirroring() const {
-  return _flags[8] & 2097152 ? &_data_handleMirroring : nullptr;
+  return _flags[8] & 2147483648 ? &_data_handleMirroring : nullptr;
 }
 
 void NodeChange::set_handleMirroring(const VectorMirror &value) {
-  _flags[8] |= 2097152; _data_handleMirroring = value;
+  _flags[8] |= 2147483648; _data_handleMirroring = value;
 }
 
 uint32_t *NodeChange::handleMirroringTag() {
-  return _flags[8] & 4194304 ? &_data_handleMirroringTag : nullptr;
+  return _flags[9] & 1 ? &_data_handleMirroringTag : nullptr;
 }
 
 const uint32_t *NodeChange::handleMirroringTag() const {
-  return _flags[8] & 4194304 ? &_data_handleMirroringTag : nullptr;
+  return _flags[9] & 1 ? &_data_handleMirroringTag : nullptr;
 }
 
 void NodeChange::set_handleMirroringTag(const uint32_t &value) {
-  _flags[8] |= 4194304; _data_handleMirroringTag = value;
+  _flags[9] |= 1; _data_handleMirroringTag = value;
 }
 
 kiwi::Array<ExportSettings> *NodeChange::exportSettings() {
-  return _flags[8] & 8388608 ? &_data_exportSettings : nullptr;
+  return _flags[9] & 2 ? &_data_exportSettings : nullptr;
 }
 
 const kiwi::Array<ExportSettings> *NodeChange::exportSettings() const {
-  return _flags[8] & 8388608 ? &_data_exportSettings : nullptr;
+  return _flags[9] & 2 ? &_data_exportSettings : nullptr;
 }
 
 kiwi::Array<ExportSettings> &NodeChange::set_exportSettings(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[8] |= 8388608; return _data_exportSettings = pool.array<ExportSettings>(count);
+  _flags[9] |= 2; return _data_exportSettings = pool.array<ExportSettings>(count);
 }
 
 uint32_t *NodeChange::exportSettingsTag() {
-  return _flags[8] & 16777216 ? &_data_exportSettingsTag : nullptr;
+  return _flags[9] & 4 ? &_data_exportSettingsTag : nullptr;
 }
 
 const uint32_t *NodeChange::exportSettingsTag() const {
-  return _flags[8] & 16777216 ? &_data_exportSettingsTag : nullptr;
+  return _flags[9] & 4 ? &_data_exportSettingsTag : nullptr;
 }
 
 void NodeChange::set_exportSettingsTag(const uint32_t &value) {
-  _flags[8] |= 16777216; _data_exportSettingsTag = value;
+  _flags[9] |= 4; _data_exportSettingsTag = value;
 }
 
 TextAutoResize *NodeChange::textAutoResize() {
-  return _flags[8] & 33554432 ? &_data_textAutoResize : nullptr;
+  return _flags[9] & 8 ? &_data_textAutoResize : nullptr;
 }
 
 const TextAutoResize *NodeChange::textAutoResize() const {
-  return _flags[8] & 33554432 ? &_data_textAutoResize : nullptr;
+  return _flags[9] & 8 ? &_data_textAutoResize : nullptr;
 }
 
 void NodeChange::set_textAutoResize(const TextAutoResize &value) {
-  _flags[8] |= 33554432; _data_textAutoResize = value;
+  _flags[9] |= 8; _data_textAutoResize = value;
 }
 
 uint32_t *NodeChange::textAutoResizeTag() {
-  return _flags[8] & 67108864 ? &_data_textAutoResizeTag : nullptr;
+  return _flags[9] & 16 ? &_data_textAutoResizeTag : nullptr;
 }
 
 const uint32_t *NodeChange::textAutoResizeTag() const {
-  return _flags[8] & 67108864 ? &_data_textAutoResizeTag : nullptr;
+  return _flags[9] & 16 ? &_data_textAutoResizeTag : nullptr;
 }
 
 void NodeChange::set_textAutoResizeTag(const uint32_t &value) {
-  _flags[8] |= 67108864; _data_textAutoResizeTag = value;
+  _flags[9] |= 16; _data_textAutoResizeTag = value;
 }
 
 kiwi::Array<LayoutGrid> *NodeChange::layoutGrids() {
-  return _flags[8] & 134217728 ? &_data_layoutGrids : nullptr;
+  return _flags[9] & 32 ? &_data_layoutGrids : nullptr;
 }
 
 const kiwi::Array<LayoutGrid> *NodeChange::layoutGrids() const {
-  return _flags[8] & 134217728 ? &_data_layoutGrids : nullptr;
+  return _flags[9] & 32 ? &_data_layoutGrids : nullptr;
 }
 
 kiwi::Array<LayoutGrid> &NodeChange::set_layoutGrids(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[8] |= 134217728; return _data_layoutGrids = pool.array<LayoutGrid>(count);
+  _flags[9] |= 32; return _data_layoutGrids = pool.array<LayoutGrid>(count);
 }
 
 uint32_t *NodeChange::layoutGridsTag() {
-  return _flags[8] & 268435456 ? &_data_layoutGridsTag : nullptr;
+  return _flags[9] & 64 ? &_data_layoutGridsTag : nullptr;
 }
 
 const uint32_t *NodeChange::layoutGridsTag() const {
-  return _flags[8] & 268435456 ? &_data_layoutGridsTag : nullptr;
+  return _flags[9] & 64 ? &_data_layoutGridsTag : nullptr;
 }
 
 void NodeChange::set_layoutGridsTag(const uint32_t &value) {
-  _flags[8] |= 268435456; _data_layoutGridsTag = value;
+  _flags[9] |= 64; _data_layoutGridsTag = value;
 }
 
 VectorData *NodeChange::vectorData() {
@@ -17964,123 +19697,123 @@ void NodeChange::set_vectorData(VectorData *value) {
 }
 
 uint32_t *NodeChange::vectorDataTag() {
-  return _flags[8] & 1073741824 ? &_data_vectorDataTag : nullptr;
+  return _flags[9] & 256 ? &_data_vectorDataTag : nullptr;
 }
 
 const uint32_t *NodeChange::vectorDataTag() const {
-  return _flags[8] & 1073741824 ? &_data_vectorDataTag : nullptr;
+  return _flags[9] & 256 ? &_data_vectorDataTag : nullptr;
 }
 
 void NodeChange::set_vectorDataTag(const uint32_t &value) {
-  _flags[8] |= 1073741824; _data_vectorDataTag = value;
+  _flags[9] |= 256; _data_vectorDataTag = value;
 }
 
 bool *NodeChange::frameMaskDisabled() {
-  return _flags[8] & 2147483648 ? &_data_frameMaskDisabled : nullptr;
+  return _flags[9] & 512 ? &_data_frameMaskDisabled : nullptr;
 }
 
 const bool *NodeChange::frameMaskDisabled() const {
-  return _flags[8] & 2147483648 ? &_data_frameMaskDisabled : nullptr;
+  return _flags[9] & 512 ? &_data_frameMaskDisabled : nullptr;
 }
 
 void NodeChange::set_frameMaskDisabled(const bool &value) {
-  _flags[8] |= 2147483648; _data_frameMaskDisabled = value;
+  _flags[9] |= 512; _data_frameMaskDisabled = value;
 }
 
 uint32_t *NodeChange::frameMaskDisabledTag() {
-  return _flags[9] & 1 ? &_data_frameMaskDisabledTag : nullptr;
+  return _flags[9] & 1024 ? &_data_frameMaskDisabledTag : nullptr;
 }
 
 const uint32_t *NodeChange::frameMaskDisabledTag() const {
-  return _flags[9] & 1 ? &_data_frameMaskDisabledTag : nullptr;
+  return _flags[9] & 1024 ? &_data_frameMaskDisabledTag : nullptr;
 }
 
 void NodeChange::set_frameMaskDisabledTag(const uint32_t &value) {
-  _flags[9] |= 1; _data_frameMaskDisabledTag = value;
+  _flags[9] |= 1024; _data_frameMaskDisabledTag = value;
 }
 
 bool *NodeChange::resizeToFit() {
-  return _flags[9] & 2 ? &_data_resizeToFit : nullptr;
+  return _flags[9] & 2048 ? &_data_resizeToFit : nullptr;
 }
 
 const bool *NodeChange::resizeToFit() const {
-  return _flags[9] & 2 ? &_data_resizeToFit : nullptr;
+  return _flags[9] & 2048 ? &_data_resizeToFit : nullptr;
 }
 
 void NodeChange::set_resizeToFit(const bool &value) {
-  _flags[9] |= 2; _data_resizeToFit = value;
+  _flags[9] |= 2048; _data_resizeToFit = value;
 }
 
 uint32_t *NodeChange::resizeToFitTag() {
-  return _flags[9] & 4 ? &_data_resizeToFitTag : nullptr;
+  return _flags[9] & 4096 ? &_data_resizeToFitTag : nullptr;
 }
 
 const uint32_t *NodeChange::resizeToFitTag() const {
-  return _flags[9] & 4 ? &_data_resizeToFitTag : nullptr;
+  return _flags[9] & 4096 ? &_data_resizeToFitTag : nullptr;
 }
 
 void NodeChange::set_resizeToFitTag(const uint32_t &value) {
-  _flags[9] |= 4; _data_resizeToFitTag = value;
+  _flags[9] |= 4096; _data_resizeToFitTag = value;
 }
 
 bool *NodeChange::exportBackgroundDisabled() {
-  return _flags[9] & 8 ? &_data_exportBackgroundDisabled : nullptr;
+  return _flags[9] & 8192 ? &_data_exportBackgroundDisabled : nullptr;
 }
 
 const bool *NodeChange::exportBackgroundDisabled() const {
-  return _flags[9] & 8 ? &_data_exportBackgroundDisabled : nullptr;
+  return _flags[9] & 8192 ? &_data_exportBackgroundDisabled : nullptr;
 }
 
 void NodeChange::set_exportBackgroundDisabled(const bool &value) {
-  _flags[9] |= 8; _data_exportBackgroundDisabled = value;
+  _flags[9] |= 8192; _data_exportBackgroundDisabled = value;
 }
 
 kiwi::Array<Guide> *NodeChange::guides() {
-  return _flags[9] & 16 ? &_data_guides : nullptr;
+  return _flags[9] & 16384 ? &_data_guides : nullptr;
 }
 
 const kiwi::Array<Guide> *NodeChange::guides() const {
-  return _flags[9] & 16 ? &_data_guides : nullptr;
+  return _flags[9] & 16384 ? &_data_guides : nullptr;
 }
 
 kiwi::Array<Guide> &NodeChange::set_guides(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[9] |= 16; return _data_guides = pool.array<Guide>(count);
+  _flags[9] |= 16384; return _data_guides = pool.array<Guide>(count);
 }
 
 bool *NodeChange::internalOnly() {
-  return _flags[9] & 32 ? &_data_internalOnly : nullptr;
+  return _flags[9] & 32768 ? &_data_internalOnly : nullptr;
 }
 
 const bool *NodeChange::internalOnly() const {
-  return _flags[9] & 32 ? &_data_internalOnly : nullptr;
+  return _flags[9] & 32768 ? &_data_internalOnly : nullptr;
 }
 
 void NodeChange::set_internalOnly(const bool &value) {
-  _flags[9] |= 32; _data_internalOnly = value;
+  _flags[9] |= 32768; _data_internalOnly = value;
 }
 
 ScrollDirection *NodeChange::scrollDirection() {
-  return _flags[9] & 64 ? &_data_scrollDirection : nullptr;
+  return _flags[9] & 65536 ? &_data_scrollDirection : nullptr;
 }
 
 const ScrollDirection *NodeChange::scrollDirection() const {
-  return _flags[9] & 64 ? &_data_scrollDirection : nullptr;
+  return _flags[9] & 65536 ? &_data_scrollDirection : nullptr;
 }
 
 void NodeChange::set_scrollDirection(const ScrollDirection &value) {
-  _flags[9] |= 64; _data_scrollDirection = value;
+  _flags[9] |= 65536; _data_scrollDirection = value;
 }
 
 float *NodeChange::cornerSmoothing() {
-  return _flags[9] & 128 ? &_data_cornerSmoothing : nullptr;
+  return _flags[9] & 131072 ? &_data_cornerSmoothing : nullptr;
 }
 
 const float *NodeChange::cornerSmoothing() const {
-  return _flags[9] & 128 ? &_data_cornerSmoothing : nullptr;
+  return _flags[9] & 131072 ? &_data_cornerSmoothing : nullptr;
 }
 
 void NodeChange::set_cornerSmoothing(const float &value) {
-  _flags[9] |= 128; _data_cornerSmoothing = value;
+  _flags[9] |= 131072; _data_cornerSmoothing = value;
 }
 
 Vector *NodeChange::scrollOffset() {
@@ -18096,27 +19829,27 @@ void NodeChange::set_scrollOffset(Vector *value) {
 }
 
 bool *NodeChange::exportTextAsSVGText() {
-  return _flags[9] & 512 ? &_data_exportTextAsSVGText : nullptr;
+  return _flags[9] & 524288 ? &_data_exportTextAsSVGText : nullptr;
 }
 
 const bool *NodeChange::exportTextAsSVGText() const {
-  return _flags[9] & 512 ? &_data_exportTextAsSVGText : nullptr;
+  return _flags[9] & 524288 ? &_data_exportTextAsSVGText : nullptr;
 }
 
 void NodeChange::set_exportTextAsSVGText(const bool &value) {
-  _flags[9] |= 512; _data_exportTextAsSVGText = value;
+  _flags[9] |= 524288; _data_exportTextAsSVGText = value;
 }
 
 ScrollContractedState *NodeChange::scrollContractedState() {
-  return _flags[9] & 1024 ? &_data_scrollContractedState : nullptr;
+  return _flags[9] & 1048576 ? &_data_scrollContractedState : nullptr;
 }
 
 const ScrollContractedState *NodeChange::scrollContractedState() const {
-  return _flags[9] & 1024 ? &_data_scrollContractedState : nullptr;
+  return _flags[9] & 1048576 ? &_data_scrollContractedState : nullptr;
 }
 
 void NodeChange::set_scrollContractedState(const ScrollContractedState &value) {
-  _flags[9] |= 1024; _data_scrollContractedState = value;
+  _flags[9] |= 1048576; _data_scrollContractedState = value;
 }
 
 Vector *NodeChange::contractedSize() {
@@ -18132,27 +19865,27 @@ void NodeChange::set_contractedSize(Vector *value) {
 }
 
 kiwi::String *NodeChange::fixedChildrenDivider() {
-  return _flags[9] & 4096 ? &_data_fixedChildrenDivider : nullptr;
+  return _flags[9] & 4194304 ? &_data_fixedChildrenDivider : nullptr;
 }
 
 const kiwi::String *NodeChange::fixedChildrenDivider() const {
-  return _flags[9] & 4096 ? &_data_fixedChildrenDivider : nullptr;
+  return _flags[9] & 4194304 ? &_data_fixedChildrenDivider : nullptr;
 }
 
 void NodeChange::set_fixedChildrenDivider(const kiwi::String &value) {
-  _flags[9] |= 4096; _data_fixedChildrenDivider = value;
+  _flags[9] |= 4194304; _data_fixedChildrenDivider = value;
 }
 
 ScrollBehavior *NodeChange::scrollBehavior() {
-  return _flags[9] & 8192 ? &_data_scrollBehavior : nullptr;
+  return _flags[9] & 8388608 ? &_data_scrollBehavior : nullptr;
 }
 
 const ScrollBehavior *NodeChange::scrollBehavior() const {
-  return _flags[9] & 8192 ? &_data_scrollBehavior : nullptr;
+  return _flags[9] & 8388608 ? &_data_scrollBehavior : nullptr;
 }
 
 void NodeChange::set_scrollBehavior(const ScrollBehavior &value) {
-  _flags[9] |= 8192; _data_scrollBehavior = value;
+  _flags[9] |= 8388608; _data_scrollBehavior = value;
 }
 
 ArcData *NodeChange::arcData() {
@@ -18168,39 +19901,39 @@ void NodeChange::set_arcData(ArcData *value) {
 }
 
 int32_t *NodeChange::derivedSymbolDataLayoutVersion() {
-  return _flags[9] & 32768 ? &_data_derivedSymbolDataLayoutVersion : nullptr;
+  return _flags[9] & 33554432 ? &_data_derivedSymbolDataLayoutVersion : nullptr;
 }
 
 const int32_t *NodeChange::derivedSymbolDataLayoutVersion() const {
-  return _flags[9] & 32768 ? &_data_derivedSymbolDataLayoutVersion : nullptr;
+  return _flags[9] & 33554432 ? &_data_derivedSymbolDataLayoutVersion : nullptr;
 }
 
 void NodeChange::set_derivedSymbolDataLayoutVersion(const int32_t &value) {
-  _flags[9] |= 32768; _data_derivedSymbolDataLayoutVersion = value;
+  _flags[9] |= 33554432; _data_derivedSymbolDataLayoutVersion = value;
 }
 
 NavigationType *NodeChange::navigationType() {
-  return _flags[9] & 65536 ? &_data_navigationType : nullptr;
+  return _flags[9] & 67108864 ? &_data_navigationType : nullptr;
 }
 
 const NavigationType *NodeChange::navigationType() const {
-  return _flags[9] & 65536 ? &_data_navigationType : nullptr;
+  return _flags[9] & 67108864 ? &_data_navigationType : nullptr;
 }
 
 void NodeChange::set_navigationType(const NavigationType &value) {
-  _flags[9] |= 65536; _data_navigationType = value;
+  _flags[9] |= 67108864; _data_navigationType = value;
 }
 
 OverlayPositionType *NodeChange::overlayPositionType() {
-  return _flags[9] & 131072 ? &_data_overlayPositionType : nullptr;
+  return _flags[9] & 134217728 ? &_data_overlayPositionType : nullptr;
 }
 
 const OverlayPositionType *NodeChange::overlayPositionType() const {
-  return _flags[9] & 131072 ? &_data_overlayPositionType : nullptr;
+  return _flags[9] & 134217728 ? &_data_overlayPositionType : nullptr;
 }
 
 void NodeChange::set_overlayPositionType(const OverlayPositionType &value) {
-  _flags[9] |= 131072; _data_overlayPositionType = value;
+  _flags[9] |= 134217728; _data_overlayPositionType = value;
 }
 
 Vector *NodeChange::overlayRelativePosition() {
@@ -18216,15 +19949,15 @@ void NodeChange::set_overlayRelativePosition(Vector *value) {
 }
 
 OverlayBackgroundInteraction *NodeChange::overlayBackgroundInteraction() {
-  return _flags[9] & 524288 ? &_data_overlayBackgroundInteraction : nullptr;
+  return _flags[9] & 536870912 ? &_data_overlayBackgroundInteraction : nullptr;
 }
 
 const OverlayBackgroundInteraction *NodeChange::overlayBackgroundInteraction() const {
-  return _flags[9] & 524288 ? &_data_overlayBackgroundInteraction : nullptr;
+  return _flags[9] & 536870912 ? &_data_overlayBackgroundInteraction : nullptr;
 }
 
 void NodeChange::set_overlayBackgroundInteraction(const OverlayBackgroundInteraction &value) {
-  _flags[9] |= 524288; _data_overlayBackgroundInteraction = value;
+  _flags[9] |= 536870912; _data_overlayBackgroundInteraction = value;
 }
 
 OverlayBackgroundAppearance *NodeChange::overlayBackgroundAppearance() {
@@ -18252,39 +19985,39 @@ void NodeChange::set_overrideKey(GUID *value) {
 }
 
 bool *NodeChange::containerSupportsFillStrokeAndCorners() {
-  return _flags[9] & 4194304 ? &_data_containerSupportsFillStrokeAndCorners : nullptr;
+  return _flags[10] & 1 ? &_data_containerSupportsFillStrokeAndCorners : nullptr;
 }
 
 const bool *NodeChange::containerSupportsFillStrokeAndCorners() const {
-  return _flags[9] & 4194304 ? &_data_containerSupportsFillStrokeAndCorners : nullptr;
+  return _flags[10] & 1 ? &_data_containerSupportsFillStrokeAndCorners : nullptr;
 }
 
 void NodeChange::set_containerSupportsFillStrokeAndCorners(const bool &value) {
-  _flags[9] |= 4194304; _data_containerSupportsFillStrokeAndCorners = value;
+  _flags[10] |= 1; _data_containerSupportsFillStrokeAndCorners = value;
 }
 
 StackSize *NodeChange::stackCounterSizing() {
-  return _flags[9] & 8388608 ? &_data_stackCounterSizing : nullptr;
+  return _flags[10] & 2 ? &_data_stackCounterSizing : nullptr;
 }
 
 const StackSize *NodeChange::stackCounterSizing() const {
-  return _flags[9] & 8388608 ? &_data_stackCounterSizing : nullptr;
+  return _flags[10] & 2 ? &_data_stackCounterSizing : nullptr;
 }
 
 void NodeChange::set_stackCounterSizing(const StackSize &value) {
-  _flags[9] |= 8388608; _data_stackCounterSizing = value;
+  _flags[10] |= 2; _data_stackCounterSizing = value;
 }
 
 bool *NodeChange::containersSupportFillStrokeAndCorners() {
-  return _flags[9] & 16777216 ? &_data_containersSupportFillStrokeAndCorners : nullptr;
+  return _flags[10] & 4 ? &_data_containersSupportFillStrokeAndCorners : nullptr;
 }
 
 const bool *NodeChange::containersSupportFillStrokeAndCorners() const {
-  return _flags[9] & 16777216 ? &_data_containersSupportFillStrokeAndCorners : nullptr;
+  return _flags[10] & 4 ? &_data_containersSupportFillStrokeAndCorners : nullptr;
 }
 
 void NodeChange::set_containersSupportFillStrokeAndCorners(const bool &value) {
-  _flags[9] |= 16777216; _data_containersSupportFillStrokeAndCorners = value;
+  _flags[10] |= 4; _data_containersSupportFillStrokeAndCorners = value;
 }
 
 KeyTrigger *NodeChange::keyTrigger() {
@@ -18300,39 +20033,39 @@ void NodeChange::set_keyTrigger(KeyTrigger *value) {
 }
 
 kiwi::String *NodeChange::voiceEventPhrase() {
-  return _flags[9] & 67108864 ? &_data_voiceEventPhrase : nullptr;
+  return _flags[10] & 16 ? &_data_voiceEventPhrase : nullptr;
 }
 
 const kiwi::String *NodeChange::voiceEventPhrase() const {
-  return _flags[9] & 67108864 ? &_data_voiceEventPhrase : nullptr;
+  return _flags[10] & 16 ? &_data_voiceEventPhrase : nullptr;
 }
 
 void NodeChange::set_voiceEventPhrase(const kiwi::String &value) {
-  _flags[9] |= 67108864; _data_voiceEventPhrase = value;
+  _flags[10] |= 16; _data_voiceEventPhrase = value;
 }
 
 kiwi::Array<GUID> *NodeChange::ancestorPathBeforeDeletion() {
-  return _flags[9] & 134217728 ? &_data_ancestorPathBeforeDeletion : nullptr;
+  return _flags[10] & 32 ? &_data_ancestorPathBeforeDeletion : nullptr;
 }
 
 const kiwi::Array<GUID> *NodeChange::ancestorPathBeforeDeletion() const {
-  return _flags[9] & 134217728 ? &_data_ancestorPathBeforeDeletion : nullptr;
+  return _flags[10] & 32 ? &_data_ancestorPathBeforeDeletion : nullptr;
 }
 
 kiwi::Array<GUID> &NodeChange::set_ancestorPathBeforeDeletion(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[9] |= 134217728; return _data_ancestorPathBeforeDeletion = pool.array<GUID>(count);
+  _flags[10] |= 32; return _data_ancestorPathBeforeDeletion = pool.array<GUID>(count);
 }
 
 kiwi::Array<SymbolLink> *NodeChange::symbolLinks() {
-  return _flags[9] & 268435456 ? &_data_symbolLinks : nullptr;
+  return _flags[10] & 64 ? &_data_symbolLinks : nullptr;
 }
 
 const kiwi::Array<SymbolLink> *NodeChange::symbolLinks() const {
-  return _flags[9] & 268435456 ? &_data_symbolLinks : nullptr;
+  return _flags[10] & 64 ? &_data_symbolLinks : nullptr;
 }
 
 kiwi::Array<SymbolLink> &NodeChange::set_symbolLinks(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[9] |= 268435456; return _data_symbolLinks = pool.array<SymbolLink>(count);
+  _flags[10] |= 64; return _data_symbolLinks = pool.array<SymbolLink>(count);
 }
 
 TextListData *NodeChange::textListData() {
@@ -18348,27 +20081,27 @@ void NodeChange::set_textListData(TextListData *value) {
 }
 
 bool *NodeChange::detachOpticalSizeFromFontSize() {
-  return _flags[9] & 1073741824 ? &_data_detachOpticalSizeFromFontSize : nullptr;
+  return _flags[10] & 256 ? &_data_detachOpticalSizeFromFontSize : nullptr;
 }
 
 const bool *NodeChange::detachOpticalSizeFromFontSize() const {
-  return _flags[9] & 1073741824 ? &_data_detachOpticalSizeFromFontSize : nullptr;
+  return _flags[10] & 256 ? &_data_detachOpticalSizeFromFontSize : nullptr;
 }
 
 void NodeChange::set_detachOpticalSizeFromFontSize(const bool &value) {
-  _flags[9] |= 1073741824; _data_detachOpticalSizeFromFontSize = value;
+  _flags[10] |= 256; _data_detachOpticalSizeFromFontSize = value;
 }
 
 float *NodeChange::listSpacing() {
-  return _flags[9] & 2147483648 ? &_data_listSpacing : nullptr;
+  return _flags[10] & 512 ? &_data_listSpacing : nullptr;
 }
 
 const float *NodeChange::listSpacing() const {
-  return _flags[9] & 2147483648 ? &_data_listSpacing : nullptr;
+  return _flags[10] & 512 ? &_data_listSpacing : nullptr;
 }
 
 void NodeChange::set_listSpacing(const float &value) {
-  _flags[9] |= 2147483648; _data_listSpacing = value;
+  _flags[10] |= 512; _data_listSpacing = value;
 }
 
 EmbedData *NodeChange::embedData() {
@@ -18408,51 +20141,51 @@ void NodeChange::set_renderedSyncedState(MultiplayerMap *value) {
 }
 
 bool *NodeChange::simplifyInstancePanels() {
-  return _flags[10] & 8 ? &_data_simplifyInstancePanels : nullptr;
+  return _flags[10] & 8192 ? &_data_simplifyInstancePanels : nullptr;
 }
 
 const bool *NodeChange::simplifyInstancePanels() const {
-  return _flags[10] & 8 ? &_data_simplifyInstancePanels : nullptr;
+  return _flags[10] & 8192 ? &_data_simplifyInstancePanels : nullptr;
 }
 
 void NodeChange::set_simplifyInstancePanels(const bool &value) {
-  _flags[10] |= 8; _data_simplifyInstancePanels = value;
+  _flags[10] |= 8192; _data_simplifyInstancePanels = value;
 }
 
-HTMLTag *NodeChange::htmlTag() {
-  return _flags[10] & 16 ? &_data_htmlTag : nullptr;
+HTMLTag *NodeChange::accessibleHTMLTag() {
+  return _flags[10] & 16384 ? &_data_accessibleHTMLTag : nullptr;
 }
 
-const HTMLTag *NodeChange::htmlTag() const {
-  return _flags[10] & 16 ? &_data_htmlTag : nullptr;
+const HTMLTag *NodeChange::accessibleHTMLTag() const {
+  return _flags[10] & 16384 ? &_data_accessibleHTMLTag : nullptr;
 }
 
-void NodeChange::set_htmlTag(const HTMLTag &value) {
-  _flags[10] |= 16; _data_htmlTag = value;
+void NodeChange::set_accessibleHTMLTag(const HTMLTag &value) {
+  _flags[10] |= 16384; _data_accessibleHTMLTag = value;
 }
 
 ARIARole *NodeChange::ariaRole() {
-  return _flags[10] & 32 ? &_data_ariaRole : nullptr;
+  return _flags[10] & 32768 ? &_data_ariaRole : nullptr;
 }
 
 const ARIARole *NodeChange::ariaRole() const {
-  return _flags[10] & 32 ? &_data_ariaRole : nullptr;
+  return _flags[10] & 32768 ? &_data_ariaRole : nullptr;
 }
 
 void NodeChange::set_ariaRole(const ARIARole &value) {
-  _flags[10] |= 32; _data_ariaRole = value;
+  _flags[10] |= 32768; _data_ariaRole = value;
 }
 
 kiwi::String *NodeChange::accessibleLabel() {
-  return _flags[10] & 64 ? &_data_accessibleLabel : nullptr;
+  return _flags[10] & 65536 ? &_data_accessibleLabel : nullptr;
 }
 
 const kiwi::String *NodeChange::accessibleLabel() const {
-  return _flags[10] & 64 ? &_data_accessibleLabel : nullptr;
+  return _flags[10] & 65536 ? &_data_accessibleLabel : nullptr;
 }
 
 void NodeChange::set_accessibleLabel(const kiwi::String &value) {
-  _flags[10] |= 64; _data_accessibleLabel = value;
+  _flags[10] |= 65536; _data_accessibleLabel = value;
 }
 
 VariableData *NodeChange::variableData() {
@@ -18492,15 +20225,15 @@ void NodeChange::set_variableModeBySetMap(VariableModeBySetMap *value) {
 }
 
 kiwi::Array<VariableSetMode> *NodeChange::variableSetModes() {
-  return _flags[10] & 1024 ? &_data_variableSetModes : nullptr;
+  return _flags[10] & 1048576 ? &_data_variableSetModes : nullptr;
 }
 
 const kiwi::Array<VariableSetMode> *NodeChange::variableSetModes() const {
-  return _flags[10] & 1024 ? &_data_variableSetModes : nullptr;
+  return _flags[10] & 1048576 ? &_data_variableSetModes : nullptr;
 }
 
 kiwi::Array<VariableSetMode> &NodeChange::set_variableSetModes(kiwi::MemoryPool &pool, uint32_t count) {
-  _flags[10] |= 1024; return _data_variableSetModes = pool.array<VariableSetMode>(count);
+  _flags[10] |= 1048576; return _data_variableSetModes = pool.array<VariableSetMode>(count);
 }
 
 VariableSetID *NodeChange::variableSetID() {
@@ -18516,15 +20249,15 @@ void NodeChange::set_variableSetID(VariableSetID *value) {
 }
 
 VariableResolvedDataType *NodeChange::variableResolvedType() {
-  return _flags[10] & 4096 ? &_data_variableResolvedType : nullptr;
+  return _flags[10] & 4194304 ? &_data_variableResolvedType : nullptr;
 }
 
 const VariableResolvedDataType *NodeChange::variableResolvedType() const {
-  return _flags[10] & 4096 ? &_data_variableResolvedType : nullptr;
+  return _flags[10] & 4194304 ? &_data_variableResolvedType : nullptr;
 }
 
 void NodeChange::set_variableResolvedType(const VariableResolvedDataType &value) {
-  _flags[10] |= 4096; _data_variableResolvedType = value;
+  _flags[10] |= 4194304; _data_variableResolvedType = value;
 }
 
 VariableDataValues *NodeChange::variableDataValues() {
@@ -18537,6 +20270,54 @@ const VariableDataValues *NodeChange::variableDataValues() const {
 
 void NodeChange::set_variableDataValues(VariableDataValues *value) {
   _data_variableDataValues = value;
+}
+
+kiwi::String *NodeChange::variableTokenName() {
+  return _flags[10] & 16777216 ? &_data_variableTokenName : nullptr;
+}
+
+const kiwi::String *NodeChange::variableTokenName() const {
+  return _flags[10] & 16777216 ? &_data_variableTokenName : nullptr;
+}
+
+void NodeChange::set_variableTokenName(const kiwi::String &value) {
+  _flags[10] |= 16777216; _data_variableTokenName = value;
+}
+
+kiwi::Array<VariableScope> *NodeChange::variableScopes() {
+  return _flags[10] & 33554432 ? &_data_variableScopes : nullptr;
+}
+
+const kiwi::Array<VariableScope> *NodeChange::variableScopes() const {
+  return _flags[10] & 33554432 ? &_data_variableScopes : nullptr;
+}
+
+kiwi::Array<VariableScope> &NodeChange::set_variableScopes(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[10] |= 33554432; return _data_variableScopes = pool.array<VariableScope>(count);
+}
+
+CodeSyntaxMap *NodeChange::codeSyntax() {
+  return _data_codeSyntax;
+}
+
+const CodeSyntaxMap *NodeChange::codeSyntax() const {
+  return _data_codeSyntax;
+}
+
+void NodeChange::set_codeSyntax(CodeSyntaxMap *value) {
+  _data_codeSyntax = value;
+}
+
+HandoffStatusMap *NodeChange::handoffStatusMap() {
+  return _data_handoffStatusMap;
+}
+
+const HandoffStatusMap *NodeChange::handoffStatusMap() const {
+  return _data_handoffStatusMap;
+}
+
+void NodeChange::set_handoffStatusMap(HandoffStatusMap *value) {
+  _data_handoffStatusMap = value;
 }
 
 AgendaPositionMap *NodeChange::agendaPositionMap() {
@@ -18576,15 +20357,15 @@ void NodeChange::set_migrationStatus(MigrationStatus *value) {
 }
 
 bool *NodeChange::isSoftDeleted() {
-  return _flags[10] & 131072 ? &_data_isSoftDeleted : nullptr;
+  return _flags[10] & 2147483648 ? &_data_isSoftDeleted : nullptr;
 }
 
 const bool *NodeChange::isSoftDeleted() const {
-  return _flags[10] & 131072 ? &_data_isSoftDeleted : nullptr;
+  return _flags[10] & 2147483648 ? &_data_isSoftDeleted : nullptr;
 }
 
 void NodeChange::set_isSoftDeleted(const bool &value) {
-  _flags[10] |= 131072; _data_isSoftDeleted = value;
+  _flags[10] |= 2147483648; _data_isSoftDeleted = value;
 }
 
 EditInfo *NodeChange::editInfo() {
@@ -18597,6 +20378,102 @@ const EditInfo *NodeChange::editInfo() const {
 
 void NodeChange::set_editInfo(EditInfo *value) {
   _data_editInfo = value;
+}
+
+ColorProfile *NodeChange::colorProfile() {
+  return _flags[11] & 2 ? &_data_colorProfile : nullptr;
+}
+
+const ColorProfile *NodeChange::colorProfile() const {
+  return _flags[11] & 2 ? &_data_colorProfile : nullptr;
+}
+
+void NodeChange::set_colorProfile(const ColorProfile &value) {
+  _flags[11] |= 2; _data_colorProfile = value;
+}
+
+SymbolId *NodeChange::detachedSymbolId() {
+  return _data_detachedSymbolId;
+}
+
+const SymbolId *NodeChange::detachedSymbolId() const {
+  return _data_detachedSymbolId;
+}
+
+void NodeChange::set_detachedSymbolId(SymbolId *value) {
+  _data_detachedSymbolId = value;
+}
+
+ChildReadingDirection *NodeChange::childReadingDirection() {
+  return _flags[11] & 8 ? &_data_childReadingDirection : nullptr;
+}
+
+const ChildReadingDirection *NodeChange::childReadingDirection() const {
+  return _flags[11] & 8 ? &_data_childReadingDirection : nullptr;
+}
+
+void NodeChange::set_childReadingDirection(const ChildReadingDirection &value) {
+  _flags[11] |= 8; _data_childReadingDirection = value;
+}
+
+kiwi::String *NodeChange::readingIndex() {
+  return _flags[11] & 16 ? &_data_readingIndex : nullptr;
+}
+
+const kiwi::String *NodeChange::readingIndex() const {
+  return _flags[11] & 16 ? &_data_readingIndex : nullptr;
+}
+
+void NodeChange::set_readingIndex(const kiwi::String &value) {
+  _flags[11] |= 16; _data_readingIndex = value;
+}
+
+DocumentColorProfile *NodeChange::documentColorProfile() {
+  return _flags[11] & 32 ? &_data_documentColorProfile : nullptr;
+}
+
+const DocumentColorProfile *NodeChange::documentColorProfile() const {
+  return _flags[11] & 32 ? &_data_documentColorProfile : nullptr;
+}
+
+void NodeChange::set_documentColorProfile(const DocumentColorProfile &value) {
+  _flags[11] |= 32; _data_documentColorProfile = value;
+}
+
+kiwi::Array<DeveloperRelatedLink> *NodeChange::developerRelatedLinks() {
+  return _flags[11] & 64 ? &_data_developerRelatedLinks : nullptr;
+}
+
+const kiwi::Array<DeveloperRelatedLink> *NodeChange::developerRelatedLinks() const {
+  return _flags[11] & 64 ? &_data_developerRelatedLinks : nullptr;
+}
+
+kiwi::Array<DeveloperRelatedLink> &NodeChange::set_developerRelatedLinks(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[11] |= 64; return _data_developerRelatedLinks = pool.array<DeveloperRelatedLink>(count);
+}
+
+kiwi::String *NodeChange::slideActiveThemeLibKey() {
+  return _flags[11] & 128 ? &_data_slideActiveThemeLibKey : nullptr;
+}
+
+const kiwi::String *NodeChange::slideActiveThemeLibKey() const {
+  return _flags[11] & 128 ? &_data_slideActiveThemeLibKey : nullptr;
+}
+
+void NodeChange::set_slideActiveThemeLibKey(const kiwi::String &value) {
+  _flags[11] |= 128; _data_slideActiveThemeLibKey = value;
+}
+
+ARIAAttributesMap *NodeChange::ariaAttributes() {
+  return _data_ariaAttributes;
+}
+
+const ARIAAttributesMap *NodeChange::ariaAttributes() const {
+  return _data_ariaAttributes;
+}
+
+void NodeChange::set_ariaAttributes(ARIAAttributesMap *value) {
+  _data_ariaAttributes = value;
 }
 
 bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
@@ -18708,6 +20585,14 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
   if (sortPosition() != nullptr) {
     _bb.writeVarUint(320);
     _bb.writeString(_data_sortPosition.c_str());
+  }
+  if (ojansSuperSecretNodeField() != nullptr) {
+    _bb.writeVarUint(345);
+    if (!_data_ojansSuperSecretNodeField->encode(_bb)) return false;
+  }
+  if (sevMoonlitLilyData() != nullptr) {
+    _bb.writeVarUint(348);
+    if (!_data_sevMoonlitLilyData->encode(_bb)) return false;
   }
   if (inheritFillStyleID() != nullptr) {
     _bb.writeVarUint(158);
@@ -18972,6 +20857,10 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(94);
     _bb.writeVarUint(_data_textDataTag);
   }
+  if (derivedTextData() != nullptr) {
+    _bb.writeVarUint(359);
+    if (!_data_derivedTextData->encode(_bb)) return false;
+  }
   if (fontVariantCommonLigatures() != nullptr) {
     _bb.writeVarUint(127);
     _bb.writeByte(_data_fontVariantCommonLigatures);
@@ -19028,13 +20917,25 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(322);
     _bb.writeVarUint(static_cast<uint32_t>(_data_leadingTrim));
   }
-  if (hangingQuote() != nullptr) {
+  if (hangingPunctuation() != nullptr) {
     _bb.writeVarUint(337);
-    _bb.writeByte(_data_hangingQuote);
+    _bb.writeByte(_data_hangingPunctuation);
   }
   if (hangingList() != nullptr) {
     _bb.writeVarUint(339);
     _bb.writeByte(_data_hangingList);
+  }
+  if (maxLines() != nullptr) {
+    _bb.writeVarUint(351);
+    _bb.writeVarInt(_data_maxLines);
+  }
+  if (sectionStatus() != nullptr) {
+    _bb.writeVarUint(352);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_sectionStatus));
+  }
+  if (sectionStatusInfo() != nullptr) {
+    _bb.writeVarUint(355);
+    if (!_data_sectionStatusInfo->encode(_bb)) return false;
   }
   if (textUserLayoutVersion() != nullptr) {
     _bb.writeVarUint(203);
@@ -19053,6 +20954,10 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
   if (hyperlink() != nullptr) {
     _bb.writeVarUint(223);
     if (!_data_hyperlink->encode(_bb)) return false;
+  }
+  if (mention() != nullptr) {
+    _bb.writeVarUint(340);
+    if (!_data_mention->encode(_bb)) return false;
   }
   if (fontVariations() != nullptr) {
     _bb.writeVarUint(260);
@@ -19433,6 +21338,14 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(326);
     if (!_data_maxSize->encode(_bb)) return false;
   }
+  if (stackCounterAlignContent() != nullptr) {
+    _bb.writeVarUint(343);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_stackCounterAlignContent));
+  }
+  if (isSnakeGameBoard() != nullptr) {
+    _bb.writeVarUint(344);
+    _bb.writeByte(_data_isSnakeGameBoard);
+  }
   if (transitionNodeID() != nullptr) {
     _bb.writeVarUint(139);
     if (!_data_transitionNodeID->encode(_bb)) return false;
@@ -19624,6 +21537,10 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
   if (isWidgetStickable() != nullptr) {
     _bb.writeVarUint(293);
     _bb.writeByte(_data_isWidgetStickable);
+  }
+  if (shouldHideCursorsOnWidgetHover() != nullptr) {
+    _bb.writeVarUint(360);
+    _bb.writeByte(_data_shouldHideCursorsOnWidgetHover);
   }
   if (widgetMetadata() != nullptr) {
     _bb.writeVarUint(262);
@@ -19928,9 +21845,9 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(284);
     _bb.writeByte(_data_simplifyInstancePanels);
   }
-  if (htmlTag() != nullptr) {
+  if (accessibleHTMLTag() != nullptr) {
     _bb.writeVarUint(302);
-    _bb.writeVarUint(static_cast<uint32_t>(_data_htmlTag));
+    _bb.writeVarUint(static_cast<uint32_t>(_data_accessibleHTMLTag));
   }
   if (ariaRole() != nullptr) {
     _bb.writeVarUint(303);
@@ -19969,6 +21886,23 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(315);
     if (!_data_variableDataValues->encode(_bb)) return false;
   }
+  if (variableTokenName() != nullptr) {
+    _bb.writeVarUint(350);
+    _bb.writeString(_data_variableTokenName.c_str());
+  }
+  if (variableScopes() != nullptr) {
+    _bb.writeVarUint(353);
+    _bb.writeVarUint(_data_variableScopes.size());
+    for (VariableScope &_it : _data_variableScopes) _bb.writeVarUint(static_cast<uint32_t>(_it));
+  }
+  if (codeSyntax() != nullptr) {
+    _bb.writeVarUint(358);
+    if (!_data_codeSyntax->encode(_bb)) return false;
+  }
+  if (handoffStatusMap() != nullptr) {
+    _bb.writeVarUint(361);
+    if (!_data_handoffStatusMap->encode(_bb)) return false;
+  }
   if (agendaPositionMap() != nullptr) {
     _bb.writeVarUint(327);
     if (!_data_agendaPositionMap->encode(_bb)) return false;
@@ -19988,6 +21922,39 @@ bool NodeChange::encode(kiwi::ByteBuffer &_bb) {
   if (editInfo() != nullptr) {
     _bb.writeVarUint(331);
     if (!_data_editInfo->encode(_bb)) return false;
+  }
+  if (colorProfile() != nullptr) {
+    _bb.writeVarUint(341);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_colorProfile));
+  }
+  if (detachedSymbolId() != nullptr) {
+    _bb.writeVarUint(342);
+    if (!_data_detachedSymbolId->encode(_bb)) return false;
+  }
+  if (childReadingDirection() != nullptr) {
+    _bb.writeVarUint(346);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_childReadingDirection));
+  }
+  if (readingIndex() != nullptr) {
+    _bb.writeVarUint(347);
+    _bb.writeString(_data_readingIndex.c_str());
+  }
+  if (documentColorProfile() != nullptr) {
+    _bb.writeVarUint(349);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_documentColorProfile));
+  }
+  if (developerRelatedLinks() != nullptr) {
+    _bb.writeVarUint(354);
+    _bb.writeVarUint(_data_developerRelatedLinks.size());
+    for (DeveloperRelatedLink &_it : _data_developerRelatedLinks) if (!_it.encode(_bb)) return false;
+  }
+  if (slideActiveThemeLibKey() != nullptr) {
+    _bb.writeVarUint(356);
+    _bb.writeString(_data_slideActiveThemeLibKey.c_str());
+  }
+  if (ariaAttributes() != nullptr) {
+    _bb.writeVarUint(357);
+    if (!_data_ariaAttributes->encode(_bb)) return false;
   }
   _bb.writeVarUint(0);
   return true;
@@ -20134,6 +22101,16 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
       case 320: {
         if (!_bb.readString(_data_sortPosition, _pool)) return false;
         set_sortPosition(_data_sortPosition);
+        break;
+      }
+      case 345: {
+        _data_ojansSuperSecretNodeField = _pool.allocate<SharedStyleMasterData>();
+        if (!_data_ojansSuperSecretNodeField->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 348: {
+        _data_sevMoonlitLilyData = _pool.allocate<SharedStyleMasterData>();
+        if (!_data_sevMoonlitLilyData->decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 158: {
@@ -20451,6 +22428,11 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
         set_textDataTag(_data_textDataTag);
         break;
       }
+      case 359: {
+        _data_derivedTextData = _pool.allocate<DerivedTextData>();
+        if (!_data_derivedTextData->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
       case 127: {
         if (!_bb.readByte(_data_fontVariantCommonLigatures)) return false;
         set_fontVariantCommonLigatures(_data_fontVariantCommonLigatures);
@@ -20522,13 +22504,28 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
         break;
       }
       case 337: {
-        if (!_bb.readByte(_data_hangingQuote)) return false;
-        set_hangingQuote(_data_hangingQuote);
+        if (!_bb.readByte(_data_hangingPunctuation)) return false;
+        set_hangingPunctuation(_data_hangingPunctuation);
         break;
       }
       case 339: {
         if (!_bb.readByte(_data_hangingList)) return false;
         set_hangingList(_data_hangingList);
+        break;
+      }
+      case 351: {
+        if (!_bb.readVarInt(_data_maxLines)) return false;
+        set_maxLines(_data_maxLines);
+        break;
+      }
+      case 352: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_sectionStatus))) return false;
+        set_sectionStatus(_data_sectionStatus);
+        break;
+      }
+      case 355: {
+        _data_sectionStatusInfo = _pool.allocate<SectionStatusInfo>();
+        if (!_data_sectionStatusInfo->decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 203: {
@@ -20549,6 +22546,11 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
       case 223: {
         _data_hyperlink = _pool.allocate<Hyperlink>();
         if (!_data_hyperlink->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 340: {
+        _data_mention = _pool.allocate<Mention>();
+        if (!_data_mention->decode(_bb, _pool, _schema)) return false;
         break;
       }
       case 260: {
@@ -21016,6 +23018,16 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
         if (!_data_maxSize->decode(_bb, _pool, _schema)) return false;
         break;
       }
+      case 343: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_stackCounterAlignContent))) return false;
+        set_stackCounterAlignContent(_data_stackCounterAlignContent);
+        break;
+      }
+      case 344: {
+        if (!_bb.readByte(_data_isSnakeGameBoard)) return false;
+        set_isSnakeGameBoard(_data_isSnakeGameBoard);
+        break;
+      }
       case 139: {
         _data_transitionNodeID = _pool.allocate<GUID>();
         if (!_data_transitionNodeID->decode(_bb, _pool, _schema)) return false;
@@ -21249,6 +23261,11 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
       case 293: {
         if (!_bb.readByte(_data_isWidgetStickable)) return false;
         set_isWidgetStickable(_data_isWidgetStickable);
+        break;
+      }
+      case 360: {
+        if (!_bb.readByte(_data_shouldHideCursorsOnWidgetHover)) return false;
+        set_shouldHideCursorsOnWidgetHover(_data_shouldHideCursorsOnWidgetHover);
         break;
       }
       case 262: {
@@ -21622,8 +23639,8 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
         break;
       }
       case 302: {
-        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_htmlTag))) return false;
-        set_htmlTag(_data_htmlTag);
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_accessibleHTMLTag))) return false;
+        set_accessibleHTMLTag(_data_accessibleHTMLTag);
         break;
       }
       case 303: {
@@ -21671,6 +23688,26 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
         if (!_data_variableDataValues->decode(_bb, _pool, _schema)) return false;
         break;
       }
+      case 350: {
+        if (!_bb.readString(_data_variableTokenName, _pool)) return false;
+        set_variableTokenName(_data_variableTokenName);
+        break;
+      }
+      case 353: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (VariableScope &_it : set_variableScopes(_pool, _count)) if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_it))) return false;
+        break;
+      }
+      case 358: {
+        _data_codeSyntax = _pool.allocate<CodeSyntaxMap>();
+        if (!_data_codeSyntax->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 361: {
+        _data_handoffStatusMap = _pool.allocate<HandoffStatusMap>();
+        if (!_data_handoffStatusMap->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
       case 327: {
         _data_agendaPositionMap = _pool.allocate<AgendaPositionMap>();
         if (!_data_agendaPositionMap->decode(_bb, _pool, _schema)) return false;
@@ -21694,6 +23731,46 @@ bool NodeChange::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bi
       case 331: {
         _data_editInfo = _pool.allocate<EditInfo>();
         if (!_data_editInfo->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 341: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_colorProfile))) return false;
+        set_colorProfile(_data_colorProfile);
+        break;
+      }
+      case 342: {
+        _data_detachedSymbolId = _pool.allocate<SymbolId>();
+        if (!_data_detachedSymbolId->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 346: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_childReadingDirection))) return false;
+        set_childReadingDirection(_data_childReadingDirection);
+        break;
+      }
+      case 347: {
+        if (!_bb.readString(_data_readingIndex, _pool)) return false;
+        set_readingIndex(_data_readingIndex);
+        break;
+      }
+      case 349: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_documentColorProfile))) return false;
+        set_documentColorProfile(_data_documentColorProfile);
+        break;
+      }
+      case 354: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (DeveloperRelatedLink &_it : set_developerRelatedLinks(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 356: {
+        if (!_bb.readString(_data_slideActiveThemeLibKey, _pool)) return false;
+        set_slideActiveThemeLibKey(_data_slideActiveThemeLibKey);
+        break;
+      }
+      case 357: {
+        _data_ariaAttributes = _pool.allocate<ARIAAttributesMap>();
+        if (!_data_ariaAttributes->decode(_bb, _pool, _schema)) return false;
         break;
       }
       default: {
@@ -22328,6 +24405,111 @@ bool VariableModeBySetMapEntry::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &
       }
       default: {
         if (!_schema || !_schema->skipVariableModeBySetMapEntryField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+kiwi::Array<CodeSyntaxMapEntry> *CodeSyntaxMap::entries() {
+  return _flags[0] & 1 ? &_data_entries : nullptr;
+}
+
+const kiwi::Array<CodeSyntaxMapEntry> *CodeSyntaxMap::entries() const {
+  return _flags[0] & 1 ? &_data_entries : nullptr;
+}
+
+kiwi::Array<CodeSyntaxMapEntry> &CodeSyntaxMap::set_entries(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 1; return _data_entries = pool.array<CodeSyntaxMapEntry>(count);
+}
+
+bool CodeSyntaxMap::encode(kiwi::ByteBuffer &_bb) {
+  if (entries() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(_data_entries.size());
+    for (CodeSyntaxMapEntry &_it : _data_entries) if (!_it.encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool CodeSyntaxMap::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (CodeSyntaxMapEntry &_it : set_entries(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipCodeSyntaxMapField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+CodeSyntaxPlatform *CodeSyntaxMapEntry::platform() {
+  return _flags[0] & 1 ? &_data_platform : nullptr;
+}
+
+const CodeSyntaxPlatform *CodeSyntaxMapEntry::platform() const {
+  return _flags[0] & 1 ? &_data_platform : nullptr;
+}
+
+void CodeSyntaxMapEntry::set_platform(const CodeSyntaxPlatform &value) {
+  _flags[0] |= 1; _data_platform = value;
+}
+
+kiwi::String *CodeSyntaxMapEntry::value() {
+  return _flags[0] & 2 ? &_data_value : nullptr;
+}
+
+const kiwi::String *CodeSyntaxMapEntry::value() const {
+  return _flags[0] & 2 ? &_data_value : nullptr;
+}
+
+void CodeSyntaxMapEntry::set_value(const kiwi::String &value) {
+  _flags[0] |= 2; _data_value = value;
+}
+
+bool CodeSyntaxMapEntry::encode(kiwi::ByteBuffer &_bb) {
+  if (platform() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_platform));
+  }
+  if (value() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeString(_data_value.c_str());
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool CodeSyntaxMapEntry::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_platform))) return false;
+        set_platform(_data_platform);
+        break;
+      }
+      case 2: {
+        if (!_bb.readString(_data_value, _pool)) return false;
+        set_value(_data_value);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipCodeSyntaxMapEntryField(_bb, _type)) return false;
         break;
       }
     }
@@ -23870,6 +26052,18 @@ void WidgetPropertyMenuItem::set_href(const kiwi::String &value) {
   _flags[0] |= 128; _data_href = value;
 }
 
+bool *WidgetPropertyMenuItem::allowCustomColor() {
+  return _flags[0] & 256 ? &_data_allowCustomColor : nullptr;
+}
+
+const bool *WidgetPropertyMenuItem::allowCustomColor() const {
+  return _flags[0] & 256 ? &_data_allowCustomColor : nullptr;
+}
+
+void WidgetPropertyMenuItem::set_allowCustomColor(const bool &value) {
+  _flags[0] |= 256; _data_allowCustomColor = value;
+}
+
 bool WidgetPropertyMenuItem::encode(kiwi::ByteBuffer &_bb) {
   if (propertyName() != nullptr) {
     _bb.writeVarUint(1);
@@ -23903,6 +26097,10 @@ bool WidgetPropertyMenuItem::encode(kiwi::ByteBuffer &_bb) {
   if (href() != nullptr) {
     _bb.writeVarUint(8);
     _bb.writeString(_data_href.c_str());
+  }
+  if (allowCustomColor() != nullptr) {
+    _bb.writeVarUint(9);
+    _bb.writeByte(_data_allowCustomColor);
   }
   _bb.writeVarUint(0);
   return true;
@@ -23954,6 +26152,11 @@ bool WidgetPropertyMenuItem::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_po
       case 8: {
         if (!_bb.readString(_data_href, _pool)) return false;
         set_href(_data_href);
+        break;
+      }
+      case 9: {
+        if (!_bb.readByte(_data_allowCustomColor)) return false;
+        set_allowCustomColor(_data_allowCustomColor);
         break;
       }
       default: {
@@ -24197,76 +26400,88 @@ void TextLineData::set_indentationLevel(const int32_t &value) {
   _flags[0] |= 2; _data_indentationLevel = value;
 }
 
+SourceDirectionality *TextLineData::sourceDirectionality() {
+  return _flags[0] & 4 ? &_data_sourceDirectionality : nullptr;
+}
+
+const SourceDirectionality *TextLineData::sourceDirectionality() const {
+  return _flags[0] & 4 ? &_data_sourceDirectionality : nullptr;
+}
+
+void TextLineData::set_sourceDirectionality(const SourceDirectionality &value) {
+  _flags[0] |= 4; _data_sourceDirectionality = value;
+}
+
 Directionality *TextLineData::directionality() {
-  return _flags[0] & 4 ? &_data_directionality : nullptr;
+  return _flags[0] & 8 ? &_data_directionality : nullptr;
 }
 
 const Directionality *TextLineData::directionality() const {
-  return _flags[0] & 4 ? &_data_directionality : nullptr;
+  return _flags[0] & 8 ? &_data_directionality : nullptr;
 }
 
 void TextLineData::set_directionality(const Directionality &value) {
-  _flags[0] |= 4; _data_directionality = value;
+  _flags[0] |= 8; _data_directionality = value;
 }
 
 DirectionalityIntent *TextLineData::directionalityIntent() {
-  return _flags[0] & 8 ? &_data_directionalityIntent : nullptr;
+  return _flags[0] & 16 ? &_data_directionalityIntent : nullptr;
 }
 
 const DirectionalityIntent *TextLineData::directionalityIntent() const {
-  return _flags[0] & 8 ? &_data_directionalityIntent : nullptr;
+  return _flags[0] & 16 ? &_data_directionalityIntent : nullptr;
 }
 
 void TextLineData::set_directionalityIntent(const DirectionalityIntent &value) {
-  _flags[0] |= 8; _data_directionalityIntent = value;
+  _flags[0] |= 16; _data_directionalityIntent = value;
 }
 
 int32_t *TextLineData::downgradeStyleId() {
-  return _flags[0] & 16 ? &_data_downgradeStyleId : nullptr;
+  return _flags[0] & 32 ? &_data_downgradeStyleId : nullptr;
 }
 
 const int32_t *TextLineData::downgradeStyleId() const {
-  return _flags[0] & 16 ? &_data_downgradeStyleId : nullptr;
+  return _flags[0] & 32 ? &_data_downgradeStyleId : nullptr;
 }
 
 void TextLineData::set_downgradeStyleId(const int32_t &value) {
-  _flags[0] |= 16; _data_downgradeStyleId = value;
+  _flags[0] |= 32; _data_downgradeStyleId = value;
 }
 
 int32_t *TextLineData::consistencyStyleId() {
-  return _flags[0] & 32 ? &_data_consistencyStyleId : nullptr;
+  return _flags[0] & 64 ? &_data_consistencyStyleId : nullptr;
 }
 
 const int32_t *TextLineData::consistencyStyleId() const {
-  return _flags[0] & 32 ? &_data_consistencyStyleId : nullptr;
+  return _flags[0] & 64 ? &_data_consistencyStyleId : nullptr;
 }
 
 void TextLineData::set_consistencyStyleId(const int32_t &value) {
-  _flags[0] |= 32; _data_consistencyStyleId = value;
+  _flags[0] |= 64; _data_consistencyStyleId = value;
 }
 
 int32_t *TextLineData::listStartOffset() {
-  return _flags[0] & 64 ? &_data_listStartOffset : nullptr;
+  return _flags[0] & 128 ? &_data_listStartOffset : nullptr;
 }
 
 const int32_t *TextLineData::listStartOffset() const {
-  return _flags[0] & 64 ? &_data_listStartOffset : nullptr;
+  return _flags[0] & 128 ? &_data_listStartOffset : nullptr;
 }
 
 void TextLineData::set_listStartOffset(const int32_t &value) {
-  _flags[0] |= 64; _data_listStartOffset = value;
+  _flags[0] |= 128; _data_listStartOffset = value;
 }
 
 bool *TextLineData::isFirstLineOfList() {
-  return _flags[0] & 128 ? &_data_isFirstLineOfList : nullptr;
+  return _flags[0] & 256 ? &_data_isFirstLineOfList : nullptr;
 }
 
 const bool *TextLineData::isFirstLineOfList() const {
-  return _flags[0] & 128 ? &_data_isFirstLineOfList : nullptr;
+  return _flags[0] & 256 ? &_data_isFirstLineOfList : nullptr;
 }
 
 void TextLineData::set_isFirstLineOfList(const bool &value) {
-  _flags[0] |= 128; _data_isFirstLineOfList = value;
+  _flags[0] |= 256; _data_isFirstLineOfList = value;
 }
 
 bool TextLineData::encode(kiwi::ByteBuffer &_bb) {
@@ -24277,6 +26492,10 @@ bool TextLineData::encode(kiwi::ByteBuffer &_bb) {
   if (indentationLevel() != nullptr) {
     _bb.writeVarUint(2);
     _bb.writeVarInt(_data_indentationLevel);
+  }
+  if (sourceDirectionality() != nullptr) {
+    _bb.writeVarUint(9);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_sourceDirectionality));
   }
   if (directionality() != nullptr) {
     _bb.writeVarUint(3);
@@ -24323,6 +26542,11 @@ bool TextLineData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const 
         set_indentationLevel(_data_indentationLevel);
         break;
       }
+      case 9: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_sourceDirectionality))) return false;
+        set_sourceDirectionality(_data_sourceDirectionality);
+        break;
+      }
       case 3: {
         if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_directionality))) return false;
         set_directionality(_data_directionality);
@@ -24355,6 +26579,47 @@ bool TextLineData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const 
       }
       default: {
         if (!_schema || !_schema->skipTextLineDataField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+Directionality *DerivedTextLineData::directionality() {
+  return _flags[0] & 1 ? &_data_directionality : nullptr;
+}
+
+const Directionality *DerivedTextLineData::directionality() const {
+  return _flags[0] & 1 ? &_data_directionality : nullptr;
+}
+
+void DerivedTextLineData::set_directionality(const Directionality &value) {
+  _flags[0] |= 1; _data_directionality = value;
+}
+
+bool DerivedTextLineData::encode(kiwi::ByteBuffer &_bb) {
+  if (directionality() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_directionality));
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool DerivedTextLineData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_directionality))) return false;
+        set_directionality(_data_directionality);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipDerivedTextLineDataField(_bb, _type)) return false;
         break;
       }
     }
@@ -24409,6 +26674,18 @@ void PrototypeInteraction::set_isDeleted(const bool &value) {
   _flags[0] |= 8; _data_isDeleted = value;
 }
 
+int32_t *PrototypeInteraction::stateManagementVersion() {
+  return _flags[0] & 16 ? &_data_stateManagementVersion : nullptr;
+}
+
+const int32_t *PrototypeInteraction::stateManagementVersion() const {
+  return _flags[0] & 16 ? &_data_stateManagementVersion : nullptr;
+}
+
+void PrototypeInteraction::set_stateManagementVersion(const int32_t &value) {
+  _flags[0] |= 16; _data_stateManagementVersion = value;
+}
+
 bool PrototypeInteraction::encode(kiwi::ByteBuffer &_bb) {
   if (id() != nullptr) {
     _bb.writeVarUint(1);
@@ -24426,6 +26703,10 @@ bool PrototypeInteraction::encode(kiwi::ByteBuffer &_bb) {
   if (isDeleted() != nullptr) {
     _bb.writeVarUint(4);
     _bb.writeByte(_data_isDeleted);
+  }
+  if (stateManagementVersion() != nullptr) {
+    _bb.writeVarUint(5);
+    _bb.writeVarInt(_data_stateManagementVersion);
   }
   _bb.writeVarUint(0);
   return true;
@@ -24457,6 +26738,11 @@ bool PrototypeInteraction::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool
       case 4: {
         if (!_bb.readByte(_data_isDeleted)) return false;
         set_isDeleted(_data_isDeleted);
+        break;
+      }
+      case 5: {
+        if (!_bb.readVarInt(_data_stateManagementVersion)) return false;
+        set_stateManagementVersion(_data_stateManagementVersion);
         break;
       }
       default: {
@@ -24687,11 +26973,27 @@ kiwi::Array<PrototypeAction> &ConditionalActions::set_actions(kiwi::MemoryPool &
   _flags[0] |= 1; return _data_actions = pool.array<PrototypeAction>(count);
 }
 
+VariableData *ConditionalActions::condition() {
+  return _data_condition;
+}
+
+const VariableData *ConditionalActions::condition() const {
+  return _data_condition;
+}
+
+void ConditionalActions::set_condition(VariableData *value) {
+  _data_condition = value;
+}
+
 bool ConditionalActions::encode(kiwi::ByteBuffer &_bb) {
   if (actions() != nullptr) {
     _bb.writeVarUint(1);
     _bb.writeVarUint(_data_actions.size());
     for (PrototypeAction &_it : _data_actions) if (!_it.encode(_bb)) return false;
+  }
+  if (condition() != nullptr) {
+    _bb.writeVarUint(2);
+    if (!_data_condition->encode(_bb)) return false;
   }
   _bb.writeVarUint(0);
   return true;
@@ -24708,6 +27010,11 @@ bool ConditionalActions::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, 
       case 1: {
         if (!_bb.readVarUint(_count)) return false;
         for (PrototypeAction &_it : set_actions(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 2: {
+        _data_condition = _pool.allocate<VariableData>();
+        if (!_data_condition->decode(_bb, _pool, _schema)) return false;
         break;
       }
       default: {
@@ -25497,6 +27804,131 @@ bool Hyperlink::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bin
   }
 }
 
+GUID *Mention::id() {
+  return _data_id;
+}
+
+const GUID *Mention::id() const {
+  return _data_id;
+}
+
+void Mention::set_id(GUID *value) {
+  _data_id = value;
+}
+
+kiwi::String *Mention::mentionedUserId() {
+  return _flags[0] & 2 ? &_data_mentionedUserId : nullptr;
+}
+
+const kiwi::String *Mention::mentionedUserId() const {
+  return _flags[0] & 2 ? &_data_mentionedUserId : nullptr;
+}
+
+void Mention::set_mentionedUserId(const kiwi::String &value) {
+  _flags[0] |= 2; _data_mentionedUserId = value;
+}
+
+kiwi::String *Mention::mentionedByUserId() {
+  return _flags[0] & 4 ? &_data_mentionedByUserId : nullptr;
+}
+
+const kiwi::String *Mention::mentionedByUserId() const {
+  return _flags[0] & 4 ? &_data_mentionedByUserId : nullptr;
+}
+
+void Mention::set_mentionedByUserId(const kiwi::String &value) {
+  _flags[0] |= 4; _data_mentionedByUserId = value;
+}
+
+kiwi::String *Mention::fileKey() {
+  return _flags[0] & 8 ? &_data_fileKey : nullptr;
+}
+
+const kiwi::String *Mention::fileKey() const {
+  return _flags[0] & 8 ? &_data_fileKey : nullptr;
+}
+
+void Mention::set_fileKey(const kiwi::String &value) {
+  _flags[0] |= 8; _data_fileKey = value;
+}
+
+MentionSource *Mention::source() {
+  return _flags[0] & 16 ? &_data_source : nullptr;
+}
+
+const MentionSource *Mention::source() const {
+  return _flags[0] & 16 ? &_data_source : nullptr;
+}
+
+void Mention::set_source(const MentionSource &value) {
+  _flags[0] |= 16; _data_source = value;
+}
+
+bool Mention::encode(kiwi::ByteBuffer &_bb) {
+  if (id() != nullptr) {
+    _bb.writeVarUint(1);
+    if (!_data_id->encode(_bb)) return false;
+  }
+  if (mentionedUserId() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeString(_data_mentionedUserId.c_str());
+  }
+  if (mentionedByUserId() != nullptr) {
+    _bb.writeVarUint(3);
+    _bb.writeString(_data_mentionedByUserId.c_str());
+  }
+  if (fileKey() != nullptr) {
+    _bb.writeVarUint(4);
+    _bb.writeString(_data_fileKey.c_str());
+  }
+  if (source() != nullptr) {
+    _bb.writeVarUint(5);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_source));
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool Mention::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        _data_id = _pool.allocate<GUID>();
+        if (!_data_id->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 2: {
+        if (!_bb.readString(_data_mentionedUserId, _pool)) return false;
+        set_mentionedUserId(_data_mentionedUserId);
+        break;
+      }
+      case 3: {
+        if (!_bb.readString(_data_mentionedByUserId, _pool)) return false;
+        set_mentionedByUserId(_data_mentionedByUserId);
+        break;
+      }
+      case 4: {
+        if (!_bb.readString(_data_fileKey, _pool)) return false;
+        set_fileKey(_data_fileKey);
+        break;
+      }
+      case 5: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_source))) return false;
+        set_source(_data_source);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipMentionField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
 kiwi::String *EmbedData::url() {
   return _flags[0] & 1 ? &_data_url : nullptr;
 }
@@ -25641,6 +28073,18 @@ void EmbedData::set_description(const kiwi::String &value) {
   _flags[0] |= 2048; _data_description = value;
 }
 
+kiwi::String *EmbedData::embedVersionId() {
+  return _flags[0] & 4096 ? &_data_embedVersionId : nullptr;
+}
+
+const kiwi::String *EmbedData::embedVersionId() const {
+  return _flags[0] & 4096 ? &_data_embedVersionId : nullptr;
+}
+
+void EmbedData::set_embedVersionId(const kiwi::String &value) {
+  _flags[0] |= 4096; _data_embedVersionId = value;
+}
+
 bool EmbedData::encode(kiwi::ByteBuffer &_bb) {
   if (url() != nullptr) {
     _bb.writeVarUint(1);
@@ -25689,6 +28133,10 @@ bool EmbedData::encode(kiwi::ByteBuffer &_bb) {
   if (description() != nullptr) {
     _bb.writeVarUint(12);
     _bb.writeString(_data_description.c_str());
+  }
+  if (embedVersionId() != nullptr) {
+    _bb.writeVarUint(13);
+    _bb.writeString(_data_embedVersionId.c_str());
   }
   _bb.writeVarUint(0);
   return true;
@@ -25759,6 +28207,11 @@ bool EmbedData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bin
       case 12: {
         if (!_bb.readString(_data_description, _pool)) return false;
         set_description(_data_description);
+        break;
+      }
+      case 13: {
+        if (!_bb.readString(_data_embedVersionId, _pool)) return false;
+        set_embedVersionId(_data_embedVersionId);
         break;
       }
       default: {
@@ -26192,6 +28645,18 @@ void Mouse::set_canvasGuid(GUID *value) {
   _data_canvasGuid = value;
 }
 
+uint32_t *Mouse::cursorHiddenReason() {
+  return _flags[0] & 16 ? &_data_cursorHiddenReason : nullptr;
+}
+
+const uint32_t *Mouse::cursorHiddenReason() const {
+  return _flags[0] & 16 ? &_data_cursorHiddenReason : nullptr;
+}
+
+void Mouse::set_cursorHiddenReason(const uint32_t &value) {
+  _flags[0] |= 16; _data_cursorHiddenReason = value;
+}
+
 bool Mouse::encode(kiwi::ByteBuffer &_bb) {
   if (cursor() != nullptr) {
     _bb.writeVarUint(1);
@@ -26208,6 +28673,10 @@ bool Mouse::encode(kiwi::ByteBuffer &_bb) {
   if (canvasGuid() != nullptr) {
     _bb.writeVarUint(4);
     if (!_data_canvasGuid->encode(_bb)) return false;
+  }
+  if (cursorHiddenReason() != nullptr) {
+    _bb.writeVarUint(5);
+    _bb.writeVarUint(_data_cursorHiddenReason);
   }
   _bb.writeVarUint(0);
   return true;
@@ -26238,6 +28707,11 @@ bool Mouse::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinaryS
       case 4: {
         _data_canvasGuid = _pool.allocate<GUID>();
         if (!_data_canvasGuid->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 5: {
+        if (!_bb.readVarUint(_data_cursorHiddenReason)) return false;
+        set_cursorHiddenReason(_data_cursorHiddenReason);
         break;
       }
       default: {
@@ -26984,6 +29458,54 @@ void TextSelection::set_textNodeGuid(GUID *value) {
   _data_textNodeGuid = value;
 }
 
+Vector *TextSelection::textSelectionRange() {
+  return _data_textSelectionRange;
+}
+
+const Vector *TextSelection::textSelectionRange() const {
+  return _data_textSelectionRange;
+}
+
+void TextSelection::set_textSelectionRange(Vector *value) {
+  _data_textSelectionRange = value;
+}
+
+GUID *TextSelection::textNodeOrContainingIfGuid() {
+  return _data_textNodeOrContainingIfGuid;
+}
+
+const GUID *TextSelection::textNodeOrContainingIfGuid() const {
+  return _data_textNodeOrContainingIfGuid;
+}
+
+void TextSelection::set_textNodeOrContainingIfGuid(GUID *value) {
+  _data_textNodeOrContainingIfGuid = value;
+}
+
+GUID *TextSelection::tableCellRowId() {
+  return _data_tableCellRowId;
+}
+
+const GUID *TextSelection::tableCellRowId() const {
+  return _data_tableCellRowId;
+}
+
+void TextSelection::set_tableCellRowId(GUID *value) {
+  _data_tableCellRowId = value;
+}
+
+GUID *TextSelection::tableCellColId() {
+  return _data_tableCellColId;
+}
+
+const GUID *TextSelection::tableCellColId() const {
+  return _data_tableCellColId;
+}
+
+void TextSelection::set_tableCellColId(GUID *value) {
+  _data_tableCellColId = value;
+}
+
 bool TextSelection::encode(kiwi::ByteBuffer &_bb) {
   if (selectionBoxes() != nullptr) {
     _bb.writeVarUint(1);
@@ -26997,6 +29519,22 @@ bool TextSelection::encode(kiwi::ByteBuffer &_bb) {
   if (textNodeGuid() != nullptr) {
     _bb.writeVarUint(3);
     if (!_data_textNodeGuid->encode(_bb)) return false;
+  }
+  if (textSelectionRange() != nullptr) {
+    _bb.writeVarUint(4);
+    if (!_data_textSelectionRange->encode(_bb)) return false;
+  }
+  if (textNodeOrContainingIfGuid() != nullptr) {
+    _bb.writeVarUint(5);
+    if (!_data_textNodeOrContainingIfGuid->encode(_bb)) return false;
+  }
+  if (tableCellRowId() != nullptr) {
+    _bb.writeVarUint(6);
+    if (!_data_tableCellRowId->encode(_bb)) return false;
+  }
+  if (tableCellColId() != nullptr) {
+    _bb.writeVarUint(7);
+    if (!_data_tableCellColId->encode(_bb)) return false;
   }
   _bb.writeVarUint(0);
   return true;
@@ -27023,6 +29561,26 @@ bool TextSelection::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const
       case 3: {
         _data_textNodeGuid = _pool.allocate<GUID>();
         if (!_data_textNodeGuid->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 4: {
+        _data_textSelectionRange = _pool.allocate<Vector>();
+        if (!_data_textSelectionRange->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 5: {
+        _data_textNodeOrContainingIfGuid = _pool.allocate<GUID>();
+        if (!_data_textNodeOrContainingIfGuid->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 6: {
+        _data_tableCellRowId = _pool.allocate<GUID>();
+        if (!_data_tableCellRowId->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 7: {
+        _data_tableCellColId = _pool.allocate<GUID>();
+        if (!_data_tableCellColId->decode(_bb, _pool, _schema)) return false;
         break;
       }
       default: {
@@ -28650,6 +31208,68 @@ bool MusicInfo::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Bin
   }
 }
 
+uint32_t *PresenterNomination::sessionID() {
+  return _flags[0] & 1 ? &_data_sessionID : nullptr;
+}
+
+const uint32_t *PresenterNomination::sessionID() const {
+  return _flags[0] & 1 ? &_data_sessionID : nullptr;
+}
+
+void PresenterNomination::set_sessionID(const uint32_t &value) {
+  _flags[0] |= 1; _data_sessionID = value;
+}
+
+bool *PresenterNomination::isCancelled() {
+  return _flags[0] & 2 ? &_data_isCancelled : nullptr;
+}
+
+const bool *PresenterNomination::isCancelled() const {
+  return _flags[0] & 2 ? &_data_isCancelled : nullptr;
+}
+
+void PresenterNomination::set_isCancelled(const bool &value) {
+  _flags[0] |= 2; _data_isCancelled = value;
+}
+
+bool PresenterNomination::encode(kiwi::ByteBuffer &_bb) {
+  if (sessionID() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(_data_sessionID);
+  }
+  if (isCancelled() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeByte(_data_isCancelled);
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool PresenterNomination::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(_data_sessionID)) return false;
+        set_sessionID(_data_sessionID);
+        break;
+      }
+      case 2: {
+        if (!_bb.readByte(_data_isCancelled)) return false;
+        set_isCancelled(_data_isCancelled);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipPresenterNominationField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
 uint32_t *PresenterInfo::sessionID() {
   return _flags[0] & 1 ? &_data_sessionID : nullptr;
 }
@@ -28662,10 +31282,26 @@ void PresenterInfo::set_sessionID(const uint32_t &value) {
   _flags[0] |= 1; _data_sessionID = value;
 }
 
+PresenterNomination *PresenterInfo::nomination() {
+  return _data_nomination;
+}
+
+const PresenterNomination *PresenterInfo::nomination() const {
+  return _data_nomination;
+}
+
+void PresenterInfo::set_nomination(PresenterNomination *value) {
+  _data_nomination = value;
+}
+
 bool PresenterInfo::encode(kiwi::ByteBuffer &_bb) {
   if (sessionID() != nullptr) {
     _bb.writeVarUint(1);
     _bb.writeVarUint(_data_sessionID);
+  }
+  if (nomination() != nullptr) {
+    _bb.writeVarUint(2);
+    if (!_data_nomination->encode(_bb)) return false;
   }
   _bb.writeVarUint(0);
   return true;
@@ -28681,6 +31317,11 @@ bool PresenterInfo::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const
       case 1: {
         if (!_bb.readVarUint(_data_sessionID)) return false;
         set_sessionID(_data_sessionID);
+        break;
+      }
+      case 2: {
+        _data_nomination = _pool.allocate<PresenterNomination>();
+        if (!_data_nomination->decode(_bb, _pool, _schema)) return false;
         break;
       }
       default: {
@@ -29197,6 +31838,18 @@ kiwi::Array<GUID> &Message::set_publishedAssetGuids(kiwi::MemoryPool &pool, uint
   _flags[0] |= 536870912; return _data_publishedAssetGuids = pool.array<GUID>(count);
 }
 
+bool *Message::dirtyFromInitialLoad() {
+  return _flags[0] & 1073741824 ? &_data_dirtyFromInitialLoad : nullptr;
+}
+
+const bool *Message::dirtyFromInitialLoad() const {
+  return _flags[0] & 1073741824 ? &_data_dirtyFromInitialLoad : nullptr;
+}
+
+void Message::set_dirtyFromInitialLoad(const bool &value) {
+  _flags[0] |= 1073741824; _data_dirtyFromInitialLoad = value;
+}
+
 bool Message::encode(kiwi::ByteBuffer &_bb) {
   if (type() != nullptr) {
     _bb.writeVarUint(1);
@@ -29325,6 +31978,10 @@ bool Message::encode(kiwi::ByteBuffer &_bb) {
     _bb.writeVarUint(29);
     _bb.writeVarUint(_data_publishedAssetGuids.size());
     for (GUID &_it : _data_publishedAssetGuids) if (!_it.encode(_bb)) return false;
+  }
+  if (dirtyFromInitialLoad() != nullptr) {
+    _bb.writeVarUint(31);
+    _bb.writeByte(_data_dirtyFromInitialLoad);
   }
   _bb.writeVarUint(0);
   return true;
@@ -29486,6 +32143,11 @@ bool Message::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const Binar
       case 29: {
         if (!_bb.readVarUint(_count)) return false;
         for (GUID &_it : set_publishedAssetGuids(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 31: {
+        if (!_bb.readByte(_data_dirtyFromInitialLoad)) return false;
+        set_dirtyFromInitialLoad(_data_dirtyFromInitialLoad);
         break;
       }
       default: {
@@ -30799,6 +33461,382 @@ bool NodeFieldMapEntry::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, c
       }
       default: {
         if (!_schema || !_schema->skipNodeFieldMapEntryField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+bool *ARIAAttributeAnyValue::boolValue() {
+  return _flags[0] & 1 ? &_data_boolValue : nullptr;
+}
+
+const bool *ARIAAttributeAnyValue::boolValue() const {
+  return _flags[0] & 1 ? &_data_boolValue : nullptr;
+}
+
+void ARIAAttributeAnyValue::set_boolValue(const bool &value) {
+  _flags[0] |= 1; _data_boolValue = value;
+}
+
+kiwi::String *ARIAAttributeAnyValue::stringValue() {
+  return _flags[0] & 2 ? &_data_stringValue : nullptr;
+}
+
+const kiwi::String *ARIAAttributeAnyValue::stringValue() const {
+  return _flags[0] & 2 ? &_data_stringValue : nullptr;
+}
+
+void ARIAAttributeAnyValue::set_stringValue(const kiwi::String &value) {
+  _flags[0] |= 2; _data_stringValue = value;
+}
+
+float *ARIAAttributeAnyValue::floatValue() {
+  return _flags[0] & 4 ? &_data_floatValue : nullptr;
+}
+
+const float *ARIAAttributeAnyValue::floatValue() const {
+  return _flags[0] & 4 ? &_data_floatValue : nullptr;
+}
+
+void ARIAAttributeAnyValue::set_floatValue(const float &value) {
+  _flags[0] |= 4; _data_floatValue = value;
+}
+
+int32_t *ARIAAttributeAnyValue::intValue() {
+  return _flags[0] & 8 ? &_data_intValue : nullptr;
+}
+
+const int32_t *ARIAAttributeAnyValue::intValue() const {
+  return _flags[0] & 8 ? &_data_intValue : nullptr;
+}
+
+void ARIAAttributeAnyValue::set_intValue(const int32_t &value) {
+  _flags[0] |= 8; _data_intValue = value;
+}
+
+bool ARIAAttributeAnyValue::encode(kiwi::ByteBuffer &_bb) {
+  if (boolValue() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeByte(_data_boolValue);
+  }
+  if (stringValue() != nullptr) {
+    _bb.writeVarUint(2);
+    _bb.writeString(_data_stringValue.c_str());
+  }
+  if (floatValue() != nullptr) {
+    _bb.writeVarUint(3);
+    _bb.writeVarFloat(_data_floatValue);
+  }
+  if (intValue() != nullptr) {
+    _bb.writeVarUint(4);
+    _bb.writeVarInt(_data_intValue);
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool ARIAAttributeAnyValue::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readByte(_data_boolValue)) return false;
+        set_boolValue(_data_boolValue);
+        break;
+      }
+      case 2: {
+        if (!_bb.readString(_data_stringValue, _pool)) return false;
+        set_stringValue(_data_stringValue);
+        break;
+      }
+      case 3: {
+        if (!_bb.readVarFloat(_data_floatValue)) return false;
+        set_floatValue(_data_floatValue);
+        break;
+      }
+      case 4: {
+        if (!_bb.readVarInt(_data_intValue)) return false;
+        set_intValue(_data_intValue);
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipARIAAttributeAnyValueField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+ARIAAttributeDataType *ARIAAttributeData::type() {
+  return _flags[0] & 1 ? &_data_type : nullptr;
+}
+
+const ARIAAttributeDataType *ARIAAttributeData::type() const {
+  return _flags[0] & 1 ? &_data_type : nullptr;
+}
+
+void ARIAAttributeData::set_type(const ARIAAttributeDataType &value) {
+  _flags[0] |= 1; _data_type = value;
+}
+
+ARIAAttributeAnyValue *ARIAAttributeData::value() {
+  return _data_value;
+}
+
+const ARIAAttributeAnyValue *ARIAAttributeData::value() const {
+  return _data_value;
+}
+
+void ARIAAttributeData::set_value(ARIAAttributeAnyValue *value) {
+  _data_value = value;
+}
+
+bool ARIAAttributeData::encode(kiwi::ByteBuffer &_bb) {
+  if (type() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(static_cast<uint32_t>(_data_type));
+  }
+  if (value() != nullptr) {
+    _bb.writeVarUint(2);
+    if (!_data_value->encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool ARIAAttributeData::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(reinterpret_cast<uint32_t &>(_data_type))) return false;
+        set_type(_data_type);
+        break;
+      }
+      case 2: {
+        _data_value = _pool.allocate<ARIAAttributeAnyValue>();
+        if (!_data_value->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipARIAAttributeDataField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+kiwi::Array<ARIAAttributesMapEntry> *ARIAAttributesMap::entries() {
+  return _flags[0] & 1 ? &_data_entries : nullptr;
+}
+
+const kiwi::Array<ARIAAttributesMapEntry> *ARIAAttributesMap::entries() const {
+  return _flags[0] & 1 ? &_data_entries : nullptr;
+}
+
+kiwi::Array<ARIAAttributesMapEntry> &ARIAAttributesMap::set_entries(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 1; return _data_entries = pool.array<ARIAAttributesMapEntry>(count);
+}
+
+bool ARIAAttributesMap::encode(kiwi::ByteBuffer &_bb) {
+  if (entries() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(_data_entries.size());
+    for (ARIAAttributesMapEntry &_it : _data_entries) if (!_it.encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool ARIAAttributesMap::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (ARIAAttributesMapEntry &_it : set_entries(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipARIAAttributesMapField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+kiwi::String *ARIAAttributesMapEntry::attribute() {
+  return _flags[0] & 1 ? &_data_attribute : nullptr;
+}
+
+const kiwi::String *ARIAAttributesMapEntry::attribute() const {
+  return _flags[0] & 1 ? &_data_attribute : nullptr;
+}
+
+void ARIAAttributesMapEntry::set_attribute(const kiwi::String &value) {
+  _flags[0] |= 1; _data_attribute = value;
+}
+
+ARIAAttributeData *ARIAAttributesMapEntry::value() {
+  return _data_value;
+}
+
+const ARIAAttributeData *ARIAAttributesMapEntry::value() const {
+  return _data_value;
+}
+
+void ARIAAttributesMapEntry::set_value(ARIAAttributeData *value) {
+  _data_value = value;
+}
+
+bool ARIAAttributesMapEntry::encode(kiwi::ByteBuffer &_bb) {
+  if (attribute() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeString(_data_attribute.c_str());
+  }
+  if (value() != nullptr) {
+    _bb.writeVarUint(2);
+    if (!_data_value->encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool ARIAAttributesMapEntry::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readString(_data_attribute, _pool)) return false;
+        set_attribute(_data_attribute);
+        break;
+      }
+      case 2: {
+        _data_value = _pool.allocate<ARIAAttributeData>();
+        if (!_data_value->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipARIAAttributesMapEntryField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+GUID *HandoffStatusMapEntry::guid() {
+  return _data_guid;
+}
+
+const GUID *HandoffStatusMapEntry::guid() const {
+  return _data_guid;
+}
+
+void HandoffStatusMapEntry::set_guid(GUID *value) {
+  _data_guid = value;
+}
+
+SectionStatusInfo *HandoffStatusMapEntry::handoffStatus() {
+  return _data_handoffStatus;
+}
+
+const SectionStatusInfo *HandoffStatusMapEntry::handoffStatus() const {
+  return _data_handoffStatus;
+}
+
+void HandoffStatusMapEntry::set_handoffStatus(SectionStatusInfo *value) {
+  _data_handoffStatus = value;
+}
+
+bool HandoffStatusMapEntry::encode(kiwi::ByteBuffer &_bb) {
+  if (guid() != nullptr) {
+    _bb.writeVarUint(1);
+    if (!_data_guid->encode(_bb)) return false;
+  }
+  if (handoffStatus() != nullptr) {
+    _bb.writeVarUint(2);
+    if (!_data_handoffStatus->encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool HandoffStatusMapEntry::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        _data_guid = _pool.allocate<GUID>();
+        if (!_data_guid->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      case 2: {
+        _data_handoffStatus = _pool.allocate<SectionStatusInfo>();
+        if (!_data_handoffStatus->decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipHandoffStatusMapEntryField(_bb, _type)) return false;
+        break;
+      }
+    }
+  }
+}
+
+kiwi::Array<HandoffStatusMapEntry> *HandoffStatusMap::entries() {
+  return _flags[0] & 1 ? &_data_entries : nullptr;
+}
+
+const kiwi::Array<HandoffStatusMapEntry> *HandoffStatusMap::entries() const {
+  return _flags[0] & 1 ? &_data_entries : nullptr;
+}
+
+kiwi::Array<HandoffStatusMapEntry> &HandoffStatusMap::set_entries(kiwi::MemoryPool &pool, uint32_t count) {
+  _flags[0] |= 1; return _data_entries = pool.array<HandoffStatusMapEntry>(count);
+}
+
+bool HandoffStatusMap::encode(kiwi::ByteBuffer &_bb) {
+  if (entries() != nullptr) {
+    _bb.writeVarUint(1);
+    _bb.writeVarUint(_data_entries.size());
+    for (HandoffStatusMapEntry &_it : _data_entries) if (!_it.encode(_bb)) return false;
+  }
+  _bb.writeVarUint(0);
+  return true;
+}
+
+bool HandoffStatusMap::decode(kiwi::ByteBuffer &_bb, kiwi::MemoryPool &_pool, const BinarySchema *_schema) {
+  uint32_t _count;
+  while (true) {
+    uint32_t _type;
+    if (!_bb.readVarUint(_type)) return false;
+    switch (_type) {
+      case 0:
+        return true;
+      case 1: {
+        if (!_bb.readVarUint(_count)) return false;
+        for (HandoffStatusMapEntry &_it : set_entries(_pool, _count)) if (!_it.decode(_bb, _pool, _schema)) return false;
+        break;
+      }
+      default: {
+        if (!_schema || !_schema->skipHandoffStatusMapField(_bb, _type)) return false;
         break;
       }
     }
