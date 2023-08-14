@@ -38,8 +38,9 @@ public:
 
 	template<typename T>
 	T* createNode(const GUID& id) {
-		void* ptr = nodePool.allocate();
-		new (ptr) T();
+		// void* ptr = nodePool.allocate();
+		void* ptr = new T();
+		// new (ptr) T();
 		static_cast<Node*>(ptr)->set_guid(id);
 		return static_cast<T*>(ptr);
 	};
