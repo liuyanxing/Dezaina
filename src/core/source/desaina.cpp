@@ -1,4 +1,12 @@
 
+#include "kiwi.h"
+#include <cstring>
+#include <memory>
+#include <stdint.h>
+#include <iostream>
+
+#include "base_type.h"
+
 #define IMPLEMENT_KIWI_H
 #define IMPLEMENT_SCHEMA_H
 
@@ -13,6 +21,13 @@ bool Desaina::processMessage(uint8_t *buffer, uint32_t size) {
 	return processMessage(kiwiBuffer);
 }
 
+static DataSharedPtr decodeGeometryBlob(const Desaina_Kiwi::Blob& blob) {
+  auto const data_ptr = blob.bytes();
+  if (data_ptr == nullptr) {
+    return nullptr;
+  }
+  return Data::MakeWithCopy(data_ptr->data(), data_ptr->size());
+}
 
 bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
 	Desaina_Kiwi::Message message{};
@@ -34,6 +49,10 @@ bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
 		default:
 			break;
 	}
+  auto blobs = *message.blobs();
+  for (auto& blob : blobs) {
+    blobs_.push_back(decodeGeometryBlob(blob));
+  }
 	return true;
 }
 
@@ -64,6 +83,7 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 				node = document.createNode<FrameNode>(id);
 				break;
 			case NodeType::RECTANGLE:
+      case NodeType::ROUNDED_RECTANGLE:
 				node = document.createNode<RectangleNode>(id);
 				break;
 			default:

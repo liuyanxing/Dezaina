@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base_type.h"
 #include "desaina_node.h"
 #include "document.h"
 #include "kiwi.h"
@@ -48,4 +49,5 @@ class Desaina {
     EventSystem eventSystem;
 	private:
 		uint32_t sessionId_ = 0;
+    vector<DataSharedPtr> blobs_;
 };

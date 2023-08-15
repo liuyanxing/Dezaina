@@ -1,15 +1,19 @@
 interface NodeChange_kiwi {}
 
-interface BaseNodeMixin extends NodeChange_kiwi {
-  guid: GUID;
-  parentIndex: ParentIndex;
-  name: string;
-  type: NodeType;
-  encode_function: "virtual void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) { toChange(change, pool); };";
+interface NodeBase extends NodeChange_kiwi {
+  encode_function: "virtual void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) = 0;";
+  applyChange_function: "virtual void applyChange(Desaina_Kiwi::NodeChange& change) = 0;";
   isDocument_function: "virtual bool isDocument() { return false; };"
   isPage_function: "virtual bool isPage() { return false; };"
   isFrame_function: "virtual bool isFrame() { return false; };;"
   isRect_function: "virtual bool isRect() { return false; };;"
+}
+
+interface BaseNodeMixin extends NodeBase {
+  guid: GUID;
+  parentIndex: ParentIndex;
+  name: string;
+  type: NodeType;
 }
 
 interface SceneNodeMixin {
