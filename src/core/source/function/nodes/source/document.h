@@ -112,6 +112,10 @@ public:
     return &blobs_;
   }
 
+  PageNode* getCurrentPage() {
+    return currentPage_;
+  }
+
 private:
 	bool isLoaded_ = false;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
