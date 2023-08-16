@@ -6,7 +6,7 @@
 class ContainerNodeBase {
 public:
 	void appendChild(Node* node) { children.push_back(node); };
-	vector<Node*>& getChildren() { return children; };
+	const vector<Node*>& getChildren() const { return children; };
 private:
   vector<Node*> children;
 };
