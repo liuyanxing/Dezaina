@@ -10,8 +10,12 @@ struct CanvasOptions {
 
 class Canvas {
 public:
-		Canvas(CanvasOptions options) : width_(options.width), height_(options.height), devicePixelRatio_(options.devicePixelRatio) {};
+		Canvas(CanvasOptions options) : width_(options.width), height_(options.height), devicePixelRatio_(options.devicePixelRatio) {
+      createSurface();
+    };
 		~Canvas();
+
+    bool createSurface();
 
 		void drawNode(SceneNode *node);
 
