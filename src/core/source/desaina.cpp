@@ -51,7 +51,7 @@ bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
 	}
   auto blobs = *message.blobs();
   for (auto& blob : blobs) {
-    blobs_.push_back(decodeGeometryBlob(blob));
+    document.getBlobs()->push_back(decodeGeometryBlob(blob));
   }
 	return true;
 }

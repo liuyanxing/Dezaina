@@ -108,6 +108,10 @@ public:
     editor_ = nullptr;
   }
 
+  vector<DataSharedPtr>* getBlobs() {
+    return &blobs_;
+  }
+
 private:
 	bool isLoaded_ = false;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
@@ -117,4 +121,5 @@ private:
   PageNode* currentPage_ = nullptr;
   Node* hoverNode_ = nullptr;
   vector<Node*> selectedNodes_{};
+  vector<DataSharedPtr> blobs_;
 };
