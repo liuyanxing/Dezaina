@@ -8,7 +8,8 @@
 #include <stdint.h>
 #include "services/id_generator.h"
 #include "services/services.h"
-#include "function/event_system/event_system.h"
+#include "event_system/event_system.h"
+#include "render_system/render_system.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -47,6 +48,7 @@ class Desaina {
 		Document document;
 		Services services;
     EventSystem eventSystem;
+    RenderSystem renderSystem;
 	private:
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;

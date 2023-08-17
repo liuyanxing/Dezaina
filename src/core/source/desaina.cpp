@@ -116,3 +116,7 @@ void Desaina::buildEvents() {
   eventSystem.addEventListener({EventType::kAny, [](const Event* event) {
   }});
 }
+
+void Desaina::tick() {
+  renderSystem.tick();
+}

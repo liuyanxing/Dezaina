@@ -1,3 +1,5 @@
+#include "desaina.h"
+#include "document.h"
 #include "include/core/SkCanvas.h"
 #include "canvas.h"
 
@@ -11,15 +13,17 @@
 #include "node_type.h"
 #include "util/skia.h"
 
+Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
+  document_ = &desaina_->document;
+}
+
 void Canvas::tick() {
-	if (document_->is_loaded()) {
-		clear();
-		if (document_->getCurrentPage() != nullptr) {
-			canvas_->setMatrix(vp_matrix_);
-			drawNode(document_->getCurrentPage());
-			surface_->flush();
-		}
-	}
+  clear();
+  if (document_->getCurrentPage() != nullptr) {
+    canvas_->setMatrix(vp_matrix_);
+    drawNode(document_->getCurrentPage());
+    surface_->flush();
+  }
 }
 
 void Canvas::drawNode(const Node *node) {

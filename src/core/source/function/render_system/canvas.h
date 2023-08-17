@@ -1,13 +1,17 @@
-#include "include/core/SkCanvas.h"
+#pragma once
 
-#include "document.h"
+#include "include/core/SkCanvas.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkSurface.h"
+
 #include "page.h"
+
+class Document;
+class Desaina;
 
 struct CanvasOptions {
 		int width = 800;
@@ -17,7 +21,7 @@ struct CanvasOptions {
 
 class Canvas {
 public:
-		Canvas(Document* doc) : document_(doc) {};
+		Canvas(Desaina* desaina);
 		~Canvas() = default;
 		void initCanvas(const CanvasOptions& options) {
 			auto& [width, height, devicePixelRatio] = options;
@@ -63,6 +67,7 @@ private:
 		SkMatrix vp_matrix_;
 		sk_sp<SkSurface> surface_{nullptr};
 		SkCanvas* canvas_{nullptr};
-		Document* document_{nullptr};
+    Desaina* desaina_{nullptr};
+    Document* document_{nullptr};
 		
 };
