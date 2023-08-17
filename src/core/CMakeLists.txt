@@ -22,6 +22,7 @@ add_library(${TARGET_NAME} STATIC ${SOURCE_FILES})
 target_compile_definitions(${TARGET_NAME} PUBLIC
 	SK_GL
 	SK_GANESH
+  SK_TRIVIAL_ABI=[[clang::trivial_abi]]
 )
 
 if (BUILD_SKIA)
