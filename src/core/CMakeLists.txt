@@ -19,6 +19,10 @@ set(TARGET_LINK_LIBS skia)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.cpp")
 add_library(${TARGET_NAME} STATIC ${SOURCE_FILES})
+target_compile_definitions(${TARGET_NAME} PUBLIC
+	SK_GL
+	SK_GANESH
+)
 
 if (BUILD_SKIA)
   add_dependencies(${TARGET_NAME} build_skia)
