@@ -13,6 +13,7 @@ set(TARGET_INCLUE_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/source/third_party/kiwi/include
 	${CMAKE_CURRENT_SOURCE_DIR}/source
 	${PROJECT_SOURCE_DIR}/src
+	${PROJECT_SOURCE_DIR}/base
 	${SKIA_INCLUDE_DIR})
 set(TARGET_LINK_LIBS skia)
 

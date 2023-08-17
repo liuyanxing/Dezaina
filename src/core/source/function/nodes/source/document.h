@@ -10,6 +10,7 @@
 #include "base/class_tool.h"
 #include "event_system/event.h"
 #include "guid.h"
+#include "include/core/SkPath.h"
 #include "node_pool.h"
 #include "page.h"
 #include "frame.h"
@@ -17,6 +18,7 @@
 #include "editor/editor.h"
 #include "base_type.h"
 #include "container_node_base.h"
+#include "util/skia.h"
 
 #include "services/services.h"
 #include "editor/node_editor.h"
@@ -25,6 +27,22 @@ constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;
 
 using NodeMap = std::unordered_map<GUID, Node*>;
+
+struct Geometry {
+  SkPath path;
+  DataSharedPtr commandsBlob;
+  const SkPath& getPath() {
+    if (path.isEmpty()) {
+      path = util::toSkiaPath(commandsBlob);
+    }
+    return path;
+  }
+  static auto Make(const DataSharedPtr& commandsBlob) {
+    Geometry geometry;
+    geometry.commandsBlob = commandsBlob;
+    return geometry;
+  }
+};
 
 class Desaina;
 
@@ -108,8 +126,15 @@ public:
     editor_ = nullptr;
   }
 
-  vector<DataSharedPtr>* getBlobs() {
-    return &blobs_;
+  void appendGeometryByBlob(const DataSharedPtr& blob) {
+    geometries_.push_back(Geometry::Make(blob));
+  }
+
+  Geometry* getGeometry(size_t index) {
+    if (index >= geometries_.size()) {
+      return nullptr;
+    }
+    return &geometries_[index];
   }
 
   PageNode* getCurrentPage() {
@@ -125,5 +150,5 @@ private:
   PageNode* currentPage_ = nullptr;
   Node* hoverNode_ = nullptr;
   vector<Node*> selectedNodes_{};
-  vector<DataSharedPtr> blobs_;
+  vector<Geometry> geometries_{};
 };
