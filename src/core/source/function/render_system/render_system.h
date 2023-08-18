@@ -1,13 +1,17 @@
+#pragma once
+
 #include "canvas.h"
+#include "event_system/event_system.h"
 
 class Desaina;
-class RenderSystem {
+class RenderSystem: public EventEmitter {
 public:
-  RenderSystem(Desaina* desaina) : desaina_(desaina), canvas_(desaina) {};
-  ~RenderSystem();
+  RenderSystem(Desaina* desaina);
   void tick() {
-    canvas_.tick();
+    // canvas_.tick();
   };
+
+  void bindEvents();
 
 private:
   Canvas canvas_;

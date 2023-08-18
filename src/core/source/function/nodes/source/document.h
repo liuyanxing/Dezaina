@@ -9,6 +9,7 @@
 #include "base/map.h"
 #include "base/class_tool.h"
 #include "event_system/event.h"
+#include "event_system/event_system.h"
 #include "guid.h"
 #include "include/core/SkPath.h"
 #include "node_pool.h"
@@ -40,6 +41,7 @@ struct Geometry {
   static auto Make(const DataSharedPtr& commandsBlob) {
     Geometry geometry;
     geometry.commandsBlob = commandsBlob;
+    geometry.path = util::toSkiaPath(commandsBlob);
     return geometry;
   }
 };

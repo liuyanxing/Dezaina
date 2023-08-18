@@ -15,6 +15,14 @@ struct DesainaOption {
 	uint32_t sessionId;
 };
 
+struct WindowInfo {
+  int width;
+  int height;
+  float devicePixelRatio;
+};
+
+using Systems = vector<std::unique_ptr<EventEmitter>>;
+
 class Desaina {
 	public:
 		Desaina(DesainaOption option):
@@ -42,14 +50,29 @@ class Desaina {
 		};
 
     void buildEvents();
+    void addSystems();
 
 		bool encode(kiwi::ByteBuffer& buffer);
 
+    Systems* getSystems() {
+      return &systems_;
+    }
+
+    void setWindowInfo(const WindowInfo& windowInfo) {
+      windowInfo_ = windowInfo;
+    }
+
+    const WindowInfo& getWindowInfo() const {
+      return windowInfo_;
+    }
+
 		Document document;
 		Services services;
-    EventSystem eventSystem;
-    RenderSystem renderSystem;
+    EventSystem eventSystem{this};
 	private:
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;
+    Systems systems_{};
+    RenderSystem renderSystem{this};
+    WindowInfo windowInfo_{};
 };

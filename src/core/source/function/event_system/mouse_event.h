@@ -19,6 +19,9 @@ public:
     event_.buttons = buttons;
     return *this;
   };
+  MouseEvent build() {
+    return event_;
+  };
 private:
   MouseEvent event_;
 };

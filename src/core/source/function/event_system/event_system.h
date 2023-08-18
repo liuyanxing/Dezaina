@@ -1,34 +1,27 @@
 #pragma once
 
+#include <optional>
+#include <stdint.h>
 #include <vector>
 #include "event.h"
 #include "mouse_event.h"
+#include "event_emitter.h"
+
+class Desaina;
 
 class EventSystem {
 public:
-  void dispatchEvent(const Event& event) {
-    for (const auto& consumer : consumers_) {
-      if (consumer.type == event.type) {
-        consumer.func(&event);
-      }
-    }
-  }
+  EventSystem(Desaina* desaina) : desaina_(desaina) {};
 
-  void addEventListener(const EventListener& consumer) {
-    consumers_.push_back(consumer);
-  }
+  void dispatchMouseEvent(float x, float y, EventType type, int button, int buttons);
+  void dispatchWindowResizeEvent(int width, int height, float devicePixelRatio);
+
+  void dispatchUIEvent(UIEvent& event);
+  void dispatchEvent(const Event& event);
 
 private:
-  void dispatchMouseEvent(float x, float y, EventType type, int button, int buttons) {
-    MouseEvent::Builder builder(type);
-    builder.setX(x);
-    builder.setY(y);
-    builder.setButton(button);
-    builder.setButtons(buttons);
-    auto event = builder.build();
-    dispatchEvent(event);
-  }
-
-
-  std::vector<EventListener> consumers_;
+  Desaina* desaina_;
+  std::optional<MouseEvent> lastMouseEvent_ = std::nullopt;
+  float mouseDeltaX_ = 0;
+  float mouseDeltaY_ = 0;
 };

@@ -23,12 +23,6 @@ class Canvas {
 public:
 		Canvas(Desaina* desaina);
 		~Canvas() = default;
-		void initCanvas(const CanvasOptions& options) {
-			auto& [width, height, devicePixelRatio] = options;
-
-			onWindowResize(width, height, devicePixelRatio);
-			createSurface();
-		};
 
 		void onWindowResize(int width, int height, int devicePixelRatio) {
 			devicePixelRatio_ = devicePixelRatio;
@@ -36,6 +30,7 @@ public:
 			height_ = height * devicePixelRatio_;
 			projection_matrix_.setScale(devicePixelRatio_, devicePixelRatio_, width_ / 2., height_ / 2.);
 			vp_matrix_ = projection_matrix_ * view_matrix_ ;
+			createSurface();
 		};
 
 		bool createSurface();

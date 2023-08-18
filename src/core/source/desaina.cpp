@@ -113,8 +113,11 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 }
 
 void Desaina::buildEvents() {
-  eventSystem.addEventListener({EventType::kAny, [](const Event* event) {
-  }});
+}
+
+void Desaina::addSystems() {
+  auto render_system = std::make_unique<RenderSystem>(this);
+  systems_.push_back(std::move(render_system));
 }
 
 void Desaina::tick() {
