@@ -35,13 +35,12 @@ class Desaina {
       };
 		~Desaina() = default;
 		void tick();
-		bool processMessage(uint8_t *buffer, uint32_t size);
 		bool processMessage(kiwi::ByteBuffer& buffer);
 		void applyNodeChanges(const Desaina_Kiwi::Message& message);
 		void applyNodeChange(const Desaina_Kiwi::NodeChange& node_change);
 
-		bool loadDocument(uint8_t* buffer, uint32_t size) {
-			bool is_loaded = processMessage(buffer, size);
+		bool loadDocument(kiwi::ByteBuffer& buffer) {
+			bool is_loaded = processMessage(buffer);
 			if (!is_loaded) {
 				return false;
 			}

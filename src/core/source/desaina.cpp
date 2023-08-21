@@ -15,12 +15,6 @@
 #include "desaina_node.h"
 #include "desaina.h"
 
-
-bool Desaina::processMessage(uint8_t *buffer, uint32_t size) {
-	kiwi::ByteBuffer kiwiBuffer(buffer, size);
-	return processMessage(kiwiBuffer);
-}
-
 static DataSharedPtr decodeGeometryBlob(const Desaina_Kiwi::Blob& blob) {
   auto const data_ptr = blob.bytes();
   if (data_ptr == nullptr) {

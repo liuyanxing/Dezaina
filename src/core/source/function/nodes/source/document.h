@@ -132,6 +132,13 @@ public:
     geometries_.push_back(Geometry::Make(blob));
   }
 
+  void setDefaultPage() {
+    const auto& children = getChildren();
+    if (children.size() > 0) {
+      currentPage_ = static_cast<PageNode*>(children[0]);
+    }
+  }
+
   Geometry* getGeometry(size_t index) {
     if (index >= geometries_.size()) {
       return nullptr;
