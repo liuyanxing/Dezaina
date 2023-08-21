@@ -121,5 +121,7 @@ void Desaina::addSystems() {
 }
 
 void Desaina::tick() {
-  renderSystem.tick();
+  for (const auto &system : systems_) {
+    system->tick();
+  }
 }

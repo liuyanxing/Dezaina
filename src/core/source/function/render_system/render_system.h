@@ -1,10 +1,10 @@
 #pragma once
 
 #include "canvas.h"
-#include "event_system/event_system.h"
+#include "system/system.h"
 
 class Desaina;
-class RenderSystem: public EventEmitter {
+class RenderSystem: public System {
 public:
   RenderSystem(Desaina* desaina);
   void tick() {

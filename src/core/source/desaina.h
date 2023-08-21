@@ -10,6 +10,7 @@
 #include "services/services.h"
 #include "event_system/event_system.h"
 #include "render_system/render_system.h"
+#include "system/system.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -21,7 +22,7 @@ struct WindowInfo {
   float devicePixelRatio;
 };
 
-using Systems = vector<std::unique_ptr<EventEmitter>>;
+using Systems = vector<std::unique_ptr<System>>;
 
 class Desaina {
 	public:
@@ -74,6 +75,5 @@ class Desaina {
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;
     Systems systems_{};
-    RenderSystem renderSystem{this};
     WindowInfo windowInfo_{};
 };
