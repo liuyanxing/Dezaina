@@ -134,9 +134,7 @@ public:
 
   void setDefaultPage() {
     const auto& children = getChildren();
-    if (children.size() > 0) {
-      currentPage_ = static_cast<PageNode*>(children[0]);
-    }
+    currentPage_ = static_cast<PageNode*>(children[1]);
   }
 
   Geometry* getGeometry(size_t index) {

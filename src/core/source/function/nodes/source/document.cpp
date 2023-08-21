@@ -5,7 +5,7 @@
 
 void Document::buildDocTree() {
 	for (auto& [_, node] : idNodeMap_) {
-		if (node->isDocument()) {
+		if (util::isDocument(node)) {
 			continue;
 		}
 

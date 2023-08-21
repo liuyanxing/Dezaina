@@ -4,6 +4,7 @@
 #include "canvas.h"
 
 #include "include/core/SkColor.h"
+#include "include/core/SkMatrix.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkRect.h"
 #include "node_type.h"
@@ -43,6 +44,7 @@ void Canvas::drawNode(const Node *node) {
       SkAutoCanvasRestore auto_save(canvas_, true);
       canvas_->clipPath(path, true);
       canvas_->drawColor(SK_ColorWHITE);
+      canvas_->getTotalMatrix().dump();
     }
   }
 

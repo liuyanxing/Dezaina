@@ -18,7 +18,7 @@ namespace util {
 	}
 
 	inline bool isRectangle(const Node* node) {
-		return node->get_type() == NodeType::RECTANGLE;
+		return node->get_type() == NodeType::RECTANGLE || node->get_type() == NodeType::ROUNDED_RECTANGLE;
 	}
 
 	inline bool isContainer(const Node *node) {
