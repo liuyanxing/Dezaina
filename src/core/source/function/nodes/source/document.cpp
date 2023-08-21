@@ -16,6 +16,11 @@ void Document::buildDocTree() {
 			util::appendChild(parentNode, node);
 		}
 	}
+  
+  const auto& children = getChildren();
+  if (children.size() > 0) {
+    currentPage_ = static_cast<PageNode*>(children[0]);
+  }
 }
 
 void Document::createDefaultFile() {

@@ -22,8 +22,8 @@ void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
     canvas_->setMatrix(vp_matrix_);
     drawNode(document_->getCurrentPage());
-    surface_->flush();
   }
+  surface_->flush();
 }
 
 void Canvas::drawNode(const Node *node) {
