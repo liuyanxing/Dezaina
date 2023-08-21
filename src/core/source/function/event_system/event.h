@@ -35,14 +35,31 @@ struct EventListener {
 
 class Event::Builder {
 public:
-  Builder(EventType type) {
-    event_.type = type;
+  Builder(EventType type, bool isOwned = true): type_(type) {
+    isOwned_ = isOwned;
+    if (isOwned_) {
+      event_ = new Event();
+      event_->type = type;
+    }
+  };
+  ~Builder() {
+    if (isOwned_) {
+      delete event_;
+    }
+  };
+
+  Builder& setEventRef(Event* event) {
+    event_ = event;
+    event_->type = type_;
+    return *this;
   };
 
   Event build() {
-    return event_;
+    return *event_;
   };
 
 private:
-  Event event_;
+  Event* event_;
+  EventType type_;
+  bool isOwned_ = false;
 };

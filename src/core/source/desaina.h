@@ -30,6 +30,7 @@ class Desaina {
 			services({std::make_unique<IdGenerator>(option.sessionId)}),
 			document(&services) {
         buildEvents();
+        addSystems();
       };
 		~Desaina() = default;
 		void tick();

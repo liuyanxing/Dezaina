@@ -21,27 +21,46 @@ struct UIEvent : public Event {
 
 class UIEvent::Builder : public Event::Builder {
   public:
-    Builder(EventType type) : Event::Builder(type) {};
+    explicit Builder(EventType type, bool isOwned = true): Event::Builder(type, false) {
+      isOwned_ = isOwned;
+      if (isOwned_) {
+        event_ = new UIEvent();
+        Event::Builder::setEventRef(event_);
+      }
+    };
+    ~Builder() {
+      if (isOwned_) {
+        delete event_;
+      }
+    };
+
+    Builder& setEventRef(UIEvent* event) {
+      Event::Builder::setEventRef(event);
+      event_ = event;
+      return *this;
+    };
+
     Builder& setX(int x) {
-      event_.x = x;
+      event_->x = x;
       return *this;
     };
     Builder& setY(int y) {
-      event_.y = y;
+      event_->y = y;
       return *this;
     };
     Builder& setMouseDeltaX(int deltaX) {
-      event_.mouseDeltaX = deltaX;
+      event_->mouseDeltaX = deltaX;
       return *this;
     };
     Builder& setMouseDeltaY(int deltaY) {
-      event_.mouseDeltaY = deltaY;
+      event_->mouseDeltaY = deltaY;
       return *this;
     };
     
     UIEvent build() {
-      return event_;
+      return *event_;
     };
   private:
-    UIEvent event_;
+    UIEvent* event_;
+    bool isOwned_ = true;
 };

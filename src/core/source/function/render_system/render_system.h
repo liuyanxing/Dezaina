@@ -8,7 +8,7 @@ class RenderSystem: public EventEmitter {
 public:
   RenderSystem(Desaina* desaina);
   void tick() {
-    // canvas_.tick();
+    canvas_.tick();
   };
 
   void bindEvents();
