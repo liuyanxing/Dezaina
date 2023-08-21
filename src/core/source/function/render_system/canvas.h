@@ -28,7 +28,7 @@ public:
 			devicePixelRatio_ = devicePixelRatio;
 			width_ = width * devicePixelRatio_;
 			height_ = height * devicePixelRatio_;
-			projection_matrix_.setScale(devicePixelRatio_, devicePixelRatio_, width_ / 2., height_ / 2.);
+			projection_matrix_.setScale(devicePixelRatio_, devicePixelRatio_, -width_ / 2., -height_ / 2.);
 			vp_matrix_ = projection_matrix_ * view_matrix_ ;
 			createSurface();
 		};

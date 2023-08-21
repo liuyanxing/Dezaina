@@ -13,7 +13,7 @@ bool Canvas::createSurface() {
     sk_sp<const GrGLInterface> interface = GrGLMakeNativeInterface();
     
     sk_sp<GrDirectContext> context = GrDirectContext::MakeGL(interface);
-    GrBackendRenderTarget backendRenderTarget(width_, height_, 0, 8, {0, GR_GL_RGBA8});
+    GrBackendRenderTarget backendRenderTarget(width_ * devicePixelRatio_, height_ * devicePixelRatio_, 0, 8, {0, GR_GL_RGBA8});
 
     // surface_ = SkSurface::MakeRenderTarget(context.get(), skgpu::Budgeted::kNo, info);
     surface_ = SkSurface::MakeFromBackendRenderTarget(
