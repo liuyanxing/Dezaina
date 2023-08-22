@@ -19,7 +19,6 @@ Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
 }
 
 void Canvas::tick() {
-	canvas_->clear(SK_ColorRED);
   if (document_->getCurrentPage() != nullptr) {
     canvas_->setMatrix(vp_matrix_);
     drawNode(document_->getCurrentPage());
@@ -44,7 +43,6 @@ void Canvas::drawNode(const Node *node) {
       SkAutoCanvasRestore auto_save(canvas_, true);
       canvas_->clipPath(path, true);
       canvas_->drawColor(SK_ColorWHITE);
-      canvas_->getTotalMatrix().dump();
     }
   }
 
