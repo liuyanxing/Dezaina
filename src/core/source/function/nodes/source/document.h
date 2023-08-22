@@ -34,14 +34,14 @@ struct Geometry {
   DataSharedPtr commandsBlob;
   const SkPath& getPath() {
     if (path.isEmpty()) {
-      path = util::toSkiaPath(commandsBlob);
+      path = util::toSkPath(commandsBlob);
     }
     return path;
   }
   static auto Make(const DataSharedPtr& commandsBlob) {
     Geometry geometry;
     geometry.commandsBlob = commandsBlob;
-    geometry.path = util::toSkiaPath(commandsBlob);
+    geometry.path = util::toSkPath(commandsBlob);
     return geometry;
   }
 };
