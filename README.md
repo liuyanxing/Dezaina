@@ -2,6 +2,10 @@
 - [x] cpp 文件生成
 - [x] cpp 文件继承
 - [x] cpp enum 转换
+- [ ] paint union
+- [ ] effect unio
+- [ ] page background color
+
 - [ ] cpp 默认值
 - [ ] cpp set value with kiwi data
 
