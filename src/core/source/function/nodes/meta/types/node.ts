@@ -10,7 +10,9 @@ interface FrameNodeBase extends DefaultFrameMixin {
 }
 
 interface PageNodeBase extends BaseNodeMixin {
-  backgroundPaints: ReadonlyArray<Paint>
+  backgroundColor: Color
+  backgroundOpacity: float
+  backgroundEnabled: bool
 }
 
 interface DocumentNodeBase extends BaseNodeMixin {

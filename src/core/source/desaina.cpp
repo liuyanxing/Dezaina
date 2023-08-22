@@ -100,7 +100,7 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 
 	for (uint32_t i = 0; i < allNodes.size(); ++i) {
 		auto& nodeChange = nodeChanges[i];
-		allNodes[i]->encode(nodeChange, pool);
+		allNodes[i]->toChange(nodeChange, pool);
 	}
 
 	return message.encode(buffer);

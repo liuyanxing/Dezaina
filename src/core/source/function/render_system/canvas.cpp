@@ -35,10 +35,8 @@ void Canvas::drawNode(const Node *node) {
 
   if (util::isPage(node)) {
     auto page = static_cast<const PageNode*>(node);
-    const auto& paints = page->get_backgroundPaints();
-    for (const auto& paint : paints) {
-      canvas_->drawPaint(util::toSkPaint(paint));
-    }
+    const auto& color = page->get_backgroundColor();
+    canvas_->drawColor(util::toSkColor(color));
   }
 
   if (util::isDefaultShapeNode(node)) {
