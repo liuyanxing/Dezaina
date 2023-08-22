@@ -37,6 +37,7 @@ void Canvas::drawNode(const Node *node) {
     auto page = static_cast<const PageNode*>(node);
     const auto& color = page->get_backgroundColor();
     canvas_->drawColor(util::toSkColor(color));
+    // canvas_->drawColor(SK_ColorBLUE);
   }
 
   if (util::isDefaultShapeNode(node)) {
@@ -52,6 +53,7 @@ void Canvas::drawNode(const Node *node) {
       auto const& paints = shape->get_fillPaints();
       for (const auto& paint : paints) {
         canvas_->drawPaint(util::toSkPaint(paint));
+        // canvas_->drawColor(SK_ColorWHITE);
       }
     }
   }

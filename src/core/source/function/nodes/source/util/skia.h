@@ -13,12 +13,13 @@
 
 namespace util {
   inline SkColor toSkColor(const Color& color) {
-    return SkColorSetARGB(
-      color.get_a(),
+    SkColor4f skColorf{
       color.get_r(),
       color.get_g(),
-      color.get_b()
-    );
+      color.get_b(),
+      color.get_a(),
+    };
+    return skColorf.toSkColor();
   }
 
 	inline SkMatrix toSkMatrix(const Matrix& matrix) {

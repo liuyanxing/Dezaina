@@ -77,6 +77,9 @@ int main() {
 						done = true;
 		}
 
+		glViewport(0, 0, drawable_width, drawable_height);
+    desaina.tick();
+
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
@@ -108,12 +111,6 @@ int main() {
 
 		// Rendering
 		ImGui::Render();
-		glViewport(0, 0, drawable_width, drawable_height);
-		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-    desaina.tick();
-
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		SDL_GL_SwapWindow(window);
 	}
