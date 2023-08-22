@@ -4,7 +4,9 @@
 - [x] cpp enum 转换
 - [ ] paint union
 - [ ] effect unio
-- [ ] page background color
+- [x] page background color
+- [ ] blob
+- [ ] vector
 
 - [ ] cpp 默认值
 - [ ] cpp set value with kiwi data

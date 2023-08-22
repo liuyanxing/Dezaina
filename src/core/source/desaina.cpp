@@ -80,6 +80,8 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
       case NodeType::ROUNDED_RECTANGLE:
 				node = document.createNode<RectangleNode>(id);
 				break;
+      case NodeType::VECTOR:
+        // node = document.createNode<VectorNode>(id);
 			default:
 				break;
 		}
