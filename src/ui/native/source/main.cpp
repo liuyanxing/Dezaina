@@ -8,6 +8,7 @@
 
 #include "create_node_panel.h"
 #include "file_panel.h"
+#include "event.h"
 
 int main() {
   uint32_t width = 1280;
@@ -75,6 +76,8 @@ int main() {
 						done = true;
 				if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
 						done = true;
+				
+				processMouseEvent(desaina, event);
 		}
 
 		glViewport(0, 0, drawable_width, drawable_height);

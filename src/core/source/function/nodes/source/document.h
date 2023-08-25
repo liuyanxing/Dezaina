@@ -9,6 +9,7 @@
 #include "base/map.h"
 #include "base/class_tool.h"
 #include "event_system/event.h"
+#include "event_system/event_emitter.h"
 #include "event_system/event_system.h"
 #include "guid.h"
 #include "include/core/SkPath.h"
@@ -19,6 +20,7 @@
 #include "star.h"
 #include "polygon.h"
 #include "line.h"
+#include "system/system.h"
 #include "vector.h"
 #include "ellipse.h"
 #include "editor/editor.h"
@@ -53,7 +55,7 @@ struct Geometry {
 
 class Desaina;
 
-class Document : public DocumentNodeBase, public ContainerNodeBase {
+class Document : public DocumentNodeBase, public ContainerNodeBase, public EventEmitter {
 public:
 	Document(Services* services): services_(services) {
     set_type(NodeType::DOCUMENT);
@@ -88,7 +90,7 @@ public:
 		isLoaded_ = loaded;
 	}
 
-	bool is_loaded() const {
+	bool isLoaded() const {
 		return isLoaded_;
 	}
 
@@ -106,9 +108,6 @@ public:
   void bindEvents();
   void onEvents(Event* event);
   
-  void addEventListener(EventType type, const ListenerFunc& func) {
-  }
-
   void setHoverNode(Node* node) {
     hoverNode_ = node;
   }

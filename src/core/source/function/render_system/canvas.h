@@ -55,6 +55,11 @@ public:
 			return vp_matrix_;
 		};
 
+		void setViewMatrix(const SkMatrix& view_matrix) {
+			view_matrix_ = view_matrix;
+			vp_matrix_ = projection_matrix_ * view_matrix_;
+		};
+
 		void clear();
 		void tick();
 private:

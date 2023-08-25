@@ -17,7 +17,7 @@ public:
   void dispatchWindowResizeEvent(int width, int height, float devicePixelRatio);
 
   void dispatchUIEvent(UIEvent& event);
-  void dispatchEvent(const Event& event);
+  void dispatchEvent(Event& event);
 
 private:
   Desaina* desaina_;

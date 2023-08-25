@@ -2,6 +2,7 @@
 #include "document.h"
 #include "page.h"
 #include "util/container.h"
+#include <iostream>
 
 void Document::buildDocTree() {
 	for (auto& [_, node] : idNodeMap_) {
@@ -63,6 +64,15 @@ void Document::onEvents(Event *event) {
     editor_.get()->onEvent(event);
   }
 
+	if (event->type == EventType::kMouseWheel) {
+		auto mouseEvent = static_cast<MouseEvent*>(event);
+		auto x = mouseEvent->x;
+		auto y = mouseEvent->y;
+		if (currentPage_) {
+		  auto& matrix = currentPage_->view_matrix();
+      matrix.preTranslate(-x * 5, y * 5);
+		}
+	}
 }
 
 void Document::close() {}

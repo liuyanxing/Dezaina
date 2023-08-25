@@ -3,11 +3,12 @@
 #include "event_system/ui_event.h"
 #include <stdint.h>
 
-void EventSystem::dispatchEvent(const Event &event) {
+void EventSystem::dispatchEvent(Event &event) {
   const Systems& systems = *desaina_->getSystems();
   for (const auto &system : systems) {
     system->emit(event);
   }
+  desaina_->document.onEvents(&event);
 }
 
 void EventSystem::dispatchUIEvent(UIEvent &event) {

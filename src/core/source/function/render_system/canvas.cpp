@@ -23,6 +23,7 @@ Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
 
 void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
+    setViewMatrix(document_->getCurrentPage()->view_matrix());
     canvas_->setMatrix(vp_matrix_);
     drawNode(document_->getCurrentPage());
   }
