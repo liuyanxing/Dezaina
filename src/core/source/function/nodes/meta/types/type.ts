@@ -336,4 +336,13 @@ interface StyleId extends Struct {
   assetRef: AssetRef 
 }
 
+interface ArcData extends Struct {
+  startingAngle: float | 0
+  endingAngle: float | 6.2831854820251465
+  innerRadius: float | 0
+}
+
+interface VectorData extends Struct {
+  vectorNetworkBlob: uint
+}
 

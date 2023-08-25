@@ -81,9 +81,21 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 				node = document.createNode<RectangleNode>(id);
 				break;
       case NodeType::VECTOR:
-        // node = document.createNode<VectorNode>(id);
+        node = document.createNode<VectorNode>(id);
+      case NodeType::STAR:
+				node = document.createNode<StarNode>(id);
+				break;
+			case NodeType::LINE:
+				node = document.createNode<LineNode>(id);
+				break;
+			case NodeType::ELLIPSE:
+				node = document.createNode<EllipseNode>(id);
+				break;
+			case NodeType::REGULAR_POLYGON:
+				node = document.createNode<PolygonNode>(id);
+				break;
 			default:
-				node = document.createNode<RectangleNode>(id);
+				assert(false);
 				break;
 		}
 		document.addNodeToMap(node);
