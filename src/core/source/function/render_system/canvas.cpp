@@ -45,7 +45,7 @@ void Canvas::drawNode(const Node *node) {
     canvas_->concat(util::toSkMatrix(shape->get_transform()));
     auto const& fillGeometry = shape->get_fillGeometry();
     for (const auto& geometry : fillGeometry) {
-      auto* geo = document_->getGeometry(geometry.get_commandsBlob());
+      auto* geo = document_->getGeometry(geometry.commandsBlob);
       const auto& path = geo->getPath();
       SkAutoCanvasRestore auto_save(canvas_, true);
       canvas_->clipPath(path, true);

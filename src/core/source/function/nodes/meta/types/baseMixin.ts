@@ -1,8 +1,8 @@
 interface NodeChange_kiwi {}
 
 interface NodeBase extends NodeChange_kiwi {
-  encode_function: "virtual void encode(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) = 0;";
-  applyChange_function: "virtual void applyChange(Desaina_Kiwi::NodeChange& change) = 0;";
+  encode_function: "virtual void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {};";
+  applyChange_function: "virtual void applyChange(const Desaina_Kiwi::NodeChange& change) {};";
   isDocument_function: "virtual bool isDocument() { return false; };"
   isPage_function: "virtual bool isPage() { return false; };"
   isFrame_function: "virtual bool isFrame() { return false; };;"
@@ -41,7 +41,7 @@ interface IndividualStrokesMixin {
 }
 
 interface MinimalStrokesMixin {
-  strokePaints: ReadonlyArray<Paint>
+  strokePaints: ReadonlyArray<PaintUnion>
   styleIdForStrokeFill: StyleId
   strokeWeight: float | 0
   strokeJoin: StrokeJoin
@@ -51,7 +51,7 @@ interface MinimalStrokesMixin {
 }
 
 interface MinimalFillsMixin {
-  fillPaints: ReadonlyArray<Paint>
+  fillPaints: ReadonlyArray<PaintUnion>
   styleIdForStrokeFill: StyleId
 }
 

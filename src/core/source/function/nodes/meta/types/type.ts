@@ -2,19 +2,22 @@ type byte = number
 type bool = boolean 
 type int  = number 
 type uint = number 
-type float = number 
+type float = number
 
-interface GUID {
+interface CustomType {}
+interface Struct {}
+
+interface GUID extends Struct {
 	sessionID: uint | 0;
 	localID: uint | 0;
 }
 
-interface Vector {
+interface Vector extends Struct {
   x: float | 0;
   y: float  | 0;
 }
 
-interface Matrix {
+interface Matrix extends Struct {
   m00: float | 1;
   m01: float | 0;
   m02: float | 0;
@@ -28,12 +31,12 @@ enum NumberUnits {
   PIXELS,
   PERCENT,
 }
-interface Number {
+interface Number extends Struct {
   value: float | 0;
   units: NumberUnits;
 }
 
-interface Color {
+interface Color extends Struct {
   r: float | 0;
   g: float | 0;
   b: float | 0;
@@ -69,7 +72,7 @@ enum EffectType {
 	BACKGROUND_BLUR,
 }
 
-interface Effect {
+interface Effect extends Struct {
   type: EffectType
 }
 
@@ -106,19 +109,19 @@ enum PaintType {
   IMAGE,
 }
 
-enum ImageScaleMode{
+enum ImageScaleMode {
   STRETCH,
   FIT,
   FILL,
   TILE,
 }
 
-interface ColorStop {
+interface ColorStop extends Struct {
   position: float | 0;
   color: Color
 }
 
-interface Paint {
+interface Paint extends Struct {
 	type: PaintType
   visible: bool | true;
   opacity: float | 1;
@@ -129,7 +132,7 @@ interface SolidPaint extends Paint {
   color: Color
 }
 
-interface GradientPaint extends Paint{
+interface GradientPaint extends Paint {
   transform: Matrix
   stops: ReadonlyArray<ColorStop>
 }
@@ -138,6 +141,47 @@ interface ImagePaint extends Paint {
   imageScaleMode: ImageScaleMode
   transform: Matrix
 }
+
+interface PaintUnion extends CustomType {
+  type: byte | "using  PaintUnion = std::variant<SolidPaint, GradientPaint, ImagePaint>;"
+  applyChange: byte | `
+auto type = static_cast<PaintType>(*item.type());
+switch (type) {
+  case PaintType::SOLID:
+    {
+      value.emplace<SolidPaint>();
+      std::get<SolidPaint>(value).applyChange(item);
+      break;
+    }
+  case PaintType::GRADIENT_LINEAR:
+  case PaintType::GRADIENT_RADIAL:
+  case PaintType::GRADIENT_ANGULAR:
+  case PaintType::GRADIENT_DIAMOND:
+    {
+      value.emplace<GradientPaint>();
+      std::get<GradientPaint>(value).applyChange(item);
+      break;
+    }
+  case PaintType::IMAGE:
+    {
+      value.emplace<ImagePaint>();
+      std::get<ImagePaint>(value).applyChange(item);
+      break;
+    }
+  default:
+    break;
+}
+  `
+  toChange: byte | `
+    if (auto value = std::get_if<SolidPaint>(&item)) {
+      value->toChange(change_item, pool);
+    } else if (auto value = std::get_if<GradientPaint>(&item)) {
+      value->toChange(change_item, pool);
+    } else if (auto value = std::get_if<ImagePaint>(&item)) {
+      value->toChange(change_item, pool);
+    }
+  `
+} 
 
 enum ConstraintType {
   MIN,
@@ -272,22 +316,22 @@ enum WindingRule {
   NONE,
 }
 
-interface Path {
+interface Path extends Struct {
   windingRule: WindingRule
   commandsBlob: uint
 }
 
-interface ParentIndex {
+interface ParentIndex extends Struct {
   guid: GUID 
   position: string
 }
 
-interface AssetRef {
+interface AssetRef extends Struct {
   key: string
   version: string
 }
 
-interface StyleId {
+interface StyleId extends Struct {
   guid: GUID
   assetRef: AssetRef 
 }

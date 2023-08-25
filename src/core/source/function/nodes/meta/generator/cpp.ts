@@ -36,6 +36,10 @@ function isPointer(interf: DInterface) {
   return interf.name.includes("_pointer");
 }
 
+function isCustomType(interf: DInterface) {
+  return interf.name.includes("CustomType") || interf.mixins.includes("CustomType");
+}
+
 export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDeclaraction[], template: string) {
   // const schemaHppPath = path.join(outDir, schemaHppFileName);
   // execSync(`kiwic --schema ${schemaFilePath} --cpp ${schemaHppPath}`, {
@@ -52,28 +56,52 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
     }
   });
 
+  const findCustomType = (name: string) => {
+    return declars.find((item) => {
+      if (item.type === DeclaractionType.Interface) {
+        if (item.name === name && isCustomType(item as DInterface)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  };
+
   const interfaces = declars.filter(
     (dInterface) => {
       return dInterface.type === DeclaractionType.Interface
         && !isKiwiOnlyInterface(dInterface as DInterface)
-        && !isPointer(dInterface as DInterface);
+        && !isPointer(dInterface as DInterface)
+        && !isCustomType(dInterface as DInterface);
     }
   ) as DInterface[];
+
+  const customTypes: Set<string> = new Set();
   const cppInterfaces = interfaces.map((item) => {
     const members = item.members.map((member) => {
       let type = member.type;
+      const customType = findCustomType(type as string);
       if (member.isPointer) {
         type = type + "*";
       }
       if (member.isArray) {
         type = "std::vector<" + type + ">";
       }
-      return { ...member, type, typeInArray: member.type };
+      
+      let applyChange = "";
+      let toChange: null | string = null;
+      if (customType) {
+        customTypes.add((customType.members[0] as any).defaultValue as string);
+        applyChange = (customType.members[1] as any).defaultValue as string;
+        toChange = (customType.members[2] as any).defaultValue as string;
+      }
+      return { ...member, type, typeInArray: member.type, applyChange, toChange };
     });
+    const propsMembers = item.members.filter((member) => !member.isFunction);
     const name = remvoeMark(item.name); 
     return {
       name,
-      kiwiChangeType: kiwiChangeMap[name],
+      kiwiChangeType: propsMembers.length ? kiwiChangeMap[name] : null,
       members,
       extends: item.mixins.length ? item.mixins.map(mixin => "public " + remvoeMark(mixin)).join(", ") : null,
       isStruct: item.isStruct,
@@ -91,6 +119,7 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
     classes,
     structs,
     enums,
+    customTypes: [...customTypes]
   };
   const reslut = Mustache.render(template, data);
 

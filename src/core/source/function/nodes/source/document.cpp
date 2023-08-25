@@ -9,7 +9,7 @@ void Document::buildDocTree() {
 			continue;
 		}
 
-		const auto parentId = node->get_parentIndex().get_guid();
+		const auto parentId = node->get_parentIndex().guid;
 		auto parentNodeOrNull = getValueFromMap(idNodeMap_, parentId);
 		if (parentNodeOrNull.has_value()) {
 			auto parentNode = parentNodeOrNull.value();

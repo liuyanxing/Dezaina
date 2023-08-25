@@ -10,22 +10,23 @@
 
 #include "base/buffer.h"
 #include <cassert>
+#include <variant>
 
 namespace util {
   inline SkColor toSkColor(const Color& color) {
     SkColor4f skColorf{
-      color.get_r(),
-      color.get_g(),
-      color.get_b(),
-      color.get_a(),
+      color.r,
+      color.g,
+      color.b,
+      color.a,
     };
     return skColorf.toSkColor();
   }
 
 	inline SkMatrix toSkMatrix(const Matrix& matrix) {
 		return SkMatrix::MakeAll(
-      matrix.get_m00(), matrix.get_m01(), matrix.get_m02(),
-      matrix.get_m10(), matrix.get_m11(), matrix.get_m12(),
+      matrix.m00, matrix.m01, matrix.m02,
+      matrix.m10, matrix.m11, matrix.m12,
 			0, 0, 1
 		);
 	}
@@ -80,32 +81,13 @@ namespace util {
     return path;
   }
 
-  inline SkPaint toSkPaint(const Paint& paint) {
+  inline SkPaint toSkPaint(const PaintUnion& paint) {
     SkPaint skPaint;
-    skPaint.setAlphaf(paint.get_opacity());
-    skPaint.setBlendMode(static_cast<SkBlendMode>(paint.get_blendMode()));
-    auto type = paint.get_type();
-    switch (type) {
-      case PaintType::SOLID: {
-        const auto& truePaint = static_cast<const SolidPaint&>(paint);
-        skPaint.setColor(toSkColor(truePaint.get_color()));
-        break;
-      }
-      case PaintType::GRADIENT_LINEAR: {
-        break;
-      }
-      case PaintType::GRADIENT_RADIAL: {
-        break;
-      }
-      case PaintType::GRADIENT_ANGULAR: {
-        break;
-      }
-      case PaintType::GRADIENT_DIAMOND: {
-        break;
-      }
-      case PaintType::IMAGE: {
-        break;
-      }
+    skPaint.setAntiAlias(true);
+    if (auto value = std::get_if<SolidPaint>(&paint)) {
+      skPaint.setAlphaf(value->opacity);
+      skPaint.setBlendMode(static_cast<SkBlendMode>(value->blendMode));
+      skPaint.setColor(toSkColor(value->get_color()));
     }
     return skPaint;
   }

@@ -8,8 +8,8 @@
 - [ ] blob
 - [ ] vector
 
-- [ ] cpp 默认值
-- [ ] cpp set value with kiwi data
+- [x] cpp 默认值
+- [x] cpp set value with kiwi data
 
 
 长期规划：

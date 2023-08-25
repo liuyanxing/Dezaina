@@ -29,8 +29,8 @@ namespace desaina_change {
 		setNodeType(nodeChange, type);
 		auto* guid = pool.allocate<Desaina_Kiwi::GUID>();
 		auto id = desaina->services.idGenerator->genId();
-		guid->set_localID(id.get_localID());
-		guid->set_sessionID(id.get_sessionID());
+		guid->set_localID(id.localID);
+		guid->set_sessionID(id.sessionID);
 		nodeChange->set_guid(guid);
 		message.encode(buffer);
 	}

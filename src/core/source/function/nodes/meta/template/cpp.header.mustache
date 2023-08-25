@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <variant>
 
 #include "desaina_kiwi.h"
 
@@ -65,6 +66,10 @@ void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) 
 };
 {{/structs}}
 
+{{#customTypes}}
+{{&.}}
+{{/customTypes}}
+
 {{#classes}}
 class {{name}} {{#extends}}: {{.}}{{/extends}} {
 private:
@@ -122,7 +127,8 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 	{{/isBasicType}}	
 	{{#isComplexType}}
 		{{name}}.push_back({{typeInArray}}());
-		{{name}}.back().applyChange(item);
+    auto& value = {{name}}.back();
+    {{&applyChange}}
 	{{/isComplexType}}	
 	}
 {{/isArray}}
@@ -149,7 +155,7 @@ void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) 
 	{{/isBasicType}}	
 	{{#isComplexType}}
 		auto* {{name}}_change = pool.allocate<Desaina_Kiwi::{{type}}>();
-		{{name}}.toChange(*{{name}}_change, pool);
+    {{name}}.toChange(*{{name}}_change, pool);
 		change.set_{{name}}({{name}}_change);
 	{{/isComplexType}}	
 {{/isArray}}
@@ -168,7 +174,10 @@ void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) 
 		change_item = item;
 	{{/isBasicType}}	
 	{{#isComplexType}}
-		item.toChange(change_item, pool);
+    {{^toChange}}
+      item.toChange(change_item, pool);
+    {{/toChange}}
+    {{&toChange}}
 	{{/isComplexType}}	
 	}
 {{/isArray}}
