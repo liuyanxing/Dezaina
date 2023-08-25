@@ -2,15 +2,20 @@
 - [x] cpp 文件生成
 - [x] cpp 文件继承
 - [x] cpp enum 转换
-- [ ] paint union
-- [ ] effect unio
+- [x] paint union
+- [x] effect unio
 - [x] page background color
-- [ ] blob
-- [ ] vector
+- [x] blob
+- [x] vector
+- [ ] pan and scale
+- [ ] text
+- [ ] group
+- [ ] symbol 
+- [ ] section 
 
-- [x] cpp 默认值
-- [x] cpp set value with kiwi data
-
+- [ ] layer blend
+- [ ] blur
+- [ ] shadow
 
 长期规划：
 
