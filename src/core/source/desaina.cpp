@@ -125,8 +125,8 @@ void Desaina::buildEvents() {
 }
 
 void Desaina::addSystems() {
-  auto render_system = std::make_unique<RenderSystem>(this);
-  systems_.push_back(std::move(render_system));
+  systems_.push_back(&renderSystem);
+  systems_.push_back(&viewPortSystem);
 }
 
 void Desaina::tick() {

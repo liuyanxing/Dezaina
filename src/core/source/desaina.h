@@ -11,6 +11,7 @@
 #include "event_system/event_system.h"
 #include "render_system/render_system.h"
 #include "system/system.h"
+#include "viewport_system/viewport_system.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -22,7 +23,7 @@ struct WindowInfo {
   float devicePixelRatio;
 };
 
-using Systems = vector<std::unique_ptr<System>>;
+using Systems = vector<System*>;
 
 class Desaina {
 	public:
@@ -70,6 +71,8 @@ class Desaina {
 		Document document;
 		Services services;
     EventSystem eventSystem{this};
+		RenderSystem renderSystem{this};
+		ViewPortSystem viewPortSystem{this};
 	private:
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;
