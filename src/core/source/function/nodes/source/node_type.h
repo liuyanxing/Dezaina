@@ -21,6 +21,22 @@ namespace util {
 		return node->get_type() == NodeType::RECTANGLE || node->get_type() == NodeType::ROUNDED_RECTANGLE;
 	}
 
+  inline bool isStar(const Node* node) {
+    return node->get_type() == NodeType::STAR;
+  }
+
+  inline bool isEllipse(const Node* node) {
+    return node->get_type() == NodeType::ELLIPSE;
+  }
+
+  inline bool isLine(const Node* node) {
+    return node->get_type() == NodeType::LINE;
+  }
+
+  inline bool isPolygon(const Node* node) {
+    return node->get_type() == NodeType::REGULAR_POLYGON;
+  }
+
 	inline bool isContainer(const Node *node) {
 		return isDocument(node) || isPage(node) || isFrame(node);
 	}
@@ -29,7 +45,11 @@ namespace util {
 		return !(isDocument(node) || isPage(node));
 	}
 
+  inline bool isVector(const Node* node) {
+    return node->get_type() == NodeType::VECTOR;
+  }
+
   inline bool isDefaultShapeNode(const Node* node) {
-    return isRectangle(node) || isFrame(node);
+    return isRectangle(node) || isFrame(node) || isStar(node) || isEllipse(node) || isLine(node) || isPolygon(node) || isVector(node);
   }
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "desaina_node.h"
+#include "document.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkMatrix.h"
@@ -37,6 +39,9 @@ public:
 
 		void drawNode(const Node *node);
 		void drawPage(PageNode *page);
+
+    void drawGeometry(const vector<Path>& geometry, const vector<PaintUnion>& paints);
+
 
 		void setWidth(int width);
 		void setHeight(int height);

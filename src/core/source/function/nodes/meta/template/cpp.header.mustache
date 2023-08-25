@@ -129,6 +129,9 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 		{{name}}.push_back({{typeInArray}}());
     auto& value = {{name}}.back();
     {{&applyChange}}
+    {{^applyChange}}
+      value.applyChange(item);
+    {{/applyChange}}
 	{{/isComplexType}}	
 	}
 {{/isArray}}

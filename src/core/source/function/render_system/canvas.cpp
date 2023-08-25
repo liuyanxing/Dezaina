@@ -1,4 +1,5 @@
 #include "desaina.h"
+#include "desaina_node.h"
 #include "document.h"
 #include "include/core/SkCanvas.h"
 #include "canvas.h"
@@ -14,6 +15,8 @@
 #include "node_type.h"
 #include "util/skia.h"
 
+#include <iostream>
+
 Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
   document_ = &desaina_->document;
 }
@@ -24,6 +27,18 @@ void Canvas::tick() {
     drawNode(document_->getCurrentPage());
   }
   surface_->flush();
+}
+
+void Canvas::drawGeometry(const vector<Path> &geometry, const vector<PaintUnion> &paints) {
+  for (const auto& g : geometry) {
+    auto* geo = document_->getGeometry(g.commandsBlob);
+    const auto& path = geo->getPath();
+    SkAutoCanvasRestore auto_save(canvas_, true);
+    canvas_->clipPath(path, true);
+    for (const auto& paint : paints) {
+      canvas_->drawPaint(util::toSkPaint(paint));
+    }
+  }
 }
 
 void Canvas::drawNode(const Node *node) {
@@ -43,19 +58,8 @@ void Canvas::drawNode(const Node *node) {
   if (util::isDefaultShapeNode(node)) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
     canvas_->concat(util::toSkMatrix(shape->get_transform()));
-    auto const& fillGeometry = shape->get_fillGeometry();
-    for (const auto& geometry : fillGeometry) {
-      auto* geo = document_->getGeometry(geometry.commandsBlob);
-      const auto& path = geo->getPath();
-      SkAutoCanvasRestore auto_save(canvas_, true);
-      canvas_->clipPath(path, true);
-
-      auto const& paints = shape->get_fillPaints();
-      for (const auto& paint : paints) {
-        canvas_->drawPaint(util::toSkPaint(paint));
-        // canvas_->drawColor(SK_ColorWHITE);
-      }
-    }
+    drawGeometry(shape->get_fillGeometry(), shape->get_fillPaints());
+    drawGeometry(shape->get_strokeGeometry(), shape->get_strokePaints());
   }
 
   if (util::isContainer(node)) {

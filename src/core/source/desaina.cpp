@@ -62,7 +62,7 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 	auto* guid = node_change.guid();
 	id.applyChange(*guid);
 	auto node_or_null = document.getNodeById(id);
-	Node* node;
+	Node* node = nullptr;
 	if (!node_or_null.has_value()) {
 		auto type = *node_change.type();
 		using Desaina_Kiwi::NodeType;
@@ -83,6 +83,7 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
       case NodeType::VECTOR:
         // node = document.createNode<VectorNode>(id);
 			default:
+				node = document.createNode<RectangleNode>(id);
 				break;
 		}
 		document.addNodeToMap(node);
