@@ -99,9 +99,10 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
     });
     const propsMembers = item.members.filter((member) => !member.isFunction);
     const name = remvoeMark(item.name); 
+    const canApplyChange = item.name !== "NodeBase" && kiwiChangeMap[name];
     return {
       name,
-      kiwiChangeType: propsMembers.length ? kiwiChangeMap[name] : null,
+      kiwiChangeType: canApplyChange ? kiwiChangeMap[name] : null,
       members,
       extends: item.mixins.length ? item.mixins.map(mixin => "public " + remvoeMark(mixin)).join(", ") : null,
       isStruct: item.isStruct,
