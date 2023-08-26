@@ -17,6 +17,13 @@ interface Vector extends Struct {
   y: float  | 0;
 }
 
+interface Rect extends Struct {
+  x: float
+  y: float
+  w: float
+  h: float
+}
+
 interface Matrix extends Struct {
   m00: float | 1;
   m01: float | 0;
@@ -344,5 +351,23 @@ interface ArcData extends Struct {
 
 interface VectorData extends Struct {
   vectorNetworkBlob: uint
+}
+
+interface Glyph extends Struct {
+  commandsBlob: uint
+  position: Vector
+  fontSize: float
+  advance: float
+}
+
+interface Decoration {
+  rects: Array<Rect>
+}
+
+interface TextData {
+  characters: string
+  layoutSize: Vector
+  glyphs: Array<Glyph>
+  decorations: Array<Decoration>
 }
 

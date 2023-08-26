@@ -49,7 +49,18 @@ namespace util {
     return node->get_type() == NodeType::VECTOR;
   }
 
+  inline bool isText(const Node* node) {
+    return node->get_type() == NodeType::TEXT;
+  }
+
   inline bool isDefaultShapeNode(const Node* node) {
-    return isRectangle(node) || isFrame(node) || isStar(node) || isEllipse(node) || isLine(node) || isPolygon(node) || isVector(node);
+    return isRectangle(node) ||
+           isFrame(node) ||
+           isText(node) ||
+           isStar(node) ||
+           isEllipse(node) ||
+           isLine(node) ||
+           isPolygon(node) ||
+           isVector(node);
   }
 }

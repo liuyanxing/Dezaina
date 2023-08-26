@@ -11,6 +11,7 @@
 #include "node_type.h"
 #include "page.h"
 #include "rectangle.h"
+#include "text.h"
 #include "util/container.h"
 #include "node_type.h"
 #include "util/skia.h"
@@ -42,6 +43,25 @@ void Canvas::drawGeometry(const vector<Path> &geometry, const vector<PaintUnion>
   }
 }
 
+void Canvas::drawText(const TextNode *text) {
+  SkPath path;
+  SkMatrix matrix;
+  const auto& textData = text->get_textData();
+  const auto& glyphs = textData.get_glyphs();
+  for (const auto& glyph : glyphs) {
+    matrix.postTranslate(glyph.position.x, glyph.position.y);
+    const auto& glyphPath = document_->getGeometry(glyph.commandsBlob)->getPath();
+    path.addPath(glyphPath, matrix);
+  }
+
+  SkAutoCanvasRestore auto_save(canvas_, true);
+  canvas_->clipPath(path, true);
+  for (const auto& paint : text->get_fillPaints()) {
+    canvas_->drawPaint(util::toSkPaint(paint));
+  }
+
+}
+
 void Canvas::drawNode(const Node *node) {
 	if (node == nullptr) {
 		return;
@@ -54,6 +74,11 @@ void Canvas::drawNode(const Node *node) {
     auto page = static_cast<const PageNode*>(node);
     const auto& color = page->get_backgroundColor();
     canvas_->drawColor(util::toSkColor(color));
+  }
+
+  if (util::isText(node)) {
+    drawText(static_cast<const TextNode*>(node));
+    return;
   }
 
   if (util::isDefaultShapeNode(node)) {

@@ -8,10 +8,10 @@
 - [x] blob
 - [x] vector
 - [ ] pan and scale
-- [ ] text
 - [ ] group
 - [ ] symbol 
 - [ ] section 
+- [ ] text
 
 - [ ] layer blend
 - [ ] blur

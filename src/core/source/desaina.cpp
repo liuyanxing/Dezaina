@@ -94,6 +94,9 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 			case NodeType::REGULAR_POLYGON:
 				node = document.createNode<PolygonNode>(id);
 				break;
+      case NodeType::TEXT:
+        node = document.createNode<TextNode>(id);
+        break;
 			default:
 				assert(false);
 				break;

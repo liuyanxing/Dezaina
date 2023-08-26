@@ -20,6 +20,7 @@
 #include "star.h"
 #include "polygon.h"
 #include "line.h"
+#include "text.h"
 #include "system/system.h"
 #include "vector.h"
 #include "ellipse.h"

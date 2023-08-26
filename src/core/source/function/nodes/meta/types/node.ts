@@ -41,6 +41,11 @@ interface VectorNodeBase extends
 interface FrameNodeBase extends DefaultFrameMixin {
 }
 
+interface TextNodeBase extends
+    DefaultShapeNode {
+      textData: TextData
+    }
+
 interface PageNodeBase extends BaseNodeMixin {
   backgroundColor: Color
   backgroundOpacity: float

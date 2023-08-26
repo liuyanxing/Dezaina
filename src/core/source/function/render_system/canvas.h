@@ -36,6 +36,7 @@ public:
 		bool createSurface();
 
 		void drawNode(const Node *node);
+    void drawText(const TextNode *text);
 		void drawPage(PageNode *page);
 
     void drawGeometry(const vector<Path>& geometry, const vector<PaintUnion>& paints);
