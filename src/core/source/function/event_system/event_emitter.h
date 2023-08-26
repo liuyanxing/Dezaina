@@ -6,7 +6,7 @@
 
 class EventEmitter {
 public:
-  void emit(const Event& event) {
+  void emit(Event& event) {
     for (const auto& consumer : consumers_) {
       if (consumer.type == event.type) {
         consumer.func(&event);

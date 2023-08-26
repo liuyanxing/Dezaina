@@ -122,6 +122,11 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 }
 
 void Desaina::buildEvents() {
+  viewPortSystem.addEventListener(EventType::kViewPortChange, [this](Event* event) {
+    if (auto* curPage = document.getCurrentPage()) {
+      curPage->setViewMatrix(viewPortSystem.getViewMatrix());
+    }
+  });
 }
 
 void Desaina::addSystems() {

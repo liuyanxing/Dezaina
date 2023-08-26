@@ -9,9 +9,13 @@ public:
 		set_type(NodeType::CANVAS);
 	};
 
-	auto& view_matrix() {
+	const auto& getViewMatrix() const {
 		return view_matrix_;
 	};
+
+  void setViewMatrix(const SkMatrix& m) {
+    view_matrix_ = m;
+  } 
 
 private:
 	SkMatrix view_matrix_;

@@ -57,22 +57,13 @@ std::vector<Node*> Document::getAllNodes() {
 
 void Document::builPath() {}
 
-void Document::bindEvents() {}
+void Document::bindEvents() {
+}
 
 void Document::onEvents(Event *event) {
   if (editor_) {
     editor_.get()->onEvent(event);
   }
-
-	if (event->type == EventType::kMouseWheel) {
-		auto mouseEvent = static_cast<MouseEvent*>(event);
-		auto x = mouseEvent->x;
-		auto y = mouseEvent->y;
-		if (currentPage_) {
-		  auto& matrix = currentPage_->view_matrix();
-      matrix.preTranslate(-x * 5, y * 5);
-		}
-	}
 }
 
 void Document::close() {}

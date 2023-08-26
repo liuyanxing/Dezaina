@@ -9,6 +9,7 @@ enum class EventType {
   kAppTick, kAppUpdate, kAppRender,
   kKeyPressed, kKeyReleased, kKeyTyped,
   kMouseDown, kMouseUp, kMouseMove, kMouseWheel,
+  kViewPortChange,
   kAny,
 };
 
@@ -26,7 +27,7 @@ struct Event {
 
 };
 
-using ListenerFunc = std::function<void(const Event* event)>;
+using ListenerFunc = std::function<void(Event* event)>;
 struct EventListener {
   EventType type;
   ListenerFunc func;

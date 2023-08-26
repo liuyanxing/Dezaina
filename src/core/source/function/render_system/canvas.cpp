@@ -14,6 +14,7 @@
 #include "util/container.h"
 #include "node_type.h"
 #include "util/skia.h"
+#include "util/node_props.h"
 
 #include <iostream>
 
@@ -23,8 +24,7 @@ Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
 
 void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
-    setViewMatrix(document_->getCurrentPage()->view_matrix());
-    canvas_->setMatrix(vp_matrix_);
+    canvas_->setMatrix(desaina_->viewPortSystem.getProjectionMatrix());
     drawNode(document_->getCurrentPage());
   }
   surface_->flush();
@@ -49,16 +49,15 @@ void Canvas::drawNode(const Node *node) {
 	
 	SkAutoCanvasRestore auto_save(canvas_, true);
 
+  canvas_->concat(util::getTransfromMatrix(node));
   if (util::isPage(node)) {
     auto page = static_cast<const PageNode*>(node);
     const auto& color = page->get_backgroundColor();
     canvas_->drawColor(util::toSkColor(color));
-    // canvas_->drawColor(SK_ColorBLUE);
   }
 
   if (util::isDefaultShapeNode(node)) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
-    canvas_->concat(util::toSkMatrix(shape->get_transform()));
     drawGeometry(shape->get_fillGeometry(), shape->get_fillPaints());
     drawGeometry(shape->get_strokeGeometry(), shape->get_strokePaints());
   }
