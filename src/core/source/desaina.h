@@ -68,8 +68,8 @@ class Desaina {
       return windowInfo_;
     }
 
-		Document document;
 		Services services;
+		Document document;
     EventSystem eventSystem{this};
 		RenderSystem renderSystem{this};
 		ViewPortSystem viewPortSystem{this};
