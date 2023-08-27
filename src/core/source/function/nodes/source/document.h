@@ -56,7 +56,7 @@ struct Geometry {
 
 class Desaina;
 
-class Document : public DocumentNodeBase, public ContainerNodeBase, public System {
+class Document : public DocumentNodeBase, public ContainerNodeBase {
 public:
 	Document(Services* services): services_(services) {
     set_type(NodeType::DOCUMENT);
