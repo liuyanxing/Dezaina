@@ -7,6 +7,7 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPaint.h"
+#include "include/core/SkPath.h"
 #include "include/core/SkRect.h"
 #include "node_type.h"
 #include "page.h"
@@ -48,11 +49,23 @@ void Canvas::drawText(const TextNode *text) {
   SkMatrix matrix;
   const auto& textData = text->get_textData();
   const auto& glyphs = textData.get_glyphs();
+  const auto& decorations = textData.get_decorations();
   for (const auto& glyph : glyphs) {
-    matrix.postTranslate(glyph.position.x, glyph.position.y);
+    auto fontSize = glyph.fontSize;
+    matrix.setScaleTranslate(fontSize, -fontSize, glyph.position.x, glyph.position.y);
     const auto& glyphPath = document_->getGeometry(glyph.commandsBlob)->getPath();
     path.addPath(glyphPath, matrix);
   }
+
+  SkPath decorationPath;
+  for (const auto& decoration : decorations) {
+    const auto& rects = decoration.get_rects();
+    for (const auto& [x, y, w, h] : rects) {
+      decorationPath.addRect(SkRect::MakeXYWH(x, y, w, h));
+    }
+  }
+
+  path.addPath(decorationPath);
 
   SkAutoCanvasRestore auto_save(canvas_, true);
   canvas_->clipPath(path, true);

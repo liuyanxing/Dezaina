@@ -30,6 +30,19 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
     std::cout << "mouse up" << std::endl;
   } else if (type == SDL_MOUSEMOTION) {
     std::cout << "mouse move" << std::endl;
+  } else if (type == SDL_MULTIGESTURE) {
+    std::cout << "gesture" << std::endl;
+    if (fabs(event.mgesture.dDist) > 0.001) {
+      std::cout << "pinch: " << event.mgesture.dDist << std::endl;
+      desaina.eventSystem.dispatchMouseEvent(
+        event.mgesture.dDist,
+        0,
+        EventType::kMouseWheel,
+        0,
+        0
+      );
+    }
   } else {
+    std::cout << "mouse event: " << type << std::endl;
   }
 }
