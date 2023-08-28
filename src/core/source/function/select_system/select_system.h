@@ -1,4 +1,4 @@
-#pragram once
+#pragma once
 
 #include "event_system/event_system.h"
 #include "system/system.h"

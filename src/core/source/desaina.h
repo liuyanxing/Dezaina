@@ -6,6 +6,7 @@
 #include "kiwi.h"
 #include <memory>
 #include <stdint.h>
+#include "select_system/select_system.h"
 #include "services/id_generator.h"
 #include "services/services.h"
 #include "event_system/event_system.h"
@@ -73,6 +74,7 @@ class Desaina {
     EventSystem eventSystem{this};
 		RenderSystem renderSystem{this};
 		ViewPortSystem viewPortSystem{this};
+    SelectSystem selectSystem{this};
 	private:
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;

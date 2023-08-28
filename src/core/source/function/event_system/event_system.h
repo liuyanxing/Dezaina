@@ -21,12 +21,14 @@ public:
   void dispatchUIEvent(UIEvent& event);
   void dispatchEvent(Event& event);
 
-  void clear() {
+  void clearEvents() {
     for (auto* event : events_) {
       delete event;
     }
     events_.clear();
   }
+
+  void tick() override;
 
 private:
   Desaina* desaina_;

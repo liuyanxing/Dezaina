@@ -11,6 +11,7 @@ void EventSystem::tick() {
       system->emit(*event);
     }
   }
+  clearEvents();
 }
 
 void EventSystem::dispatchEvent(Event &event) {

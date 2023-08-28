@@ -12,7 +12,5 @@ struct ColorRect {
 
 class TextNode : public TextNodeBase {
 public:
-  SkPath getFillGeometry();
-  SkPath getStrokeGeometry();
   vector<ColorRect> getFillRects();
 };

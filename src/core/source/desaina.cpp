@@ -136,7 +136,6 @@ void Desaina::addSystems() {
 	systems_.push_back(&eventSystem);
   systems_.push_back(&renderSystem);
   systems_.push_back(&viewPortSystem);
-	systems_.push_back(&document);
 }
 
 void Desaina::tick() {
