@@ -25,7 +25,7 @@ function getInterfaceMembers(node: ts.InterfaceDeclaration): Member[] {
       } else if (ts.isTypeReferenceNode(type as ts.Node)) {
         let typeRef = type as ts.TypeReferenceNode;
         let typeName = getNameText(typeRef.typeName as ts.Identifier);
-        if (["Array", "ReadonlyArray"].includes(typeName)) {
+        if (["Array", "ReadonlyArray", "IArray"].includes(typeName)) {
           isArray = true;
           if (typeRef.typeArguments?.length !== 1) {
             throw new Error("typeArguments error");

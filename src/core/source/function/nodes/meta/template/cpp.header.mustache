@@ -4,10 +4,10 @@
 #include <vector>
 #include <variant>
 
-#include "desaina_kiwi.h"
-
 using  uint = uint32_t;
 using string = std::string;
+
+#include "change/change_type.h"
 
 {{#classes}}
 class {{name}};
@@ -23,46 +23,18 @@ enum class {{name}} {
 
 {{#structs}}
 struct {{name}} {
-{{#members}}
+{{#propsMembers}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
-{{/members}}
+{{/propsMembers}}
 void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
-{{#members}}
+{{#propsMembers}}
 	if (change.{{name}}() != nullptr) {
-	{{#isEnum}}
-		{{name}} = static_cast<{{type}}>(*change.{{name}}());
-	{{/isEnum}}
-	{{#isString}}
-		{{name}} = *change.{{name}}()->c_str();
-	{{/isString}}	
-	{{#isBasicType}}
-		{{name}} = *change.{{name}}();
-	{{/isBasicType}}	
-	{{#isComplexType}}
-		{{name}}.applyChange(*change.{{name}}());
-	{{/isComplexType}}	
+    applyChangeImpl({{name}}, *change.{{name}}());
 	}
-{{/members}}
+{{/propsMembers}}
 }
 
-void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {
-{{#members}}
-	{{#isEnum}}
-		change.set_{{name}}(static_cast<Desaina_Kiwi::{{type}}>({{name}}));
-	{{/isEnum}}
-	{{#isString}}
-		change.set_{{name}}(kiwi::String({{name}}.c_str()));
-	{{/isString}}	
-	{{#isBasicType}}
-		change.set_{{name}}({{name}});
-	{{/isBasicType}}	
-	{{#isComplexType}}
-		auto* {{name}}_change = pool.allocate<Desaina_Kiwi::{{type}}>();
-		{{name}}.toChange(*{{name}}_change, pool);
-	{{/isComplexType}}	
-{{/members}}
-}
-
+void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {}
 };
 {{/structs}}
 
@@ -73,124 +45,46 @@ void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) 
 {{#classes}}
 class {{name}} {{#extends}}: {{.}}{{/extends}} {
 private:
-{{#members}}
-{{^isFunction}}
+{{#propsMembers}}
 	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}};
-{{/isFunction}}
-{{/members}}
+{{/propsMembers}}
 
 public:
-{{#members}}
-{{^isFunction}}
+{{#propsMembers}}
 	const {{&type}}& get_{{name}}() const {
 		return {{name}};
 	};
 	void set_{{name}} (const {{&type}}& val) {
 		{{name}} = val;
 	};
-{{/isFunction}}
-{{#isFunction}}
+{{/propsMembers}}
+{{#funcMembers}}
 	{{&defaultValue}}
-{{/isFunction}}
-{{/members}}
+{{/funcMembers}}
 
 {{#kiwiChangeType}}
 void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
-{{#members}}
-{{^isFunction}}
+{{#propsMembers}}
 	if (change.{{name}}() != nullptr) {
-{{^isArray}}
-	{{#isEnum}}
-		{{name}} = static_cast<{{type}}>(*change.{{name}}());
-	{{/isEnum}}
-	{{#isString}}
-		{{name}} = *change.{{name}}()->c_str();
-	{{/isString}}	
-	{{#isBasicType}}
-		{{name}} = *change.{{name}}();
-	{{/isBasicType}}	
-	{{#isComplexType}}
-		{{name}}.applyChange(*change.{{name}}());
-	{{/isComplexType}}	
-{{/isArray}}
-{{#isArray}}
-	{{name}}.clear();
-	for (auto& item : *change.{{name}}()) {
-	{{#isEnum}}
-		{{name}}.push_back(static_cast<{{type}}>(item));
-	{{/isEnum}}
-	{{#isString}}
-		{{name}}.push_back(*item->c_str());
-	{{/isString}}	
-	{{#isBasicType}}
-		{{name}}.push_back(item);
-	{{/isBasicType}}	
-	{{#isComplexType}}
-		{{name}}.push_back({{typeInArray}}());
-    auto& value = {{name}}.back();
-    {{&applyChange}}
-    {{^applyChange}}
-      value.applyChange(item);
-    {{/applyChange}}
-	{{/isComplexType}}	
-	}
-{{/isArray}}
+    applyChangeImpl({{name}}, *change.{{name}}());
   }
-{{/isFunction}}
-{{/members}}
+{{/propsMembers}}
 {{#kiwiMixins}}
 	{{.}}::applyChange(change);
 {{/kiwiMixins}}
 }
 
 void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {
-{{#members}}
-{{^isFunction}}
-{{^isArray}}
-	{{#isEnum}}
-		change.set_{{name}}(static_cast<Desaina_Kiwi::{{type}}>({{name}}));
-	{{/isEnum}}
-	{{#isString}}
-		change.set_{{name}}(kiwi::String({{name}}.c_str()));
-	{{/isString}}	
-	{{#isBasicType}}
-		change.set_{{name}}({{name}});
-	{{/isBasicType}}	
-	{{#isComplexType}}
-		auto* {{name}}_change = pool.allocate<Desaina_Kiwi::{{type}}>();
-    {{name}}.toChange(*{{name}}_change, pool);
-		change.set_{{name}}({{name}}_change);
-	{{/isComplexType}}	
-{{/isArray}}
-{{#isArray}}
-	auto {{name}}_change = change.set_{{name}}(pool, {{name}}.size());
-	for (int i = 0; i < {{name}}.size(); i++) {
-		auto& item = {{name}}[i];
-		auto& change_item = {{name}}_change[i];
-	{{#isEnum}}
-		change_item = static_cast<Desaina_Kiwi::{{typeInArray}}>(item);
-	{{/isEnum}}
-	{{#isString}}
-		change_item->set_{{name}}(kiwi::String(item.c_str()));
-	{{/isString}}	
-	{{#isBasicType}}
-		change_item = item;
-	{{/isBasicType}}	
-	{{#isComplexType}}
-    {{^toChange}}
-      item.toChange(change_item, pool);
-    {{/toChange}}
-    {{&toChange}}
-	{{/isComplexType}}	
-	}
-{{/isArray}}
-{{/isFunction}}
-{{/members}}
-{{#kiwiMixins}}
-	{{.}}::toChange(change, pool);
-{{/kiwiMixins}}
 }
 
 {{/kiwiChangeType}}
 };
 {{/classes}}
+
+{{#applyChanges}}
+{{&.}}
+{{/applyChanges}}
+
+{{#toChanges}}
+{{&.}}
+{{/toChanges}}

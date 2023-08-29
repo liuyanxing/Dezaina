@@ -77,6 +77,8 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
   ) as DInterface[];
 
   const customTypes: Set<string> = new Set();
+  const applyChanges: Set<string> = new Set();
+  const toChanges: Set<string> = new Set();
   const cppInterfaces = interfaces.map((item) => {
     const members = item.members.map((member) => {
       let type = member.type;
@@ -85,25 +87,31 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
         type = type + "*";
       }
       if (member.isArray) {
-        type = "std::vector<" + type + ">";
+        type = "IVector<" + type + ">";
       }
       
-      let applyChange = "";
-      let toChange: null | string = null;
       if (customType) {
         customTypes.add((customType.members[0] as any).defaultValue as string);
-        applyChange = (customType.members[1] as any).defaultValue as string;
-        toChange = (customType.members[2] as any).defaultValue as string;
+        const applyChange = customType.members[1] as any; 
+        if (applyChange) {
+          applyChanges.add(applyChange.defaultValue as string);
+        }
+        const toChange = customType.members[2] as any;
+        if (toChange) {
+          toChanges.add(toChange.defaultValue as string);
+        }
       }
-      return { ...member, type, typeInArray: member.type, applyChange, toChange };
+      return { ...member, type, typeInArray: member.type };
     });
-    const propsMembers = item.members.filter((member) => !member.isFunction);
+    const propsMembers = members.filter((member) => !member.isFunction);
+    const funcMembers = members.filter((member) => member.isFunction);
     const name = remvoeMark(item.name); 
     const canApplyChange = item.name !== "NodeBase" && kiwiChangeMap[name];
     return {
       name,
       kiwiChangeType: canApplyChange ? kiwiChangeMap[name] : null,
-      members,
+      propsMembers,
+      funcMembers,
       extends: item.mixins.length ? item.mixins.map(mixin => "public " + remvoeMark(mixin)).join(", ") : null,
       isStruct: item.isStruct,
       kiwiMixins: item.mixins.filter((item) => !!kiwiChangeMap[item]),
@@ -120,7 +128,9 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
     classes,
     structs,
     enums,
-    customTypes: [...customTypes]
+    customTypes: [...customTypes],
+    applyChanges: [...applyChanges],
+    toChanges: [...toChanges],
   };
   const reslut = Mustache.render(template, data);
 

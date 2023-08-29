@@ -1,7 +1,7 @@
 interface GeometryMixin extends MinimalStrokesMixin, MinimalFillsMixin {
   strokeCap: StrokeCap
   miterLimit: float | 0;
-  fillGeometry: Array<Path>;
+  fillGeometry: IArray<Path>;
 }
 
 interface LayoutMixin extends DimensionAndPositionMixin {
@@ -27,3 +27,9 @@ interface BaseFrameMixin extends
 
 interface DefaultFrameMixin extends BaseFrameMixin {
 }
+
+interface TextNodeMixin extends
+  DefaultShapeNode {
+    letterSpacing: Number
+    lineHeight: Number
+  }

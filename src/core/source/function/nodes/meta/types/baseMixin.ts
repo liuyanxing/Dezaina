@@ -41,17 +41,17 @@ interface IndividualStrokesMixin {
 }
 
 interface MinimalStrokesMixin {
-  strokePaints: ReadonlyArray<PaintUnion>
+  strokePaints: IArray<PaintUnion>
   styleIdForStrokeFill: StyleId
   strokeWeight: float | 0
   strokeJoin: StrokeJoin
   strokeAlign: StrokeAlign
-  dashPattern: ReadonlyArray<float>
-  strokeGeometry: ReadonlyArray<Path>
+  dashPattern: IArray<float>
+  strokeGeometry: IArray<Path>
 }
 
 interface MinimalFillsMixin {
-  fillPaints: ReadonlyArray<PaintUnion>
+  fillPaints: IArray<PaintUnion>
   styleIdForStrokeFill: StyleId
 }
 
@@ -66,7 +66,7 @@ interface ConstraintMixin {
 }
 
 interface EffectMixin {
-  effects: ReadonlyArray<Effect>
+  effects: IArray<Effect>
   styleIdForEffect: StyleId
 }
 

@@ -42,7 +42,7 @@ interface FrameNodeBase extends DefaultFrameMixin {
 }
 
 interface TextNodeBase extends
-    DefaultShapeNode {
+    TextNodeMixin {
       textData: TextData
     }
 

@@ -7,6 +7,10 @@ type float = number
 interface CustomType {}
 interface Struct {}
 
+interface IArray<T> extends CustomType {
+  type: byte | ""
+}
+
 interface GUID extends Struct {
 	sessionID: uint | 0;
 	localID: uint | 0;
@@ -141,7 +145,7 @@ interface SolidPaint extends Paint {
 
 interface GradientPaint extends Paint {
   transform: Matrix
-  stops: ReadonlyArray<ColorStop>
+  stops: IArray<ColorStop>
 }
 
 interface ImagePaint extends Paint {
@@ -152,42 +156,37 @@ interface ImagePaint extends Paint {
 interface PaintUnion extends CustomType {
   type: byte | "using  PaintUnion = std::variant<SolidPaint, GradientPaint, ImagePaint>;"
   applyChange: byte | `
-auto type = static_cast<PaintType>(*item.type());
-switch (type) {
-  case PaintType::SOLID:
-    {
-      value.emplace<SolidPaint>();
-      std::get<SolidPaint>(value).applyChange(item);
+template <>
+inline void applyChangeImpl<PaintUnion, Desaina_Kiwi::Paint>(PaintUnion& value, const Desaina_Kiwi::Paint& change) {
+  auto type = static_cast<PaintType>(*change.type());
+  switch (type) {
+    case PaintType::SOLID:
+      {
+        value.emplace<SolidPaint>();
+        std::get<SolidPaint>(value).applyChange(change);
+        break;
+      }
+    case PaintType::GRADIENT_LINEAR:
+    case PaintType::GRADIENT_RADIAL:
+    case PaintType::GRADIENT_ANGULAR:
+    case PaintType::GRADIENT_DIAMOND:
+      {
+        value.emplace<GradientPaint>();
+          std::get<SolidPaint>(value).applyChange(change);
+        break;
+      }
+    case PaintType::IMAGE:
+      {
+        value.emplace<ImagePaint>();
+        std::get<SolidPaint>(value).applyChange(change);
+        break;
+      }
+    default:
       break;
-    }
-  case PaintType::GRADIENT_LINEAR:
-  case PaintType::GRADIENT_RADIAL:
-  case PaintType::GRADIENT_ANGULAR:
-  case PaintType::GRADIENT_DIAMOND:
-    {
-      value.emplace<GradientPaint>();
-      std::get<GradientPaint>(value).applyChange(item);
-      break;
-    }
-  case PaintType::IMAGE:
-    {
-      value.emplace<ImagePaint>();
-      std::get<ImagePaint>(value).applyChange(item);
-      break;
-    }
-  default:
-    break;
+  };
 }
   `
-  toChange: byte | `
-    if (auto value = std::get_if<SolidPaint>(&item)) {
-      value->toChange(change_item, pool);
-    } else if (auto value = std::get_if<GradientPaint>(&item)) {
-      value->toChange(change_item, pool);
-    } else if (auto value = std::get_if<ImagePaint>(&item)) {
-      value->toChange(change_item, pool);
-    }
-  `
+  toChange: byte | ``
 } 
 
 enum ConstraintType {
@@ -361,13 +360,13 @@ interface Glyph extends Struct {
 }
 
 interface Decoration {
-  rects: Array<Rect>
+  rects: IArray<Rect>
 }
 
 interface TextData {
   characters: string
   layoutSize: Vector
-  glyphs: Array<Glyph>
-  decorations: Array<Decoration>
+  glyphs: IArray<Glyph>
+  decorations: IArray<Decoration>
 }
 
