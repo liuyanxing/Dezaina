@@ -37,7 +37,7 @@ namespace util {
     auto size = blob->size();
     size_t i = 0;
     while (i < size) {
-      auto type = buffer::readByte(data, i);
+      auto type = Buffer::readByte(data, i);
       i++;
       switch (type) {
         case 0: {
@@ -45,28 +45,28 @@ namespace util {
           break;
         }
         case 1: {
-          path.moveTo(buffer::readFloat(data, i), buffer::readFloat(data, i + 4));
+          path.moveTo(Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4));
           i += 8;
           break;
         }
         case 2: {
-          path.lineTo(buffer::readFloat(data, i), buffer::readFloat(data, i + 4));
+          path.lineTo(Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4));
           i += 8;
           break;
         }
         case 3: {
           path.quadTo(
-            buffer::readFloat(data, i), buffer::readFloat(data, i + 4),
-            buffer::readFloat(data, i + 8), buffer::readFloat(data, i + 12)
+            Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4),
+            Buffer::readFloat(data, i + 8), Buffer::readFloat(data, i + 12)
           );
           i += 16;
           break;
         }
         case 4: {
           path.cubicTo(
-            buffer::readFloat(data, i), buffer::readFloat(data, i + 4),
-            buffer::readFloat(data, i + 8), buffer::readFloat(data, i + 12),
-            buffer::readFloat(data, i + 16), buffer::readFloat(data, i + 20)
+            Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4),
+            Buffer::readFloat(data, i + 8), Buffer::readFloat(data, i + 12),
+            Buffer::readFloat(data, i + 16), Buffer::readFloat(data, i + 20)
           );
           i += 24;
           break;

@@ -363,8 +363,24 @@ interface Decoration {
   rects: IArray<Rect>
 }
 
+interface Buffer extends CustomType {
+  type: byte | ''
+  applyChange: byte | `
+template <>
+inline void applyChangeImpl<Buffer, const kiwi::Array<Desaina_Kiwi::NodeChange>>(Buffer& value, const kiwi::Array<Desaina_Kiwi::NodeChange>& change) {
+  kiwi::ByteBuffer _bb;
+  _bb.writeVarUint(change.size());
+  for (auto &_it : change) {
+    const_cast<Desaina_Kiwi::NodeChange&>(_it).encode(_bb);
+  }
+  value.set(_bb.data(), _bb.size());
+}
+  `
+}
+
 interface TextData {
   characters: string
+  styleOverrideTable: Buffer 
   layoutSize: Vector
   glyphs: IArray<Glyph>
   decorations: IArray<Decoration>
