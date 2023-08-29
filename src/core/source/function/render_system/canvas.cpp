@@ -1,3 +1,4 @@
+#include "base_type.h"
 #include "desaina.h"
 #include "desaina_node.h"
 #include "document.h"
@@ -32,14 +33,18 @@ void Canvas::tick() {
   surface_->flush();
 }
 
-void Canvas::drawGeometry(const vector<Path> &geometry, const vector<PaintUnion> &paints) {
+void Canvas::drawGeometry(const vector<Path> &geometry, const vector<PaintWithRect> &paintsWithRect) {
   for (const auto& g : geometry) {
     auto* geo = document_->getGeometry(g.commandsBlob);
     const auto& path = geo->getPath();
     SkAutoCanvasRestore auto_save(canvas_, true);
     canvas_->clipPath(path, true);
-    for (const auto& paint : paints) {
-      canvas_->drawPaint(util::toSkPaint(paint));
+    for (const auto& paintWithRect : paintsWithRect) {
+      SkAutoCanvasRestore auto_save(canvas_, true);
+      if (paintWithRect.rect.has_value()) {
+        canvas_->clipRect(paintWithRect.rect.value(), true);
+      }
+      canvas_->drawPaint(paintWithRect.paint);
     }
   }
 }
@@ -96,8 +101,8 @@ void Canvas::drawNode(const Node *node) {
 
   if (util::isDefaultShapeNode(node)) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
-    drawGeometry(shape->get_fillGeometry(), shape->get_fillPaints());
-    drawGeometry(shape->get_strokeGeometry(), shape->get_strokePaints());
+    drawGeometry(shape->get_fillGeometry(), util::getFillPaintsWithRect(node));
+    drawGeometry(shape->get_strokeGeometry(), util::getStrokePaintsWithRect(node));
   }
 
   if (util::isContainer(node)) {
