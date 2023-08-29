@@ -6,6 +6,7 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPaint.h"
+#include "include/core/SkPath.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkSurface.h"
@@ -40,7 +41,7 @@ public:
     void drawText(const TextNode *text);
 		void drawPage(PageNode *page);
 
-    void drawGeometry(const vector<Path> &geometry, const vector<PaintWithRect> &paints);
+    void drawGeometry(const vector<SkPath> &geometry, const vector<PaintWithRect> &paints);
 
 
 		void setWidth(int width);

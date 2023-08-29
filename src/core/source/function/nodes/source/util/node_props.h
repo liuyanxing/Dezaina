@@ -2,11 +2,15 @@
 
 #include "base_type.h"
 #include "desaina_node.h"
+#include "event_system/event_system.h"
+#include "include/core/SkPath.h"
 #include "include/core/SkRect.h"
 #include "node_type.h"
 #include "page.h"
 #include "skia.h"
 #include <optional>
+#include <utility>
+#include "text.h"
 
 struct PaintWithRect {
   SkPaint paint;
@@ -27,7 +31,7 @@ namespace util {
 
   inline vector<PaintWithRect> getFillPaintsWithRect(const Node* node) {
     vector<PaintWithRect> paintsWithRect;
-    if (util::isText(node)) {
+    if (util::isDefaultShapeNode(node)) {
       auto shape = static_cast<const DefaultShapeNode*>(node);
       const auto& [w, h] = shape->get_size();
 
@@ -35,9 +39,11 @@ namespace util {
       for (auto& paint : paints) {
         paintsWithRect.push_back({util::toSkPaint(paint), SkRect::MakeWH(w, h)});
       }
-    } else if (util::isDefaultShapeNode(node)) {
+    }
+    if (util::isText(node)) {
 
     }
+
     return paintsWithRect;
   }
 
@@ -53,4 +59,7 @@ namespace util {
     }
     return paintsWithRect;
   }
+
+  vector<SkPath> getGeometry(const TextNode* node, Desaina* desaina);
+  vector<SkPath> getGeometry(const Node* node, Desaina* desaina);
 }

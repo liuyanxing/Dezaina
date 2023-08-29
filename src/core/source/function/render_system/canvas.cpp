@@ -33,10 +33,9 @@ void Canvas::tick() {
   surface_->flush();
 }
 
-void Canvas::drawGeometry(const vector<Path> &geometry, const vector<PaintWithRect> &paintsWithRect) {
-  for (const auto& g : geometry) {
-    auto* geo = document_->getGeometry(g.commandsBlob);
-    const auto& path = geo->getPath();
+void Canvas::drawGeometry(const vector<SkPath> &geometry, const vector<PaintWithRect> &paintsWithRect) {
+  for (const auto& geo : geometry) {
+    const auto& path = geo;
     SkAutoCanvasRestore auto_save(canvas_, true);
     canvas_->clipPath(path, true);
     for (const auto& paintWithRect : paintsWithRect) {
@@ -47,37 +46,6 @@ void Canvas::drawGeometry(const vector<Path> &geometry, const vector<PaintWithRe
       canvas_->drawPaint(paintWithRect.paint);
     }
   }
-}
-
-void Canvas::drawText(const TextNode *text) {
-  SkPath path;
-  SkMatrix matrix;
-  const auto& textData = text->get_textData();
-  const auto& glyphs = textData.get_glyphs();
-  const auto& decorations = textData.get_decorations();
-  for (const auto& glyph : glyphs) {
-    auto fontSize = glyph.fontSize;
-    matrix.setScaleTranslate(fontSize, -fontSize, glyph.position.x, glyph.position.y);
-    const auto& glyphPath = document_->getGeometry(glyph.commandsBlob)->getPath();
-    path.addPath(glyphPath, matrix);
-  }
-
-  SkPath decorationPath;
-  for (const auto& decoration : decorations) {
-    const auto& rects = decoration.get_rects();
-    for (const auto& [x, y, w, h] : rects) {
-      decorationPath.addRect(SkRect::MakeXYWH(x, y, w, h));
-    }
-  }
-
-  path.addPath(decorationPath);
-
-  SkAutoCanvasRestore auto_save(canvas_, true);
-  canvas_->clipPath(path, true);
-  for (const auto& paint : text->get_fillPaints()) {
-    canvas_->drawPaint(util::toSkPaint(paint));
-  }
-
 }
 
 void Canvas::drawNode(const Node *node) {
@@ -94,15 +62,10 @@ void Canvas::drawNode(const Node *node) {
     canvas_->drawColor(util::toSkColor(color));
   }
 
-  if (util::isText(node)) {
-    drawText(static_cast<const TextNode*>(node));
-    return;
-  }
-
   if (util::isDefaultShapeNode(node)) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
-    drawGeometry(shape->get_fillGeometry(), util::getFillPaintsWithRect(node));
-    drawGeometry(shape->get_strokeGeometry(), util::getStrokePaintsWithRect(node));
+    drawGeometry(util::getGeometry(node, desaina_), util::getFillPaintsWithRect(node));
+    drawGeometry(util::getGeometry(node, desaina_), util::getStrokePaintsWithRect(node));
   }
 
   if (util::isContainer(node)) {
