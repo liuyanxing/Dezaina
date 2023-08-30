@@ -28,8 +28,14 @@ interface BaseFrameMixin extends
 interface DefaultFrameMixin extends BaseFrameMixin {
 }
 
-interface TextNodeMixin extends
+interface SubTextMixin extends
   DefaultShapeNode {
+    styleID: uint
     letterSpacing: Number
     lineHeight: Number
+  }
+
+
+interface TextNodeMixin extends
+  DefaultShapeNode {
   }

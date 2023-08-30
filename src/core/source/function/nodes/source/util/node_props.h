@@ -21,6 +21,12 @@ struct PaintWithRect {
   std::optional<SkRect > rect;
 };
 
+struct GeometryWithPaints {
+  vector<SkPath> geometry;
+  vector<PaintWithRect> paints;
+};
+
+
 namespace util {
   inline auto getTransfromMatrix(const Node* node) {
     if (util::isPage(node)) {
@@ -68,10 +74,6 @@ namespace util {
         paintsWithRect.push_back({util::toSkPaint(paint), SkRect::MakeWH(w, h)});
       }
     }
-    if (util::isText(node)) {
-
-    }
-
     return paintsWithRect;
   }
 
@@ -88,6 +90,7 @@ namespace util {
     return paintsWithRect;
   }
 
-  vector<SkPath> getGeometry(const TextNode* node, Desaina* desaina);
-  vector<SkPath> getGeometry(const Node* node, Desaina* desaina);
+  GeometryWithPaints getFillGeometryWithPaints(const TextNode* node, Desaina* desaina);
+  GeometryWithPaints getFillGeometryWithPaints(const Node* node, Desaina* desaina);
+  GeometryWithPaints getStrokeGeometryWithPaints(const Node* node, Desaina* desaina);
 }

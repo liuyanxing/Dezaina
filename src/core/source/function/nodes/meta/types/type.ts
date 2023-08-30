@@ -353,6 +353,7 @@ interface VectorData extends Struct {
 }
 
 interface Glyph extends Struct {
+  styleID: uint
   commandsBlob: uint
   position: Vector
   fontSize: float
@@ -367,7 +368,7 @@ interface Buffer extends CustomType {
   type: byte | ''
   applyChange: byte | `
 template <>
-inline void applyChangeImpl<Buffer, const kiwi::Array<Desaina_Kiwi::NodeChange>>(Buffer& value, const kiwi::Array<Desaina_Kiwi::NodeChange>& change) {
+inline void applyChangeImpl<Buffer, kiwi::Array<Desaina_Kiwi::NodeChange>>(Buffer& value, const kiwi::Array<Desaina_Kiwi::NodeChange>& change) {
   kiwi::ByteBuffer _bb;
   _bb.writeVarUint(change.size());
   for (auto &_it : change) {
@@ -378,10 +379,21 @@ inline void applyChangeImpl<Buffer, const kiwi::Array<Desaina_Kiwi::NodeChange>>
   `
 }
 
+interface Baseline extends Struct {
+  position: Vector,
+  width: float,
+  lineY: float,
+  lineHeight: float,
+  lineAscent: float,
+  firstCharacter: uint,
+  endCharacter: uint,
+}
+
 interface TextData {
   characters: string
   styleOverrideTable: Buffer 
   layoutSize: Vector
+  baselines: IArray<Baseline>
   glyphs: IArray<Glyph>
   decorations: IArray<Decoration>
 }

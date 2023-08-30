@@ -33,12 +33,12 @@ void Canvas::tick() {
   surface_->flush();
 }
 
-void Canvas::drawGeometry(const vector<SkPath> &geometry, const vector<PaintWithRect> &paintsWithRect) {
-  for (const auto& geo : geometry) {
+void Canvas::drawGeometry(const GeometryWithPaints& geometryWithPaints) {
+  for (const auto& geo : geometryWithPaints.geometry) {
     const auto& path = geo;
     SkAutoCanvasRestore auto_save(canvas_, true);
     canvas_->clipPath(path, true);
-    for (const auto& paintWithRect : paintsWithRect) {
+    for (const auto& paintWithRect : geometryWithPaints.paints) {
       SkAutoCanvasRestore auto_save(canvas_, true);
       if (paintWithRect.rect.has_value()) {
         canvas_->clipRect(paintWithRect.rect.value(), true);
@@ -64,8 +64,8 @@ void Canvas::drawNode(const Node *node) {
 
   if (util::isDefaultShapeNode(node)) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
-    drawGeometry(util::getGeometry(node, desaina_), util::getFillPaintsWithRect(node));
-    drawGeometry(util::getGeometry(node, desaina_), util::getStrokePaintsWithRect(node));
+    drawGeometry(util::getFillGeometryWithPaints(shape, desaina_));
+    drawGeometry(util::getStrokeGeometryWithPaints(shape, desaina_));
   }
 
   if (util::isContainer(node)) {

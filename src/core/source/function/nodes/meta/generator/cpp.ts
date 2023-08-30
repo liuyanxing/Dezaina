@@ -1,8 +1,7 @@
 import Mustache from "mustache";
 import { writeFileSync } from "fs";
 import { DDeclaraction, DeclaractionType, DEnum, DInterface } from "./types";
-import { execSync } from "child_process";
-import { desainaHppFileName, desainaSourceFileName, outDir, schemaFilePath, schemaHppFileName } from "../const";
+import { desainaHppFileName, desainaSourceFileName, outDir } from "../const";
 import { remvoeMark } from "./util";
 import path from "path";
 
