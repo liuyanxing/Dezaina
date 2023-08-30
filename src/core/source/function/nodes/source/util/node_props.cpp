@@ -11,8 +11,7 @@
 #include <stdint.h>
 
 namespace util {
-  GeometryWithPaints getFillGeometryWithPaints(const TextNode* node, Desaina* desaina) {
-    GeometryWithPaints geometryWithPaints;
+  void getFillGeometryWithPaints(const TextNode* node, GeometryWithPaints& geometryWithPaints, Desaina* desaina) {
     geometryWithPaints.geometry.emplace_back();
     SkPath& path = geometryWithPaints.geometry.back();
     auto& paintsWithRect = geometryWithPaints.paints;
@@ -40,33 +39,46 @@ namespace util {
       map[styleID] = std::move(subText);
     }
 
-    uint32_t lastStyleID = -1;
-    uint32_t lastBaseLine = -1;
+    int32_t lastStyleID = -1;
     std::optional<vector<SkPaint>> lastPaint;
     std::optional<SkRect> rect;
-    uint32_t curBaseline = 0;
+    int32_t curBaseline = -1;
+    Baseline baseline{};
 
-    for (int i = 0; i < glyphs.size(); i++) {
-      auto baseline = baselines[curBaseline];
-      if (i > baseline.endCharacter) {
-        curBaseline++;
-        baseline = baselines[curBaseline];
-      }
-      auto lineAscentPosition = baseline.position.y - baseline.lineAscent;
-      auto lineDescentPosition = baseline.position.y + baseline.lineHeight - baseline.lineAscent;
-
-      auto& glyph = glyphs[i];
-      auto fontSize = glyph.fontSize;
-      auto advance = glyph.advance * fontSize;
-      auto styleID = glyph.styleID;
-      auto glyphRect = SkRect::MakeLTRB(glyph.position.x, lineAscentPosition, advance, lineDescentPosition);
-
-      if (lastStyleID != styleID) {
+    auto addPaintsWithRect = [&lastPaint, &rect, &paintsWithRect]() {
         if (rect.has_value() && lastPaint.has_value()) {
           for (auto paint : lastPaint.value()) {
             paintsWithRect.push_back({paint, rect.value()});
           }
+          lastPaint = std::nullopt;
         }
+    };
+
+    float lineAscentPosition = 0;
+    float lineDescentPosition = 0;
+
+    for (int i = 0; i < glyphs.size(); i++) {
+      auto& glyph = glyphs[i];
+      if (curBaseline == -1 || glyph.position.y != baseline.position.y) {
+        addPaintsWithRect();
+        curBaseline++;
+        baseline = baselines[curBaseline];
+        lineAscentPosition = baseline.position.y - baseline.lineAscent;
+        lineDescentPosition = baseline.position.y + baseline.lineHeight - baseline.lineAscent;
+        const auto [x, y] = baseline.position;
+        path.addRect(SkRect::MakeLTRB(x, y - 2, x + baseline.width, y));
+        rect = std::nullopt;
+        lastPaint = std::nullopt;
+        lastStyleID = -1;
+      }
+
+      auto fontSize = glyph.fontSize;
+      auto advance = glyph.advance * fontSize;
+      auto styleID = glyph.styleID;
+      auto glyphRect = SkRect::MakeLTRB(glyph.position.x, lineAscentPosition, glyph.position.x + advance, lineDescentPosition);
+
+      if (lastStyleID != styleID) {
+        addPaintsWithRect();
         rect = glyphRect;
         auto& styleOverride = map[styleID]; 
         if (auto& paints = styleOverride.get_fillPaints(); paints.size() > 0) {
@@ -85,6 +97,7 @@ namespace util {
 
       lastStyleID = styleID;
     }
+    addPaintsWithRect();
 
     SkPath decorationPath;
     for (const auto& decoration : decorations) {
@@ -95,26 +108,25 @@ namespace util {
     }
 
     path.addPath(decorationPath);
-
-    return geometryWithPaints;
   }
 
   GeometryWithPaints getFillGeometryWithPaints(const Node* node, Desaina* desaina) {
-    if (util::isText(node)) {
-      return getFillGeometryWithPaints(static_cast<const TextNode*>(node), desaina);
-    }
-
     GeometryWithPaints geometryWithPaints;
     auto& paths = geometryWithPaints.geometry;
-    auto& paintsWithRect = geometryWithPaints.paints;
 
     if (util::isDefaultShapeNode(node)) {
       auto shape = static_cast<const DefaultShapeNode*>(node);
+      geometryWithPaints.paints = getFillPaintsWithRect(node);
+    
+      if (util::isText(node)) {
+        getFillGeometryWithPaints(static_cast<const TextNode*>(node), geometryWithPaints, desaina);
+        return geometryWithPaints;
+      }
+    
       const auto& geometry = shape->get_fillGeometry();
       for (const auto& geo : geometry) {
         paths.push_back(desaina->document.getGeometry(geo.commandsBlob)->getPath());
       }
-      paintsWithRect = getFillPaintsWithRect(node);
     }
     return geometryWithPaints;
   }

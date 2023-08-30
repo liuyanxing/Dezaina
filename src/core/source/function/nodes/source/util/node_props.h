@@ -90,7 +90,7 @@ namespace util {
     return paintsWithRect;
   }
 
-  GeometryWithPaints getFillGeometryWithPaints(const TextNode* node, Desaina* desaina);
+  void getFillGeometryWithPaints(const TextNode* node, GeometryWithPaints&, Desaina* desaina);
   GeometryWithPaints getFillGeometryWithPaints(const Node* node, Desaina* desaina);
   GeometryWithPaints getStrokeGeometryWithPaints(const Node* node, Desaina* desaina);
 }
