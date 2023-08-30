@@ -7,11 +7,12 @@
 - [x] page background color
 - [x] blob
 - [x] vector
+- [ ] selection
 - [ ] pan and scale
-- [ ] group
 - [ ] symbol 
 - [ ] section 
-- [ ] text
+- [x] group
+- [x] text
 
 - [ ] layer blend
 - [ ] blur
