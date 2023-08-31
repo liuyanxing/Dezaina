@@ -2,6 +2,7 @@
 
 #include "base_type.h"
 #include "desaina_node.h"
+#include "document.h"
 #include "event_system/event_system.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPath.h"
@@ -89,8 +90,13 @@ namespace util {
     }
     return paintsWithRect;
   }
+  inline auto getParent(Node* node, Document* document) {
+    auto parent = document->getNodeById(node->get_parentIndex().guid);
+    return parent;
+  }
 
   void getFillGeometryWithPaints(const TextNode* node, GeometryWithPaints&, Desaina* desaina);
   GeometryWithPaints getFillGeometryWithPaints(const Node* node, Desaina* desaina);
   GeometryWithPaints getStrokeGeometryWithPaints(const Node* node, Desaina* desaina);
+  Geometry getHoverGeometry(const Node* node, Desaina* desaina);
 }

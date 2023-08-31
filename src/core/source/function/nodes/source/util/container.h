@@ -1,7 +1,10 @@
 #include "base_type.h"
 
+#include "container_node_base.h"
 #include "document.h"
+#include "frame.h"
 #include "node_type.h"
+#include "page.h"
 
 using NodeChildren = vector<Node*>;
 namespace util {
@@ -41,6 +44,21 @@ namespace util {
     }
     else if (util::isFrame(node)) {
       return node;
+    }
+    else {
+      assert(false);
+    }
+  }
+
+  inline ContainerNodeBase* getContainer(Node* node) {
+    if (util::isDocument(node)) {
+      return static_cast<ContainerNodeBase*>(static_cast<Document*>(node));
+    }
+    else if (util::isPage(node)) {
+      return static_cast<ContainerNodeBase*>(static_cast<PageNode*>(node));
+    }
+    else if (util::isFrame(node)) {
+      return static_cast<ContainerNodeBase*>(static_cast<FrameNode*>(node));
     }
     else {
       assert(false);

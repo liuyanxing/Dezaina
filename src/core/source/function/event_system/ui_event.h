@@ -14,8 +14,8 @@ struct UIEvent : public Event {
   float windowHeight;
   float windowX;
   float windowY;
-  float mouseDeltaX;
-  float mouseDeltaY;
+  float deltaX;
+  float deltaY;
   float devicePixelRatio;
 };
 
@@ -39,7 +39,6 @@ class UIEvent::Builder : public Event::Builder {
       event_ = event;
       return *this;
     };
-
     Builder& setX(int x) {
       event_->x = x;
       return *this;
@@ -48,12 +47,20 @@ class UIEvent::Builder : public Event::Builder {
       event_->y = y;
       return *this;
     };
+    Builder& setClientX(int clientX) {
+      event_->clientX = clientX;
+      return *this;
+    };
+    Builder& setClientY(int clientY) {
+      event_->clientY = clientY;
+      return *this;
+    };
     Builder& setMouseDeltaX(int deltaX) {
-      event_->mouseDeltaX = deltaX;
+      event_->deltaX = deltaX;
       return *this;
     };
     Builder& setMouseDeltaY(int deltaY) {
-      event_->mouseDeltaY = deltaY;
+      event_->deltaY = deltaY;
       return *this;
     };
     

@@ -9,8 +9,8 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
   if (!desaina.document.isLoaded()) {
     return;
   }
-  int mouse_pos_x, mouse_pos_y;
-  SDL_GetMouseState(&mouse_pos_x, &mouse_pos_y);
+  int mouseX, mouseY;
+  SDL_GetMouseState(&mouseX, &mouseY);
 
   auto type = event.type;
   
@@ -29,7 +29,13 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
   } else if (type == SDL_MOUSEBUTTONUP) {
     std::cout << "mouse up" << std::endl;
   } else if (type == SDL_MOUSEMOTION) {
-    std::cout << "mouse move" << std::endl;
+    desaina.eventSystem.dispatchMouseEvent(
+      mouseX,
+      mouseY,
+      EventType::kMouseMove,
+      0,
+      0
+    );
   } else if (type == SDL_MULTIGESTURE) {
     std::cout << "gesture" << std::endl;
     if (fabs(event.mgesture.dDist) > 0.001) {

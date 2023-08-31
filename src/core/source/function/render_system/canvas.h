@@ -2,6 +2,7 @@
 
 #include "desaina_node.h"
 #include "document.h"
+#include "event_system/mouse_event.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkMatrix.h"
@@ -43,7 +44,7 @@ public:
 
     void drawGeometry(const GeometryWithPaints& geometryWithPaints);
 
-
+		void drawHoverNode();
 		void setWidth(int width);
 		void setHeight(int height);
 		void setBuffer(void *buffer);
@@ -51,6 +52,8 @@ public:
 		int width() const;
 		int height() const;
 		void *buffer() const;
+
+    void drawMouseEvents(MouseEvent* event);
 
 		void clear();
 		void tick();

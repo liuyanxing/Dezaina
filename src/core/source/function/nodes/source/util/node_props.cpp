@@ -146,5 +146,17 @@ namespace util {
     }
     return geometryWithPaints;
   }
+
+  Geometry getHoverGeometry(const Node* node, Desaina* desaina) {
+    Geometry geometry;
+    if (util::isDefaultShapeNode(node)) {
+      if (util::isText(node)) {
+      }
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      const auto& geo = shape->get_fillGeometry().back();
+      geometry.path = desaina->document.getGeometry(geo.commandsBlob)->getPath();
+    }
+    return geometry;
+  }
 }
 

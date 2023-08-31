@@ -18,14 +18,18 @@ void ViewPortSystem::bindEvents() {
     float center_y = height_ * devicePixelRatio_ / 2.;
     projection_matrix_.setScale(devicePixelRatio_, devicePixelRatio_, -center_x, -center_y);
     view_projection_matrix_ = projection_matrix_ * view_matrix_ ;
+
+    world_screen_matrix_ = view_projection_matrix_;
+    world_screen_matrix_.postScale(1 / devicePixelRatio_, 1 / devicePixelRatio_);
+
     auto e = Event::Builder(EventType::kViewPortChange).build();
     emit(e);
   });
 
   addEventListener(EventType::kMouseWheel, [this](Event* event) {
 		auto mouseEvent = static_cast<MouseEvent*>(event);
-		auto x = mouseEvent->x;
-		auto y = mouseEvent->y;
+		auto x = mouseEvent->deltaX;
+		auto y = mouseEvent->deltaY;
     std::cout << "mouse wheel: " << x << " " << y << std::endl;
     view_matrix_.preTranslate(-x * 5, y * 5);
     view_projection_matrix_ = projection_matrix_ * view_matrix_ ;

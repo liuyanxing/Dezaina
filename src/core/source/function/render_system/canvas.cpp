@@ -18,6 +18,7 @@
 #include "node_type.h"
 #include "util/skia.h"
 #include "util/node_props.h"
+#include "util/node_geometry.h"
 
 #include <iostream>
 
@@ -29,6 +30,7 @@ void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
     canvas_->setMatrix(desaina_->viewPortSystem.getProjectionMatrix());
     drawNode(document_->getCurrentPage());
+    drawHoverNode();
   }
   surface_->flush();
 }
@@ -80,3 +82,26 @@ void Canvas::drawNode(const Node *node) {
 void Canvas::clear() {
 	canvas_->clear(SK_ColorRED);
 }
+
+void Canvas::drawHoverNode() {
+  const auto hoverNodes = desaina_->selectSystem.getHoverNodes();
+  if (hoverNodes.empty()) {
+    return;
+  }
+  auto* hoverNode = hoverNodes.back();
+  SkAutoCanvasRestore auto_save(canvas_, true);
+  canvas_->concat(util::getWorldMatrix(hoverNode, document_));
+  if (util::isDefaultShapeNode(hoverNode)) {
+    auto shape = static_cast<const DefaultShapeNode*>(hoverNode);
+    auto geometry = util::getHoverGeometry(shape, desaina_);
+    SkPaint paint;
+    paint.setColor(SK_ColorRED);
+    paint.setStyle(SkPaint::kStroke_Style);
+    paint.setStrokeWidth(1);
+    canvas_->drawPath(geometry.path, paint);
+  }
+}
+
+void Canvas::drawMouseEvents(MouseEvent* event) {
+}
+
