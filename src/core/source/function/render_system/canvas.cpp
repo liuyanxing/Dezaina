@@ -84,11 +84,10 @@ void Canvas::clear() {
 }
 
 void Canvas::drawHoverNode() {
-  const auto hoverNodes = desaina_->selectSystem.getHoverNodes();
-  if (hoverNodes.empty()) {
+  const auto hoverNode = desaina_->selectSystem.getHoverNode();
+  if (hoverNode == nullptr) {
     return;
   }
-  auto* hoverNode = hoverNodes.back();
   SkAutoCanvasRestore auto_save(canvas_, true);
   canvas_->concat(util::getWorldMatrix(hoverNode, document_));
   if (util::isDefaultShapeNode(hoverNode)) {

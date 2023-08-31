@@ -22,7 +22,7 @@ namespace util {
     auto rect = SkRect::MakeIWH(size.width(), size.height());
     return rect.contains(x, y);
   }
-  inline auto getWorldMatrix(Node* node, Document* document) {
+  inline auto getWorldMatrix(const Node* node, Document* document) {
     auto matrix = util::getTransfromMatrix(node);
     auto parent = util::getParent(node, document);
     while (parent.has_value()) {

@@ -91,7 +91,7 @@ namespace util {
     }
     return paintsWithRect;
   }
-  inline auto getParent(Node* node, Document* document) {
+  inline auto getParent(const Node* node, Document* document) {
     auto parent = document->getNodeById(node->get_parentIndex().guid);
     return parent;
   }

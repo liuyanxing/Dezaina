@@ -10,9 +10,9 @@ public:
     buildEvents();
   }
 	void tick() override {}
-  vector<Node* > getHoverNodes() const;
+  Node* getHoverNode() const;
 private:
 	void buildEvents();
-	vector<Node*> hover_nodes_;
+	Node* hover_node_ = nullptr;
 	Desaina* desaina_;
 };
