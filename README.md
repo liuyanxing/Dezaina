@@ -7,9 +7,10 @@
 - [x] page background color
 - [x] blob
 - [x] vector
+- [ ] hover
+- [ ] symbol 
 - [ ] selection
 - [ ] pan and scale
-- [ ] symbol 
 - [ ] section 
 - [x] group
 - [x] text

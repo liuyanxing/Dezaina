@@ -13,6 +13,7 @@
 #include "skia.h"
 #include <optional>
 #include <stdint.h>
+#include <string>
 #include <unordered_map>
 #include <utility>
 #include "text.h"
@@ -93,6 +94,11 @@ namespace util {
   inline auto getParent(Node* node, Document* document) {
     auto parent = document->getNodeById(node->get_parentIndex().guid);
     return parent;
+  }
+
+  inline string idToString(Node *node) {
+    const auto& id = node->get_guid();
+    return std::to_string(id.sessionID) + ":" + std::to_string(id.localID);
   }
 
   void getFillGeometryWithPaints(const TextNode* node, GeometryWithPaints&, Desaina* desaina);
