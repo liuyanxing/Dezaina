@@ -3,6 +3,8 @@
 #include "desaina_node.h"
 
 using Node = BaseNodeMixin;
+using NodeChange = Desaina_Kiwi::NodeChange;
+using kiwiPool = kiwi::MemoryPool;
 
 namespace util {
 	inline bool isDocument(const Node* node) {

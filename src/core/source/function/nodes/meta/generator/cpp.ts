@@ -82,6 +82,7 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
     const members = item.members.map((member) => {
       let type = member.type;
       const customType = findCustomType(type as string);
+      const needKiwiType = member.isEnum || member.isComplexType;
       if (member.isPointer) {
         type = type + "*";
       }
@@ -100,7 +101,7 @@ export function genCppHeader(declars: DDeclaraction[], mixinedInterfaces: DDecla
           toChanges.add(toChange.defaultValue as string);
         }
       }
-      return { ...member, type, typeInArray: member.type };
+      return { ...member, type, typeInArray: member.type, needKiwiType };
     });
     const propsMembers = members.filter((member) => !member.isFunction);
     const funcMembers = members.filter((member) => member.isFunction);

@@ -23,18 +23,18 @@ void applyChangeImpl(T& value, const C& change) {
   }
 }
 
-template<typename F, typename T, typename K>
-void toChangeImpl(const F& setChange, const T& value, kiwi::MemoryPool& pool) {
+template<typename O, typename T, typename Arg>
+void toChangeImpl(O* obj, void (O::*setChangeFunc)(Arg), const T& value, kiwi::MemoryPool& pool) {
   if constexpr (std::is_enum_v<T>) {
-    return setChange(static_cast<K>(value));
+    return (obj->*setChangeFunc)((Arg)(value));
   } else if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T>) {
-    setChange(value);
+    (obj->*setChangeFunc)(value);
   } else if constexpr (is_string<T>()) {
-    setChange(kiwi::String(value.c_str()));
+    (obj->*setChangeFunc)(kiwi::String(value.c_str()));
   } else {
-		auto* change = pool.allocate<K>();
+		auto* change = pool.allocate<std::remove_pointer_t<Arg>>();
     value.toChange(*change, pool);
-    return change;
+    (obj->*setChangeFunc)(change);
   }
 }
 

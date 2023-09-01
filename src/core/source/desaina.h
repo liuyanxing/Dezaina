@@ -13,6 +13,7 @@
 #include "render_system/render_system.h"
 #include "system/system.h"
 #include "viewport_system/viewport_system.h"
+#include "action_system/action_system.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -75,6 +76,7 @@ class Desaina {
 		RenderSystem renderSystem{this};
 		ViewPortSystem viewPortSystem{this};
     SelectSystem selectSystem{this};
+  	ActionSystem actionSystem{};
 	private:
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;

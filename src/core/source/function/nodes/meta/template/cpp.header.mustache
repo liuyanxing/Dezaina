@@ -35,7 +35,20 @@ void applyChange(const Desaina_Kiwi::{{kiwiChangeType}}& change) {
 {{/propsMembers}}
 }
 
-void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) {}
+void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) const {
+{{#propsMembers}}
+  toChangeImpl(&change, &Desaina_Kiwi::{{kiwiChangeType}}::set_{{name}}, {{name}}, pool);
+{{/propsMembers}}
+}
+
+auto* toChange(kiwi::MemoryPool& pool) const {
+  auto* change = pool.allocate<Desaina_Kiwi::{{kiwiChangeType}}>();
+{{#propsMembers}}
+  toChange(*change, pool);
+{{/propsMembers}}
+  return change;
+}
+
 };
 {{/structs}}
 

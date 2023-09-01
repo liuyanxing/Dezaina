@@ -4,5 +4,6 @@
 
 class System: public EventEmitter {
 public:
+  virtual ~System() = default;
   virtual void tick() {};
 };
