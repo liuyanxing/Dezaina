@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base_type.h"
+#include "desaina_node.h"
 #include "event_system/event_system.h"
 #include "system/system.h"
 
@@ -11,8 +12,13 @@ public:
   }
 	void tick() override {}
   Node* getHoverNode() const;
+  vector<Node*> getSelectedNodes() const;
+	
 private:
 	void buildEvents();
-	Node* hover_node_ = nullptr;
+	void handleMouseMove(Event* event);
+	void handleMouseDown(Event* event);
+  vector<GUID> selected_node_id_{};
+  std::optional<GUID> hovered_node_id_ = std::nullopt;
 	Desaina* desaina_;
 };

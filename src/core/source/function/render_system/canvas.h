@@ -44,7 +44,9 @@ public:
 
     void drawGeometry(const GeometryWithPaints& geometryWithPaints);
 
+		void drawHoverSelectionNode();
 		void drawHoverNode();
+		void drawSelectionNode();
 		void setWidth(int width);
 		void setHeight(int height);
 		void setBuffer(void *buffer);

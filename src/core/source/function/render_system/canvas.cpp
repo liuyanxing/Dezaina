@@ -30,7 +30,7 @@ void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
     canvas_->setMatrix(desaina_->viewPortSystem.getProjectionMatrix());
     drawNode(document_->getCurrentPage());
-    drawHoverNode();
+    drawHoverSelectionNode();
   }
   surface_->flush();
 }
@@ -83,6 +83,11 @@ void Canvas::clear() {
 	canvas_->clear(SK_ColorRED);
 }
 
+void Canvas::drawHoverSelectionNode() {
+  drawHoverNode();
+  drawSelectionNode();
+}
+
 void Canvas::drawHoverNode() {
   const auto hoverNode = desaina_->selectSystem.getHoverNode();
   if (hoverNode == nullptr) {
@@ -99,6 +104,9 @@ void Canvas::drawHoverNode() {
     paint.setStrokeWidth(1);
     canvas_->drawPath(geometry.path, paint);
   }
+}
+
+void Canvas::drawSelectionNode() {
 }
 
 void Canvas::drawMouseEvents(MouseEvent* event) {
