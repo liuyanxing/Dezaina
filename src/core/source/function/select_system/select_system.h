@@ -11,14 +11,10 @@ public:
     buildEvents();
   }
 	void tick() override {}
-  Node* getHoverNode() const;
-  vector<Node*> getSelectedNodes() const;
 	
 private:
 	void buildEvents();
 	void handleMouseMove(Event* event);
 	void handleMouseDown(Event* event);
-  vector<GUID> selected_node_id_{};
-  std::optional<GUID> hovered_node_id_ = std::nullopt;
 	Desaina* desaina_;
 };

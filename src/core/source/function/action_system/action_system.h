@@ -11,7 +11,7 @@ class ActionSystem : public System {
   ActionSystem() {};
   ~ActionSystem() = default;
   void tick() override {};
-  void addAction(const ActionPtr& action) { actions_.push_back(action); };
+  void addAction(ActionPtr&& action) { actions_.push_back(std::move(action)); };
   const vector<ActionPtr>& getActions() const { return actions_; };
   void clearActions() { actions_.clear(); };
   

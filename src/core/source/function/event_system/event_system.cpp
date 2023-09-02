@@ -1,4 +1,5 @@
 #include "desaina.h"
+#include "event_system/event.h"
 #include "event_system/event_system.h"
 #include "event_system/mouse_event.h"
 #include "event_system/ui_event.h"
@@ -38,12 +39,21 @@ void EventSystem::dispatchMouseEvent(float x, float y, EventType type, int butto
       builder.setClientX(x);
       builder.setClientY(y);
     }
+  
     builder.setButton(button);
     builder.setButtons(buttons);
     auto event = builder.build();
+  
+    if (type == EventType::kMouseMove && lastMouseEvent_.has_value()) {
+      auto lastType = lastMouseEvent_->type;
+      if (lastType == EventType::kMouseDown || lastType == EventType::kMouseDrag) {
+        event.type = EventType::kMouseDrag;
+      }
+    }
+  
     auto* e = new MouseEvent(event);
     dispatchUIEvent(*e);
-    lastMouseEvent_ = event;
+    lastMouseEvent_ = *e;
 }
 
 void EventSystem::dispatchWindowResizeEvent(int width, int height, float devicePixelRatio) {

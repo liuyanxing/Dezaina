@@ -6,12 +6,11 @@
 
 enum class PropertyType  {
   kNone,
-  kX,
-  kY,
+  kTransform,
   kSize,
   kRotation,
 };
-using PropertyValue = variant<float, int, Vector>;
+using PropertyValue = variant<float, int, Vector, Matrix>;
 
 struct UpdatePropertiesAction : public Action {
   UpdatePropertiesAction(GUID id, const PropertyType& property_type, const PropertyValue& property_value) : 

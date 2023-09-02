@@ -89,7 +89,7 @@ void Canvas::drawHoverSelectionNode() {
 }
 
 void Canvas::drawHoverNode() {
-  const auto hoverNode = desaina_->selectSystem.getHoverNode();
+  const auto hoverNode = desaina_->document.getHoverNode();
   if (hoverNode == nullptr) {
     return;
   }

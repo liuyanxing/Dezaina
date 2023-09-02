@@ -13,42 +13,64 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
   SDL_GetMouseState(&mouseX, &mouseY);
 
   auto type = event.type;
-  
-  if (type == SDL_MOUSEWHEEL) {
-    auto deltaX = event.wheel.x;
-    auto deltaY = event.wheel.y;
-    desaina.eventSystem.dispatchMouseEvent(
-      deltaX,
-      deltaY,
-      EventType::kMouseWheel,
-      0,
-      0
-    );
-  } else if (type == SDL_MOUSEBUTTONDOWN) {
-    std::cout << "mouse down" << std::endl;
-  } else if (type == SDL_MOUSEBUTTONUP) {
-    std::cout << "mouse up" << std::endl;
-  } else if (type == SDL_MOUSEMOTION) {
-    desaina.eventSystem.dispatchMouseEvent(
-      mouseX,
-      mouseY,
-      EventType::kMouseMove,
-      0,
-      0
-    );
-  } else if (type == SDL_MULTIGESTURE) {
-    std::cout << "gesture" << std::endl;
-    if (fabs(event.mgesture.dDist) > 0.001) {
-      std::cout << "pinch: " << event.mgesture.dDist << std::endl;
+
+  switch (type) {
+    case SDL_MOUSEWHEEL: {
+      auto deltaX = event.wheel.x;
+      auto deltaY = event.wheel.y;
       desaina.eventSystem.dispatchMouseEvent(
-        event.mgesture.dDist,
-        0,
+        deltaX,
+        deltaY,
         EventType::kMouseWheel,
         0,
         0
       );
+      break;
     }
-  } else {
-    std::cout << "mouse event: " << type << std::endl;
+    case SDL_MOUSEBUTTONDOWN: {
+      desaina.eventSystem.dispatchMouseEvent(
+        mouseX,
+        mouseY,
+        EventType::kMouseDown,
+        0,
+        0
+      );
+      break;
+    }
+    case SDL_MOUSEBUTTONUP: {
+      desaina.eventSystem.dispatchMouseEvent(
+        mouseX,
+        mouseY,
+        EventType::kMouseUp,
+        0,
+        0
+      );
+      break;
+    }
+    case SDL_MOUSEMOTION: {
+      desaina.eventSystem.dispatchMouseEvent(
+        mouseX,
+        mouseY,
+        EventType::kMouseMove,
+        0,
+        0
+      );
+      break;
+    }
+    case SDL_MULTIGESTURE: {
+      std::cout << "gesture" << std::endl;
+      if (fabs(event.mgesture.dDist) > 0.001) {
+        std::cout << "pinch: " << event.mgesture.dDist << std::endl;
+        desaina.eventSystem.dispatchMouseEvent(
+          event.mgesture.dDist,
+          0,
+          EventType::kMouseWheel,
+          0,
+          0
+        );
+      }
+      break;
+    }
   }
+  
 }

@@ -11,7 +11,7 @@ void Document::buildDocTree() {
 		}
 
 		const auto parentId = node->get_parentIndex().guid;
-		auto parentNodeOrNull = getValueFromMap(idNodeMap_, parentId);
+		auto parentNodeOrNull = getNodeById(parentId);
 		if (parentNodeOrNull.has_value()) {
 			auto parentNode = parentNodeOrNull.value();
 			util::appendChild(parentNode, node);
@@ -68,3 +68,21 @@ void Document::onEvents(Event *event) {
 
 void Document::close() {}
 
+Node* Document::getHoverNode() const {
+	if (!hover_node_id_.has_value()) {
+		return nullptr;
+	}
+	return getNodeById(hover_node_id_.value()).value();
+};
+
+vector<Node*> Document::getSelectedNodes() const {
+  vector<Node*> nodes;
+  for (const auto& id : selectedNodes_) {
+    auto node = getNodeById(id);
+    if (node.has_value()) {
+      nodes.push_back(node.value());
+    }
+  }
+  return nodes;
+};
+ 

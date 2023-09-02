@@ -79,8 +79,12 @@ public:
 		return createNode<T>(id);
 	};
 
-	std::optional<Node*> getNodeById(GUID id) {
-		return getValueFromMap(idNodeMap_, id);
+	std::optional<Node*> getNodeById(GUID id) const {
+    auto it = idNodeMap_.find(id);
+    if (it == idNodeMap_.end()) {
+      return std::nullopt;
+    }
+    return it->second;
 	}
 
 	void iterateNode(Node* node, std::function<bool(Node*)> func);
@@ -109,28 +113,9 @@ public:
   void bindEvents();
   void onEvents(Event* event);
   
-  void setHoverNode(Node* node) {
-    hoverNode_ = node;
-  }
-
-  Node* getHoverNode() {
-    return hoverNode_;
-  }
-
-  void addSelectedNode(Node* node) {
-    selectedNodes_.push_back(node);
-    if (!editor_ || !editor_->isNodeEditor()) {
-      editor_ = std::make_unique<NodeEditor>(this);
-    }
-  }
-
-  const std::vector<Node*>* getSelectedNodes() {
-    return &selectedNodes_;
-  }
 
   void clearSelectedNodes() {
     selectedNodes_.clear();
-    editor_ = nullptr;
   }
 
   void appendGeometryByBlob(const DataSharedPtr& blob) {
@@ -153,6 +138,22 @@ public:
     return currentPage_;
   }
 
+  Node* getHoverNode() const;
+  void setHoverNode(Node* node) {
+    if (node == nullptr) {
+      hover_node_id_ = std::nullopt;
+      return;
+    }
+    hover_node_id_ = node->get_guid();
+  }
+  void setSelectedNodes(const vector<Node*>& ids) {
+    selectedNodes_.clear();
+    for (auto node : ids) {
+      selectedNodes_.push_back(node->get_guid());
+    }
+  }
+  vector<Node*> getSelectedNodes() const;
+  
 private:
 	bool isLoaded_ = false;
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
@@ -160,7 +161,10 @@ private:
 	Services* services_;
   std::unique_ptr<Editor> editor_ = nullptr;
   PageNode* currentPage_ = nullptr;
-  Node* hoverNode_ = nullptr;
-  vector<Node*> selectedNodes_{};
+  std::optional<GUID>hover_node_id_{};
+  vector<GUID> selectedNodes_{};
   vector<Geometry> geometries_{};
+  
+  vector<GUID> selected_node_id_{};
+  std::optional<GUID> hovered_node_id_ = std::nullopt;
 };

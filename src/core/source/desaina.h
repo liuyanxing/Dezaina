@@ -3,6 +3,7 @@
 #include "base_type.h"
 #include "desaina_node.h"
 #include "document.h"
+#include "edit_system/edit_system.h"
 #include "kiwi.h"
 #include <memory>
 #include <stdint.h>
@@ -14,6 +15,8 @@
 #include "system/system.h"
 #include "viewport_system/viewport_system.h"
 #include "action_system/action_system.h"
+#include "change_system/change_system.h"
+#include "edit_system/edit_system.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -39,6 +42,7 @@ class Desaina {
 		~Desaina() = default;
 		void tick();
 		bool processMessage(kiwi::ByteBuffer& buffer);
+		bool processMessage(const Desaina_Kiwi::Message& message);
 		void applyNodeChanges(const Desaina_Kiwi::Message& message);
 		void applyNodeChange(const Desaina_Kiwi::NodeChange& node_change);
 
@@ -77,6 +81,8 @@ class Desaina {
 		ViewPortSystem viewPortSystem{this};
     SelectSystem selectSystem{this};
   	ActionSystem actionSystem{};
+  	ChangeSystem changeSystem{this};
+    EditSystem editSystem{this};
 	private:
 		uint32_t sessionId_ = 0;
     vector<DataSharedPtr> blobs_;

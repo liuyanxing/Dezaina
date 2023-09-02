@@ -30,6 +30,11 @@ bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
 	if (!decode_success) {
 		return false;
 	}
+	processMessage(message);
+	return true;
+}
+
+bool Desaina::processMessage(const Desaina_Kiwi::Message& message) {
 	auto type = message.type();
 	if (type == nullptr) {
 		return false;
@@ -43,9 +48,11 @@ bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
 		default:
 			break;
 	}
-  auto blobs = *message.blobs();
-  for (auto& blob : blobs) {
-    document.appendGeometryByBlob(decodeGeometryBlob(blob));
+  if (auto* blobPtr = message.blobs()) {
+    auto& blobs = *blobPtr;
+    for (auto& blob : blobs) {
+      document.appendGeometryByBlob(decodeGeometryBlob(blob));
+    }
   }
 	return true;
 }
@@ -136,7 +143,9 @@ void Desaina::addSystems() {
 	systems_.push_back(&eventSystem);
   systems_.push_back(&viewPortSystem);
   systems_.push_back(&selectSystem);
+  systems_.push_back(&editSystem);
   systems_.push_back(&actionSystem);
+  systems_.push_back(&changeSystem);
   systems_.push_back(&renderSystem);
 }
 

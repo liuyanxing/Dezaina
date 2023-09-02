@@ -31,6 +31,13 @@ namespace util {
 		);
 	}
 
+  inline Matrix toMatrix(const SkMatrix& matrix) {
+    return Matrix{
+      matrix.get(0), matrix.get(1), matrix.get(2),
+      matrix.get(3), matrix.get(4), matrix.get(5),
+    };
+  }
+
   inline SkPath toSkPath(const DataSharedPtr& blob) {
     SkPath path;
     const auto* data = static_cast<const uint8_t*>(blob->data());
