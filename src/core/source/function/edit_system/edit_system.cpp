@@ -5,6 +5,7 @@
 #include "desaina.h"
 #include <iostream>
 #include "edit_system/editor/rectangle_node_editor.h"
+#include "util/skia.h"
 
 void EditSystem::bindEvents() {
   desaina_->selectSystem.addEventListener(EventType::kSelectionChange, [this](Event* event) {

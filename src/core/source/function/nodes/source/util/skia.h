@@ -31,6 +31,12 @@ namespace util {
 		);
 	}
 
+  inline SkRect rotate(const SkRect& rect, float angle, float x = 0, float y = 0) {
+    SkMatrix matrix;
+    matrix.setRotate(angle, x, y);
+    return matrix.mapRect(rect);
+  }
+
   inline Matrix toMatrix(const SkMatrix& matrix) {
     return Matrix{
       matrix.get(0), matrix.get(1), matrix.get(2),

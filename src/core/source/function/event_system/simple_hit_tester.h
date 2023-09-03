@@ -7,7 +7,7 @@ public:
   HitTestNode* getNodeUnderPoint(float x, float y) override {
     std::vector<HitTestNode*> nodes;
     for (auto& node : nodes_) {
-      if (node.rect.contains(x, y)) {
+      if (node.bound.contains(x, y)) {
         return &node;
       }
     }
@@ -17,18 +17,19 @@ public:
   std::vector<HitTestNode*> getNodesIntersectWithRect(const SkRect& rect) override {
     std::vector<HitTestNode*> nodes;
     for (auto& node : nodes_) {
-      if (node.rect.intersects(rect)) {
+      if (node.bound.intersects(rect)) {
         nodes.push_back(&node);
       }
     }
     return nodes;
   }
 
-  void insertNode(HitTestNode* node) override {
+  void insert(HitTestNode* node) override {
     nodes_.push_back(*node);
   }
 
-  void deleteNode(HitTestNode* node) override {
+  void clear() override {
+    nodes_.clear();
   }
 
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event.h"
+#include "include/core/SkRect.h"
 
 struct UIEvent : public Event {
   class Builder;
@@ -17,10 +18,12 @@ struct UIEvent : public Event {
   float deltaX;
   float deltaY;
   float devicePixelRatio;
+  SkRect activeLocalRect;
 };
 
 class UIEvent::Builder : public Event::Builder {
   public:
+    inline static float activeRectSize = 6;
     explicit Builder(EventType type, bool isOwned = true): Event::Builder(type, false) {
       isOwned_ = isOwned;
       if (isOwned_) {

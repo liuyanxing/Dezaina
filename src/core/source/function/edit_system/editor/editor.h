@@ -15,8 +15,8 @@ enum class EditorType {
 };
 
 enum class EditorHitNodeType {
-  kResize,
-  kCornerResize,
+  kBoundEdge,
+  kBoundCorner,
   kRotate,
   kNormal,
 };
@@ -24,18 +24,29 @@ enum class EditorHitNodeType {
 struct EditorHitNode : public HitTestNode {
   EditorHitNodeType type;
   int index = 0;
+  static EditorHitNode Make(EditorHitNodeType type, int index, const SkRect& bound) {
+    EditorHitNode node;
+    node.type = type;
+    node.index = index;
+    node.bound = bound;
+    return node;
+  } 
 };
 
 class Editor : public EventEmitter {
 public:
   Editor(Desaina* desaina) {
     this->desaina = desaina;
+    update();
   };
   virtual ~Editor() = default;
-  virtual void update() {};
+  virtual void update() {
+    bound_ = buildEditingNodesBound();
+  };
 
   void emit(Event* event) {
     if (event->isMouseEvent()) {
+      mapEventToLocal(event);
       EventEmitter::emit(*event);
     }
   };
@@ -44,18 +55,21 @@ public:
   bool isNodeEditor() { return type == EditorType::kNode; };
   bool isPathEditor() { return type == EditorType::kPath; };
 
-  void buildHitTester(const std::vector<HitTestNode*>& nodes) {
-  }
-
   bool isDirty() { return this->dirty; };
-  void setDirty() { this->dirty = true; };
-  
+  const SkRect& getBound() const { return bound_; };
   vector<Node*> getEditingNodes();
   vector<EditorHitNode*>& getSelectedHitNode() { return selected_hit_nodes_; };
   EditorHitNode* getHoverHitNode() { return hover_hit_node_; };
+  void setDirty() { this->dirty = true; };
   
   Desaina* desaina;
+  std::unique_ptr<HitTester> hit_tester = std::make_unique<SimpleHitTester>();
 private:
+  SkRect buildEditingNodesBound();
+  void buildHitTester(const std::vector<HitTestNode*>& nodes) {
+  }
+  void mapEventToLocal(Event* event);
+  
   void handleMouseEvent(Event* event);
   void handleMouseMove(Event* event);
   void handleMouseDown(Event* event);
@@ -64,5 +78,5 @@ private:
   bool dirty = false;
   EditorHitNode* hover_hit_node_ = nullptr;
   vector<EditorHitNode*> selected_hit_nodes_{};
-  std::unique_ptr<HitTester> hit_tester_ = std::make_unique<SimpleHitTester>();
+  SkRect bound_;
 };

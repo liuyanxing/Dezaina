@@ -24,6 +24,10 @@ public:
     return view_matrix_;
   }
 
+  SkRect mapWorldToScreen(const SkRect& rect) {
+    return view_projection_matrix_.mapRect(rect);
+  }
+
   SkPoint mapScreenToWorld(float x, float y) {
     SkPoint point;
     SkMatrix inverse;

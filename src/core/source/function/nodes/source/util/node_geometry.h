@@ -1,5 +1,6 @@
 #include "document.h"
 #include "include/core/SkMatrix.h"
+#include "include/core/SkPoint.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkSize.h"
 #include "node_type.h"
@@ -44,11 +45,9 @@ namespace util {
     }
     return matrix;
   }
-  inline auto getWorldBound(const Node* node, Document* document) {
+  inline auto getWorldAABBBound(const Node* node, Document* document) {
     auto matrix = getWorldMatrix(node, document);
     auto bound = getLocalBound(node);
-    SkRect rect;
-    matrix.mapRect(&rect, bound);
-    return rect;
+    return matrix.mapRect(bound);
   }
 }
