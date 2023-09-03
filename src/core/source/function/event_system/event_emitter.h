@@ -8,7 +8,7 @@ class EventEmitter {
 public:
   void emit(Event& event) {
     for (const auto& consumer : consumers_) {
-      if (consumer.type == event.type) {
+      if (consumer.type == event.type || consumer.type == EventType::kAny) {
         consumer.func(&event);
       }
     }

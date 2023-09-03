@@ -13,7 +13,8 @@ struct HitTestNode {
 
 class HitTester {
 public:
-  virtual HitTestNode* getNodeContainsPoint(const SkPoint& point) = 0;
+  virtual ~HitTester() = default;
+  virtual HitTestNode* getNodeUnderPoint(float x, float y) = 0;
   virtual std::vector<HitTestNode*> getNodesIntersectWithRect(const SkRect& point) = 0;
   virtual void insertNode(HitTestNode* node) = 0;
   virtual void deleteNode(HitTestNode* node) = 0;

@@ -24,13 +24,11 @@
 #include "system/system.h"
 #include "vector.h"
 #include "ellipse.h"
-#include "editor/editor.h"
 #include "base_type.h"
 #include "container_node_base.h"
 #include "util/skia.h"
 
 #include "services/services.h"
-#include "editor/node_editor.h"
 
 constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;
@@ -111,8 +109,6 @@ public:
 	void builPath();
 
   void bindEvents();
-  void onEvents(Event* event);
-  
 
   void clearSelectedNodes() {
     selectedNodes_.clear();
@@ -159,12 +155,8 @@ private:
 	NodePool<NodeSize> nodePool{NodePoolInitialSize};
 	NodeMap idNodeMap_;
 	Services* services_;
-  std::unique_ptr<Editor> editor_ = nullptr;
   PageNode* currentPage_ = nullptr;
   std::optional<GUID>hover_node_id_{};
   vector<GUID> selectedNodes_{};
   vector<Geometry> geometries_{};
-  
-  vector<GUID> selected_node_id_{};
-  std::optional<GUID> hovered_node_id_ = std::nullopt;
 };

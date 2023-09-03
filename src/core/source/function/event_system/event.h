@@ -7,9 +7,9 @@ enum class EventType {
   kNone = 0,
   kWindowClose, kWindowResize, kWindowFocus, kWindowLostFocus, kWindowMoved,
   kAppTick, kAppUpdate, kAppRender,
-  kKeyPressed, kKeyReleased, kKeyTyped,
+  kKeyDown, kKeyUp,
   kMouseDown, kMouseUp, kMouseMove, kMouseWheel, kMouseDrag,
-  kViewPortChange,
+  kViewPortChange, kSelectionChange,
   kAny,
 };
 
@@ -22,7 +22,7 @@ struct Event {
   }
 
   static bool isMouseEvent(EventType type) {
-    return type == EventType::kMouseDown || type == EventType::kMouseUp || type == EventType::kMouseMove;
+    return type > EventType::kKeyUp && type < EventType::kViewPortChange;
   }
 
 };

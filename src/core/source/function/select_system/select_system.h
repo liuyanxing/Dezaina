@@ -2,6 +2,7 @@
 
 #include "base_type.h"
 #include "desaina_node.h"
+#include "event_system/event_emitter.h"
 #include "event_system/event_system.h"
 #include "system/system.h"
 
@@ -16,5 +17,6 @@ private:
 	void buildEvents();
 	void handleMouseMove(Event* event);
 	void handleMouseDown(Event* event);
+	void setSelection(vector<Node*> nodes);
 	Desaina* desaina_;
 };

@@ -15,7 +15,7 @@ void ContainerNodeBase::getNodesUnderPoint(float x, float y, vector<Node *> &nod
       auto* container = util::getContainer(child);
       container->getNodesUnderPoint(point.x(), point.y(), nodes);
     } else {
-      if (util::isPointInNode(child, point.x(), point.y())) {
+      if (util::isPointInNodeGeometry(child, point.x(), point.y())) {
         nodes.push_back(child);
       }
     }

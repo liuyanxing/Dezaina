@@ -1,6 +1,7 @@
 #include "select_system.h"
 #include "base_type.h"
 #include "desaina.h"
+#include "event_system/ui_event.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "select_system/selection.h"
@@ -35,9 +36,16 @@ void SelectSystem::handleMouseMove(Event* event) {
 
 void SelectSystem::handleMouseDown(Event* event) {
   if (desaina_->document.getHoverNode() != nullptr) {
-    desaina_->document.setSelectedNodes({desaina_->document.getHoverNode()});
+    setSelection({desaina_->document.getHoverNode()});
   } else {
-    desaina_->document.clearSelectedNodes();
+    setSelection({});
   }
+}
+
+void SelectSystem::setSelection(vector<Node*> nodes) {
+  desaina_->document.setSelectedNodes(nodes);
+  UIEvent event;
+  event.type = EventType::kSelectionChange;
+  emit(event);
 }
 

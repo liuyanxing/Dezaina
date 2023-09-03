@@ -4,10 +4,10 @@
 
 class SimpleHitTester : public HitTester {
 public:
-  HitTestNode* getNodeContainsPoint(const SkPoint& point) override {
+  HitTestNode* getNodeUnderPoint(float x, float y) override {
     std::vector<HitTestNode*> nodes;
     for (auto& node : nodes_) {
-      if (node.rect.contains(point.x(), point.y())) {
+      if (node.rect.contains(x, y)) {
         return &node;
       }
     }

@@ -1,31 +1,49 @@
 #include "edit_system.h"
 #include "action_system/UpdatePropertiesAction.h"
+#include "editor/bound_editor.h"
 #include "util/node_props.h"
 #include "desaina.h"
 #include <iostream>
+#include "edit_system/editor/rectangle_node_editor.h"
 
 void EditSystem::bindEvents() {
-  addEventListener(EventType::kMouseDrag, [this](Event* event) {
-    handleMouseDrag(event);
+  desaina_->selectSystem.addEventListener(EventType::kSelectionChange, [this](Event* event) {
+    setEditorBySelection();
+  });
+  
+  addEventListener(EventType::kAny, [this](Event* event) {
+    if (editor_) {
+      editor_->emit(event);
+    }
   });
 }
 
-void EditSystem::handleMouseDrag(Event *event) {
-  auto& actionSystem = desaina_->actionSystem;
-  auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto deltaX = mouseEvent->deltaX;
-  auto deltaY = mouseEvent->deltaY;
+void EditSystem::setEditorBySelection() {
   auto selectedNodes = desaina_->document.getSelectedNodes();
   if (selectedNodes.size() == 0) {
+    editor_ = nullptr;
     return;
   }
+  
+  if (selectedNodes.size() == 1) {
+    auto node = selectedNodes[0];
+    switch (node->get_type()) {
+      case NodeType::ROUNDED_RECTANGLE:
+      case NodeType::RECTANGLE: {
+        editor_ = std::make_unique<RectangleNodeEditor>(desaina_);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  } else {
+    editor_ = std::make_unique<NodeEditor>(desaina_);
+  }
+}
 
-  for (auto node : selectedNodes) {
-    auto m = util::getTransfromMatrix(node);
-    m.preTranslate(deltaX, deltaY);
-    PropertyType type = PropertyType::kTransform;
-    PropertyValue transform = util::toMatrix(m);
-    
-    actionSystem.addAction(UpdatePropertiesAction::Make(node->get_guid(), type, transform));
+void EditSystem::tick() {
+  if (editor_ != nullptr && editor_->isDirty()) {
+    editor_->update();
   }
 }

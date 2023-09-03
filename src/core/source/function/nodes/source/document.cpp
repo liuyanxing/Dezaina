@@ -60,12 +60,6 @@ void Document::builPath() {}
 void Document::bindEvents() {
 }
 
-void Document::onEvents(Event *event) {
-  if (editor_) {
-    editor_.get()->onEvent(event);
-  }
-}
-
 void Document::close() {}
 
 Node* Document::getHoverNode() const {

@@ -7,18 +7,28 @@
 #include "util/skia.h"
 
 namespace util {
-  inline SkSize getNodeSize(Node* node) {
+// todo : fill path and stroke path bound
+  inline SkRect getGeometryBound(const Node* node) {
     if (util::isPage(node)) {
-      return SkSize::MakeEmpty();
+      return SkRect::MakeEmpty();
     }
     if (util::isDefaultShapeNode(node)) {
-      auto shape = static_cast<DefaultShapeNode*>(node);
-      return SkSize::Make(shape->get_size().x, shape->get_size().y);
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      return SkRect::MakeIWH(shape->get_size().x, shape->get_size().y);
     }
-    return SkSize::MakeEmpty();
+    return SkRect::MakeEmpty();
   }
-  inline bool isPointInNode(Node* node, float x, float y) {
-    auto size = getNodeSize(node);
+
+  inline SkRect getLocalBound(const Node* node) {
+    if (util::isDefaultShapeNode(node)) {
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      return SkRect::MakeIWH(shape->get_size().x, shape->get_size().y);
+    }
+    return SkRect::MakeEmpty();
+  }
+
+  inline bool isPointInNodeGeometry(Node* node, float x, float y) {
+    auto size = getGeometryBound(node);
     auto rect = SkRect::MakeIWH(size.width(), size.height());
     return rect.contains(x, y);
   }
@@ -33,5 +43,12 @@ namespace util {
       parent = util::getParent(parent.value(), document);
     }
     return matrix;
+  }
+  inline auto getWorldBound(const Node* node, Document* document) {
+    auto matrix = getWorldMatrix(node, document);
+    auto bound = getLocalBound(node);
+    SkRect rect;
+    matrix.mapRect(&rect, bound);
+    return rect;
   }
 }
