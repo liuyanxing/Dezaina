@@ -9,7 +9,10 @@ public:
   NodeEditor(Desaina* document): Editor(document), boundEditor_(this) {};
   virtual ~NodeEditor() = default;
   
-  virtual void update() { boundEditor_.update(); };
+  virtual void update() {
+    boundEditor_.update();
+    Editor::update();
+  };
   
   void bindEvents();
   BoundEditor boundEditor_;

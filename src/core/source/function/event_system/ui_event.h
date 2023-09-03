@@ -2,6 +2,7 @@
 
 #include "event.h"
 #include "include/core/SkRect.h"
+#include "types/cursor.h"
 
 struct UIEvent : public Event {
   class Builder;
@@ -19,6 +20,7 @@ struct UIEvent : public Event {
   float deltaY;
   float devicePixelRatio;
   SkRect activeLocalRect;
+  CursorType cursorType;
 };
 
 class UIEvent::Builder : public Event::Builder {
@@ -27,7 +29,7 @@ class UIEvent::Builder : public Event::Builder {
     explicit Builder(EventType type, bool isOwned = true): Event::Builder(type, false) {
       isOwned_ = isOwned;
       if (isOwned_) {
-        event_ = new UIEvent();
+        event_ = new UIEvent{};
         Event::Builder::setEventRef(event_);
       }
     };

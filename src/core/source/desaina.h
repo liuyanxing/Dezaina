@@ -4,6 +4,8 @@
 #include "desaina_node.h"
 #include "document.h"
 #include "edit_system/edit_system.h"
+#include "event_system/event.h"
+#include "event_system/event_emitter.h"
 #include "kiwi.h"
 #include <memory>
 #include <stdint.h>
@@ -17,6 +19,7 @@
 #include "action_system/action_system.h"
 #include "change_system/change_system.h"
 #include "edit_system/edit_system.h"
+#include "types/cursor.h"
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -30,7 +33,7 @@ struct WindowInfo {
 
 using Systems = vector<System*>;
 
-class Desaina {
+class Desaina : public EventEmitter {
 	public:
 		Desaina(DesainaOption option):
 			sessionId_(option.sessionId),
@@ -72,6 +75,13 @@ class Desaina {
 
     const WindowInfo& getWindowInfo() const {
       return windowInfo_;
+    }
+
+    void setCursor(CursorType cursorType) {
+      UIEvent::Builder builder(EventType::kSetCursor);
+      auto event = builder.build();
+      event.cursorType = cursorType;
+      emit(event);
     }
 
 		Services services;

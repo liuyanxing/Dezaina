@@ -57,6 +57,8 @@ int main() {
 	bool done = false;
 
 	Desaina desaina{{0}};
+  bindEvents(desaina);
+
   int drawable_width, drawable_height;
   SDL_GL_GetDrawableSize(window, &drawable_width, &drawable_height);
   auto devicePixelRatio = drawable_width / (float)width;

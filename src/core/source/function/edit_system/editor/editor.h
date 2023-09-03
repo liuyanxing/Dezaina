@@ -17,15 +17,13 @@ enum class EditorType {
 enum class EditorHitNodeType {
   kBoundEdge,
   kBoundCorner,
-  kRotate,
-  kNormal,
 };
 
 struct EditorHitNode : public HitTestNode {
   EditorHitNodeType type;
   int index = 0;
   static EditorHitNode Make(EditorHitNodeType type, int index, const SkRect& bound) {
-    EditorHitNode node;
+    EditorHitNode node{};
     node.type = type;
     node.index = index;
     node.bound = bound;
@@ -37,12 +35,15 @@ class Editor : public EventEmitter {
 public:
   Editor(Desaina* desaina) {
     this->desaina = desaina;
-    update();
+    init();
   };
   virtual ~Editor() = default;
   virtual void update() {
     bound_ = buildEditingNodesBound();
   };
+
+  void init();
+  void bindEvents();
 
   void emit(Event* event) {
     if (event->isMouseEvent()) {
@@ -59,6 +60,7 @@ public:
   const SkRect& getBound() const { return bound_; };
   vector<Node*> getEditingNodes();
   vector<EditorHitNode*>& getSelectedHitNode() { return selected_hit_nodes_; };
+  EditorHitNode* getFirstSelectedHitNode() { return !selected_hit_nodes_.empty() ? selected_hit_nodes_[0] : nullptr; };
   EditorHitNode* getHoverHitNode() { return hover_hit_node_; };
   void setDirty() { this->dirty = true; };
   

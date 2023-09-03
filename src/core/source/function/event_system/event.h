@@ -10,12 +10,14 @@ enum class EventType {
   kKeyDown, kKeyUp,
   kMouseDown, kMouseUp, kMouseMove, kMouseWheel, kMouseDrag,
   kViewPortChange, kSelectionChange,
+  kSetCursor,
   kAny,
 };
 
 struct Event {
   EventType type;  
-  Node* target;
+  Node* target = nullptr;
+  bool isStop = false;
   class Builder;
   bool isMouseEvent() const {
     return isMouseEvent(type);
@@ -39,7 +41,7 @@ public:
   Builder(EventType type, bool isOwned = true): type_(type) {
     isOwned_ = isOwned;
     if (isOwned_) {
-      event_ = new Event();
+      event_ = new Event{};
       event_->type = type;
     }
   };

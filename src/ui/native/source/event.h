@@ -1,9 +1,11 @@
 #pragma once
 
 #include "SDL_events.h"
+#include "SDL_mouse.h"
 #include "desaina.h"
 #include <iostream>
 #include "core/source/function/event_system/event.h"
+#include "event_system/ui_event.h"
 
 inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
   if (!desaina.document.isLoaded()) {
@@ -73,4 +75,43 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
     }
   }
   
+}
+
+inline void bindEvents(Desaina& desaina) {
+  desaina.addEventListener(EventType::kSetCursor, [](Event* event) {
+    auto cursorEvent = static_cast<UIEvent*>(event);
+    auto cursor = cursorEvent->cursorType;
+    SDL_Cursor* sdlCursor;
+    switch (cursor) {
+      case CursorType::kSIZEWE: {
+        sdlCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
+        break;
+      }
+      case CursorType::kSIZENS: {
+        sdlCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
+        break;
+      }
+      case CursorType::kSIZENESW: {
+        sdlCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENESW);
+        break;
+      }
+      case CursorType::kSIZENWSE: {
+        sdlCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
+        break;
+      }
+      case CursorType::kHandle: {
+        sdlCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+        break;
+      }
+      case CursorType::kDefault: {
+        sdlCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+        break;
+      };
+      default: {
+        break;
+      }
+    }
+
+    SDL_SetCursor(sdlCursor);
+  });
 }
