@@ -20,8 +20,7 @@ void Editor::bindEvents() {
 }
 
 vector<Node*> Editor::getEditingNodes() {
-  auto selectedNodes = desaina->document.getSelectedNodes();
-  return selectedNodes;
+  return desaina->document.getSelectedNodes();
 }
 
 SkRect Editor::buildEditingNodesBound() {
@@ -70,7 +69,6 @@ void Editor::handleMouseMove(Event* event) {
 }
 
 void Editor::mapEventToLocal(Event* event) {
-  update();
   auto mouseEvent = static_cast<UIEvent*>(event);
   auto selectedNodes = getEditingNodes();
   
@@ -81,11 +79,11 @@ void Editor::mapEventToLocal(Event* event) {
     auto matrix = SkMatrix::I();
     matrix.setTranslate(bound_.x(), bound_.y());
   }
-  auto point = base::mapPointToLocal(mouseEvent->x, mouseEvent->y, matrix);
-  auto deltaPointX = base::mapPointToLocal(mouseEvent->deltaX, 0, matrix);
-  auto deltaPointY = base::mapPointToLocal(mouseEvent->deltaY, 0, matrix);
+  auto point = base::mapPointToLocal({mouseEvent->x, mouseEvent->y}, matrix);
   mouseEvent->localX = point.x();
   mouseEvent->localY = point.y();
-  // mouseEvent->deltaX = deltaPointX.x() - deltaPointX.y();
-  // mouseEvent->deltaY = deltaPointY.y() - deltaPointY.x();
+
+  auto localDelta = base::mapSizeToLocal({mouseEvent->deltaX, mouseEvent->deltaY}, matrix);
+  mouseEvent->deltaX = localDelta.width();
+  mouseEvent->deltaY = localDelta.height();
 }
