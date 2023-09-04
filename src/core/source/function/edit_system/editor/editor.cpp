@@ -53,6 +53,7 @@ void Editor::handleMouseDown(Event* event) {
   auto mouseEvent = static_cast<MouseEvent*>(event);
   if (hover_hit_node_) {
     selected_hit_nodes_.push_back(hover_hit_node_);
+    event->stop();
   }
 }
 

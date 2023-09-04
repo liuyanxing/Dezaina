@@ -9,6 +9,9 @@ void EventSystem::tick() {
   const Systems& systems = *desaina_->getSystems();
   for (const auto &system : systems) {
     for (auto* event : events_) {
+      if (event->isStop()) {
+        continue;
+      }
       system->emit(*event);
     }
   }

@@ -17,15 +17,22 @@ enum class EventType {
 struct Event {
   EventType type;  
   Node* target = nullptr;
-  bool isStop = false;
   class Builder;
   bool isMouseEvent() const {
     return isMouseEvent(type);
+  }
+  void stop() {
+    isStop_ = true;
+  }
+  bool isStop() const {
+    return isStop_;
   }
 
   static bool isMouseEvent(EventType type) {
     return type > EventType::kKeyUp && type < EventType::kViewPortChange;
   }
+private:
+  bool isStop_ = false;
 
 };
 

@@ -142,8 +142,8 @@ void Desaina::buildEvents() {
 void Desaina::addSystems() {
 	systems_.push_back(&eventSystem);
   systems_.push_back(&viewPortSystem);
-  systems_.push_back(&selectSystem);
   systems_.push_back(&editSystem);
+  systems_.push_back(&selectSystem);
   systems_.push_back(&actionSystem);
   systems_.push_back(&changeSystem);
   systems_.push_back(&renderSystem);

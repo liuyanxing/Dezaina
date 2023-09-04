@@ -140,7 +140,7 @@ void BoundEditor::handleDragBoundEdge(Event* event) {
 }
 
 void BoundEditor::handleMouseDrag(Event* event) {
-  if (!editor_->getSelectedHitNode().empty()) {
+  if (editor_->getFirstSelectedHitNode()) {
     hanldeDrageCtrlNode(event);
   } else {
     handleDragBound(event);
@@ -165,6 +165,7 @@ void BoundEditor::handleMouseMove(Event* event) {
         break;
       }
     }
+    event->stop();
   }
   editor_->desaina->setCursor(cursorType);
 }
