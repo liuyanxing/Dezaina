@@ -6,10 +6,12 @@
 #include "edit_system/edit_system.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
+#include "include/core/SkPath.h"
 #include "kiwi.h"
 #include <memory>
 #include <stdint.h>
 #include "select_system/select_system.h"
+#include "services/blob_service.h"
 #include "services/id_generator.h"
 #include "services/services.h"
 #include "event_system/event_system.h"
@@ -31,13 +33,24 @@ struct WindowInfo {
   float devicePixelRatio;
 };
 
+struct Geometry {
+  SkPath path;
+  Blob* commandsBlob;
+  const SkPath& getPath() {
+    if (path.isEmpty()) {
+      path = util::toSkPath(commandsBlob);
+    }
+    return path;
+  }
+};
+
 using Systems = vector<System*>;
 
 class Desaina : public EventEmitter {
 	public:
 		Desaina(DesainaOption option):
 			sessionId_(option.sessionId),
-			services({std::make_unique<IdGenerator>(option.sessionId)}),
+			services({std::make_unique<IdGenerator>(option.sessionId), std::make_unique<BlobService>()}),
 			document(&services) {
         buildEvents();
         addSystems();
@@ -84,6 +97,21 @@ class Desaina : public EventEmitter {
       emit(event);
     }
 
+    uint32_t addGeomtryFromBlob(Blob&& blob) {
+      auto blob_key = services.blobService->addBlob(std::move(blob));
+      auto* blob_ptr = &services.blobService->getBlob(blob_key);
+      geometries_[blob_key] = Geometry{};
+      return blob_key;
+    }
+
+    const Geometry* getGeometry(uint32_t key) {
+      auto iter = geometries_.find(key);
+      if (iter == geometries_.end()) {
+        return nullptr;
+      }
+      return &iter->second;
+    }
+
 		Services services;
 		Document document;
     EventSystem eventSystem{this};
@@ -95,7 +123,7 @@ class Desaina : public EventEmitter {
     EditSystem editSystem{this};
 	private:
 		uint32_t sessionId_ = 0;
-    vector<DataSharedPtr> blobs_;
+    unordered_map<int, Geometry> geometries_{};
     Systems systems_{};
     WindowInfo windowInfo_{};
 };

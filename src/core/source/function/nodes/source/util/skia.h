@@ -9,6 +9,7 @@
 #include "include/core/SkPath.h"
 
 #include "base/buffer.h"
+#include "services/blob_service.h"
 #include <cassert>
 #include <variant>
 
@@ -44,7 +45,7 @@ namespace util {
     };
   }
 
-  inline SkPath toSkPath(const DataSharedPtr& blob) {
+  inline SkPath toSkPath(const Blob* blob) {
     SkPath path;
     const auto* data = static_cast<const uint8_t*>(blob->data());
     auto size = blob->size();
@@ -90,6 +91,7 @@ namespace util {
         }
       }
     }
+    path.dump();
 
     return path;
   }

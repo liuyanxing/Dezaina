@@ -7,6 +7,7 @@
 #include "include/core/SkRect.h"
 #include "util/node_geometry.h"
 #include "util/skia.h"
+#include <iostream>
 
 static bool isFirstDiagonal(EditorHitNode* node) {
   return node->index % 2 == 0;
@@ -110,15 +111,17 @@ void BoundEditor::handleDragBoundEdge(Event* event) {
   auto deltaX = mouseEvent->deltaX;
   auto deltaY = mouseEvent->deltaY;
   if (isFirstDiagonal(hitNode)) {
-    deltaY = 0;
-  } else {
     deltaX = 0;
+  } else {
+    deltaY = 0;
   }
   bool isInverse = shouldInverse(hitNode);
   if (isInverse) {
     deltaX = -deltaX;
     deltaY = -deltaY;
   }
+
+  std::cout << "drag bound edge: " << deltaX << ", " << deltaY <<  std::endl;
 
   auto selectedNodes = editor_->getEditingNodes();
   for (auto node : selectedNodes) {
@@ -132,7 +135,7 @@ void BoundEditor::handleDragBoundEdge(Event* event) {
     }
     
     auto m = util::getTransfromMatrix(node);
-    m.postTranslate(deltaX, deltaY);
+    m.postTranslate(-deltaX, -deltaY);
     PropertyType type = PropertyType::kTransform;
     PropertyValue transform = util::toMatrix(m);
     editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::Make(node->get_guid(), type, transform));

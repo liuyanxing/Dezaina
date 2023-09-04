@@ -75,6 +75,7 @@ private:
   void handleMouseEvent(Event* event);
   void handleMouseMove(Event* event);
   void handleMouseDown(Event* event);
+  void handleMouseUp(Event* event);
   
   EditorType type;
   bool dirty = false;

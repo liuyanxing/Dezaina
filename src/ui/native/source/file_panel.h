@@ -28,7 +28,7 @@ inline void CreateFilePanel(Desaina* desaina) {
 	if (ImGui::Button("load file from local")) {
     std::filesystem::path fig_dir = std::filesystem::current_path() / "figs";
 		std::fstream file;
-		file.open(fig_dir / "round-rect", std::ios::in | std::ios::binary);
+		file.open(fig_dir / "temp", std::ios::in | std::ios::binary);
 		if (!file.is_open()) {
 			assert(false);
 		}

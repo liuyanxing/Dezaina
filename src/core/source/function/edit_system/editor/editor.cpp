@@ -1,5 +1,6 @@
 #include "editor.h"
 #include "desaina.h"
+#include "event_system/event.h"
 #include "event_system/ui_event.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkScalar.h"
@@ -44,6 +45,9 @@ void Editor::handleMouseEvent(Event* event) {
     case EventType::kMouseMove:
       handleMouseMove(event);
       break;
+    case EventType::kMouseUp:
+      handleMouseUp(event);
+      break;
     default:
       break;
   }
@@ -55,6 +59,10 @@ void Editor::handleMouseDown(Event* event) {
     selected_hit_nodes_.push_back(hover_hit_node_);
     event->stop();
   }
+}
+
+void Editor::handleMouseUp(Event* event) {
+  auto mouseEvent = static_cast<MouseEvent*>(event);
 }
 
 void Editor::handleMouseMove(Event* event) {

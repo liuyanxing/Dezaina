@@ -35,25 +35,7 @@ constexpr size_t NodePoolInitialSize = 1024;
 
 using NodeMap = std::unordered_map<GUID, Node*>;
 
-struct Geometry {
-  SkPath path;
-  DataSharedPtr commandsBlob;
-  const SkPath& getPath() {
-    if (path.isEmpty()) {
-      path = util::toSkPath(commandsBlob);
-    }
-    return path;
-  }
-  static auto Make(const DataSharedPtr& commandsBlob) {
-    Geometry geometry;
-    geometry.commandsBlob = commandsBlob;
-    geometry.path = util::toSkPath(commandsBlob);
-    return geometry;
-  }
-};
-
 class Desaina;
-
 class Document : public DocumentNodeBase, public ContainerNodeBase {
 public:
 	Document(Services* services): services_(services) {

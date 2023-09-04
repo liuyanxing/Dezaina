@@ -1,5 +1,6 @@
 #include "document.h"
 #include "include/core/SkMatrix.h"
+#include "include/core/SkPath.h"
 #include "include/core/SkPoint.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkSize.h"
@@ -50,4 +51,5 @@ namespace util {
     auto bound = getLocalBound(node);
     return matrix.mapRect(bound);
   }
+  SkPath buildFillPath(const Node* node);
 }
