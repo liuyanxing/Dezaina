@@ -35,7 +35,7 @@ struct WindowInfo {
 
 struct Geometry {
   SkPath path;
-  Blob* commandsBlob;
+  const Blob* commandsBlob = nullptr;
   const SkPath& getPath() {
     if (path.isEmpty()) {
       path = util::toSkPath(commandsBlob);
@@ -44,6 +44,7 @@ struct Geometry {
   }
 };
 
+using BlobReMap = unordered_map<uint32_t, uint32_t>;
 using Systems = vector<System*>;
 
 class Desaina : public EventEmitter {
@@ -97,14 +98,14 @@ class Desaina : public EventEmitter {
       emit(event);
     }
 
-    uint32_t addGeomtryFromBlob(Blob&& blob) {
+  std::pair<uint32_t, Geometry*> addGeomtryFromBlob(Blob&& blob) {
       auto blob_key = services.blobService->addBlob(std::move(blob));
-      auto* blob_ptr = &services.blobService->getBlob(blob_key);
-      geometries_[blob_key] = Geometry{};
-      return blob_key;
+      const auto* blob_ptr = services.blobService->getBlob(blob_key);
+      auto geometryPair = geometries_.insert({blob_key, Geometry{.commandsBlob = blob_ptr}});
+      return {blob_key, &geometryPair.first->second} ;
     }
 
-    const Geometry* getGeometry(uint32_t key) {
+    Geometry* getGeometry(uint32_t key) {
       auto iter = geometries_.find(key);
       if (iter == geometries_.end()) {
         return nullptr;
@@ -122,8 +123,10 @@ class Desaina : public EventEmitter {
   	ChangeSystem changeSystem{this};
     EditSystem editSystem{this};
 	private:
+    void remapBlobId();
 		uint32_t sessionId_ = 0;
     unordered_map<int, Geometry> geometries_{};
     Systems systems_{};
     WindowInfo windowInfo_{};
+    BlobReMap blob_id_remap_{};
 };

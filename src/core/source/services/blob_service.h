@@ -17,12 +17,12 @@ namespace std {
 class BlobService {
 public:
   uint32_t addBlob(Blob&& blob);
-  const Blob& getBlob(uint32_t index) const {
+  const Blob* getBlob(uint32_t index) const {
     return index_to_blobs_.at(index);
   }
 
 private:
   unordered_map<Blob, int> blobs_to_index_;
-  unordered_map<uint32_t, Blob> index_to_blobs_;
+  unordered_map<uint32_t, const Blob*> index_to_blobs_;
   unordered_set<uint32_t> blob_sizes_;
 };

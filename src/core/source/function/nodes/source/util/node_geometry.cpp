@@ -1,35 +1,37 @@
+#include "desaina.h"
 #include "desaina_node.h"
 #include "frame.h"
 #include "include/core/SkPath.h"
 #include "node_type.h"
 #include "rectangle.h"
+#include "util/skia.h"
 #include <optional>
+#include <tuple>
+
+using SizeAndRadius = std::tuple<Vector, float, float, float, float>;
+template<typename T>
+static SizeAndRadius getSizeAndRadius(const T* node) {
+    Vector size = node->get_size();
+    float topLeftRadius = node->get_rectangleTopLeftCornerRadius();
+    float topRightRadius = node->get_rectangleTopRightCornerRadius();
+    float bottomLeftRadius = node->get_rectangleBottomLeftCornerRadius();
+    float bottomRightRadius = node->get_rectangleBottomRightCornerRadius();
+    return {size, topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius};
+}
 
 static std::optional<SkPath> buildRoundRectFillPath(const Node* node) {
   constexpr float raduisRatio = 0.447715521F;
   SkPath path;
-  Vector size;
-  float topLeftRadius;
-  float topRightRadius;
-  float bottomLeftRadius;
-  float bottomRightRadius;
+  SizeAndRadius sizeAndRadius;
   if (util::isRectangle(node)) {
-    auto rect = static_cast<const RectangleNode*>(node);
-    size = rect->get_size();
-    topLeftRadius = rect->get_rectangleTopLeftCornerRadius();
-    topRightRadius = rect->get_rectangleTopRightCornerRadius();
-    bottomLeftRadius = rect->get_rectangleBottomLeftCornerRadius();
-    bottomRightRadius = rect->get_rectangleBottomRightCornerRadius();
+    sizeAndRadius = getSizeAndRadius(static_cast<const RectangleNode*>(node));
   } else if (util::isFrame(node)) {
-    auto frame = static_cast<const FrameNode*>(node);
-    size = frame->get_size();
-    topLeftRadius = frame->get_rectangleTopLeftCornerRadius();
-    topRightRadius = frame->get_rectangleTopRightCornerRadius();
-    bottomLeftRadius = frame->get_rectangleBottomLeftCornerRadius();
-    bottomRightRadius = frame->get_rectangleBottomRightCornerRadius();
+    sizeAndRadius = getSizeAndRadius(static_cast<const FrameNodeBase*>(node));
   } else {
     return std::nullopt;
   }
+  
+  auto [size, topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius] = sizeAndRadius;
   const float bezierRadius = topLeftRadius * raduisRatio;
   path.moveTo(0, topLeftRadius);
   path.cubicTo(0, topLeftRadius - bezierRadius, topLeftRadius - bezierRadius, 0, topLeftRadius, 0);
@@ -49,6 +51,10 @@ namespace util {
       return path.value();
     }
     return SkPath();
+  }
+
+  Geometry* buildFillGeometry(const Node *node, Desaina *desaina) {
+    return desaina->addGeomtryFromBlob(util::toBuffer(buildFillPath(node)));
   }
 }
 

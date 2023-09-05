@@ -1,6 +1,7 @@
 #pragma once
 
 #include "desaina_node.h"
+#include "include/private/base/SkTArray.h"
 
 using Node = BaseNodeMixin;
 using NodeChange = Desaina_Kiwi::NodeChange;

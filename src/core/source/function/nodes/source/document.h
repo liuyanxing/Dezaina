@@ -46,11 +46,9 @@ public:
 
 	template<typename T>
 	T* createNode(const GUID& id) {
-		// void* ptr = nodePool.allocate();
-		void* ptr = new T();
-		// new (ptr) T();
-		static_cast<Node*>(ptr)->set_guid(id);
-		return static_cast<T*>(ptr);
+		T* ptr = nodePool.createNode<T>();
+		ptr->set_guid(id);
+		return ptr;
 	};
 
 	template<typename T>
@@ -96,20 +94,9 @@ public:
     selectedNodes_.clear();
   }
 
-  void appendGeometryByBlob(const DataSharedPtr& blob) {
-    geometries_.push_back(Geometry::Make(blob));
-  }
-
   void setDefaultPage() {
     const auto& children = getChildren();
     currentPage_ = static_cast<PageNode*>(children[1]);
-  }
-
-  Geometry* getGeometry(size_t index) {
-    if (index >= geometries_.size()) {
-      return nullptr;
-    }
-    return &geometries_[index];
   }
 
   PageNode* getCurrentPage() {
@@ -134,11 +121,10 @@ public:
   
 private:
 	bool isLoaded_ = false;
-	NodePool<NodeSize> nodePool{NodePoolInitialSize};
+	NodePool nodePool{NodePoolInitialSize};
 	NodeMap idNodeMap_;
 	Services* services_;
   PageNode* currentPage_ = nullptr;
   std::optional<GUID>hover_node_id_{};
   vector<GUID> selectedNodes_{};
-  vector<Geometry> geometries_{};
 };

@@ -8,5 +8,5 @@ class AutoLayout : public Layout {
     AutoLayout(Desaina* desaina) : Layout(desaina) {};
     ~AutoLayout() = default;
     
-    bool processUpdatePropertiesAction(UpdatePropertiesAction* action, vector<NodeChange*>& changes, kiwiPool& pool) override;
+    bool processUpdatePropertiesAction(const UpdatePropertiesAction* action, kiwiPool& pool) override;
 };

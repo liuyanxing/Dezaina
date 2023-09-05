@@ -125,7 +125,7 @@ namespace util {
     
       const auto& geometry = shape->get_fillGeometry();
       for (const auto& geo : geometry) {
-        paths.push_back(desaina->document.getGeometry(geo.commandsBlob)->getPath());
+        paths.push_back(desaina->getGeometry(geo.commandsBlob)->getPath());
       }
     }
     return geometryWithPaints;
@@ -140,7 +140,7 @@ namespace util {
       auto shape = static_cast<const DefaultShapeNode*>(node);
       const auto& geometry = shape->get_strokeGeometry();
       for (const auto& geo : geometry) {
-        paths.push_back(desaina->document.getGeometry(geo.commandsBlob)->getPath());
+        paths.push_back(desaina->getGeometry(geo.commandsBlob)->getPath());
       }
       paintsWithRect = getStrokePaintsWithRect(node);
     }
@@ -154,7 +154,7 @@ namespace util {
       }
       auto shape = static_cast<const DefaultShapeNode*>(node);
       const auto& geo = shape->get_fillGeometry().back();
-      geometry.path = desaina->document.getGeometry(geo.commandsBlob)->getPath();
+      geometry.path = desaina->getGeometry(geo.commandsBlob)->getPath();
     }
     return geometry;
   }

@@ -28,6 +28,9 @@ struct GeometryWithPaints {
   vector<PaintWithRect> paints;
 };
 
+class Desaina;
+class Geometry;
+
 
 namespace util {
   inline auto getTransfromMatrix(const Node* node) {

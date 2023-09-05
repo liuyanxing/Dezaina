@@ -8,8 +8,8 @@ class ConstraintLayout : public Layout {
     ConstraintLayout(Desaina* desaina) : Layout(desaina) {};
     ~ConstraintLayout() = default;
 
-    void hanldeTransfrom(UpdatePropertiesAction* action, vector<NodeChange*>& changes, kiwiPool& pool);
-    void hanldeSize(UpdatePropertiesAction* action, vector<NodeChange*>& changes, kiwiPool& pool);
+    void hanldeTransfrom(const UpdatePropertiesAction* action, kiwiPool& pool);
+    void hanldeResize(const UpdatePropertiesAction* action, kiwiPool& pool);
     
-    bool processUpdatePropertiesAction(UpdatePropertiesAction* action, vector<NodeChange*>& changes, kiwiPool& pool) override;
+    bool processUpdatePropertiesAction(const UpdatePropertiesAction* action, kiwiPool& pool) override;
 };

@@ -1,7 +1,7 @@
 #include "desaina.h"
 #include "constraint_layout.h"
 
-bool ConstraintLayout::processUpdatePropertiesAction(UpdatePropertiesAction *action, vector<NodeChange*> &changes, kiwiPool &pool) {
+bool ConstraintLayout::processUpdatePropertiesAction(const UpdatePropertiesAction *action, kiwiPool &pool) {
   auto nodeOpt = desaina_->document.getNodeById(action->node_id);
   if (!nodeOpt.has_value()) {
     return true;
@@ -9,10 +9,10 @@ bool ConstraintLayout::processUpdatePropertiesAction(UpdatePropertiesAction *act
 
   switch (action->propertyType) {
     case PropertyType::kTransform:
-      hanldeTransfrom(action, changes, pool);
+      hanldeTransfrom(action, pool);
       break;
     case PropertyType::kSize:
-      hanldeSize(action, changes, pool);
+      hanldeResize(action, pool);
       break;
     default:
       break;
@@ -21,22 +21,21 @@ bool ConstraintLayout::processUpdatePropertiesAction(UpdatePropertiesAction *act
   return true;
 }
 
-void ConstraintLayout::hanldeTransfrom(UpdatePropertiesAction *action, vector<NodeChange*> &changes, kiwiPool &pool) {
-  auto nodeOpt = desaina_->document.getNodeById(action->node_id);
-  if (!nodeOpt.has_value()) {
+void ConstraintLayout::hanldeTransfrom(const UpdatePropertiesAction *action, kiwiPool &pool) {
+  auto changeItem = desaina_->changeSystem.getChangingItem(action->node_id);
+  if (changeItem == nullptr) {
     return;
   }
-  auto* nodeChange = pool.allocate<NodeChange>();
+  auto* changeNode = changeItem->changeNode;
   auto transform = get<Matrix>(action->propertyValue);
-  nodeChange->set_guid(action->node_id.toChange(pool));
-  nodeChange->set_transform(transform.toChange(pool));
-  changes.push_back(nodeChange);
+  changeNode->set_transform(transform.toChange(pool));
 }
 
-void ConstraintLayout::hanldeSize(UpdatePropertiesAction *action, vector<NodeChange*> &changes, kiwiPool &pool) {
-    auto size = get<Vector>(action->propertyValue);
-    auto* nodeChange = pool.allocate<NodeChange>();
-    nodeChange->set_guid(action->node_id.toChange(pool));
-    nodeChange->set_size(size.toChange(pool));
-		changes.push_back(nodeChange);
+void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPool &pool) {
+  auto changeItem = desaina_->changeSystem.getChangingItem(action->node_id);
+  auto size = get<Vector>(action->propertyValue);
+  auto* nodeChange = changeItem->changeNode;
+  nodeChange->set_size(size.toChange(pool));
+  changeItem->isFillGeometryDirty = true;
+  changeItem->isStrokeGeometryDirty = true;
 }

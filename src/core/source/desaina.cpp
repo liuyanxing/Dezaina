@@ -1,4 +1,3 @@
-
 #include "kiwi.h"
 #include <cstring>
 #include <memory>
@@ -13,14 +12,12 @@
 #include "event_system/event.h"
 #include <cstdint>
 #include "desaina_node.h"
+#include "util/node_geometry.h"
 #include "desaina.h"
 
-static DataSharedPtr decodeGeometryBlob(const Desaina_Kiwi::Blob& blob) {
+static Buffer decodeBlob(const Desaina_Kiwi::Blob& blob) {
   auto const data_ptr = blob.bytes();
-  if (data_ptr == nullptr) {
-    return nullptr;
-  }
-  return Data::MakeWithCopy(data_ptr->data(), data_ptr->size());
+  return Buffer::MakeWithCopy(data_ptr->data(), data_ptr->size());
 }
 
 bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
@@ -34,12 +31,28 @@ bool Desaina::processMessage(kiwi::ByteBuffer& buffer) {
 	return true;
 }
 
+static vector<Node*> messageNodes;
+
 bool Desaina::processMessage(const Desaina_Kiwi::Message& message) {
 	auto type = message.type();
 	if (type == nullptr) {
 		return false;
 	}
-
+	blob_id_remap_.clear();
+	messageNodes.clear();
+	
+	if (auto* blobPtr = message.blobs()) {
+    auto& blobs = *blobPtr;
+    int index = 0;
+    for (auto& blob : blobs) {
+    	if (!document.isLoaded()) {
+    		// todo add blob without query;
+    	};
+    	auto geometry = addGeomtryFromBlob(decodeBlob(blob));
+    	blob_id_remap_[index++] = geometry.first;
+    }
+  }
+  
 	using Desaina_Kiwi::MessageType;
 	switch (*type) {
 		case MessageType::NODE_CHANGES:
@@ -48,12 +61,11 @@ bool Desaina::processMessage(const Desaina_Kiwi::Message& message) {
 		default:
 			break;
 	}
-  if (auto* blobPtr = message.blobs()) {
-    auto& blobs = *blobPtr;
-    for (auto& blob : blobs) {
-      document.appendGeometryByBlob(decodeGeometryBlob(blob));
-    }
-  }
+	
+	if (document.isLoaded()) {
+		remapBlobId();
+	}
+	
 	return true;
 }
 
@@ -61,6 +73,15 @@ void Desaina::applyNodeChanges(const Desaina_Kiwi::Message& message) {
 	auto* node_changs = message.nodeChanges();
 	for (const auto& node_change : *node_changs) {
 		applyNodeChange(node_change);
+	}
+}
+
+void Desaina::remapBlobId() {
+	for (auto& node : messageNodes) {
+		auto& fillGeometry = util::getFillGeometry(node);
+		for (auto& geometry : fillGeometry) {
+		  const_cast<Path&>(geometry).commandsBlob = blob_id_remap_[geometry.commandsBlob];
+		}
 	}
 }
 
@@ -114,6 +135,7 @@ void Desaina::applyNodeChange(const Desaina_Kiwi::NodeChange& node_change) {
 	}
 
 	node->applyChange(node_change);
+	messageNodes.push_back(node);
 }
 
 bool Desaina::encode(kiwi::ByteBuffer &buffer) {

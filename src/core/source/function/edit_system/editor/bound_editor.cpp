@@ -125,9 +125,10 @@ void BoundEditor::handleDragBoundEdge(Event* event) {
 
   auto selectedNodes = editor_->getEditingNodes();
   for (auto node : selectedNodes) {
+    Action::MakeTranslate(node->get_guid(), deltaX, deltaY);
     auto bound = util::getLocalBound(node);
     Vector size{bound.width() + deltaX, bound.height() + deltaY};
-    PropertyType sizeType = PropertyType::kSize;
+    PropertyType sizeType = PropertyType::kResize;
     PropertyValue sizeValue = size;
     editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::Make(node->get_guid(), sizeType, sizeValue));
     if (!isInverse) {

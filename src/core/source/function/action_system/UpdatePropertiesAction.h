@@ -24,4 +24,9 @@ struct UpdatePropertiesAction : public Action {
     auto action = make_shared<UpdatePropertiesAction>(id, property_type, property_value);
     return action;
   }
+
+  static auto MakeTranslate(GUID id, const Vector& vector) {
+    auto action = make_shared<UpdatePropertiesAction>(id, PropertyType::kTransform, Matrix::MakeTranslate(vector));
+    return action;
+  }
 };

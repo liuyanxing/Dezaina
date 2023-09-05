@@ -7,12 +7,12 @@
 class Buffer {
 public:
   Buffer() : size_(0), data_(nullptr) {}
-  Buffer(const Buffer& other) {
-    size_ = other.size_;
-    data_ = new uint8_t[size_];
-    memcpy(data_, other.data_, size_);
-    is_owned = true;
-  }
+  Buffer(const Buffer& other) = delete;
+  Buffer(Buffer&& other) {
+    this->data_ = other.data_;
+    this->size_ = other.size_;
+    other.data_ = nullptr;
+  };
   ~Buffer() {
     if (is_owned) {
       delete[] data_;

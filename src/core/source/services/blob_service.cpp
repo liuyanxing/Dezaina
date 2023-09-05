@@ -1,4 +1,5 @@
 #include "blob_service.h"
+#include <algorithm>
 #include <stdint.h>
 
 uint32_t BlobService::addBlob(Blob&& blob) {
@@ -9,9 +10,10 @@ uint32_t BlobService::addBlob(Blob&& blob) {
     return it->second;
   }
 insert:
+  auto size = blob.size();
   uint32_t index = blobs_to_index_.size();
-  blobs_to_index_[blob] = index;
-  index_to_blobs_[index] = blob;
+  auto pair = blobs_to_index_.insert({std::move(blob), index});
+  index_to_blobs_[index] = &pair.first->first;
   blob_sizes_.insert(blob.size());
   return index;
 }

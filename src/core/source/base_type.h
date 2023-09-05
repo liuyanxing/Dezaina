@@ -9,7 +9,6 @@
 #include "include/core/SkRefCnt.h"
 
 using Data = SkData;
-using DataSharedPtr = sk_sp<Data>;
 
 using std::vector;
 using std::string;

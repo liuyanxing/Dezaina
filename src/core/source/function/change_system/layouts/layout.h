@@ -9,7 +9,7 @@ class Layout {
     Layout(Desaina* desaina) : desaina_(desaina) {};
     ~Layout() = default;
     
-    virtual bool processUpdatePropertiesAction(UpdatePropertiesAction* action, vector<NodeChange*>& changes, kiwiPool& pool) = 0;
+    virtual bool processUpdatePropertiesAction(const UpdatePropertiesAction* action, kiwiPool& pool) = 0;
   protected:
     Desaina* desaina_;
 };

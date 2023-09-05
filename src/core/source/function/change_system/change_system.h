@@ -7,10 +7,23 @@
 #include "change_system/layouts/auto_layout.h"
 #include "change_system/layouts/constraint_layout.h"
 #include "change_system/layouts/layout.h"
+#include "node_type.h"
+#include "node_pool.h"
 #include "system/system.h"
 #include <vector>
 
 using LayoutPtr = shared_ptr<Layout>;
+
+struct ChangeItem {
+  Node* node = nullptr;
+  NodeChange* changeNode = nullptr;
+  bool isFillGeometryDirty;
+  bool isStrokeGeometryDirty;
+  
+  static ChangeItem Make(Node* node, NodeChange* change_node) {
+    return {node, change_node, false, false};
+  }
+};
 
 class ChangeSystem : public System {
  public:
@@ -20,15 +33,30 @@ class ChangeSystem : public System {
   };
   ~ChangeSystem() = default;
 
-  void tick() override;
+ unordered_map<GUID, ChangeItem>* getChangingItems() {
+   return &changing_items_;
+ }
 
-  void convertActionsToChange(const vector<ActionPtr>& actions);
-  void processAction(Action* action);
-  void processAction(UpdatePropertiesAction* action);
+ ChangeItem* getChangingItem(GUID guid) {
+   auto it = changing_items_.find(guid);
+   if (it == changing_items_.end()) {
+     return nullptr;
+   }
+   return &it->second;
+ }
+
+  void tick() override;
   
  private:
+  void addChangingItem(const Action* action);
+  void convertActionsToChange(const vector<ActionPtr>& actions);
+  void processAction(const Action* action);
+  void processAction(const UpdatePropertiesAction* action);
+ 
   Desaina* desaina_;
-  kiwi::MemoryPool pool;
-  vector<Desaina_Kiwi::NodeChange*> node_changes_;
   vector<LayoutPtr> layouts;
+ 
+  kiwi::MemoryPool change_pool_;
+  NodePool node_pool_{10};
+  unordered_map<GUID, ChangeItem> changing_items_;
 };

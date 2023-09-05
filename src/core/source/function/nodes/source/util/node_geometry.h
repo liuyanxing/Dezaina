@@ -46,10 +46,22 @@ namespace util {
     }
     return matrix;
   }
+
   inline auto getWorldAABBBound(const Node* node, Document* document) {
     auto matrix = getWorldMatrix(node, document);
     auto bound = getLocalBound(node);
     return matrix.mapRect(bound);
   }
+
+  inline const IVector<Path>& getFillGeometry(const Node* node) {
+    static IVector<Path> empty;
+    if (util::isDefaultShapeNode(node)) {
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      return shape->get_fillGeometry();
+    }
+    return empty;
+  }
+
   SkPath buildFillPath(const Node* node);
+  Geometry* buildFillGeometry(const Node *node, Desaina *desaina);
 }

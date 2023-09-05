@@ -106,4 +106,6 @@ namespace util {
     }
     return skPaint;
   }
+
+  Buffer toBuffer(const SkPath& path);
 }
