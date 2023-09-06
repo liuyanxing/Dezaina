@@ -3,6 +3,7 @@
 #include "change_system.h"
 #include "action_system/UpdatePropertiesAction.h"
 #include "util/node_geometry.h"
+#include "util/node_create.h"
 
 void ChangeSystem::convertActionsToChange(const vector<ActionPtr>& actions) {
   for (auto& action : actions) {
@@ -24,7 +25,7 @@ void ChangeSystem::processAction(const Action *action) {
 
 void ChangeSystem::processAction(const UpdatePropertiesAction *action) {
   for (auto& layout : layouts) {
-    if (layout->processUpdatePropertiesAction(action, node_changes_, change_pool_)) {
+    if (layout->processUpdatePropertiesAction(action, change_pool_)) {
       break;
     }
   }
@@ -74,7 +75,7 @@ void ChangeSystem::tick() {
       continue;
     }
     if (changeItem.isFillGeometryDirty) {
-      changeItem.node =  node.value().cloneBase(node_pool_);
+      changeItem.node = util::cloneNodeBase(node.value(), node_pool_);
       changeItem.node->applyChange(changeNode);
       auto* geometry = util::buildFillGeometry(changeItem.node, desaina_);
       changeNode.set_fillGeometry(change_pool_, 1)[0].set_commandsBlob(blobIndex++);
@@ -91,7 +92,7 @@ void ChangeSystem::tick() {
     auto& blobChangeBuffer = blobChange.set_bytes(change_pool_, blob->size());
     blobChangeBuffer.set(blob->data(), blob->size());
   }
-  desaina_->processMessage(message);
+  change_processor_.processMessage(message);
   
   change_pool_.clear();
   node_pool_.clear();

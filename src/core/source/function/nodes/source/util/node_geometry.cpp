@@ -54,7 +54,7 @@ namespace util {
   }
 
   Geometry* buildFillGeometry(const Node *node, Desaina *desaina) {
-    return desaina->addGeomtryFromBlob(util::toBuffer(buildFillPath(node)));
+    return desaina->addGeomtryFromBlob(util::toBuffer(buildFillPath(node))).second;
   }
 }
 

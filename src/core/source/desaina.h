@@ -58,13 +58,9 @@ class Desaina : public EventEmitter {
       };
 		~Desaina() = default;
 		void tick();
-		bool processMessage(kiwi::ByteBuffer& buffer);
-		bool processMessage(const Desaina_Kiwi::Message& message);
-		void applyNodeChanges(const Desaina_Kiwi::Message& message);
-		void applyNodeChange(const Desaina_Kiwi::NodeChange& node_change);
 
 		bool loadDocument(kiwi::ByteBuffer& buffer) {
-			bool is_loaded = processMessage(buffer);
+			bool is_loaded = changeSystem.processMessage(buffer);
 			if (!is_loaded) {
 				return false;
 			}
@@ -98,8 +94,8 @@ class Desaina : public EventEmitter {
       emit(event);
     }
 
-  std::pair<uint32_t, Geometry*> addGeomtryFromBlob(Blob&& blob) {
-      auto blob_key = services.blobService->addBlob(std::move(blob));
+  std::pair<uint32_t, Geometry*> addGeomtryFromBlob(const Blob& blob) {
+      auto blob_key = services.blobService->addBlob(blob);
       const auto* blob_ptr = services.blobService->getBlob(blob_key);
       auto geometryPair = geometries_.insert({blob_key, Geometry{.commandsBlob = blob_ptr}});
       return {blob_key, &geometryPair.first->second} ;
@@ -128,5 +124,4 @@ class Desaina : public EventEmitter {
     unordered_map<int, Geometry> geometries_{};
     Systems systems_{};
     WindowInfo windowInfo_{};
-    BlobReMap blob_id_remap_{};
 };

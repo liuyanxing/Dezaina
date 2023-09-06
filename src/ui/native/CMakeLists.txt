@@ -11,6 +11,7 @@ set(TARGET_INCLUE_DIRS
 
 set(TARGET_LINK_LIBS
   DesainaCore
+  DesainaBase
   ${SDL_LIBRARIES}
   imgui)
 

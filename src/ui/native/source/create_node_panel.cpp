@@ -13,13 +13,13 @@ void CreateNodePanel(Desaina* desaina) {
 	if (ImGui::Button("Rect")) {
 		kiwi::ByteBuffer buffer;
 		desaina_change::createNodeChangeMessage(NodeType::RECTANGLE, buffer, desaina);	
-		desaina->processMessage(buffer);
+		// desaina->processMessage(buffer);
 	}
 
 	if (ImGui::Button("Frame")) {
 		kiwi::ByteBuffer buffer;
 		desaina_change::createNodeChangeMessage(NodeType::FRAME, buffer, desaina);	
-		desaina->processMessage(buffer);
+		// desaina->processMessage(buffer);
 	}
 
 	ImGui::End();

@@ -1,3 +1,6 @@
+#pragma once
+
+#include "desaina_node.h"
 #include "document.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPath.h"
@@ -27,6 +30,14 @@ namespace util {
       return SkRect::MakeIWH(shape->get_size().x, shape->get_size().y);
     }
     return SkRect::MakeEmpty();
+  }
+
+  inline Vector getSize(const Node* node) {
+    if (util::isDefaultShapeNode(node)) {
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      return shape->get_size();
+    }
+    return Vector{0, 0};
   }
 
   inline bool isPointInNodeGeometry(Node* node, float x, float y) {

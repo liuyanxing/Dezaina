@@ -1,9 +1,9 @@
-#include "base/buffer.h"
+#include "buffer.h"
 #include "services/blob_service.h"
 #include "skia.h"
 namespace util {
-  Blob toBlob(const SkPath &path) {
-    Blob buffer;
+  Buffer toBuffer(const SkPath &path) {
+    Buffer buffer;
     SkPath::Iter iter(path, false);
     SkPoint points[4];
     SkPath::Verb type;
@@ -49,6 +49,51 @@ namespace util {
         }
       }
     }
-    return buf; 
+    return buffer; 
   }
+
+  SkPath toSkPath(const Blob* blob) {
+    SkPath path;
+    size_t i = 0;
+    while (i < blob->size()) {
+      auto type = blob->readByte();
+      switch (type) {
+        case 0: {
+          path.close();
+          break;
+        }
+        case 1: {
+          path.moveTo(blob->readFloat(), blob->readFloat());
+          break;
+        }
+        case 2: {
+          path.lineTo(blob->readFloat(), blob->readFloat());
+          break;
+        }
+        case 3: {
+          path.quadTo(
+            blob->readFloat(), blob->readFloat(),
+            blob->readFloat(), blob->readFloat()
+          );
+          break;
+        }
+        case 4: {
+          path.cubicTo(
+            blob->readFloat(), blob->readFloat(),
+            blob->readFloat(), blob->readFloat(),
+            blob->readFloat(), blob->readFloat()
+          );
+          break;
+        }
+        default: {
+          assert(false);
+          break;
+        }
+      }
+    }
+    path.dump();
+
+    return path;
+  }
+
 }

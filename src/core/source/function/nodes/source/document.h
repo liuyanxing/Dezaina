@@ -6,8 +6,6 @@
 #include <optional>
 #include <functional>
 #include <unordered_map>
-#include "base/map.h"
-#include "base/class_tool.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "event_system/event_system.h"
@@ -30,7 +28,6 @@
 
 #include "services/services.h"
 
-constexpr size_t NodeSize = max_size<PageNode, FrameNodeBase, RectangleNode>();
 constexpr size_t NodePoolInitialSize = 1024;
 
 using NodeMap = std::unordered_map<GUID, Node*>;

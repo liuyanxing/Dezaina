@@ -1,5 +1,5 @@
 #include "auto_layout.h"
 
-bool AutoLayout::processUpdatePropertiesAction(UpdatePropertiesAction *action, vector<NodeChange*> &changes, kiwiPool &pool) {
+bool AutoLayout::processUpdatePropertiesAction(const UpdatePropertiesAction *action, kiwiPool &pool) {
   return false;
 }

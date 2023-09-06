@@ -8,7 +8,7 @@
 #include "include/core/SkPaint.h"
 #include "include/core/SkPath.h"
 
-#include "base/buffer.h"
+#include "buffer.h"
 #include "services/blob_service.h"
 #include <cassert>
 #include <variant>
@@ -45,57 +45,6 @@ namespace util {
     };
   }
 
-  inline SkPath toSkPath(const Blob* blob) {
-    SkPath path;
-    const auto* data = static_cast<const uint8_t*>(blob->data());
-    auto size = blob->size();
-    size_t i = 0;
-    while (i < size) {
-      auto type = Buffer::readByte(data, i);
-      i++;
-      switch (type) {
-        case 0: {
-          path.close();
-          break;
-        }
-        case 1: {
-          path.moveTo(Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4));
-          i += 8;
-          break;
-        }
-        case 2: {
-          path.lineTo(Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4));
-          i += 8;
-          break;
-        }
-        case 3: {
-          path.quadTo(
-            Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4),
-            Buffer::readFloat(data, i + 8), Buffer::readFloat(data, i + 12)
-          );
-          i += 16;
-          break;
-        }
-        case 4: {
-          path.cubicTo(
-            Buffer::readFloat(data, i), Buffer::readFloat(data, i + 4),
-            Buffer::readFloat(data, i + 8), Buffer::readFloat(data, i + 12),
-            Buffer::readFloat(data, i + 16), Buffer::readFloat(data, i + 20)
-          );
-          i += 24;
-          break;
-        }
-        default: {
-          assert(false);
-          break;
-        }
-      }
-    }
-    path.dump();
-
-    return path;
-  }
-
   inline SkPaint toSkPaint(const PaintUnion& paint) {
     SkPaint skPaint;
     skPaint.setAntiAlias(true);
@@ -108,4 +57,5 @@ namespace util {
   }
 
   Buffer toBuffer(const SkPath& path);
+  SkPath toSkPath(const Blob* blob);
 }

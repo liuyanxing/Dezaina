@@ -92,7 +92,7 @@ namespace util {
       }
 
       matrix.setScaleTranslate(fontSize, -fontSize, glyph.position.x, glyph.position.y);
-      const auto& glyphPath = desaina->document.getGeometry(glyph.commandsBlob)->getPath();
+      const auto& glyphPath = desaina->getGeometry(glyph.commandsBlob)->getPath();
       path.addPath(glyphPath, matrix);
 
       lastStyleID = styleID;
