@@ -19,6 +19,7 @@
 #include "util/skia.h"
 #include "util/node_props.h"
 #include "util/node_geometry.h"
+#include "config/color.h"
 
 #include <iostream>
 
@@ -85,7 +86,7 @@ void Canvas::clear() {
 
 void Canvas::drawHoverSelectionNode() {
   drawHoverNode();
-  drawSelectionNode();
+  drawEditor();
 }
 
 void Canvas::drawHoverNode() {
@@ -99,14 +100,33 @@ void Canvas::drawHoverNode() {
     auto shape = static_cast<const DefaultShapeNode*>(hoverNode);
     auto geometry = util::getHoverGeometry(shape, desaina_);
     SkPaint paint;
-    paint.setColor(SK_ColorRED);
+    paint.setColor(Config::primaryColor);
     paint.setStyle(SkPaint::kStroke_Style);
-    paint.setStrokeWidth(1);
+    paint.setStrokeWidth(2);
     canvas_->drawPath(geometry.path, paint);
   }
 }
 
-void Canvas::drawSelectionNode() {
+void Canvas::drawEditor() {
+  SkAutoCanvasRestore auto_save(canvas_, true);
+  auto* editor = desaina_->editSystem.getEditor();
+  if (editor == nullptr) {
+    return;
+  }
+  canvas_->concat(editor->getEditTransform());
+  SkPath fillPath, strokePath;
+  editor->getPath(fillPath, strokePath);
+  
+  SkPaint paint;
+  paint.setColor(Config::primaryColor);
+  paint.setStyle(SkPaint::kStroke_Style);
+  paint.setStrokeWidth(1);
+  canvas_->drawPath(fillPath, paint);
+  canvas_->drawPath(strokePath, paint);
+
+  paint.setStyle(SkPaint::kFill_Style);
+  paint.setColor(SK_ColorWHITE);
+  canvas_->drawPath(fillPath, paint);
 }
 
 void Canvas::drawMouseEvents(MouseEvent* event) {

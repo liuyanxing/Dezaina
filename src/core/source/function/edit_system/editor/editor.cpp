@@ -24,17 +24,21 @@ vector<Node*> Editor::getEditingNodes() {
   return desaina->document.getSelectedNodes();
 }
 
-SkRect Editor::buildEditingNodesBound() {
+void Editor::buildEditingNodesBound() {
   auto selectedNodes = getEditingNodes();
   if (selectedNodes.size() == 1) {
-    return util::getLocalBound(selectedNodes[0]);
+    edit_bound_ = util::getLocalBound(selectedNodes[0]);
+    edit_transform_ = util::getWorldMatrix(selectedNodes[0], &desaina->document);
+    return;
   }
   
   SkRect bound;
   for (const auto node : selectedNodes) {
     bound.join(util::getWorldAABBBound(node, &desaina->document));
   }
-  return bound;
+  edit_transform_.reset();
+  edit_transform_.setTranslate(bound.x(), bound.y());
+  edit_bound_ = {0, 0, bound.width(), bound.height()};
 }
 
 void Editor::handleMouseEvent(Event* event) {
@@ -81,18 +85,11 @@ void Editor::mapEventToLocal(Event* event) {
   auto mouseEvent = static_cast<UIEvent*>(event);
   auto selectedNodes = getEditingNodes();
   
-  SkMatrix matrix;
-  if (selectedNodes.size() == 1) {
-    matrix = util::getWorldMatrix(selectedNodes[0], &desaina->document);
-  } else {
-    auto matrix = SkMatrix::I();
-    matrix.setTranslate(bound_.x(), bound_.y());
-  }
-  auto point = base::mapPointToLocal({mouseEvent->x, mouseEvent->y}, matrix);
+  auto point = base::mapPointToLocal({mouseEvent->x, mouseEvent->y}, edit_transform_);
   mouseEvent->localX = point.x();
   mouseEvent->localY = point.y();
 
-  auto localDelta = base::mapSizeToLocal({mouseEvent->deltaX, mouseEvent->deltaY}, matrix);
+  auto localDelta = base::mapSizeToLocal({mouseEvent->deltaX, mouseEvent->deltaY}, edit_transform_);
   mouseEvent->deltaX = localDelta.width();
   mouseEvent->deltaY = localDelta.height();
 }

@@ -2,7 +2,9 @@
 #include "bound_editor.h"
 #include "desaina.h"
 #include "edit_system/editor/editor.h"
+#include "event_system/event.h"
 #include "event_system/hit_tester.h"
+#include "event_system/mouse_event.h"
 #include "include/core/SkPoint.h"
 #include "include/core/SkRect.h"
 #include "util/node_geometry.h"
@@ -18,6 +20,15 @@ static bool shouldInverse(EditorHitNode* node) {
   return node->index % 3 == 0;
 }
 
+static bool inverseDelta(EditorHitNode* node, MouseEvent* event) {
+  if (!shouldInverse(node)) {
+    return false;
+  }
+  event->deltaX = -event->deltaX;
+  event->deltaY = -event->deltaY;
+  return true;
+}
+
 BoundEditor::BoundEditor(Editor* editor): editor_(editor) {
   init();
 }
@@ -27,14 +38,14 @@ void BoundEditor::init() {
   bindInteractionArea();
 }
 
-void BoundEditor::addHitNode(const EditorHitNode& node) {
-  hit_nodes_.push_back(node);
+void BoundEditor::addHitNode(EditorHitNodeType type, int index, const SkRect& rect) {
+  hit_nodes_.push_back(EditorHitNode::Make(type, index, rect));
   auto* hit_node = &hit_nodes_.back();
   editor_->hit_tester->insert(hit_node);
 }
 
 void BoundEditor::bindInteractionArea() {
-  const auto& bound = editor_->getBound();
+  const auto& bound = editor_->getEditBound();
   constexpr float kCornerCtrlNodeSize = 5;
   constexpr float kEdgeCtrlNodeSize = 1;
   constexpr float kCornerCtrlNodeHalfSize = kCornerCtrlNodeSize / 2;
@@ -43,17 +54,23 @@ void BoundEditor::bindInteractionArea() {
   auto width = bound.width();
   auto height = bound.height();
   auto leftTopCornerCtrlRect = SkRect::MakeXYWH(left - kCornerCtrlNodeHalfSize, top - kCornerCtrlNodeHalfSize, kCornerCtrlNodeSize, kCornerCtrlNodeSize);
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundCorner, 0, leftTopCornerCtrlRect));
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundCorner, 1, leftTopCornerCtrlRect.makeOffset(width, 0)));
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundCorner, 2, leftTopCornerCtrlRect.makeOffset(width, height)));
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundCorner, 3, leftTopCornerCtrlRect.makeOffset(0, height)));
+  addHitNode(EditorHitNodeType::kBoundCorner, 0, leftTopCornerCtrlRect);
+  addHitNode(EditorHitNodeType::kBoundCorner, 1, leftTopCornerCtrlRect.makeOffset(width, 0));
+  addHitNode(EditorHitNodeType::kBoundCorner, 2, leftTopCornerCtrlRect.makeOffset(width, height));
+  addHitNode(EditorHitNodeType::kBoundCorner, 3, leftTopCornerCtrlRect.makeOffset(0, height));
+
+  auto leftTopRotateCtrRect = leftTopCornerCtrlRect.makeOffset(-kCornerCtrlNodeSize, -kCornerCtrlNodeSize);
+  addHitNode(EditorHitNodeType::kBoundRotate, 0, leftTopRotateCtrRect);
+  addHitNode(EditorHitNodeType::kBoundRotate, 1, leftTopRotateCtrRect.makeOffset(width + kCornerCtrlNodeSize, 0));
+  addHitNode(EditorHitNodeType::kBoundRotate, 2, leftTopRotateCtrRect.makeOffset(width + kCornerCtrlNodeSize, height + kCornerCtrlNodeSize));
+  addHitNode(EditorHitNodeType::kBoundRotate, 3, leftTopRotateCtrRect.makeOffset(0, height + kCornerCtrlNodeSize));
 
   auto leftEdgeCtrlRect = SkRect::MakeXYWH(left - kEdgeCtrlNodeHalfSize, top + kCornerCtrlNodeHalfSize, kEdgeCtrlNodeSize, height - kCornerCtrlNodeSize);
   auto topEdgeCtrlRect = SkRect::MakeXYWH(left + kCornerCtrlNodeHalfSize, top - kEdgeCtrlNodeHalfSize, width - kCornerCtrlNodeSize, kEdgeCtrlNodeSize);
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundEdge, 0, topEdgeCtrlRect));
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundEdge, 1, leftEdgeCtrlRect.makeOffset(width, 0)));
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundEdge, 2, topEdgeCtrlRect.makeOffset(0, height)));
-  addHitNode(EditorHitNode::Make(EditorHitNodeType::kBoundEdge, 3, leftEdgeCtrlRect));
+  addHitNode(EditorHitNodeType::kBoundEdge, 0, topEdgeCtrlRect);
+  addHitNode(EditorHitNodeType::kBoundEdge, 1, leftEdgeCtrlRect.makeOffset(width, 0));
+  addHitNode(EditorHitNodeType::kBoundEdge, 2, topEdgeCtrlRect.makeOffset(0, height));
+  addHitNode(EditorHitNodeType::kBoundEdge, 3, leftEdgeCtrlRect);
 }
 
 void BoundEditor::bindEvents() {
@@ -90,17 +107,21 @@ void BoundEditor::hanldeDrageCtrlNode(Event* event) {
 
   switch (hitNode->type) {
     case EditorHitNodeType::kBoundCorner: {
-      handleDragBoundCorner(event);
+      handleDragBoundResize(event);
       break;
     }
     case EditorHitNodeType::kBoundEdge: {
       handleDragBoundEdge(event);
       break;
     }
+    case EditorHitNodeType::kBoundRotate: {
+      handleDragBoundRotate(event);
+      break;
+    }
   }
 }
 
-void BoundEditor::handleDragBoundCorner(Event* event) {
+void BoundEditor::handleDragBoundResize(Event* event) {
   auto selectedNodes = editor_->getEditingNodes();
   if (selectedNodes.size() == 1) {
     auto mouseEvent = *static_cast<MouseEvent*>(event);
@@ -121,32 +142,43 @@ void BoundEditor::handleDragBoundCorner(Event* event) {
   } else {}
 }
 
+void BoundEditor::handleDragBoundRotate(Event* event) {
+  auto selectedNodes = editor_->getEditingNodes();
+  if (selectedNodes.size() == 1) {
+    auto mouseEvent = *static_cast<MouseEvent*>(event);
+    auto* node = selectedNodes[0];
+    auto deltaX = mouseEvent.deltaX;
+    auto deltaY = mouseEvent.deltaY;
+    auto localX = mouseEvent.localX;
+    auto localY = mouseEvent.localY;
+    auto oldeX = localX - deltaX;
+    auto oldeY = localY - deltaY;
+    auto size = util::getSize(node);
+    float angle = base::linesAngle(SkPoint::Make(oldeX - size.x, oldeY - size.y), SkPoint::Make(localX - size.x, localY - size.y));
+
+  } else {}
+}
+
 void BoundEditor::handleDragBoundEdge(Event* event) {
   auto* hitNode = editor_->getFirstSelectedHitNode();
   if (!hitNode) {
     return;
   }
   auto mouseEvent = static_cast<MouseEvent*>(event);
+  if (isFirstDiagonal(hitNode)) {
+    mouseEvent->deltaX = 0;
+  } else {
+    mouseEvent->deltaY = 0;
+  }
+  inverseDelta(hitNode, mouseEvent);
   auto deltaX = mouseEvent->deltaX;
   auto deltaY = mouseEvent->deltaY;
-  if (isFirstDiagonal(hitNode)) {
-    deltaX = 0;
-  } else {
-    deltaY = 0;
-  }
-  bool isInverse = shouldInverse(hitNode);
-  if (isInverse) {
-    deltaX = -deltaX;
-    deltaY = -deltaY;
-  }
 
   auto selectedNodes = editor_->getEditingNodes();
   if (selectedNodes.size() == 1) {
     auto* node = selectedNodes[0];
     editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, deltaX, deltaY));
-    if (!isInverse) {
-      return;
-    }
+    if (!shouldInverse(hitNode)) return;
     editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
 
   } else {}
@@ -174,6 +206,10 @@ void BoundEditor::handleMouseMove(Event* event) {
         cursorType = hoverNode->index % 2 == 0 ? CursorType::kSIZENWSE : CursorType::kSIZENESW;
         break;
       }
+      case EditorHitNodeType::kBoundRotate: {
+        cursorType = CursorType::kHandle;
+        break;
+      }
       default: {
         break;
       }
@@ -181,6 +217,22 @@ void BoundEditor::handleMouseMove(Event* event) {
     event->stop();
   }
   editor_->desaina->setCursor(cursorType);
+}
+
+void BoundEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
+  auto& bound = editor_->getEditBound();
+  strokePath.addRect(bound);
+  
+  constexpr float kCornerCtrlNodeSize = 5;
+  constexpr float kCornerCtrlNodeHalfSize = kCornerCtrlNodeSize / 2;
+  auto [left, top, right, bottom] = bound;
+  auto width = bound.width();
+  auto height = bound.height();
+  auto leftTopCornerCtrlRect = SkRect::MakeXYWH(left - kCornerCtrlNodeHalfSize, top - kCornerCtrlNodeHalfSize, kCornerCtrlNodeSize, kCornerCtrlNodeSize);
+  fillPath.addRect(leftTopCornerCtrlRect);
+  fillPath.addRect(leftTopCornerCtrlRect.makeOffset(width, 0));
+  fillPath.addRect(leftTopCornerCtrlRect.makeOffset(width, height));
+  fillPath.addRect(leftTopCornerCtrlRect.makeOffset(0, height));
 }
 
 

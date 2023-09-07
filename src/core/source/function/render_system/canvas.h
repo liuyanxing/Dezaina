@@ -46,7 +46,7 @@ public:
 
 		void drawHoverSelectionNode();
 		void drawHoverNode();
-		void drawSelectionNode();
+		void drawEditor();
 		void setWidth(int width);
 		void setHeight(int height);
 		void setBuffer(void *buffer);

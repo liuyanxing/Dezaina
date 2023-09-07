@@ -1,6 +1,7 @@
 #pragma once
 
 #include "editor.h"
+#include "include/core/SkPath.h"
 #include "include/core/SkRect.h"
 #include <vector>
 
@@ -9,7 +10,7 @@ public:
 	BoundEditor(Editor* editor);
 	void init();
 	void update() {};
-
+  void getPath(SkPath& fillPath, SkPath& strokePath);
 
 private:
 	void bindEvents();
@@ -18,9 +19,11 @@ private:
 	void handleMouseDrag(Event* event);
 	void handleDragBound(Event* event);
 	void hanldeDrageCtrlNode(Event* event);
-	void handleDragBoundCorner(Event* event);
+	void handleDragBoundResize(Event* event);
+  void handleDragBoundRotate(Event* event);
 	void handleDragBoundEdge(Event* event);
-	void addHitNode(const EditorHitNode& node);
+
+	void addHitNode(EditorHitNodeType type, int index, const SkRect& rect);
 	
   Editor* editor_;
   SkRect bound_;

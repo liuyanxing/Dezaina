@@ -5,6 +5,8 @@
 #include "event_system/event_emitter.h"
 #include "event_system/hit_tester.h"
 #include "event_system/simple_hit_tester.h"
+#include "include/core/SkMatrix.h"
+#include "include/core/SkPath.h"
 
 class Desaina;
 
@@ -17,6 +19,7 @@ enum class EditorType {
 enum class EditorHitNodeType {
   kBoundEdge,
   kBoundCorner,
+  kBoundRotate,
 };
 
 struct EditorHitNode : public HitTestNode {
@@ -39,8 +42,9 @@ public:
   };
   virtual ~Editor() = default;
   virtual void update() {
-    bound_ = buildEditingNodesBound();
+    buildEditingNodesBound();
   };
+  virtual void getPath(SkPath& fillPath, SkPath& strokePath) {};
 
   void init();
   void bindEvents();
@@ -57,7 +61,8 @@ public:
   bool isPathEditor() { return type == EditorType::kPath; };
 
   bool isDirty() { return this->dirty; };
-  const SkRect& getBound() const { return bound_; };
+  const SkRect& getEditBound() const { return edit_bound_; };
+  const SkMatrix& getEditTransform() const { return edit_transform_; };
   vector<Node*> getEditingNodes();
   vector<EditorHitNode*>& getSelectedHitNode() { return selected_hit_nodes_; };
   EditorHitNode* getFirstSelectedHitNode() { return !selected_hit_nodes_.empty() ? selected_hit_nodes_[0] : nullptr; };
@@ -67,7 +72,7 @@ public:
   Desaina* desaina;
   std::unique_ptr<HitTester> hit_tester = std::make_unique<SimpleHitTester>();
 private:
-  SkRect buildEditingNodesBound();
+  void buildEditingNodesBound();
   void buildHitTester(const std::vector<HitTestNode*>& nodes) {
   }
   void mapEventToLocal(Event* event);
@@ -81,5 +86,6 @@ private:
   bool dirty = false;
   EditorHitNode* hover_hit_node_ = nullptr;
   vector<EditorHitNode*> selected_hit_nodes_{};
-  SkRect bound_;
+  SkRect edit_bound_;
+  SkMatrix edit_transform_;
 };

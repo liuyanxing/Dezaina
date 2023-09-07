@@ -13,6 +13,10 @@ public:
     boundEditor_.update();
     Editor::update();
   };
+
+  virtual void getPath(SkPath& fillPath, SkPath& strokePath) {
+    boundEditor_.getPath(fillPath, strokePath);
+  };
   
   void bindEvents();
   BoundEditor boundEditor_;

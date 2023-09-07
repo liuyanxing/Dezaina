@@ -14,6 +14,10 @@ class EditSystem : public System {
     bindEvents();
   };
   ~EditSystem() = default;
+ 
+ Editor* getEditor() {
+   return editor_.get();
+ }
 
   void tick() override;
   
