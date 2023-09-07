@@ -1,3 +1,5 @@
+#pragma once
+
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
 #include "include/core/SkSize.h"
@@ -19,5 +21,8 @@ namespace base {
     SkPoint orgin = invertMatrix.mapXY(0, 0);
     SkPoint point = invertMatrix.mapXY(size.width(), size.height());
     return SkSize::Make(point.x() - orgin.x(), point.y() - orgin.y());
+  }
+  inline float linesAngle(const SkPoint& a, const SkPoint& b) {
+    return acosf(a.dot(b) / (a.length() * b.length()));
   }
 }

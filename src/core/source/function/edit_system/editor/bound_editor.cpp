@@ -7,6 +7,7 @@
 #include "include/core/SkRect.h"
 #include "util/node_geometry.h"
 #include "util/skia.h"
+#include "base/math.h"
 #include <iostream>
 
 static bool isFirstDiagonal(EditorHitNode* node) {
@@ -100,6 +101,24 @@ void BoundEditor::hanldeDrageCtrlNode(Event* event) {
 }
 
 void BoundEditor::handleDragBoundCorner(Event* event) {
+  auto selectedNodes = editor_->getEditingNodes();
+  if (selectedNodes.size() == 1) {
+    auto mouseEvent = *static_cast<MouseEvent*>(event);
+    auto* node = selectedNodes[0];
+    auto deltaX = mouseEvent.deltaX;
+    auto deltaY = mouseEvent.deltaY;
+    auto localX = mouseEvent.localX;
+    auto localY = mouseEvent.localY;
+    auto oldeX = localX - deltaX;
+    auto oldeY = localY - deltaY;
+    auto size = util::getSize(node);
+    float angle = base::linesAngle(SkPoint::Make(oldeX - size.x, oldeY - size.y), SkPoint::Make(localX - size.x, localY - size.y));
+
+
+    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, deltaX, deltaY));
+    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
+
+  } else {}
 }
 
 void BoundEditor::handleDragBoundEdge(Event* event) {
@@ -121,16 +140,16 @@ void BoundEditor::handleDragBoundEdge(Event* event) {
     deltaY = -deltaY;
   }
 
-  std::cout << "drag bound edge: " << deltaX << ", " << deltaY <<  std::endl;
-
   auto selectedNodes = editor_->getEditingNodes();
-  for (auto node : selectedNodes) {
+  if (selectedNodes.size() == 1) {
+    auto* node = selectedNodes[0];
     editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, deltaX, deltaY));
     if (!isInverse) {
-      continue;
+      return;
     }
     editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
-  }
+
+  } else {}
 }
 
 void BoundEditor::handleMouseDrag(Event* event) {

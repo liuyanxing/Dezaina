@@ -43,7 +43,7 @@ void ChangeSystem::addChangingItem(const Action *action) {
   if (id.has_value()) {
     auto& nodeId = id.value();
     auto node = desaina_->document.getNodeById(nodeId);
-    if (!node.has_value()) {
+    if (!node.has_value() || changing_items_.find(id.value()) != changing_items_.end()) {
       return;
     }
     auto* changeNode = change_pool_.allocate<Desaina_Kiwi::NodeChange>();
@@ -65,7 +65,6 @@ void ChangeSystem::tick() {
   int index = 0;
   vector<const Blob*> blobs;
   uint32_t blobIndex = 0;
-  message.set_blobs(change_pool_, 2);
   for (auto& changeItemPair : changing_items_) {
     auto& guid = changeItemPair.first;
     auto& changeItem = changeItemPair.second;

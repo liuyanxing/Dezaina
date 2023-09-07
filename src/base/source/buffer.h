@@ -11,18 +11,9 @@ public:
   Buffer(uint8_t *data, size_t size);
   Buffer(const uint8_t *data, size_t size);
   Buffer(const Buffer& other) { *this = other; };
-  Buffer& operator=(const Buffer& other) {
-    if (this != &other) {
-      if (owns_data_) {
-        delete[] data_;
-      }
-      data_ = new uint8_t[capacity_];
-      memcpy(data_, other.data_, size_);
-      owns_data_ = true;
-      size_ = other.size_;
-    }
-    return *this;
-  }
+  Buffer& operator=(const Buffer& other) noexcept;
+  Buffer(Buffer&& other) noexcept { *this = std::move(other); };
+  Buffer& operator=(Buffer&& other) noexcept;
 
   ~Buffer();
   bool operator==(const Buffer& other) const {
@@ -35,6 +26,7 @@ public:
   uint8_t *data() const { return data_; }
   size_t size() const { return size_; }
   size_t index() const { return index_; }
+  bool isEnd() const { return index_ >= size_; }
   void setIndex(size_t index) { index_ = index; }
   void set(const uint8_t *data, size_t size);
 
@@ -56,8 +48,7 @@ private:
   size_t size_ = 0;
   size_t capacity_ = 0;
   mutable size_t index_ = 0;
-  bool owns_data_ = false;
-  bool is_const_ = false;
+  bool is_owned_ = false;
 };
 
 namespace std {

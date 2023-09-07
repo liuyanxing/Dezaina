@@ -55,7 +55,7 @@ namespace util {
   SkPath toSkPath(const Blob* blob) {
     SkPath path;
     size_t i = 0;
-    while (i < blob->size()) {
+    while (!blob->isEnd()) {
       auto type = blob->readByte();
       switch (type) {
         case 0: {
