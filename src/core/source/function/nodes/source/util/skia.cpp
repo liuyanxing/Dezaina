@@ -91,8 +91,6 @@ namespace util {
         }
       }
     }
-    path.dump();
-
     return path;
   }
 

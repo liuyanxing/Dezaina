@@ -41,7 +41,7 @@ void BoundEditor::init() {
 void BoundEditor::addHitNode(EditorHitNodeType type, int index, const SkRect& rect) {
   hit_nodes_.push_back(EditorHitNode::Make(type, index, rect));
   auto* hit_node = &hit_nodes_.back();
-  editor_->hit_tester->insert(hit_node);
+  editor_->insertHitNode(hit_node);
 }
 
 void BoundEditor::bindInteractionArea() {

@@ -10,8 +10,8 @@ public:
   virtual ~NodeEditor() = default;
   
   virtual void update() {
-    boundEditor_.update();
     Editor::update();
+    boundEditor_.update();
   };
 
   virtual void getPath(SkPath& fillPath, SkPath& strokePath) {

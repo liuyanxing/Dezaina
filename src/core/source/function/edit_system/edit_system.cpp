@@ -44,7 +44,7 @@ void EditSystem::setEditorBySelection() {
 }
 
 void EditSystem::tick() {
-  if (editor_ != nullptr && editor_->isDirty()) {
+  if (editor_ != nullptr) {
     editor_->update();
   }
 }

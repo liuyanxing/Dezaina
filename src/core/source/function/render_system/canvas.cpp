@@ -20,6 +20,7 @@
 #include "util/node_props.h"
 #include "util/node_geometry.h"
 #include "config/color.h"
+#include "config/editor.h"
 
 #include <iostream>
 
@@ -120,7 +121,7 @@ void Canvas::drawEditor() {
   SkPaint paint;
   paint.setColor(Config::primaryColor);
   paint.setStyle(SkPaint::kStroke_Style);
-  paint.setStrokeWidth(1);
+  paint.setStrokeWidth(Config::editorStrokeWidth);
   canvas_->drawPath(fillPath, paint);
   canvas_->drawPath(strokePath, paint);
 

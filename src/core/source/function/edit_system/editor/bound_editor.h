@@ -9,7 +9,7 @@ class BoundEditor {
 public:
 	BoundEditor(Editor* editor);
 	void init();
-	void update() {};
+	void update() { hit_nodes_.clear(); bindInteractionArea(); };
   void getPath(SkPath& fillPath, SkPath& strokePath);
 
 private:

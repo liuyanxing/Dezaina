@@ -42,6 +42,7 @@ public:
   };
   virtual ~Editor() = default;
   virtual void update() {
+    hit_tester->clear();
     buildEditingNodesBound();
   };
   virtual void getPath(SkPath& fillPath, SkPath& strokePath) {};
@@ -64,6 +65,7 @@ public:
   const SkRect& getEditBound() const { return edit_bound_; };
   const SkMatrix& getEditTransform() const { return edit_transform_; };
   vector<Node*> getEditingNodes();
+  void insertHitNode(EditorHitNode* node) { hit_tester->insert(node); };
   vector<EditorHitNode*>& getSelectedHitNode() { return selected_hit_nodes_; };
   EditorHitNode* getFirstSelectedHitNode() { return !selected_hit_nodes_.empty() ? selected_hit_nodes_[0] : nullptr; };
   EditorHitNode* getHoverHitNode() { return hover_hit_node_; };
