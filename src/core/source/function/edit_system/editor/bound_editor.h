@@ -5,6 +5,18 @@
 #include "include/core/SkRect.h"
 #include <vector>
 
+struct BoundEditorHitNode : public EditorHitNode {
+	SkPoint direction;
+	static BoundEditorHitNode Make(EditorHitNodeType type, int index, const SkPoint& direction, const SkRect& bound) {
+		BoundEditorHitNode node{};
+		node.type = type;
+		node.index = index;
+		node.bound = bound;
+		node.direction = direction;
+		return node;
+	}
+};
+
 class BoundEditor {
 public:
 	BoundEditor(Editor* editor);
@@ -22,11 +34,10 @@ private:
 	void handleDragBoundResize(Event* event);
   void handleDragBoundRotate(Event* event);
 	void handleDragBoundEdge(Event* event);
-  void handleDragBoundEdge(int index, float deltaX, float deltaY);
 
-	void addHitNode(EditorHitNodeType type, int index, const SkRect& rect);
+	void addHitNode(EditorHitNodeType type, int index, const SkPoint& direction, const SkRect& rect);
 	
   Editor* editor_;
   SkRect bound_;
-  vector<EditorHitNode> hit_nodes_;
+  vector<BoundEditorHitNode> hit_nodes_;
 };
