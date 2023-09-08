@@ -10,7 +10,9 @@ void ChangeProcessor::remapBlobId() {
 	for (auto& node : message_nodes_) {
 		auto& fillGeometry = util::getFillGeometry(node);
 		for (auto& geometry : fillGeometry) {
-		  const_cast<Path&>(geometry).commandsBlob = blob_id_remap_[geometry.commandsBlob];
+      if (blob_id_remap_.find(geometry.commandsBlob) != blob_id_remap_.end()) {
+        const_cast<Path&>(geometry).commandsBlob = blob_id_remap_[geometry.commandsBlob];
+      }
 		}
 	}
 }
@@ -58,7 +60,7 @@ bool ChangeProcessor::processMessage(const Desaina_Kiwi::Message& message) {
 			break;
 	}
 	
-	if (document.isLoaded()) {
+	if (document.isLoaded() && !blob_id_remap_.empty()) {
 		remapBlobId();
 	}
 	
