@@ -1,7 +1,7 @@
 #include "node_type.h"
 #include "document.h"
 #include "page.h"
-#include "util/container.h"
+#include "util/node_container.h"
 #include <iostream>
 
 void Document::buildDocTree() {

@@ -3,6 +3,7 @@
 #include "action.h"
 #include "base_type.h"
 #include "desaina_node.h"
+#include "include/core/SkMatrix.h"
 #include "node_type.h"
 #include "util/node_props.h"
 #include "util/skia.h"
@@ -12,6 +13,7 @@ enum class PropertyType  {
   kNone,
   kTransform,
   kSize,
+  kRezieDelta,
   kRotation,
 };
 using PropertyValue = variant<float, int, Vector, Matrix>;
@@ -31,26 +33,26 @@ struct UpdatePropertiesAction : public Action {
 
   static auto MakeTranslate(Node* node, float deltaX, float deltaY) {
     auto m = util::getTransfromMatrix(node);
-    m.postTranslate(-deltaX, -deltaY);
+    m.preTranslate(deltaX, deltaY);
     PropertyType type = PropertyType::kTransform;
     auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(m));
     return action;
   }
 
-  static auto MakeRotate(Node* node, float delta) {
+  static auto MakeRotateDelta(Node* node, float degrees) {
     auto m = util::getTransfromMatrix(node);
-    m.postRotate(delta);
+    auto size = util::getSize(node);
+    SkMatrix rotationMatrix;
+    rotationMatrix.setRotate(degrees, size.x / 2, size.y / 2);
+    m.preConcat(rotationMatrix);
     PropertyType type = PropertyType::kTransform;
     auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(m));
     return action;
   }
 
   static auto MakeResizeDelta(Node* node, float deltaX, float deltaY) {
-    auto size = util::getSize(node);
-    size.x += deltaX;
-    size.y += deltaY;
-    PropertyType sizeType = PropertyType::kSize;
-    PropertyValue sizeValue = size;
+    PropertyType sizeType = PropertyType::kRezieDelta;
+    PropertyValue sizeValue = Vector{deltaX, deltaY};
     auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), sizeType, sizeValue);
     return action;
   }

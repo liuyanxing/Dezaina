@@ -14,7 +14,7 @@
 #include "page.h"
 #include "rectangle.h"
 #include "text.h"
-#include "util/container.h"
+#include "util/node_container.h"
 #include "node_type.h"
 #include "util/skia.h"
 #include "util/node_props.h"
@@ -86,25 +86,40 @@ void Canvas::clear() {
 }
 
 void Canvas::drawHoverSelectionNode() {
-  drawHoverNode();
+  drawHighlightNode();
   drawEditor();
 }
 
-void Canvas::drawHoverNode() {
-  const auto hoverNode = desaina_->document.getHoverNode();
-  if (hoverNode == nullptr) {
+void Canvas::drawHighlightNode(const Node* node) {
+  if (node == nullptr) {
     return;
   }
   SkAutoCanvasRestore auto_save(canvas_, true);
-  canvas_->concat(util::getWorldMatrix(hoverNode, document_));
-  if (util::isDefaultShapeNode(hoverNode)) {
-    auto shape = static_cast<const DefaultShapeNode*>(hoverNode);
+  canvas_->concat(util::getWorldMatrix(node, document_));
+  if (util::isDefaultShapeNode(node)) {
+    auto shape = static_cast<const DefaultShapeNode*>(node);
     auto geometry = util::getHoverGeometry(shape, desaina_);
     SkPaint paint;
     paint.setColor(Config::primaryColor);
     paint.setStyle(SkPaint::kStroke_Style);
     paint.setStrokeWidth(2);
     canvas_->drawPath(geometry.path, paint);
+  }
+}
+
+void Canvas::drawHighlightNode() {
+  const auto hoverNode = desaina_->document.getHoverNode();
+  drawHighlightNode(hoverNode);
+  auto* editor = desaina_->editSystem.getEditor();
+  if (editor == nullptr) {
+    return;
+  }
+  auto editingNodes = editor->getEditingNodes();
+  for (const auto* node : editingNodes) {
+    if (node == hoverNode) {
+      continue;
+    }
+    drawHighlightNode(node);
   }
 }
 

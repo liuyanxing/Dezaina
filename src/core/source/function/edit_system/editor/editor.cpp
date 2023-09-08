@@ -6,6 +6,7 @@
 #include "include/core/SkScalar.h"
 #include "util/node_geometry.h"
 #include "base/math.h"
+#include "config/editor.h"
 
 void Editor::init() {
   update();
@@ -71,10 +72,11 @@ void Editor::handleMouseUp(Event* event) {
 }
 
 void Editor::handleMouseMove(Event* event) {
+  auto raduis = Config::editorMouseRadius;
   auto mouseEvent = static_cast<MouseEvent*>(event);
   auto localX = mouseEvent->localX;
   auto localY = mouseEvent->localY;
-  auto hitNode = hit_tester->getNodesIntersectWithRect(SkRect::MakeXYWH(localX - 3, localY - 3, 6, 6));
+  auto hitNode = hit_tester->getNodesIntersectWithRect(SkRect::MakeXYWH(localX - raduis, localY - raduis, raduis * 2, raduis * 2));
   if (!hitNode.empty()) {
     hover_hit_node_ = static_cast<EditorHitNode*>(hitNode[0]);
   } else {
@@ -91,6 +93,6 @@ void Editor::mapEventToLocal(Event* event) {
   mouseEvent->localY = point.y();
 
   auto localDelta = base::mapSizeToLocal({mouseEvent->deltaX, mouseEvent->deltaY}, edit_transform_);
-  mouseEvent->deltaX = localDelta.width();
-  mouseEvent->deltaY = localDelta.height();
+  mouseEvent->localDeltaX = localDelta.width();
+  mouseEvent->localDeltaY = localDelta.height();
 }

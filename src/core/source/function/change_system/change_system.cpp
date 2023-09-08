@@ -4,6 +4,7 @@
 #include "action_system/UpdatePropertiesAction.h"
 #include "util/node_geometry.h"
 #include "util/node_create.h"
+#include "util/node_props.h"
 
 void ChangeSystem::convertActionsToChange(const vector<ActionPtr>& actions) {
   for (auto& action : actions) {
@@ -74,9 +75,7 @@ void ChangeSystem::tick() {
       continue;
     }
     if (changeItem.isFillGeometryDirty) {
-      changeItem.node = util::cloneNodeBase(node.value(), node_pool_);
-      changeItem.node->applyChange(changeNode);
-      auto* geometry = util::buildFillGeometry(changeItem.node, desaina_);
+      auto* geometry = util::buildFillGeometry(changeItem.layoutNode, desaina_);
       changeNode.set_fillGeometry(change_pool_, 1)[0].set_commandsBlob(blobIndex++);
       blobs.push_back(geometry->commandsBlob);
     }
@@ -98,3 +97,15 @@ void ChangeSystem::tick() {
   changing_items_.clear();
 }
 
+LayoutNode* ChangeSystem::appendLayoutNode(GUID guid) {
+  auto node = desaina_->document.getNodeById(guid);
+  if (!node.has_value()) {
+    return nullptr;
+  }
+  layout_nodes_.push_back({});
+  auto& layoutNode = layout_nodes_.back();
+  layoutNode.node = node.value(); 
+  layoutNode.size = util::getSize(node.value());
+  layoutNode.transform = util::getTransfromMatrix(node.value());
+  return &layoutNode;
+}

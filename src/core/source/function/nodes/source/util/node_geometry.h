@@ -1,5 +1,6 @@
 #pragma once
 
+#include "change_system/layouts/layout_node.h"
 #include "desaina_node.h"
 #include "document.h"
 #include "include/core/SkMatrix.h"
@@ -10,6 +11,18 @@
 #include "node_type.h"
 #include "util/node_props.h"
 #include "util/skia.h"
+
+using CornerRadii = std::array<float, 4>;
+
+template<typename T>
+static CornerRadii getCornerRadii(const T* node) {
+    Vector size = node->get_size();
+    float topLeftRadius = node->get_rectangleTopLeftCornerRadius();
+    float topRightRadius = node->get_rectangleTopRightCornerRadius();
+    float bottomLeftRadius = node->get_rectangleBottomLeftCornerRadius();
+    float bottomRightRadius = node->get_rectangleBottomRightCornerRadius();
+    return { topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius};
+}
 
 namespace util {
 // todo : fill path and stroke path bound
@@ -73,6 +86,16 @@ namespace util {
     return empty;
   }
 
+  inline CornerRadii getCornerRadii(const Node* node) {
+    if (util::isFrame(node)) {
+      return getCornerRadii(static_cast<const FrameNode*>(node));
+    } else if (util::isRectangle(node)) {
+      return getCornerRadii(static_cast<const RectangleNode*>(node));
+    }
+
+    return CornerRadii{0, 0, 0, 0};
+  }
+
   SkPath buildFillPath(const Node* node);
-  Geometry* buildFillGeometry(const Node *node, Desaina *desaina);
+  Geometry* buildFillGeometry(const LayoutNode *node, Desaina *desaina);
 }

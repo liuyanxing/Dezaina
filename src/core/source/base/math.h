@@ -23,6 +23,6 @@ namespace base {
     return SkSize::Make(point.x() - orgin.x(), point.y() - orgin.y());
   }
   inline float linesAngle(const SkPoint& a, const SkPoint& b) {
-    return acosf(a.dot(b) / (a.length() * b.length()));
+    return acosf(a.dot(b) / (a.length() * b.length())) * 180 / M_PI;
   }
 }

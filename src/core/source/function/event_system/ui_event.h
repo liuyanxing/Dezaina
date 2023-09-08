@@ -18,6 +18,8 @@ struct UIEvent : public Event {
   float windowY;
   float deltaX;
   float deltaY;
+  float localDeltaX;
+  float localDeltaY;
   float devicePixelRatio;
   SkRect activeLocalRect;
   CursorType cursorType;

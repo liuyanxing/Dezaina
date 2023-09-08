@@ -14,16 +14,17 @@
 #include "system/system.h"
 #include <unordered_map>
 #include <vector>
+#include "layouts/layout_node.h"
 
 using LayoutPtr = shared_ptr<Layout>;
 
 struct ChangeItem {
-  Node* node = nullptr;
+  LayoutNode* layoutNode = nullptr;
   NodeChange* changeNode = nullptr;
   bool isFillGeometryDirty;
   bool isStrokeGeometryDirty;
   
-  static ChangeItem Make(Node* node, NodeChange* change_node) {
+  static ChangeItem Make(LayoutNode* node, NodeChange* change_node) {
     return {node, change_node, false, false};
   }
 };
@@ -47,7 +48,7 @@ class ChangeSystem : public System {
   }
 
   bool processMessage(kiwi::ByteBuffer& buffer) { return change_processor_.processMessage(buffer); }
-
+  LayoutNode* appendLayoutNode(GUID guid);
   void tick() override;
   
  private:
@@ -59,6 +60,7 @@ class ChangeSystem : public System {
  
   Desaina* desaina_;
   vector<LayoutPtr> layouts;
+  vector<LayoutNode> layout_nodes_;
  
   kiwi::MemoryPool change_pool_;
   NodePool node_pool_{10};

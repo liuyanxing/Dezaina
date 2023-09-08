@@ -1,3 +1,4 @@
+#include "change_system/layouts/layout_node.h"
 #include "desaina.h"
 #include "desaina_node.h"
 #include "frame.h"
@@ -19,20 +20,16 @@ static SizeAndRadius getSizeAndRadius(const T* node) {
     return {size, topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius};
 }
 
-static std::optional<SkPath> buildRoundRectFillPath(const Node* node) {
+static std::optional<SkPath> buildRoundRectFillPath(const LayoutNode* node) {
   constexpr float raduisRatio = 0.447715521F;
   SkPath path;
-  SizeAndRadius sizeAndRadius;
-  if (util::isRectangle(node)) {
-    sizeAndRadius = getSizeAndRadius(static_cast<const RectangleNode*>(node));
-  } else if (util::isFrame(node)) {
-    sizeAndRadius = getSizeAndRadius(static_cast<const FrameNodeBase*>(node));
-  } else {
-    return std::nullopt;
-  }
-  
-  auto [size, topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius] = sizeAndRadius;
+  auto size = node->size;
+  auto topLeftRadius = node->topLeftRadius;
+  auto topRightRadius = node->topRightRadius;
+  auto bottomLeftRadius = node->bottomLeftRadius;
+  auto bottomRightRadius = node->bottomRightRadius;
   const float bezierRadius = topLeftRadius * raduisRatio;
+  
   path.moveTo(0, topLeftRadius);
   path.cubicTo(0, topLeftRadius - bezierRadius, topLeftRadius - bezierRadius, 0, topLeftRadius, 0);
   path.lineTo(size.x - topRightRadius, 0);
@@ -46,14 +43,14 @@ static std::optional<SkPath> buildRoundRectFillPath(const Node* node) {
 }
 
 namespace util {
-  SkPath buildFillPath(const Node *node) {
+  SkPath buildFillPath(const LayoutNode *node) {
     if (auto path = buildRoundRectFillPath(node); path.has_value()) {
       return path.value();
     }
     return SkPath();
   }
 
-  Geometry* buildFillGeometry(const Node *node, Desaina *desaina) {
+  Geometry* buildFillGeometry(const LayoutNode *node, Desaina *desaina) {
     return desaina->addGeomtryFromBlob(util::toBuffer(buildFillPath(node))).second;
   }
 }

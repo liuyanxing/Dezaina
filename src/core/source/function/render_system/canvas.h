@@ -11,6 +11,7 @@
 #include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkSurface.h"
+#include "node_type.h"
 #include "util/node_props.h"
 
 #include "page.h"
@@ -45,7 +46,8 @@ public:
     void drawGeometry(const GeometryWithPaints& geometryWithPaints);
 
 		void drawHoverSelectionNode();
-		void drawHoverNode();
+		void drawHighlightNode();
+		void drawHighlightNode(const Node* node);
 		void drawEditor();
 		void setWidth(int width);
 		void setHeight(int height);

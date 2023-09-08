@@ -10,6 +10,7 @@ class ConstraintLayout : public Layout {
 
     void hanldeTransfrom(const UpdatePropertiesAction* action, kiwiPool& pool);
     void hanldeResize(const UpdatePropertiesAction* action, kiwiPool& pool);
+    void hanldeResizeDelta(const UpdatePropertiesAction* action, kiwiPool& pool);
     
     bool processUpdatePropertiesAction(const UpdatePropertiesAction* action, kiwiPool& pool) override;
 };

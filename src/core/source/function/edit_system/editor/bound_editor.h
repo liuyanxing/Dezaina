@@ -22,6 +22,7 @@ private:
 	void handleDragBoundResize(Event* event);
   void handleDragBoundRotate(Event* event);
 	void handleDragBoundEdge(Event* event);
+  void handleDragBoundEdge(int index, float deltaX, float deltaY);
 
 	void addHitNode(EditorHitNodeType type, int index, const SkRect& rect);
 	

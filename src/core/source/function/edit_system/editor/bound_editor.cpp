@@ -10,22 +10,28 @@
 #include "util/node_geometry.h"
 #include "util/skia.h"
 #include "base/math.h"
+#include "config/editor.h"
 #include <iostream>
 
-static bool isFirstDiagonal(EditorHitNode* node) {
-  return node->index % 2 == 0;
+static bool isFirstDiagonal(int index) {
+  return index % 2 == 0;
 }
 
 static bool shouldInverse(EditorHitNode* node) {
+  if (node->type == EditorHitNodeType::kBoundEdge) {
+    return node->index % 3 == 0;
+  } else if (node->type == EditorHitNodeType::kBoundCorner) {
+    return node->index != 2;
+  }
   return node->index % 3 == 0;
 }
 
-static bool inverseDelta(EditorHitNode* node, MouseEvent* event) {
-  if (!shouldInverse(node)) {
+static bool inverseDelta(int index, float& deltaX, float& deltaY) {
+  if (index % 3 != 0) {
     return false;
   }
-  event->deltaX = -event->deltaX;
-  event->deltaY = -event->deltaY;
+  deltaX = -deltaX;
+  deltaY = -deltaY;
   return true;
 }
 
@@ -46,9 +52,11 @@ void BoundEditor::addHitNode(EditorHitNodeType type, int index, const SkRect& re
 
 void BoundEditor::bindInteractionArea() {
   const auto& bound = editor_->getEditBound();
-  constexpr float kCornerCtrlNodeSize = 5;
-  constexpr float kEdgeCtrlNodeSize = 1;
+  constexpr float kCornerCtrlNodeSize = Config::boundCornerCtrlNodeSize - 2 * Config::editorMouseRadius;
+  constexpr float kRotationCtrlNodeSize = Config::boundCornerCtrlNodeSize;
+  constexpr float kEdgeCtrlNodeSize = Config::boundEdgeCtrlNodeWith;
   constexpr float kCornerCtrlNodeHalfSize = kCornerCtrlNodeSize / 2;
+  constexpr float kRotationCtrlNodeHalfSize = kRotationCtrlNodeSize / 2;
   constexpr float kEdgeCtrlNodeHalfSize = kEdgeCtrlNodeSize / 2;
   auto [left, top, right, bottom] = bound;
   auto width = bound.width();
@@ -59,11 +67,12 @@ void BoundEditor::bindInteractionArea() {
   addHitNode(EditorHitNodeType::kBoundCorner, 2, leftTopCornerCtrlRect.makeOffset(width, height));
   addHitNode(EditorHitNodeType::kBoundCorner, 3, leftTopCornerCtrlRect.makeOffset(0, height));
 
-  auto leftTopRotateCtrRect = leftTopCornerCtrlRect.makeOffset(-kCornerCtrlNodeSize, -kCornerCtrlNodeSize);
+  auto leftTopRotateCtrRect = leftTopCornerCtrlRect.MakeXYWH(left - kRotationCtrlNodeHalfSize, top - kRotationCtrlNodeHalfSize, kRotationCtrlNodeSize, kRotationCtrlNodeSize);
+  leftTopRotateCtrRect = leftTopRotateCtrRect.makeOffset(-kRotationCtrlNodeHalfSize - kCornerCtrlNodeHalfSize, -kRotationCtrlNodeHalfSize - kCornerCtrlNodeHalfSize);
   addHitNode(EditorHitNodeType::kBoundRotate, 0, leftTopRotateCtrRect);
-  addHitNode(EditorHitNodeType::kBoundRotate, 1, leftTopRotateCtrRect.makeOffset(width + kCornerCtrlNodeSize, 0));
-  addHitNode(EditorHitNodeType::kBoundRotate, 2, leftTopRotateCtrRect.makeOffset(width + kCornerCtrlNodeSize, height + kCornerCtrlNodeSize));
-  addHitNode(EditorHitNodeType::kBoundRotate, 3, leftTopRotateCtrRect.makeOffset(0, height + kCornerCtrlNodeSize));
+  addHitNode(EditorHitNodeType::kBoundRotate, 1, leftTopRotateCtrRect.makeOffset(width + kCornerCtrlNodeSize + kRotationCtrlNodeSize, 0));
+  addHitNode(EditorHitNodeType::kBoundRotate, 2, leftTopRotateCtrRect.makeOffset(width + kCornerCtrlNodeSize + kRotationCtrlNodeSize, height + kCornerCtrlNodeSize + kRotationCtrlNodeSize));
+  addHitNode(EditorHitNodeType::kBoundRotate, 3, leftTopRotateCtrRect.makeOffset(0, height + kCornerCtrlNodeSize + kRotationCtrlNodeSize));
 
   auto leftEdgeCtrlRect = SkRect::MakeXYWH(left - kEdgeCtrlNodeHalfSize, top + kCornerCtrlNodeHalfSize, kEdgeCtrlNodeSize, height - kCornerCtrlNodeSize);
   auto topEdgeCtrlRect = SkRect::MakeXYWH(left + kCornerCtrlNodeHalfSize, top - kEdgeCtrlNodeHalfSize, width - kCornerCtrlNodeSize, kEdgeCtrlNodeSize);
@@ -91,12 +100,8 @@ void BoundEditor::handleDragBound(Event* event) {
   
   for (auto node : selectedNodes) {
     auto m = util::getTransfromMatrix(node);
-    m.postTranslate(deltaX, deltaY);
-    PropertyType type = PropertyType::kTransform;
-    PropertyValue transform = util::toMatrix(m);
-    actionSystem.addAction(UpdatePropertiesAction::Make(node->get_guid(), type, transform));
+    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
   }
-  editor_->setDirty();
 }
 
 void BoundEditor::hanldeDrageCtrlNode(Event* event) {
@@ -122,24 +127,17 @@ void BoundEditor::hanldeDrageCtrlNode(Event* event) {
 }
 
 void BoundEditor::handleDragBoundResize(Event* event) {
-  auto selectedNodes = editor_->getEditingNodes();
-  if (selectedNodes.size() == 1) {
-    auto mouseEvent = *static_cast<MouseEvent*>(event);
-    auto* node = selectedNodes[0];
-    auto deltaX = mouseEvent.deltaX;
-    auto deltaY = mouseEvent.deltaY;
-    auto localX = mouseEvent.localX;
-    auto localY = mouseEvent.localY;
-    auto oldeX = localX - deltaX;
-    auto oldeY = localY - deltaY;
-    auto size = util::getSize(node);
-    float angle = base::linesAngle(SkPoint::Make(oldeX - size.x, oldeY - size.y), SkPoint::Make(localX - size.x, localY - size.y));
-
-
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, deltaX, deltaY));
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
-
-  } else {}
+  auto* hitNode = editor_->getFirstSelectedHitNode();
+  if (!hitNode) {
+    return;
+  }
+  auto mouseEvent = static_cast<MouseEvent*>(event);
+  auto deltaX = mouseEvent->deltaX;
+  auto deltaY = mouseEvent->deltaY;
+  auto index = hitNode->index;
+  auto preIndex = index - 1 < 0 ? 3 : index - 1;
+  handleDragBoundEdge(index, deltaX, deltaY);
+  handleDragBoundEdge(preIndex, deltaX, deltaY);
 }
 
 void BoundEditor::handleDragBoundRotate(Event* event) {
@@ -147,14 +145,32 @@ void BoundEditor::handleDragBoundRotate(Event* event) {
   if (selectedNodes.size() == 1) {
     auto mouseEvent = *static_cast<MouseEvent*>(event);
     auto* node = selectedNodes[0];
-    auto deltaX = mouseEvent.deltaX;
-    auto deltaY = mouseEvent.deltaY;
+    auto deltaX = mouseEvent.localDeltaX;
+    auto deltaY = mouseEvent.localDeltaY;
     auto localX = mouseEvent.localX;
     auto localY = mouseEvent.localY;
     auto oldeX = localX - deltaX;
     auto oldeY = localY - deltaY;
     auto size = util::getSize(node);
-    float angle = base::linesAngle(SkPoint::Make(oldeX - size.x, oldeY - size.y), SkPoint::Make(localX - size.x, localY - size.y));
+    float angle = base::linesAngle(SkPoint::Make(oldeX - size.x / 2, oldeY - size.y / 2), SkPoint::Make(localX - size.x / 2, localY - size.y / 2));
+    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeRotateDelta(node, angle));
+  } else {}
+}
+
+void BoundEditor::handleDragBoundEdge(int index, float deltaX, float deltaY) {
+  if (isFirstDiagonal(index)) {
+    deltaX = 0;
+  } else {
+    deltaY = 0;
+  }
+  bool inversed = inverseDelta(index, deltaX, deltaY);
+
+  auto selectedNodes = editor_->getEditingNodes();
+  if (selectedNodes.size() == 1) {
+    auto* node = selectedNodes[0];
+    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, deltaX, deltaY));
+    if (!inversed) return;
+    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, -deltaX, -deltaY));
 
   } else {}
 }
@@ -165,23 +181,8 @@ void BoundEditor::handleDragBoundEdge(Event* event) {
     return;
   }
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  if (isFirstDiagonal(hitNode)) {
-    mouseEvent->deltaX = 0;
-  } else {
-    mouseEvent->deltaY = 0;
-  }
-  inverseDelta(hitNode, mouseEvent);
-  auto deltaX = mouseEvent->deltaX;
-  auto deltaY = mouseEvent->deltaY;
 
-  auto selectedNodes = editor_->getEditingNodes();
-  if (selectedNodes.size() == 1) {
-    auto* node = selectedNodes[0];
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, deltaX, deltaY));
-    if (!shouldInverse(hitNode)) return;
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
-
-  } else {}
+  handleDragBoundEdge(hitNode->index, mouseEvent->deltaX, mouseEvent->deltaY);
 }
 
 void BoundEditor::handleMouseDrag(Event* event) {
@@ -223,7 +224,7 @@ void BoundEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
   auto& bound = editor_->getEditBound();
   strokePath.addRect(bound);
   
-  constexpr float kCornerCtrlNodeSize = 5;
+  constexpr float kCornerCtrlNodeSize = Config::boundCornerCtrlNodeSize;
   constexpr float kCornerCtrlNodeHalfSize = kCornerCtrlNodeSize / 2;
   auto [left, top, right, bottom] = bound;
   auto width = bound.width();
