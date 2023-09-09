@@ -14,6 +14,7 @@ bool ConstraintLayout::processUpdatePropertiesAction(const UpdatePropertiesActio
       break;
     case PropertyType::kSize:
       hanldeResize(action, pool);
+      break;
     case PropertyType::kResizeDelta:
       hanldeResizeDelta(action, pool);
       break;
@@ -36,6 +37,9 @@ void ConstraintLayout::hanldeTransfrom(const UpdatePropertiesAction *action, kiw
 
 void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPool &pool) {
   auto changeItem = desaina_->changeSystem.getChangingItem(action->node_id);
+  if (changeItem->layoutNode == nullptr) {
+    changeItem->layoutNode = desaina_->changeSystem.appendLayoutNode(action->node_id);
+  }
   auto size = get<Vector>(action->propertyValue);
   auto* nodeChange = changeItem->changeNode;
   nodeChange->set_size(size.toChange(pool));

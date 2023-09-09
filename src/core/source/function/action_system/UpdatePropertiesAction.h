@@ -32,22 +32,15 @@ struct UpdatePropertiesAction : public Action {
   }
 
   static auto MakeSetTranslate(float x, float y, const Node* node) {
-    auto size = util::getSize(node);
-    auto degree = util::getRotation(node);
-    auto transform = SkMatrix::I();
-    transform.setRotate(degree, size.x / 2, size.y / 2);
-    transform.postTranslate(x, y);
+    SkMatrix transform = util::computeTransform({x, y}, util::getRotation(node), node);
+
     PropertyType type = PropertyType::kTransform;
     auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));
     return action;
   }
 
-  static auto MakeSetRotate(float degrees, const Node* node) {
-    auto m = util::getTransfromMatrix(node);
-    auto size = util::getSize(node);
-    auto transform = SkMatrix::I();
-    transform.setRotate(degrees, size.x / 2, size.y / 2);
-    transform.postTranslate(m.getTranslateX(), m.getTranslateY());
+  static auto MakeSetRotate(float rotation, const Node* node) {
+    SkMatrix transform = util::computeTransform(util::getTranslate(node), rotation, node);
 
     PropertyType type = PropertyType::kTransform;
     auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));

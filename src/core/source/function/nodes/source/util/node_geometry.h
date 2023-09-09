@@ -102,6 +102,21 @@ namespace util {
     return acosf(matrix.getScaleX()) * 180 / M_PI;
   }
 
+  inline SkVector getTranslate(const Node* node) {
+    auto matrix = util::getTransfromMatrix(node);
+    auto size = util::getSize(node);
+    return matrix.mapPoint({size.x / 2, size.y / 2}) - SkPoint{size.x / 2, size.y / 2};
+  }
+
+  inline SkMatrix computeTransform(SkVector translate, float rotation, const Node* node) {
+    auto transform = SkMatrix::I();
+    auto size = util::getSize(node);
+
+    transform.setRotate(rotation, size.x / 2, size.y / 2);
+    transform.postTranslate(translate.x(), translate.y());
+    return transform;
+  }
+
   SkPath buildFillPath(const Node* node);
   Geometry* buildFillGeometry(const LayoutNode *node, Desaina *desaina);
 }
