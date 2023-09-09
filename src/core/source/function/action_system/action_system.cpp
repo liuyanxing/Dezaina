@@ -1,5 +1,6 @@
 #include "action_system.h"
 #include "UpdatePropertiesAction.h"
+#include "util/node_geometry.h"
 
 void ActionSystem::rotate(float deltaRotation, const Node* node) {
   auto rotation = util::getRotation(node);
@@ -12,9 +13,9 @@ void ActionSystem::setRotate(float degrees, const Node* node) {
 }
 
 void ActionSystem::translate(float deltaX, float deltaY, const Node* node) {
-  auto m = util::getTransfromMatrix(node);
-  m.preTranslate(deltaX, deltaY);
-  setTranslate(m.getTranslateX(), m.getTranslateY(), node);
+  auto translate = util::getTranslate(node);
+  translate += {deltaX, deltaY};
+  setTranslate(translate.x(), translate.y(), node);
 }
 
 void ActionSystem::setTranslate(float x, float y, const Node* node) {

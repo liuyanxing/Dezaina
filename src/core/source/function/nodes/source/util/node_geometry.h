@@ -99,7 +99,8 @@ namespace util {
 
   inline float getRotation(const Node* node) {
     auto matrix = util::getTransfromMatrix(node);
-    return acosf(matrix.getScaleX()) * 180 / M_PI;
+    int sign = matrix.getSkewY() > 0 ? 1 : -1;
+    return sign * acosf(matrix.getScaleX()) * 180 / M_PI;
   }
 
   inline SkVector getTranslate(const Node* node) {
