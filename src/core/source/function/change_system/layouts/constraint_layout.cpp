@@ -14,7 +14,7 @@ bool ConstraintLayout::processUpdatePropertiesAction(const UpdatePropertiesActio
       break;
     case PropertyType::kSize:
       hanldeResize(action, pool);
-    case PropertyType::kRezieDelta:
+    case PropertyType::kResizeDelta:
       hanldeResizeDelta(action, pool);
       break;
     default:

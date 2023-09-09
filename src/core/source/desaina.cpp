@@ -36,6 +36,9 @@ void Desaina::buildEvents() {
       curPage->setViewMatrix(viewPortSystem.getViewMatrix());
     }
   });
+  editSystem.addEventListener(EventType::kEditorChagne, [this](Event* event) {
+    editor = editSystem.getEditor();
+  });
 }
 
 void Desaina::addSystems() {

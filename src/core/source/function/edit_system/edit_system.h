@@ -2,6 +2,7 @@
 
 #include "base_type.h"
 #include "edit_system/editor/editor.h"
+#include "event_system/event.h"
 #include "system/system.h"
 #include <memory>
 #include <vector>
@@ -15,9 +16,14 @@ class EditSystem : public System {
   };
   ~EditSystem() = default;
  
- Editor* getEditor() {
-   return editor_.get();
- }
+  Editor* getEditor() {
+    return editor_.get();
+  }
+  void setEditor(std::unique_ptr<Editor>&& editor) {
+    editor_ = std::move(editor);
+    auto event = Event::Builder(EventType::kEditorChagne).build();
+    emit(event);
+  }
 
   void tick() override;
   

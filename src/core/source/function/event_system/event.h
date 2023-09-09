@@ -11,6 +11,7 @@ enum class EventType {
   kMouseDown, kMouseUp, kMouseMove, kMouseWheel, kMouseDrag,
   kViewPortChange, kSelectionChange,
   kSetCursor,
+  kEditorChagne,
   kAny,
 };
 

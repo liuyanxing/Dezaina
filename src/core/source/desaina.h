@@ -4,6 +4,7 @@
 #include "desaina_node.h"
 #include "document.h"
 #include "edit_system/edit_system.h"
+#include "edit_system/editor/editor.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "include/core/SkPath.h"
@@ -118,6 +119,7 @@ class Desaina : public EventEmitter {
   	ActionSystem actionSystem{};
   	ChangeSystem changeSystem{this};
     EditSystem editSystem{this};
+    Editor* editor = nullptr;
 	private:
     void remapBlobId();
 		uint32_t sessionId_ = 0;

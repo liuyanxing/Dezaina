@@ -64,6 +64,9 @@ void Canvas::drawNode(const Node *node) {
     auto page = static_cast<const PageNode*>(node);
     const auto& color = page->get_backgroundColor();
     canvas_->drawColor(util::toSkColor(color));
+    SkPaint paint;
+    paint.setColor(SK_ColorRED);
+    canvas_->drawCircle(0, 0, 10, paint);
   }
 
   if (util::isDefaultShapeNode(node)) {

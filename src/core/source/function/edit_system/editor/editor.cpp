@@ -96,3 +96,83 @@ void Editor::mapEventToLocal(Event* event) {
   mouseEvent->localDeltaX = localDelta.width();
   mouseEvent->localDeltaY = localDelta.height();
 }
+
+
+Node* Editor::getEditNodeById(const std::optional<GUID>& id) {
+  if (id.has_value()) {
+    auto node = desaina->document.getNodeById(id.value());
+    return node.has_value() ? node.value() : nullptr;
+  }
+  auto editingNodes = getEditingNodes();
+  if (!editingNodes.empty()) {
+    return editingNodes[0];
+  }
+  return nullptr;
+}
+
+void Editor::rotate(float degrees, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.rotate(degrees, node);
+
+}
+
+void Editor::resize(float width, float height, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.resize(width, height, node);
+}
+
+void Editor::translate(float x, float y, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.translate(x, y, node);
+}
+
+void Editor::setRotatation(float degrees, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.setRotate(degrees, node);
+}
+
+void Editor::setSize(float width, float height, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.setSize(width, height, node);
+}
+
+void Editor::setTranslate(float x, float y, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.setTranslate(x, y, node);
+}
+
+void Editor::setTranslateX(float x, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  auto matrix = util::getWorldMatrix(node, &desaina->document);
+  desaina->actionSystem.setTranslate(x, matrix.getTranslateY(), node);
+}
+
+void Editor::setTranslateY(float y, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  auto matrix = util::getWorldMatrix(node, &desaina->document);
+  desaina->actionSystem.setTranslate(matrix.getTranslateX(), y, node);
+}

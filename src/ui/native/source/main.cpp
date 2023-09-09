@@ -7,6 +7,7 @@
 #include "backends/imgui_impl_opengl3.h"
 
 #include "create_node_panel.h"
+#include "props_panel.h"
 #include "file_panel.h"
 #include "event.h"
 
@@ -79,7 +80,9 @@ int main() {
 				if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
 						done = true;
 				
-				processMouseEvent(desaina, event);
+				if (!io.WantCaptureMouse) {
+					processMouseEvent(desaina, event);
+				}
 		}
 
 		glViewport(0, 0, drawable_width, drawable_height);
@@ -112,6 +115,7 @@ int main() {
 
 				CreateNodePanel(&desaina);
 				CreateFilePanel(&desaina);
+        CreatePropsPanel(&desaina);
 		}
 
 		// Rendering

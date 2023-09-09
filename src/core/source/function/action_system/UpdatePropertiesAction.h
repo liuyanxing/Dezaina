@@ -13,7 +13,7 @@ enum class PropertyType  {
   kNone,
   kTransform,
   kSize,
-  kRezieDelta,
+  kResizeDelta,
   kRotation,
 };
 using PropertyValue = variant<float, int, Vector, Matrix>;
@@ -31,28 +31,32 @@ struct UpdatePropertiesAction : public Action {
     return action;
   }
 
-  static auto MakeTranslate(Node* node, float deltaX, float deltaY) {
-    auto m = util::getTransfromMatrix(node);
-    m.preTranslate(deltaX, deltaY);
+  static auto MakeSetTranslate(float x, float y, const Node* node) {
+    auto size = util::getSize(node);
+    auto degree = util::getRotation(node);
+    auto transform = SkMatrix::I();
+    transform.setRotate(degree, size.x / 2, size.y / 2);
+    transform.postTranslate(x, y);
     PropertyType type = PropertyType::kTransform;
-    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(m));
+    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));
     return action;
   }
 
-  static auto MakeRotateDelta(Node* node, float degrees) {
+  static auto MakeSetRotate(float degrees, const Node* node) {
     auto m = util::getTransfromMatrix(node);
     auto size = util::getSize(node);
-    SkMatrix rotationMatrix;
-    rotationMatrix.setRotate(degrees, size.x / 2, size.y / 2);
-    m.preConcat(rotationMatrix);
+    auto transform = SkMatrix::I();
+    transform.setRotate(degrees, size.x / 2, size.y / 2);
+    transform.postTranslate(m.getTranslateX(), m.getTranslateY());
+
     PropertyType type = PropertyType::kTransform;
-    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(m));
+    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));
     return action;
   }
 
-  static auto MakeResizeDelta(Node* node, float deltaX, float deltaY) {
-    PropertyType sizeType = PropertyType::kRezieDelta;
-    PropertyValue sizeValue = Vector{deltaX, deltaY};
+  static auto MakeSetSize(float width, float height, const Node* node) {
+    PropertyType sizeType = PropertyType::kSize;
+    PropertyValue sizeValue = Vector{width, height};
     auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), sizeType, sizeValue);
     return action;
   }

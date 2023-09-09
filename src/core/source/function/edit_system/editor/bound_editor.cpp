@@ -46,7 +46,7 @@ void BoundEditor::handleDragBound(Event* event) {
   
   for (auto node : selectedNodes) {
     auto m = util::getTransfromMatrix(node);
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, deltaX, deltaY));
+    editor_->translate(deltaX, deltaY, node->get_guid());
   }
 }
 
@@ -90,8 +90,8 @@ void BoundEditor::handleDragBoundResize(Event* event) {
   auto selectedNodes = editor_->getEditingNodes();
   if (selectedNodes.size() == 1) {
     auto* node = selectedNodes[0];
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeResizeDelta(node, sizeDelta.x(), sizeDelta.y()));
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeTranslate(node, translateDeltaX, translateDeltaY));
+    editor_->resize(sizeDelta.x(), sizeDelta.y());
+    editor_->translate(translateDeltaX, translateDeltaY);
 
   } else {}
   
@@ -111,7 +111,7 @@ void BoundEditor::handleDragBoundRotate(Event* event) {
   if (selectedNodes.size() == 1) {
     auto* node = selectedNodes[0];
    float angle = base::vectorsAngle({oldCenterX, oldCenterY}, {localCenterX, localCenterY});
-    editor_->desaina->actionSystem.addAction(UpdatePropertiesAction::MakeRotateDelta(node, angle));
+   editor_->rotate(angle);
   } else {}
 }
 

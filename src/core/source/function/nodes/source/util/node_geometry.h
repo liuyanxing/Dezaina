@@ -11,6 +11,7 @@
 #include "node_type.h"
 #include "util/node_props.h"
 #include "util/skia.h"
+#include <cmath>
 
 using CornerRadii = std::array<float, 4>;
 
@@ -94,6 +95,11 @@ namespace util {
     }
 
     return CornerRadii{0, 0, 0, 0};
+  }
+
+  inline float getRotation(const Node* node) {
+    auto matrix = util::getTransfromMatrix(node);
+    return acosf(matrix.getScaleX()) * 180 / M_PI;
   }
 
   SkPath buildFillPath(const Node* node);
