@@ -41,6 +41,9 @@ void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPo
     changeItem->layoutNode = desaina_->changeSystem.appendLayoutNode(action->node_id);
   }
   auto size = get<Vector>(action->propertyValue);
+  auto& layoutNode = changeItem->layoutNode;
+  layoutNode->size = size;
+
   auto* nodeChange = changeItem->changeNode;
   nodeChange->set_size(size.toChange(pool));
   changeItem->isFillGeometryDirty = true;
