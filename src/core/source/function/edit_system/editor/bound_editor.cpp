@@ -83,16 +83,16 @@ void BoundEditor::handleDragBoundResize(Event* event) {
   auto localDeltaX = mouseEvent->localDeltaX;
   auto localDeltaY = mouseEvent->localDeltaY;
   auto sizeDelta = SkVector{localDeltaX, localDeltaY} * hitNode->direction;
-  auto translateDeltaX = 0;
-  auto translateDeltaY = 0;
+  auto translateDeltaX = 0.F;
+  auto translateDeltaY = 0.F;
   SkMatrix transform;
 
   if (sizeDelta.x() * localDeltaX < 0) {
-    translateDeltaX = -sizeDelta.x();
+    translateDeltaX = localDeltaX;
   }
 
   if (sizeDelta.y() * localDeltaY < 0) {
-    translateDeltaY = -sizeDelta.y();
+    translateDeltaY = localDeltaY;
   }
   auto translate = base::getTranslateOfBound(bound, boundTransform);
   transform.setTranslate(translateDeltaX, translateDeltaY);

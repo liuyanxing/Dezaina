@@ -1,5 +1,7 @@
 #include "props_panel.h"
+#include "base/math.h"
 #include "imgui.h"
+#include "util/node_geometry.h"
 #include <cmath>
 
 void CreatePropsPanel(Desaina* desaina) {
@@ -12,7 +14,7 @@ void CreatePropsPanel(Desaina* desaina) {
   }
 
   auto transform = editor->getEditTransform();
-  float rotation = acosf(transform.getScaleX()) * 180 / 3.1415926f;
+  float rotation = base::getRotation(transform);
   if (ImGui::InputFloat("rotation", &rotation)) {
     editor->setRotatation(rotation);
   }
