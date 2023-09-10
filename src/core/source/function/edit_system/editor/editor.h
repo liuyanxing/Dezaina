@@ -78,6 +78,7 @@ public:
   void setTranslateX(float x, std::optional<GUID> id = std::nullopt);
   void setTranslateY(float y, std::optional<GUID> id = std::nullopt);
   void setSize(float width, float height, std::optional<GUID> id = std::nullopt);
+  void setTransform(const SkMatrix& transform, std::optional<GUID> id = std::nullopt);
   
   Desaina* desaina;
   std::unique_ptr<HitTester> hit_tester = std::make_unique<SimpleHitTester>();

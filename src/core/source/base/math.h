@@ -4,6 +4,7 @@
 #include "include/core/SkPoint.h"
 #include "include/core/SkSize.h"
 #include <algorithm>
+#include <cmath>
 
 inline SkPoint operator*(const SkPoint& point, const SkPoint& other) {
   return SkPoint::Make(point.x() * other.x(), point.y() * other.y());
@@ -31,5 +32,24 @@ namespace base {
     auto acosValue = std::clamp(a.dot(b) / (a.length() * b.length()), -1.0f, 1.0f);
     auto angle = acosf(acosValue) * 180 / M_PI;
     return a.cross(b) < 0 ? -angle : angle;
+  }
+
+  inline SkVector mapVector(const SkVector& vector, const SkMatrix& matrix) {
+    auto rotation = acosf(float(matrix.getScaleX())) * 180 / M_PI;
+    int sign = asinf(float(matrix.getSkewY())) > 0 ? 1 : -1;
+    rotation *= -sign;
+    SkMatrix m;
+    m.setRotate(rotation);
+    return m.mapVector(vector.x(), vector.y());
+  }
+  
+  inline float getRotation(const SkMatrix& matrix) {
+    return atan2f(matrix.getSkewY(), matrix.getScaleX()) * 180 / M_PI;
+  }
+
+  inline SkVector getTranslateOfBound(const SkRect& bound, const SkMatrix& matrix) {
+    auto center = SkPoint::Make(bound.width() / 2, bound.height() / 2);
+    SkPoint point = matrix.mapPoint(center);
+    return point - center;
   }
 }

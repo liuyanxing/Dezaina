@@ -2,6 +2,7 @@
 
 #include "action_system/action.h"
 #include "base_type.h"
+#include "include/core/SkMatrix.h"
 #include "node_type.h"
 #include "system/system.h"
 
@@ -22,6 +23,7 @@ class ActionSystem : public System {
   void setTranslate(float x, float y, const Node* node);
   void resize(float deltaWidth, float deltaHeight, const Node* node);
   void setSize(float width, float height, const Node* node);
+  void setTransform(const SkMatrix& transform, const Node* node);
   
  private:
   vector<ActionPtr> actions_;

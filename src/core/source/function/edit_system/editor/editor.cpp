@@ -92,9 +92,10 @@ void Editor::mapEventToLocal(Event* event) {
   mouseEvent->localX = point.x();
   mouseEvent->localY = point.y();
 
-  auto localDelta = base::mapSizeToLocal({mouseEvent->deltaX, mouseEvent->deltaY}, edit_transform_);
-  mouseEvent->localDeltaX = localDelta.width();
-  mouseEvent->localDeltaY = localDelta.height();
+  // mouseEvent->deltaY = -1;
+  auto localDelta = base::mapVector({mouseEvent->deltaX, mouseEvent->deltaY}, edit_transform_);
+  mouseEvent->localDeltaX = localDelta.x();
+  mouseEvent->localDeltaY = localDelta.y();
 }
 
 
@@ -175,4 +176,12 @@ void Editor::setTranslateY(float y, std::optional<GUID> id) {
   }
   auto matrix = util::getWorldMatrix(node, &desaina->document);
   desaina->actionSystem.setTranslate(matrix.getTranslateX(), y, node);
+}
+
+void Editor::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
+  auto* node = getEditNodeById(id);
+  if (!node) {
+    return;
+  }
+  desaina->actionSystem.setTransform(transform, node);
 }

@@ -34,6 +34,11 @@ void EventSystem::dispatchUIEvent(UIEvent &event) {
 }
 
 void EventSystem::dispatchMouseEvent(float x, float y, EventType type, int button, int buttons) {
+    for (auto* event : events_) {
+      if (event->isMouseEvent()) {
+        return;
+      } 
+    }
     MouseEvent::Builder builder(type);
     if (type == EventType::kMouseWheel) {
       builder.setMouseDeltaX(x);

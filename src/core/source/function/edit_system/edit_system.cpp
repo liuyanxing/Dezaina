@@ -43,7 +43,7 @@ void EditSystem::setEditorBySelection() {
   }
 }
 
-void EditSystem::tick() {
+void EditSystem::afterTick() {
   if (editor_ != nullptr) {
     editor_->update();
   }

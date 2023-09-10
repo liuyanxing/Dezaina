@@ -24,8 +24,8 @@ struct ChangeItem {
   bool isFillGeometryDirty;
   bool isStrokeGeometryDirty;
   
-  static ChangeItem Make(LayoutNode* node, NodeChange* change_node) {
-    return {node, change_node, false, false};
+  static ChangeItem Make(LayoutNode* layoutNode, NodeChange* change_node) {
+    return {layoutNode, change_node, false, false};
   }
 };
 
@@ -48,7 +48,7 @@ class ChangeSystem : public System {
   }
 
   bool processMessage(kiwi::ByteBuffer& buffer) { return change_processor_.processMessage(buffer); }
-  LayoutNode* appendLayoutNode(GUID guid);
+  LayoutNode* appendLayoutNode(Node* node);
   void tick() override;
   
  private:

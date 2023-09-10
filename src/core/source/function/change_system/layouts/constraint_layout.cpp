@@ -27,9 +27,6 @@ bool ConstraintLayout::processUpdatePropertiesAction(const UpdatePropertiesActio
 
 void ConstraintLayout::hanldeTransfrom(const UpdatePropertiesAction *action, kiwiPool &pool) {
   auto changeItem = desaina_->changeSystem.getChangingItem(action->node_id);
-  if (changeItem == nullptr) {
-    return;
-  }
   auto* changeNode = changeItem->changeNode;
   auto transform = get<Matrix>(action->propertyValue);
   changeNode->set_transform(transform.toChange(pool));
@@ -37,9 +34,6 @@ void ConstraintLayout::hanldeTransfrom(const UpdatePropertiesAction *action, kiw
 
 void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPool &pool) {
   auto changeItem = desaina_->changeSystem.getChangingItem(action->node_id);
-  if (changeItem->layoutNode == nullptr) {
-    changeItem->layoutNode = desaina_->changeSystem.appendLayoutNode(action->node_id);
-  }
   auto size = get<Vector>(action->propertyValue);
   auto& layoutNode = changeItem->layoutNode;
   layoutNode->size = size;
@@ -52,9 +46,6 @@ void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPo
 
 void ConstraintLayout::hanldeResizeDelta(const UpdatePropertiesAction *action, kiwiPool &pool) {
   auto changeItem = desaina_->changeSystem.getChangingItem(action->node_id);
-  if (changeItem->layoutNode == nullptr) {
-    changeItem->layoutNode = desaina_->changeSystem.appendLayoutNode(action->node_id);
-  }
   auto& layoutNode = changeItem->layoutNode;
   auto deltaSize = get<Vector>(action->propertyValue);
   layoutNode->size.x += deltaSize.x;

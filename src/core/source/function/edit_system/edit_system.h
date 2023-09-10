@@ -25,7 +25,7 @@ class EditSystem : public System {
     emit(event);
   }
 
-  void tick() override;
+  void afterTick() override;
   
  private:
   void bindEvents();

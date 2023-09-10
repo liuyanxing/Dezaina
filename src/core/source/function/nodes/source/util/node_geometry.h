@@ -11,6 +11,7 @@
 #include "node_type.h"
 #include "util/node_props.h"
 #include "util/skia.h"
+#include "base/math.h"
 #include <cmath>
 
 using CornerRadii = std::array<float, 4>;
@@ -99,8 +100,7 @@ namespace util {
 
   inline float getRotation(const Node* node) {
     auto matrix = util::getTransfromMatrix(node);
-    int sign = matrix.getSkewY() > 0 ? 1 : -1;
-    return sign * acosf(matrix.getScaleX()) * 180 / M_PI;
+    return base::getRotation(matrix);
   }
 
   inline SkVector getTranslate(const Node* node) {

@@ -31,26 +31,25 @@ struct UpdatePropertiesAction : public Action {
     return action;
   }
 
+  static auto MakeSetTransform(const SkMatrix& transform, const Node* node) {
+    PropertyType type = PropertyType::kTransform;
+    return Make(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));
+  }
+
   static auto MakeSetTranslate(float x, float y, const Node* node) {
     SkMatrix transform = util::computeTransform({x, y}, util::getRotation(node), node);
-
-    PropertyType type = PropertyType::kTransform;
-    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));
-    return action;
+    return MakeSetTransform(transform, node);
   }
+
 
   static auto MakeSetRotate(float rotation, const Node* node) {
     SkMatrix transform = util::computeTransform(util::getTranslate(node), rotation, node);
-
-    PropertyType type = PropertyType::kTransform;
-    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), PropertyType::kTransform, util::toMatrix(transform));
-    return action;
+    return MakeSetTransform(transform, node);
   }
 
   static auto MakeSetSize(float width, float height, const Node* node) {
     PropertyType sizeType = PropertyType::kSize;
     PropertyValue sizeValue = Vector{width, height};
-    auto action = make_shared<UpdatePropertiesAction>(node->get_guid(), sizeType, sizeValue);
-    return action;
+    return Make(node->get_guid(), sizeType, sizeValue);
   }
 };

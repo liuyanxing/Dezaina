@@ -55,4 +55,7 @@ void Desaina::tick() {
   for (const auto &system : systems_) {
     system->tick();
   }
+  for (const auto &system : systems_) {
+    system->afterTick();
+  }
 }

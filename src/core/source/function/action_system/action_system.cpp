@@ -30,3 +30,7 @@ void ActionSystem::resize(float deltaWidth, float deltaHeight, const Node* node)
 void ActionSystem::setSize(float width, float height, const Node* node) {
   addAction(UpdatePropertiesAction::MakeSetSize(width, height, node));
 }
+
+void ActionSystem::setTransform(const SkMatrix& transform, const Node* node) {
+  addAction(UpdatePropertiesAction::MakeSetTransform(transform, node));
+}

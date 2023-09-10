@@ -50,7 +50,7 @@ void ChangeSystem::addChangingItem(const Action *action) {
     auto* changeNode = change_pool_.allocate<Desaina_Kiwi::NodeChange>();
     changeNode->set_guid(nodeId.toChange(change_pool_));
     
-    changing_items_[id.value()] = ChangeItem::Make(nullptr, changeNode);
+    changing_items_[id.value()] = ChangeItem::Make(appendLayoutNode(node.value()), changeNode);
   }
 }
 
@@ -97,15 +97,14 @@ void ChangeSystem::tick() {
   changing_items_.clear();
 }
 
-LayoutNode* ChangeSystem::appendLayoutNode(GUID guid) {
-  auto node = desaina_->document.getNodeById(guid);
-  if (!node.has_value()) {
+LayoutNode* ChangeSystem::appendLayoutNode(Node* node) {
+  if (!node) {
     return nullptr;
   }
   layout_nodes_.push_back({});
   auto& layoutNode = layout_nodes_.back();
-  layoutNode.node = node.value(); 
-  layoutNode.size = util::getSize(node.value());
-  layoutNode.transform = util::getTransfromMatrix(node.value());
+  layoutNode.node = node; 
+  layoutNode.size = util::getSize(node);
+  layoutNode.transform = util::getTransfromMatrix(node);
   return &layoutNode;
 }

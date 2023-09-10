@@ -5,6 +5,7 @@
 #include "event_system/event.h"
 #include "event_system/hit_tester.h"
 #include "event_system/mouse_event.h"
+#include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
 #include "include/core/SkRect.h"
 #include "util/node_geometry.h"
@@ -75,23 +76,35 @@ void BoundEditor::handleDragBoundResize(Event* event) {
     return;
   }
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto deltaX = mouseEvent->localDeltaX;
-  auto deltaY = mouseEvent->localDeltaY;
-  auto direction = hitNode->direction;
-  auto sizeDelta = SkPoint::Make(deltaX, deltaY) * direction;
+  auto bound = editor_->getEditBound();
+  auto boundTransform = editor_->getEditTransform();
+  auto deltaX = mouseEvent->deltaX;
+  auto deltaY = mouseEvent->deltaY;
+  auto localDeltaX = mouseEvent->localDeltaX;
+  auto localDeltaY = mouseEvent->localDeltaY;
+  auto sizeDelta = SkVector{localDeltaX, localDeltaY} * hitNode->direction;
   auto translateDeltaX = 0;
   auto translateDeltaY = 0;
-  if (sizeDelta.x() * deltaX < 0) {
-    translateDeltaX = deltaX;
+  SkMatrix transform;
+
+  if (sizeDelta.x() * localDeltaX < 0) {
+    translateDeltaX = -sizeDelta.x();
   }
-  if (sizeDelta.y() * deltaY < 0) {
-    translateDeltaY = deltaY;
+
+  if (sizeDelta.y() * localDeltaY < 0) {
+    translateDeltaY = -sizeDelta.y();
   }
+  auto translate = base::getTranslateOfBound(bound, boundTransform);
+  transform.setTranslate(translateDeltaX, translateDeltaY);
+  auto rotatation = base::getRotation(boundTransform);
+  transform.postRotate(rotatation, bound.width() / 2, bound.height() / 2);
+  transform.postTranslate(translate.x(), translate.y());
+
   auto selectedNodes = editor_->getEditingNodes();
   if (selectedNodes.size() == 1) {
     auto* node = selectedNodes[0];
     editor_->resize(sizeDelta.x(), sizeDelta.y());
-    editor_->translate(translateDeltaX, translateDeltaY);
+    editor_->setTransform(transform);
 
   } else {}
   
