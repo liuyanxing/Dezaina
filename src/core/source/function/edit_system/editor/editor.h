@@ -28,6 +28,7 @@ enum class EditorHitNodeType {
 struct EditorHitNode : public HitTestNode {
   EditorHitNodeType type;
   int index = 0;
+  void* data = nullptr;
   static EditorHitNode Make(EditorHitNodeType type, int index, const SkRect& bound) {
     EditorHitNode node{};
     node.type = type;

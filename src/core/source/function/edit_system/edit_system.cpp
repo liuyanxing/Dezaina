@@ -1,5 +1,6 @@
 #include "edit_system.h"
 #include "action_system/UpdatePropertiesAction.h"
+#include "edit_system/editor/vector_node_editor.h"
 #include "editor/bound_editor.h"
 #include "util/node_props.h"
 #include "desaina.h"
@@ -32,6 +33,10 @@ void EditSystem::setEditorBySelection() {
       case NodeType::ROUNDED_RECTANGLE:
       case NodeType::RECTANGLE: {
         editor_ = std::make_unique<RectangleNodeEditor>(desaina_);
+        break;
+      }
+      case NodeType::VECTOR: {
+        editor_ = std::make_unique<VectorNodeEditor>(desaina_);
         break;
       }
       default: {

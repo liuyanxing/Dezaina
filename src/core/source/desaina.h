@@ -95,7 +95,7 @@ class Desaina : public EventEmitter {
       emit(event);
     }
 
-  std::pair<uint32_t, Geometry*> addGeomtryFromBlob(const Blob& blob) {
+    std::pair<uint32_t, Geometry*> addGeomtryFromBlob(const Blob& blob) {
       auto blob_key = services.blobService->addBlob(blob);
       const auto* blob_ptr = services.blobService->getBlob(blob_key);
       auto geometryPair = geometries_.insert({blob_key, Geometry{.commandsBlob = blob_ptr}});
@@ -108,6 +108,10 @@ class Desaina : public EventEmitter {
         return nullptr;
       }
       return &iter->second;
+    }
+
+    const Blob* getBlob(uint32_t key) {
+      return services.blobService->getBlob(key);
     }
 
 		Services services;

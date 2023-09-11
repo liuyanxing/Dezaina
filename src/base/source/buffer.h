@@ -60,3 +60,5 @@ namespace std {
     }
   };
 }
+
+using Blob = Buffer;
