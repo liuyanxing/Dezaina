@@ -21,6 +21,7 @@ public:
   }
 
 
+  static Buffer MakeEmpty() { return Buffer(static_cast<uint8_t*>(nullptr), 0); };
   static Buffer MakeWithCopy(const uint8_t* data, size_t size);
 
   uint8_t *data() const { return data_; }
