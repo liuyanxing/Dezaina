@@ -6,6 +6,8 @@
 #include "node_type.h"
 #include "rectangle.h"
 #include "util/skia.h"
+#include "vector.h"
+#include <_types/_uint32_t.h>
 #include <optional>
 #include <tuple>
 
@@ -50,8 +52,40 @@ namespace util {
     return SkPath();
   }
 
-  Geometry* buildFillGeometry(const LayoutNode *node, Desaina *desaina) {
-    return desaina->addGeomtryFromBlob(util::toBuffer(buildFillPath(node))).second;
+  BlobPair buildFillGeometry(const LayoutNode *node, Desaina *desaina) {
+    return desaina->addBlob(util::toBuffer(buildFillPath(node)));
+  }
+
+  const IVector<Path>& getFillGeometry(const Node* node) {
+    static IVector<Path> empty;
+    if (util::isDefaultShapeNode(node)) {
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      return shape->get_fillGeometry();
+    }
+    return empty;
+  }
+
+  const IVector<Path>& getStrokeGeometry(const Node* node) {
+    static IVector<Path> empty;
+    if (util::isDefaultShapeNode(node)) {
+      auto shape = static_cast<const DefaultShapeNode*>(node);
+      return shape->get_strokeGeometry();
+    }
+    return empty;
+  }
+
+  const VectorData& getVectorData(const Node* node) {
+    auto vectorNode = static_cast<const VectorNode*>(node);
+    return vectorNode->get_vectorData();
+  }
+
+  Geometry getGeometryFromBlob(uint32_t blobId, Desaina *desaina) {
+    auto* blob = desaina->getBlob(blobId);
+    auto* geometry = blob->getAttachment<Geometry>();
+    if (geometry != nullptr) {
+      return *geometry;
+    }
+    return *(blob->setAttachment<Geometry>(blob));
   }
 }
 

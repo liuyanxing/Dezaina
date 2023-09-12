@@ -9,6 +9,7 @@
 #include "event_system/event_emitter.h"
 #include "include/core/SkPath.h"
 #include "kiwi.h"
+#include <_types/_uint32_t.h>
 #include <memory>
 #include <stdint.h>
 #include "select_system/select_system.h"
@@ -34,16 +35,7 @@ struct WindowInfo {
   float devicePixelRatio;
 };
 
-struct Geometry {
-  SkPath path;
-  const Blob* commandsBlob = nullptr;
-  const SkPath& getPath() {
-    if (path.isEmpty()) {
-      path = util::toSkPath(commandsBlob);
-    }
-    return path;
-  }
-};
+
 
 using BlobReMap = unordered_map<uint32_t, uint32_t>;
 using Systems = vector<System*>;
@@ -95,23 +87,18 @@ class Desaina : public EventEmitter {
       emit(event);
     }
 
-    std::pair<uint32_t, Geometry*> addGeomtryFromBlob(const Blob& blob) {
+    BlobPair addBlob(const Blob& blob) {
       auto blob_key = services.blobService->addBlob(blob);
-      const auto* blob_ptr = services.blobService->getBlob(blob_key);
-      auto geometryPair = geometries_.insert({blob_key, Geometry{.commandsBlob = blob_ptr}});
-      return {blob_key, &geometryPair.first->second} ;
+      auto* blob_ptr = services.blobService->getBlob(blob_key);
+      return {blob_key, blob_ptr} ;
     }
 
-    Geometry* getGeometry(uint32_t key) {
-      auto iter = geometries_.find(key);
-      if (iter == geometries_.end()) {
-        return nullptr;
-      }
-      return &iter->second;
-    }
-
-    const Blob* getBlob(uint32_t key) {
+    Blob* getBlob(uint32_t key) {
       return services.blobService->getBlob(key);
+    }
+
+    uint32_t frame() {
+      return frameCount;
     }
 
 		Services services;
@@ -130,4 +117,5 @@ class Desaina : public EventEmitter {
     unordered_map<int, Geometry> geometries_{};
     Systems systems_{};
     WindowInfo windowInfo_{};
+    uint32_t frameCount = 0;
 };

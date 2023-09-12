@@ -6,7 +6,9 @@
 
 class NodeEditor : public Editor {
 public:
-  NodeEditor(Desaina* document): Editor(document), boundEditor_(this) {};
+  NodeEditor(Desaina* desaina, EditorType type = EditorType::kNode): Editor(type, desaina), boundEditor_(this) {
+    bindEvents();
+  };
   virtual ~NodeEditor() = default;
   
   virtual void update() {

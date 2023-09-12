@@ -75,9 +75,9 @@ void ChangeSystem::tick() {
       continue;
     }
     if (changeItem.isFillGeometryDirty) {
-      auto* geometry = util::buildFillGeometry(changeItem.layoutNode, desaina_);
+      auto blobPair = util::buildFillGeometry(changeItem.layoutNode, desaina_);
       changeNode.set_fillGeometry(change_pool_, 1)[0].set_commandsBlob(blobIndex++);
-      blobs.push_back(geometry->commandsBlob);
+      blobs.push_back(blobPair.second);
     }
     if (changeItem.isStrokeGeometryDirty) {
     }

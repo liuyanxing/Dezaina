@@ -2,6 +2,7 @@
 #include "desaina.h"
 #include "desaina_node.h"
 #include "document.h"
+#include "edit_system/editor/editor.h"
 #include "include/core/SkCanvas.h"
 #include "canvas.h"
 
@@ -132,7 +133,19 @@ void Canvas::drawEditor() {
   if (editor == nullptr) {
     return;
   }
+
   canvas_->concat(editor->getEditTransform());
+
+  if (editor->getType() == EditorType::kVector) {
+    SkPath editPath;
+    editor->getEditPath(editPath);
+    SkPaint paint;
+    paint.setColor(Config::lightDarkColor);
+    paint.setStyle(SkPaint::kStroke_Style);
+    paint.setStrokeWidth(Config::editPathStrokeWith);
+    canvas_->drawPath(editPath, paint);
+  }
+
   SkPath fillPath, strokePath;
   editor->getPath(fillPath, strokePath);
   

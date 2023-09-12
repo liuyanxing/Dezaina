@@ -58,4 +58,5 @@ void Desaina::tick() {
   for (const auto &system : systems_) {
     system->afterTick();
   }
+  frameCount++;
 }

@@ -8,7 +8,7 @@ enum class EventType {
   kWindowClose, kWindowResize, kWindowFocus, kWindowLostFocus, kWindowMoved,
   kAppTick, kAppUpdate, kAppRender,
   kKeyDown, kKeyUp,
-  kMouseDown, kMouseUp, kMouseMove, kMouseWheel, kMouseDrag,
+  kMouseDown, kMouseUp, kMouseMove, kMouseWheel, kMouseDoubleClick, kMouseDrag,
   kViewPortChange, kSelectionChange,
   kSetCursor,
   kEditorChagne,
@@ -18,6 +18,7 @@ enum class EventType {
 struct Event {
   EventType type;  
   Node* target = nullptr;
+  uint32_t triggeredFrame = 0;
   class Builder;
   bool isMouseEvent() const {
     return isMouseEvent(type);

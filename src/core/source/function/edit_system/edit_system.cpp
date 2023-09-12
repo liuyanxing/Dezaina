@@ -31,12 +31,9 @@ void EditSystem::setEditorBySelection() {
     auto node = selectedNodes[0];
     switch (node->get_type()) {
       case NodeType::ROUNDED_RECTANGLE:
-      case NodeType::RECTANGLE: {
-        editor_ = std::make_unique<RectangleNodeEditor>(desaina_);
-        break;
-      }
+      case NodeType::RECTANGLE: 
       case NodeType::VECTOR: {
-        editor_ = std::make_unique<VectorNodeEditor>(desaina_);
+        editor_ = std::make_unique<RectangleNodeEditor>(desaina_);
         break;
       }
       default: {

@@ -57,5 +57,5 @@ namespace util {
   }
 
   Buffer toBuffer(const SkPath& path);
-  SkPath toSkPath(const Blob* blob);
+  SkPath toSkPath(const Buffer* buffer);
 }

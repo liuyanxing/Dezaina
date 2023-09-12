@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base_type.h"
 #include "change_system/layouts/layout_node.h"
 #include "desaina_node.h"
 #include "document.h"
@@ -9,10 +10,29 @@
 #include "include/core/SkRect.h"
 #include "include/core/SkSize.h"
 #include "node_type.h"
+#include "services/blob_service.h"
 #include "util/node_props.h"
 #include "util/skia.h"
 #include "base/math.h"
 #include <cmath>
+#include <stdint.h>
+
+class Geometry : public BlobAttachment {
+public:
+  Geometry(const Blob* blob) : commandsBlob(blob) {}
+  const SkPath& getPath() {
+    if (path.isEmpty()) {
+      path = util::toSkPath(commandsBlob->buffer());
+    }
+    return path;
+  }
+  void setPath(SkPath&& path) {
+    this->path = std::move(path);
+  }
+  SkPath path;
+private:
+  const Blob* commandsBlob = nullptr;
+};
 
 using CornerRadii = std::array<float, 4>;
 
@@ -79,15 +99,10 @@ namespace util {
     return matrix.mapRect(bound);
   }
 
-  inline const IVector<Path>& getFillGeometry(const Node* node) {
-    static IVector<Path> empty;
-    if (util::isDefaultShapeNode(node)) {
-      auto shape = static_cast<const DefaultShapeNode*>(node);
-      return shape->get_fillGeometry();
-    }
-    return empty;
-  }
-
+  const IVector<Path>& getFillGeometry(const Node* node);
+  const IVector<Path>& getStrokeGeometry(const Node* node);
+  const VectorData& getVectorData(const Node* node);
+  
   inline CornerRadii getCornerRadii(const Node* node) {
     if (util::isFrame(node)) {
       return getCornerRadii(static_cast<const FrameNode*>(node));
@@ -119,5 +134,6 @@ namespace util {
   }
 
   SkPath buildFillPath(const Node* node);
-  Geometry* buildFillGeometry(const LayoutNode *node, Desaina *desaina);
+  BlobPair buildFillGeometry(const LayoutNode *node, Desaina *desaina);
+  Geometry getGeometryFromBlob(uint32_t blobId, Desaina *desaina);
 }

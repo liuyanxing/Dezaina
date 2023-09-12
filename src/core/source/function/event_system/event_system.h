@@ -36,4 +36,5 @@ private:
   float mouseDeltaX_ = 0;
   float mouseDeltaY_ = 0;
   vector<Event*> events_;
+  uint32_t lastMouseDownFrame_ = 0;
 };

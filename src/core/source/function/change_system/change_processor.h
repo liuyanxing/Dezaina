@@ -14,7 +14,7 @@ public:
   bool processMessage(const Desaina_Kiwi::Message& message);
 private:
   void applyNodeChanges(const Desaina_Kiwi::Message& message);
-  void applyNodeChange(const Desaina_Kiwi::NodeChange& node_change);
+  Node* applyNodeChange(const Desaina_Kiwi::NodeChange& node_change);
 
   void remapBlobId();
 

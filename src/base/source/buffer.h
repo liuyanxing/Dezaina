@@ -28,8 +28,8 @@ public:
   size_t size() const { return size_; }
   size_t index() const { return index_; }
   bool isEnd() const { return index_ >= size_; }
-  void setIndex(size_t index) { index_ = index; }
   void set(const uint8_t *data, size_t size);
+  void seek(size_t offset) const { index_ = offset; };
 
   uint8_t readByte() const;
   float readFloat() const;
@@ -60,5 +60,3 @@ namespace std {
     }
   };
 }
-
-using Blob = Buffer;

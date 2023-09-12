@@ -1,7 +1,8 @@
 #include "change_processor.h"
 #include "desaina.h"
+#include "node_type.h"
 
-static Buffer decodeBlob(const Desaina_Kiwi::Blob& blob) {
+static Buffer copyBlob(const Desaina_Kiwi::Blob& blob) {
   auto const data_ptr = blob.bytes();
   return Buffer::MakeWithCopy(data_ptr->data(), data_ptr->size());
 }
@@ -13,6 +14,18 @@ void ChangeProcessor::remapBlobId() {
       if (blob_id_remap_.find(geometry.commandsBlob) != blob_id_remap_.end()) {
         const_cast<Path&>(geometry).commandsBlob = blob_id_remap_[geometry.commandsBlob];
       }
+		}
+		auto& strokeGeometry = util::getStrokeGeometry(node);
+		for (auto& geometry : strokeGeometry) {
+			if (blob_id_remap_.find(geometry.commandsBlob) != blob_id_remap_.end()) {
+				const_cast<Path&>(geometry).commandsBlob = blob_id_remap_[geometry.commandsBlob];
+			}
+		}
+		if (util::isVector(node)) {
+			const auto& vectorData = util::getVectorData(node);
+			if (blob_id_remap_.find(vectorData.vectorNetworkBlob) != blob_id_remap_.end()) {
+			  const_cast<VectorData&>(vectorData).vectorNetworkBlob = blob_id_remap_[vectorData.vectorNetworkBlob];
+			}
 		}
 	}
 }
@@ -45,9 +58,9 @@ bool ChangeProcessor::processMessage(const Desaina_Kiwi::Message& message) {
     	if (!document.isLoaded()) {
     		// todo add blob without query;
     	};
-      auto gblob = decodeBlob(blob);
-    	auto geometry = desaina_->addGeomtryFromBlob(gblob);
-    	blob_id_remap_[index++] = geometry.first;
+      auto gblob = copyBlob(blob);
+    	auto desainaBlob = desaina_->addBlob(gblob);
+    	blob_id_remap_[index++] = desainaBlob.first;
     }
   }
   
@@ -67,7 +80,7 @@ bool ChangeProcessor::processMessage(const Desaina_Kiwi::Message& message) {
 	return true;
 }
 
-void ChangeProcessor::applyNodeChange(const Desaina_Kiwi::NodeChange &node_change) {
+Node* ChangeProcessor::applyNodeChange(const Desaina_Kiwi::NodeChange &node_change) {
   auto& document = desaina_->document;
 	GUID id;
 	auto* guid = node_change.guid();
@@ -93,6 +106,7 @@ void ChangeProcessor::applyNodeChange(const Desaina_Kiwi::NodeChange &node_chang
 				break;
       case NodeType::VECTOR:
         node = document.createNode<VectorNode>(id);
+        break;
       case NodeType::STAR:
 				node = document.createNode<StarNode>(id);
 				break;
@@ -119,11 +133,12 @@ void ChangeProcessor::applyNodeChange(const Desaina_Kiwi::NodeChange &node_chang
 
 	node->applyChange(node_change);
 	message_nodes_.push_back(node);
+  return node;
 }
 
 void ChangeProcessor::applyNodeChanges(const Desaina_Kiwi::Message& message) {
 	auto* node_changs = message.nodeChanges();
 	for (const auto& node_change : *node_changs) {
-		applyNodeChange(node_change);
+	  applyNodeChange(node_change);
 	}
 }

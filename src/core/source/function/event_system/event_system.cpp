@@ -3,6 +3,7 @@
 #include "event_system/event_system.h"
 #include "event_system/mouse_event.h"
 #include "event_system/ui_event.h"
+#include <iostream>
 #include <stdint.h>
 
 void EventSystem::tick() {
@@ -19,6 +20,7 @@ void EventSystem::tick() {
 }
 
 void EventSystem::dispatchEvent(Event &event) {
+  event.triggeredFrame = desaina_->frame();
   events_.push_back(&event);
 }
 
@@ -57,6 +59,14 @@ void EventSystem::dispatchMouseEvent(float x, float y, EventType type, int butto
       if (lastType == EventType::kMouseDown || lastType == EventType::kMouseDrag) {
         event.type = EventType::kMouseDrag;
       }
+    }
+
+    if (type == EventType::kMouseDown  ) {
+      if (desaina_->frame() - lastMouseDownFrame_ < 60) {
+        std::cout << "double click" << std::endl;
+        event.type = EventType::kMouseDoubleClick;
+      }
+      lastMouseDownFrame_ = desaina_->frame();
     }
   
     auto* e = new MouseEvent(event);

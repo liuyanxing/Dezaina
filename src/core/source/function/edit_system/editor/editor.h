@@ -14,15 +14,17 @@
 class Desaina;
 
 enum class EditorType {
-  kBound,
   kNode,
-  kPath,
+  kVector,
+  kRectangel,
+  kFrame,
 };
 
 enum class EditorHitNodeType {
   kBoundEdge,
   kBoundCorner,
   kBoundRotate,
+  kController,
 };
 
 struct EditorHitNode : public HitTestNode {
@@ -36,12 +38,20 @@ struct EditorHitNode : public HitTestNode {
     node.bound = bound;
     return node;
   } 
+  static EditorHitNode Make(EditorHitNodeType type, void* data, const SkRect& bound) {
+    EditorHitNode node{};
+    node.type = type;
+    node.data = data;
+    node.bound = bound;
+    return node;
+  }
 };
 
 class Editor : public EventEmitter {
 public:
-  Editor(Desaina* desaina) {
+  Editor(EditorType type, Desaina* desaina) {
     this->desaina = desaina;
+    this->type = type;
     init();
   };
   virtual ~Editor() = default;
@@ -50,6 +60,9 @@ public:
     buildEditingNodesBound();
   };
   virtual void getPath(SkPath& fillPath, SkPath& strokePath) {};
+  virtual void getEditPath(SkPath& path) {};
+
+  auto getType() { return type; };
 
   void init();
   void bindEvents();

@@ -6,6 +6,7 @@
 #include "include/core/SkPath.h"
 #include "include/core/SkRect.h"
 #include "node_props.h"
+#include "util/node_geometry.h"
 #include <algorithm>
 #include <optional>
 #include <stdint.h>
@@ -92,7 +93,7 @@ namespace util {
       }
 
       matrix.setScaleTranslate(fontSize, -fontSize, glyph.position.x, glyph.position.y);
-      const auto& glyphPath = desaina->getGeometry(glyph.commandsBlob)->getPath();
+      const auto& glyphPath = util::getGeometryFromBlob(glyph.commandsBlob, desaina).getPath();
       path.addPath(glyphPath, matrix);
 
       lastStyleID = styleID;
@@ -125,7 +126,7 @@ namespace util {
     
       const auto& geometry = shape->get_fillGeometry();
       for (const auto& geo : geometry) {
-        paths.push_back(desaina->getGeometry(geo.commandsBlob)->getPath());
+        paths.push_back(util::getGeometryFromBlob(geo.commandsBlob, desaina).getPath());
       }
     }
     return geometryWithPaints;
@@ -140,7 +141,7 @@ namespace util {
       auto shape = static_cast<const DefaultShapeNode*>(node);
       const auto& geometry = shape->get_strokeGeometry();
       for (const auto& geo : geometry) {
-        paths.push_back(desaina->getGeometry(geo.commandsBlob)->getPath());
+        paths.push_back(util::getGeometryFromBlob(geo.commandsBlob, desaina).getPath());
       }
       paintsWithRect = getStrokePaintsWithRect(node);
     }
@@ -148,13 +149,13 @@ namespace util {
   }
 
   Geometry getHoverGeometry(const Node* node, Desaina* desaina) {
-    Geometry geometry;
+    Geometry geometry{nullptr};
     if (util::isDefaultShapeNode(node)) {
       if (util::isText(node)) {
       }
       auto shape = static_cast<const DefaultShapeNode*>(node);
       const auto& geo = shape->get_fillGeometry().back();
-      geometry.path = desaina->getGeometry(geo.commandsBlob)->getPath();
+      return util::getGeometryFromBlob(geo.commandsBlob, desaina);
     }
     return geometry;
   }

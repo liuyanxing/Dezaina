@@ -52,36 +52,38 @@ namespace util {
     return buffer; 
   }
 
-  SkPath toSkPath(const Blob* blob) {
+  SkPath toSkPath(const Buffer* buffer) {
     SkPath path;
     size_t i = 0;
-    while (!blob->isEnd()) {
-      auto type = blob->readByte();
+    buffer->seek(0);
+    
+    while (!buffer->isEnd()) {
+      auto type = buffer->readByte();
       switch (type) {
         case 0: {
           path.close();
           break;
         }
         case 1: {
-          path.moveTo(blob->readFloat(), blob->readFloat());
+          path.moveTo(buffer->readFloat(), buffer->readFloat());
           break;
         }
         case 2: {
-          path.lineTo(blob->readFloat(), blob->readFloat());
+          path.lineTo(buffer->readFloat(), buffer->readFloat());
           break;
         }
         case 3: {
           path.quadTo(
-            blob->readFloat(), blob->readFloat(),
-            blob->readFloat(), blob->readFloat()
+            buffer->readFloat(), buffer->readFloat(),
+            buffer->readFloat(), buffer->readFloat()
           );
           break;
         }
         case 4: {
           path.cubicTo(
-            blob->readFloat(), blob->readFloat(),
-            blob->readFloat(), blob->readFloat(),
-            blob->readFloat(), blob->readFloat()
+            buffer->readFloat(), buffer->readFloat(),
+            buffer->readFloat(), buffer->readFloat(),
+            buffer->readFloat(), buffer->readFloat()
           );
           break;
         }
