@@ -67,6 +67,8 @@ void BoundEditor::hanldeDrageCtrlNode(Event* event) {
       handleDragBoundRotate(event);
       break;
     }
+    default:
+      break;
   }
 }
 

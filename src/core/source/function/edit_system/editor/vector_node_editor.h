@@ -8,6 +8,18 @@
 #include "vector_editor_data.h"
 
 constexpr int kArenaAllocSize = 16 * 1024;
+using ControllerVertex =  std::variant<VectorEditor::Vertex*, Vector*>;
+
+struct ControllerNode : public EditorHitNode {
+  ControllerVertex vertex;
+  static ControllerNode Make(ControllerVertex vertex, const SkRect& bound) {
+    ControllerNode node{};
+    node.type = EditorHitNodeType::kController;
+    node.vertex = vertex;
+    node.bound = bound;
+    return node;
+  }
+};
 
 class VectorNodeEditor : public Editor {
 public:
@@ -17,20 +29,23 @@ public:
 
   void init();
   void update() override;
-  void bindInteractionArea();
-  void addHitNode(EditorHitNodeType type, void* data, const SkRect& rect);
+  void buildInteractionArea();
   void bindEvents();
   void buildNetWork();
   void updateBlob();
   void getPath(SkPath& fillPath, SkPath& strokePath) override;
   void getEditPath(SkPath& path) override;
 
-  void hanleDrag(MouseEvent* event);
+  void handleDrag(MouseEvent* event);
 private:
   ArenaAlloc arena_{kArenaAllocSize};
   VectorEditor::Network network_{};
   VectorNode* node_;
   Desaina* desaina_;
-  vector<EditorHitNode> hit_nodes_;
+  vector<ControllerNode> hit_nodes_;
+  vector<VectorEditor::Segment*> selected_segments_;
+
+  void updateSelectedSegments();
+  bool isSelected(const VectorEditor::Segment*) const;
 };
 

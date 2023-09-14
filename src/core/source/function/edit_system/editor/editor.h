@@ -78,11 +78,14 @@ public:
   const SkRect& getEditBound() const { return edit_bound_; };
   const SkMatrix& getEditTransform() const { return edit_transform_; };
   vector<Node*> getEditingNodes();
-  void insertHitNode(EditorHitNode* node) { hit_tester->insert(node); };
   vector<EditorHitNode*>& getSelectedHitNode() { return selected_hit_nodes_; };
   EditorHitNode* getFirstSelectedHitNode() { return !selected_hit_nodes_.empty() ? selected_hit_nodes_[0] : nullptr; };
   EditorHitNode* getHoverHitNode() { return hover_hit_node_; };
   void setDirty() { this->dirty = true; };
+  void insertHitNode(EditorHitNode* node) {
+    hit_tester->insert(node);
+  };
+  void updateHitNodes(const vector<EditorHitNode*>& nodes, std::function<bool(EditorHitNode*, EditorHitNode*)> isSameHitNode);
 
   void rotate(float degrees, std::optional<GUID> id = std::nullopt);
   void translate(float x, float y, std::optional<GUID> id = std::nullopt);
@@ -96,6 +99,7 @@ public:
   
   Desaina* desaina;
   std::unique_ptr<HitTester> hit_tester = std::make_unique<SimpleHitTester>();
+  
 private:
   void buildEditingNodesBound();
   void buildHitTester(const std::vector<HitTestNode*>& nodes) {

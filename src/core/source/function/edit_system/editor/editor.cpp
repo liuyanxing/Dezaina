@@ -1,6 +1,7 @@
 #include "editor.h"
 #include "desaina.h"
 #include "event_system/event.h"
+#include "event_system/hit_tester.h"
 #include "event_system/ui_event.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkScalar.h"
@@ -184,4 +185,24 @@ void Editor::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
     return;
   }
   desaina->actionSystem.setTransform(transform, node);
+}
+
+void Editor::updateHitNodes(const vector<EditorHitNode*>& nodes, std::function<bool(EditorHitNode*, EditorHitNode*)> isSameHitNode) {
+  auto selectedHitNodes = selected_hit_nodes_;
+  selected_hit_nodes_.clear();
+  hit_tester->clear();
+  EditorHitNode* newHoverNode = nullptr;
+  for (auto* node : nodes) {
+    auto it = std::find_if(selectedHitNodes.begin(), selectedHitNodes.end(), [node, isSameHitNode](EditorHitNode* selectedNode) {
+      return isSameHitNode(node, selectedNode);
+    });
+    if (it != selectedHitNodes.end()) {
+      selected_hit_nodes_.push_back(node);
+    }
+    if (hover_hit_node_ && isSameHitNode(node, hover_hit_node_)) {
+      newHoverNode = node;
+    }
+    hit_tester->insert(node);
+  }
+  hover_hit_node_ = newHoverNode;
 }

@@ -52,16 +52,24 @@ namespace VectorEditor {
       this->vertex = vertex;
     }
 
-    Vector& getTangentOffset() {
-      return tangentOffset;
+    Vector* getTangentOffset() {
+      return &tangentOffset;
     }
 
-    Vector* getVector() {
+    Vector getTangentEnd() const {
+      return {vertex->x + tangentOffset.x, vertex->y + tangentOffset.y};
+    }
+
+    bool hasTangent() const {
+      return tangentOffset.x != 0 || tangentOffset.y != 0;
+    }
+
+    Vector* getVertex() {
       return vertex;
     }
 
   private:
-    Vector tangentOffset{};
+    mutable Vector tangentOffset{};
     Vertex* vertex;
   };
 
@@ -73,6 +81,12 @@ namespace VectorEditor {
     }
     auto& getVertecies() {
       return vertices;
+    }
+    bool hasVertex(Vertex* vertex) {
+      return vertices[0]->getVertex() == vertex || vertices[1]->getVertex() == vertex;
+    }
+    bool hasTangent(Vector* tangent) {
+      return vertices[0]->getTangentOffset() == tangent || vertices[1]->getTangentOffset() == tangent;
     }
   private:
       std::array<SegmentVertex*, 2> vertices;
@@ -92,6 +106,9 @@ namespace VectorEditor {
     }
     vector<Segment*>& getSegments() {
       return segments;
+    }
+    bool empty() {
+      return vertecies.empty() && segments.empty();
     }
     private:
       vector<Vertex*> vertecies;

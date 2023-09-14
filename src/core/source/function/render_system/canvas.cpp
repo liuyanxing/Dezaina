@@ -65,9 +65,6 @@ void Canvas::drawNode(const Node *node) {
     auto page = static_cast<const PageNode*>(node);
     const auto& color = page->get_backgroundColor();
     canvas_->drawColor(util::toSkColor(color));
-    SkPaint paint;
-    paint.setColor(SK_ColorRED);
-    canvas_->drawCircle(0, 0, 10, paint);
   }
 
   if (util::isDefaultShapeNode(node)) {
@@ -159,6 +156,15 @@ void Canvas::drawEditor() {
   paint.setStyle(SkPaint::kFill_Style);
   paint.setColor(SK_ColorWHITE);
   canvas_->drawPath(fillPath, paint);
+
+  auto& hitNods = editor->getSelectedHitNode();
+  for (auto* hitNode : hitNods) {
+    auto bound = hitNode->bound;
+    SkPoint center = {bound.x() + bound.width() / 2, bound.y() + bound.height() / 2};
+    SkPaint paint;
+    paint.setColor(SK_ColorRED);
+    canvas_->drawCircle(center.x(), center.y(), 2,  paint);
+  }
 }
 
 void Canvas::drawMouseEvents(MouseEvent* event) {
