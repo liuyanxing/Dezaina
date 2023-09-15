@@ -1,3 +1,4 @@
+#pragma once
 #include "base_type.h"
 #include "buffer.h"
 #include "desaina_node.h"

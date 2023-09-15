@@ -3,6 +3,7 @@
 #include "buffer.h"
 #include "edit_system/editor/editor.h"
 #include "event_system/mouse_event.h"
+#include "include/core/SkPath.h"
 #include "node_editor.h"
 #include "vector.h"
 #include "vector_editor_data.h"
@@ -44,6 +45,7 @@ private:
   Desaina* desaina_;
   vector<ControllerNode> hit_nodes_;
   vector<VectorEditor::Segment*> selected_segments_;
+  SkPath vector_path_;
 
   void updateSelectedSegments();
   bool isSelected(const VectorEditor::Segment*) const;

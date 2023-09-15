@@ -10,6 +10,7 @@
 #include "config/editor.h"
 #include <iostream>
 #include <variant>
+#include "edit_system/util/vector_node_helper.h"
 
 void VectorNodeEditor::init() {
   bindEvents();
@@ -35,6 +36,9 @@ void VectorNodeEditor::update() {
   if (network_.empty()) {
     buildNetWork();
   }
+  vector_path_.reset();
+  util::networkToSkPath(network_, vector_path_);
+  util::computeFillGeometryPath(vector_path_);
 }
 
 void VectorNodeEditor::updateSelectedSegments() {
@@ -131,22 +135,15 @@ bool VectorNodeEditor::isSelected(const VectorEditor::Segment* segment) const {
 }
 
 void VectorNodeEditor::getEditPath(SkPath &path) {
-  for (auto* segment : network_.getSegments()) {
+  path.addPath(vector_path_);
+  for (auto* segment : selected_segments_) {
     auto& [v0, v1] = segment->getVertecies();
-    path.moveTo(v0->x(), v0->y());
     auto t0 = v0->getTangentEnd();
     auto t1 = v1->getTangentEnd();
-    path.cubicTo(
-      t0.x, t0.y,
-      t1.x, t1.y,
-      v1->x(), v1->y()
-    );
-    if (isSelected(segment)) {
-      path.moveTo(v0->x(), v0->y());
-      path.lineTo(t0.x, t0.y);
-      path.moveTo(v1->x(), v1->y());
-      path.lineTo(t1.x, t1.y);
-    }
+    path.moveTo(v0->x(), v0->y());
+    path.lineTo(t0.x, t0.y);
+    path.moveTo(v1->x(), v1->y());
+    path.lineTo(t1.x, t1.y);
   }
 }
 
