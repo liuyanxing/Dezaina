@@ -18,6 +18,10 @@ public:
 
   SkColor readColorAtPointOfNode(const Node* node, float x, float y, const vector<SkPaint>& paints);
 
+  void flush() {
+    canvas_.flush();
+  };
+
   void bindEvents();
 
 private:

@@ -2,6 +2,7 @@
 
 #include "desaina_node.h"
 #include "ellipse.h"
+#include "include/private/base/SkTArray.h"
 #include "line.h"
 #include "page.h"
 #include "frame.h"
@@ -15,6 +16,8 @@
 #include <stdint.h>
 #include <variant>
 #include <vector>
+
+using skia_private::TArray;
 
 using PoolNode = std::variant<void*,
   PageNode, FrameNode, RectangleNode, StarNode, LineNode, PolygonNode, VectorNode, TextNode, EllipseNode,
@@ -41,5 +44,5 @@ public:
 
 private:
 	uint32_t free_index = 0;
-	SkTArray<PoolNode> nodes_;
+	TArray<PoolNode> nodes_;
 };

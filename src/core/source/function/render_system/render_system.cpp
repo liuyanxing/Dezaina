@@ -9,6 +9,9 @@
 #include "include/core/SkPaint.h"
 #include "util/node_props.h"
 #include "util/node_geometry.h"
+#include "include/gpu/ganesh/SkSurfaceGanesh.h"
+#include "include/core/SkSurface.h"
+#include "include/gpu/GrDirectContext.h"
 
 RenderSystem::RenderSystem(Desaina* desaina) : desaina_(desaina), canvas_(desaina) {
   bindEvents();
@@ -21,7 +24,7 @@ RenderSystem::RenderSystem(Desaina* desaina) : desaina_(desaina), canvas_(desain
       SkImageInfo::Make(width, height, SkColorType::kRGBA_8888_SkColorType,
                         SkAlphaType::kOpaque_SkAlphaType);
   int rowBytes = width * 4;
-  read_color_surface_ = SkSurface::MakeRasterDirect(imageInfo, pixes_, rowBytes, nullptr);
+  read_color_surface_ = SkSurfaces::WrapPixels(imageInfo, pixes_, rowBytes, nullptr);
 }
 
 void RenderSystem::bindEvents() {
@@ -49,6 +52,6 @@ SkColor RenderSystem::readColorAtPointOfNode(const Node* node, float x, float y,
   for (const auto& paint : paints) {
     canvas->drawPath(path, paint);
   }
-  read_color_surface_->flush();
+  canvas->recordingContext()->asDirectContext();
   return SkColorSetARGB(pixes_[3], pixes_[0], pixes_[1], pixes_[2]);
 }

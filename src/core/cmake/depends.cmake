@@ -3,13 +3,13 @@ set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_BASE_DIR ${PROJECT_SOURCE_DIR}/deps)
 
-option(BUILD_SKIA "Build Skia" OFF)
+option(BUILD_SKIA "Build Skia" ON)
 
 message(STATUS "Fetching skia")
 FetchContent_Declare(
 	skia
-	GIT_REPOSITORY https://github.com/google/skia.git
-	GIT_TAG				  chrome/m113
+	GIT_REPOSITORY git@github.com:liuyanxing/skia.git
+	GIT_TAG         m118
 	GIT_SHALLOW			TRUE
 	GIT_PROGRESS		TRUE
 	USES_TERMINAL_DOWNLOAD	TRUE

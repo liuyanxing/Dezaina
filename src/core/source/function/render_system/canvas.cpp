@@ -22,6 +22,7 @@
 #include "util/node_geometry.h"
 #include "config/color.h"
 #include "config/editor.h"
+#include "include/gpu/GrDirectContext.h"
 
 #include <iostream>
 
@@ -35,7 +36,18 @@ void Canvas::tick() {
     drawNode(document_->getCurrentPage());
     drawHoverSelectionNode();
   }
-  surface_->flush();
+}
+
+void Canvas::flush() {
+  if (!canvas_) {
+    return;
+  }
+
+  auto* context = canvas_->recordingContext()->asDirectContext();
+  if (context != nullptr) {
+    context->flush();
+    context->submit(true);
+  }
 }
 
 void Canvas::drawGeometry(const GeometryWithPaints& geometryWithPaints) {

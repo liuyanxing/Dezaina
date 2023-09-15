@@ -61,6 +61,7 @@ public:
 
 		void clear();
 		void tick();
+    void flush();
 private:
 		int width_;
 		int height_;
