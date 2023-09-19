@@ -32,6 +32,13 @@ namespace util {
 		);
 	}
 
+  inline SkPoint toSkPoint(const Vector& vector) {
+    return SkPoint{
+      vector.x,
+      vector.y,
+    };
+  }
+
   inline SkRect rotate(const SkRect& rect, float angle, float x = 0, float y = 0) {
     SkMatrix matrix;
     matrix.setRotate(angle, x, y);

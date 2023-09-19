@@ -35,12 +35,12 @@ VectorEditor::Network buildNetworkFromBlob(const Blob& blob, ArenaAlloc& arena) 
     auto networkIndex = intData[segmentStart];
     auto v0Index = intData[segmentStart + 1];
     auto& vertex0 = vertecies[v0Index];
-    auto* v0 = arena.make<VectorEditor::SegmentVertex>(&vertex0);
+    auto* v0 = arena.make<VectorEditor::SegmentVertex>(&vertex0, 0);
     v0->setTangentOffset(floatData[segmentStart + 2], floatData[segmentStart + 3]);
 
     auto v1Index = intData[segmentStart + 4];
     auto& vertex1 = vertecies[v1Index];
-    auto* v1 = arena.make<VectorEditor::SegmentVertex>(&vertex1);
+    auto* v1 = arena.make<VectorEditor::SegmentVertex>(&vertex1, 1);
     v1->setTangentOffset(floatData[segmentStart + 5], floatData[segmentStart + 6]);
     segment.setVertices(v0, v1);
 

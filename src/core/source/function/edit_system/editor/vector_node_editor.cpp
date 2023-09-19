@@ -38,7 +38,7 @@ void VectorNodeEditor::update() {
   }
   vector_path_.reset();
   util::networkToSkPath(network_, vector_path_);
-  util::computeFillGeometryPath(vector_path_);
+  util::computeFillGeometryPath(vector_path_, network_, arena_);
 }
 
 void VectorNodeEditor::updateSelectedSegments() {
@@ -76,7 +76,7 @@ void VectorNodeEditor::buildInteractionArea() {
   };
 
   for (auto* segment : selected_segments_) {
-      auto& [v0, v1] = segment->getVertecies();
+      auto [v0, v1] = segment->getEndVertecies();
       addTangentToHitNodes(v0);
       addTangentToHitNodes(v1);
   }
@@ -115,7 +115,7 @@ void VectorNodeEditor::getPath(SkPath &fillPath, SkPath &strokePath) {
   }
   for (auto* segment : network_.getSegments()) {
     if (isSelected(segment)) {
-      auto& [v0, v1] = segment->getVertecies();
+      auto [v0, v1] = segment->getEndVertecies();
       auto t0 = v0->getTangentEnd();
       auto t1 = v1->getTangentEnd();
       fillPath.addCircle(t0.x, t0.y , Config::roundCtrlNodeRadius);
@@ -137,7 +137,7 @@ bool VectorNodeEditor::isSelected(const VectorEditor::Segment* segment) const {
 void VectorNodeEditor::getEditPath(SkPath &path) {
   path.addPath(vector_path_);
   for (auto* segment : selected_segments_) {
-    auto& [v0, v1] = segment->getVertecies();
+    auto [v0, v1] = segment->getEndVertecies();
     auto t0 = v0->getTangentEnd();
     auto t1 = v1->getTangentEnd();
     path.moveTo(v0->x(), v0->y());
