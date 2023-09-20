@@ -91,7 +91,7 @@ namespace VectorEditor {
       next_ = next;
     }
 
-    SegmentVertex* getNext() {
+    SegmentVertex* next() {
       return next_;
     }
 

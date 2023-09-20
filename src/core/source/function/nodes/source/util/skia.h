@@ -9,6 +9,7 @@
 #include "include/core/SkPath.h"
 
 #include "buffer.h"
+#include "include/private/base/SkPoint_impl.h"
 #include "services/blob_service.h"
 #include <cassert>
 #include <variant>
@@ -34,6 +35,13 @@ namespace util {
 
   inline SkPoint toSkPoint(const Vector& vector) {
     return SkPoint{
+      vector.x,
+      vector.y,
+    };
+  }
+
+  inline SkVector toSkVector(const Vector& vector) {
+    return SkVector{
       vector.x,
       vector.y,
     };

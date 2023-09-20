@@ -1,7 +1,9 @@
 
 #include "vector_node_helper.h"
 #include "base/math.h"
+#include "desaina_node.h"
 #include "edit_system/editor/vector_editor_data.h"
+#include "include/private/base/SkPoint_impl.h"
 #include "src/base/SkArenaAlloc.h"
 #include "src/pathops/SkOpContour.h"
 #include "src/pathops/SkPathOpsCubic.h"
@@ -59,17 +61,58 @@ namespace util {
     return leftMost;
   }
 
-  VectorEditor::SegmentVertex* findVertexOfTheLeftMostEdge(VectorEditor::SegmentVertex* vertex) {
-    auto* leftMost = vertex;
-    auto* next = vertex->getNext();
+  VectorEditor::SegmentVertex* getClockwiseMost(const Vector& pre, VectorEditor::SegmentVertex* vertex) {
+    SkVector curV = {vertex->x() - pre.x, vertex->y() - pre.y};
+    auto* next = vertex;
+    auto* result = vertex;
+    SkVector nextV = util::toSkVector(*next->getTangentOffset());
+    bool isConvex = SkVector::CrossProduct(nextV, curV) > 0;
+    next = next->next();
     while (next != vertex) {
-      auto angle = base::vectorsAngle(util::toSkPoint(*(leftMost->getTangentOffset())), util::toSkPoint(*(next->getTangentOffset()))); 
-      if (angle > 0) {
-        leftMost = next;
+      SkVector vertexV = util::toSkVector(*next->getTangentOffset());
+      if (isConvex) {
+        if (SkVector::CrossProduct(nextV, vertexV) > 0 && SkVector::CrossProduct(vertexV, curV) > 0) {
+          result = next;
+          nextV = vertexV;
+          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+        }
+      } else {
+        if (SkVector::CrossProduct(curV, vertexV) < 0 || SkVector::CrossProduct(vertexV, nextV) < 0) {
+          result = next;
+          nextV = vertexV;
+          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+        }
       }
-      next = next->getNext();
+      next = next->next();
     }
-    return leftMost;
+    return result;
+  }
+
+  VectorEditor::SegmentVertex* getCounterClockwiseMost(const Vector& pre, VectorEditor::SegmentVertex* vertex) {
+    SkVector curV = {vertex->x() - pre.x, vertex->y() - pre.y};
+    auto* next = vertex;
+    auto* result = vertex;
+    SkVector nextV = util::toSkVector(*next->getTangentOffset());
+    bool isConvex = SkVector::CrossProduct(nextV, curV) > 0;
+    next = next->next();
+    while (next != vertex) {
+      SkVector vertexV = util::toSkVector(*next->getTangentOffset());
+      if (isConvex) {
+        if (SkVector::CrossProduct(nextV, vertexV) < 0 || SkVector::CrossProduct(vertexV, curV) < 0) {
+          result = next;
+          nextV = vertexV;
+          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+        }
+      } else {
+        if (SkVector::CrossProduct(curV, vertexV) > 0 && SkVector::CrossProduct(vertexV, nextV) > 0) {
+          result = next;
+          nextV = vertexV;
+          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+        }
+      }
+      next = next->next();
+    }
+    return result;
   }
 
   SkOpContourHead* buildSkOpContourWithIntersection(SkPath& path, ArenaAlloc& allocator) {
@@ -98,7 +141,7 @@ namespace util {
     return contourList;
   }
 
-  vector<VectorEditor::Segment*> buildSegemtsWithoutIntersection(SkOpContourHead* contourList, vector<VectorEditor::Segment*> segments, ArenaAlloc& allocator) {
+  vector<VectorEditor::Segment*> buildPlanarSegemts(SkOpContourHead* contourList, vector<VectorEditor::Segment*> segments, ArenaAlloc& allocator) {
     vector<VectorEditor::Segment*> result;
     std::unordered_map<SkOpPtT*, vector<VectorEditor::SegmentVertex*>> ptVertexMap;
     auto current = contourList;
@@ -181,24 +224,12 @@ namespace util {
     vector<vector<VectorEditor::SegmentVertex*>> result;
     unordered_set<VectorEditor::SegmentVertex*> visited;
     std::stack<VectorEditor::SegmentVertex*> stack;
-    auto* current = findTheLeftMostVertex(segments);
-    do {
-      current = findVertexOfTheLeftMostEdge(current);
-      stack.push(current);
-      visited.insert(current);
-      auto* next = current;
-      while (next != current) {
-        visited.insert(next);
-        next = current->getNext();
-      }
-
-    } while (leftMost->hasLink());
     return result;
   }
 
   vector<SkPath> computeFillGeometryPath(SkPath& path, VectorEditor::Network& network, ArenaAlloc& allocator) {
     auto* contourList = buildSkOpContourWithIntersection(path, allocator);
-    auto segments = buildSegemtsWithoutIntersection(contourList, network.getSegments(), allocator);
+    auto segments = buildPlanarSegemts(contourList, network.getSegments(), allocator);
     auto mcb = buildMinimalCycleBasis(segments);
 
     return {};
