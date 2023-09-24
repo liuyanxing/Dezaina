@@ -9,7 +9,6 @@
 #include "include/core/SkPath.h"
 
 #include "buffer.h"
-#include "include/private/base/SkPoint_impl.h"
 #include "services/blob_service.h"
 #include <cassert>
 #include <variant>

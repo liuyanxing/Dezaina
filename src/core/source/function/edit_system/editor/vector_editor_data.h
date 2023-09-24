@@ -83,8 +83,8 @@ namespace VectorEditor {
       return vertex_;
     }
 
-    Segment* getSegment() {
-      return segment;
+    Segment* segment() {
+      return segment_;
     }
 
     void setNext(SegmentVertex* next) {
@@ -104,7 +104,7 @@ namespace VectorEditor {
     Vertex* vertex_;
     float t_;
     SegmentVertex* next_ = nullptr; // next intersection
-    Segment* segment;
+    Segment* segment_;
   };
 
   class Segment {
@@ -141,6 +141,13 @@ namespace VectorEditor {
         }
       }
       return nullptr;
+    }
+
+    SegmentVertex* getAnotherVertex(SegmentVertex* vertex) {
+      if (vertex->t() == 0) {
+        return vertices[1];
+      }
+      return vertices[0];
     }
   private:
       std::array<SegmentVertex*, 2> vertices;

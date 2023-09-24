@@ -3,7 +3,6 @@
 #include "base/math.h"
 #include "desaina_node.h"
 #include "edit_system/editor/vector_editor_data.h"
-#include "include/private/base/SkPoint_impl.h"
 #include "src/base/SkArenaAlloc.h"
 #include "src/pathops/SkOpContour.h"
 #include "src/pathops/SkPathOpsCubic.h"
@@ -18,6 +17,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
+#include <vector>
+
+using Vertices = vector<VectorEditor::SegmentVertex*>;
 
 namespace util {
   void networkToSkPath(VectorEditor::Network& network, SkPath& path) {
@@ -88,8 +90,8 @@ namespace util {
     return result;
   }
 
-  VectorEditor::SegmentVertex* getCounterClockwiseMost(const Vector& pre, VectorEditor::SegmentVertex* vertex) {
-    SkVector curV = {vertex->x() - pre.x, vertex->y() - pre.y};
+  VectorEditor::SegmentVertex* getCounterClockwiseMost(const Vector* pre, VectorEditor::SegmentVertex* vertex) {
+    SkVector curV = {vertex->x() - pre->x, vertex->y() - pre->y};
     auto* next = vertex;
     auto* result = vertex;
     SkVector nextV = util::toSkVector(*next->getTangentOffset());
@@ -170,16 +172,14 @@ namespace util {
           cubic.set(opSegment->pts());
           auto cubicPair = cubic.chopAt(ptt);
           auto tangentEndPoint = cubicPair.first().fPts[2];
-          auto* vertex = allocator.make<VectorEditor::Vertex>(pt.x(), pt.y());
-          auto* segmentVertex1 = allocator.make<VectorEditor::SegmentVertex>(vertex, 1);
+          auto* segmentVertex1 = allocator.make<VectorEditor::SegmentVertex>(nullptr, 1);
           segmentVertex1->setTangentOffset(tangentEndPoint.fX, tangentEndPoint.fY);
           newSegment->setVertex(segmentVertex1);
           ptVertexMap[span->ptT()].push_back(segmentVertex1);
           newSegment = allocator.make<VectorEditor::Segment>();
           result.push_back(newSegment);
           tangentEndPoint = cubicPair.second().fPts[1];
-          vertex = allocator.make<VectorEditor::Vertex>(pt.x(), pt.y());
-          auto segmentVertex2 = allocator.make<VectorEditor::SegmentVertex>(vertex, 0);
+          auto segmentVertex2 = allocator.make<VectorEditor::SegmentVertex>(nullptr, 0);
           segmentVertex2->setTangentOffset(tangentEndPoint.fX, tangentEndPoint.fY);
           newSegment->setVertex(segmentVertex1);
           ptVertexMap[span->ptT()].push_back(segmentVertex2);
@@ -200,6 +200,7 @@ namespace util {
         auto* pt = span->ptT();
         auto* startPt = pt;
         auto* nextPt = pt->next();
+        auto* vertex = allocator.make<VectorEditor::Vertex>(0, 0);
         while (nextPt && (nextPt != startPt)) {
           VectorEditor::SegmentVertex* segmentVertex = ptVertexMap.find(pt)->second.back();
           if (segmentVertex->hasLink()) {
@@ -220,10 +221,53 @@ namespace util {
     return result;
   }
 
+  struct Cycle {
+    vector<VectorEditor::SegmentVertex*> vertecies;
+    vector<Cycle> children;
+  };
+
+  vector<VectorEditor::SegmentVertex*> walk(VectorEditor::SegmentVertex* segmentVertex) {
+    vector<VectorEditor::SegmentVertex*> res;
+    res.push_back(segmentVertex);
+
+    auto* vertex = segmentVertex->getVertex();
+    auto* clockwiseMost = getClockwiseMost({vertex->x, vertex->y + 1}, segmentVertex);
+    if (clockwiseMost == segmentVertex) {
+      return res;
+    }
+    res.push_back(clockwiseMost);
+
+    auto next = getCounterClockwiseMost(clockwiseMost->getTangentOffset(), clockwiseMost->segment()->getAnotherVertex(clockwiseMost));
+    while (next && vertex != next->getVertex()) {
+      res.push_back(next);
+      next = getCounterClockwiseMost(next->getTangentOffset(), next->segment()->getAnotherVertex(next));
+    }
+    return res;
+  }
+
+  VectorEditor::SegmentVertex* buildCycle(Vertices& vertecies, int index, Vertices &res, std::unordered_set<VectorEditor::SegmentVertex*>& visited) {
+    auto* vertex = vertecies[index];
+    if (visited.contains(vertex)) {
+      res.push_back(vertex);
+      return vertex;
+    }
+    auto* cycleVertext = buildCycle(vertecies, index + 1, res, visited);
+    res.push_back(vertex);
+    if (cycleVertext == vertex) {
+    }
+  }
+
+  vector<Cycle> buildCycle(vector<VectorEditor::Segment*>& segments) {
+    auto* leftMost = findTheLeftMostVertex(segments);
+    auto cycleSegemtnVertices = walk(leftMost);
+    Cycle cycle;
+
+
+    return result;
+  }
+
   vector<vector<VectorEditor::SegmentVertex*>> buildMinimalCycleBasis(vector<VectorEditor::Segment*>& segments) {
     vector<vector<VectorEditor::SegmentVertex*>> result;
-    unordered_set<VectorEditor::SegmentVertex*> visited;
-    std::stack<VectorEditor::SegmentVertex*> stack;
     return result;
   }
 
