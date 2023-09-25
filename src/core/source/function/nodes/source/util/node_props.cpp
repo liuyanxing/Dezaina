@@ -159,5 +159,11 @@ namespace util {
     }
     return geometry;
   }
+
+  void processInstanceNode(InstanceNode* node, Document& document) {
+    auto& symbolData = node->get_symbolData();
+    auto& guid = symbolData.get_symbolID();
+    auto* symbol = document.getNodeById(guid).value();
+  }
 }
 

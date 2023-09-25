@@ -16,6 +16,10 @@ void Document::buildDocTree() {
 			auto parentNode = parentNodeOrNull.value();
 			util::appendChild(parentNode, node);
 		}
+
+    if (util::isInsatance(node)) {
+      auto instanceNode = static_cast<InstanceNode*>(node);
+    }
 	}
 }
 

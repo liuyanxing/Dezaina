@@ -19,6 +19,8 @@
 #include "polygon.h"
 #include "line.h"
 #include "text.h"
+#include "symbol.h"
+#include "instance.h"
 #include "system/system.h"
 #include "vector.h"
 #include "ellipse.h"

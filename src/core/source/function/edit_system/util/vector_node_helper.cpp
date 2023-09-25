@@ -255,15 +255,14 @@ namespace util {
     res.push_back(vertex);
     if (cycleVertext == vertex) {
     }
+    return nullptr;
   }
 
   vector<Cycle> buildCycle(vector<VectorEditor::Segment*>& segments) {
     auto* leftMost = findTheLeftMostVertex(segments);
     auto cycleSegemtnVertices = walk(leftMost);
     Cycle cycle;
-
-
-    return result;
+    return {};
   }
 
   vector<vector<VectorEditor::SegmentVertex*>> buildMinimalCycleBasis(vector<VectorEditor::Segment*>& segments) {
