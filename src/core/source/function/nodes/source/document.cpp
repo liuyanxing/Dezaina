@@ -1,7 +1,7 @@
 #include "node_type.h"
 #include "document.h"
 #include "page.h"
-#include "util/node_container.h"
+#include "util/node_create.h"
 #include <iostream>
 
 void Document::buildDocTree() {
@@ -84,3 +84,7 @@ vector<Node*> Document::getSelectedNodes() const {
   return nodes;
 };
  
+Node* Document::cloneNodeDeep(Node *node) {
+  auto* clone = util::cloneNodeDeep(node, *this);
+  return clone;
+}

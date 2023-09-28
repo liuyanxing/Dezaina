@@ -1,3 +1,5 @@
+#pragma once
+
 #include "base_type.h"
 
 #include "container_node_base.h"
@@ -12,16 +14,19 @@ namespace util {
 		if (util::isDocument(parent)) {
 			auto document = static_cast<const Document*>(parent);
 			return document->getChildren();
-		}
-		else if (util::isPage(parent)) {
+		} else if (util::isPage(parent)) {
 			auto page = static_cast<const PageNode*>(parent);
 			return page->getChildren();
-		}
-		else if (util::isFrame(parent)) {
+		} else if (util::isFrame(parent)) {
 			auto frame = static_cast<const FrameNode*>(parent);
 			return frame->getChildren();
-		}
-		else {
+		} else if (util::isSymbol(parent)) {
+      auto symbol = static_cast<const SymbolNode*>(parent);
+      return symbol->getChildren();
+    } else if (util::isInsatance(parent)) {
+      auto instance = static_cast<const InstanceNode*>(parent);
+      return instance->getChildren();
+    } else {
 			assert(false);
 		}
 	}

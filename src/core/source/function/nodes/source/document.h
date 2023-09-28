@@ -12,6 +12,7 @@
 #include "guid.h"
 #include "include/core/SkPath.h"
 #include "node_pool.h"
+#include "node_type.h"
 #include "page.h"
 #include "frame.h"
 #include "rectangle.h"
@@ -55,6 +56,8 @@ public:
 		auto id = services_->idGenerator->genId();
 		return createNode<T>(id);
 	};
+
+  Node* cloneNodeDeep(Node* node);
 
 	std::optional<Node*> getNodeById(GUID id) const {
     auto it = idNodeMap_.find(id);
@@ -117,6 +120,10 @@ public:
     }
   }
   vector<Node*> getSelectedNodes() const;
+
+  auto* getNodePool() {
+    return &nodePool;
+  }
   
 private:
 	bool isLoaded_ = false;

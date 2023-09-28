@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <optional>
 #include <stdint.h>
+#include "util/node_container.h"
+#include "util/node_create.h"
 
 namespace util {
   void getFillGeometryWithPaints(const TextNode* node, GeometryWithPaints& geometryWithPaints, Desaina* desaina) {
@@ -164,6 +166,13 @@ namespace util {
     auto& symbolData = node->get_symbolData();
     auto& guid = symbolData.get_symbolID();
     auto* symbol = document.getNodeById(guid).value();
+    auto* instanceContainer = util::getContainer(node);
+    instanceContainer->clear();
+    auto* symbolContainer = util::getContainer(symbol);
+    for (auto node : symbolContainer->getChildren()) {
+      instanceContainer->addChild(document.cloneNodeDeep(node));
+    }
+
   }
 }
 
