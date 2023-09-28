@@ -14,10 +14,11 @@
 #include "src/pathops/SkPathWriter.h"
 #include "util/skia.h"
 #include <stack>
+#include <cassert>
 #include <unordered_map>
 #include <unordered_set>
-#include <queue>
 #include <vector>
+#include <stack>
 
 using Vertices = vector<VectorEditor::SegmentVertex*>;
 
@@ -221,11 +222,6 @@ namespace util {
     return result;
   }
 
-  struct Cycle {
-    vector<VectorEditor::SegmentVertex*> vertecies;
-    vector<Cycle> children;
-  };
-
   vector<VectorEditor::SegmentVertex*> walk(VectorEditor::SegmentVertex* segmentVertex) {
     vector<VectorEditor::SegmentVertex*> res;
     res.push_back(segmentVertex);
@@ -245,30 +241,55 @@ namespace util {
     return res;
   }
 
-  VectorEditor::SegmentVertex* buildCycle(Vertices& vertecies, int index, Vertices &res, std::unordered_set<VectorEditor::SegmentVertex*>& visited) {
-    auto* vertex = vertecies[index];
-    if (visited.contains(vertex)) {
-      res.push_back(vertex);
-      return vertex;
+  static void removeSegments(vector<VectorEditor::SegmentVertex*>& cycleSegemtnVertices, vector<VectorEditor::Segment*>& segments) {
+    std::unordered_set<VectorEditor::Segment*> set;
+    for (auto* segmentVertex : cycleSegemtnVertices) {
+      set.insert(segmentVertex->segment());
     }
-    auto* cycleVertext = buildCycle(vertecies, index + 1, res, visited);
-    res.push_back(vertex);
-    if (cycleVertext == vertex) {
+    for (int i = 0; i < segments.size(); i++) {
+      if (set.contains(segments[i])) {
+        segments.erase(segments.begin() + i);
+        i--;
+      }
     }
   }
 
-  vector<Cycle> buildCycle(vector<VectorEditor::Segment*>& segments) {
+  struct CycleVertex {
+    VectorEditor::SegmentVertex* vertex;
+    vector<CycleVertex> cycle;
+  };
+
+  CycleVertex buildCycle(vector<VectorEditor::Segment*>& segments) {
     auto* leftMost = findTheLeftMostVertex(segments);
     auto cycleSegemtnVertices = walk(leftMost);
-    Cycle cycle;
-
-
-    return result;
+    removeSegments(cycleSegemtnVertices, segments);
+    std::stack<CycleVertex, std::vector<CycleVertex>> stack;
+    std::unordered_map<VectorEditor::Vertex*, CycleVertex> map;
+    for (auto* segmentVertex : cycleSegemtnVertices) {
+      CycleVertex cycleVertex{segmentVertex, {}};
+      stack.push(cycleVertex);
+      auto* vertex = segmentVertex->getVertex();
+      map.insert(vertex, cycleVertex);
+      if (map.contains(vertex)) {
+        auto* cycleVertex = map[vertex];
+        auto& cycle = cycleVertex.cycle; 
+        while(stack.top() != cycleVertex) {
+          map.erase(stack.top());
+          cycle.push_back(stack.top());
+          stack.pop();
+        }
+        continue;
+      }
+    }
+    assert(stack.size() == 1);
+    return stack.top();
   }
 
-  vector<vector<VectorEditor::SegmentVertex*>> buildMinimalCycleBasis(vector<VectorEditor::Segment*>& segments) {
-    vector<vector<VectorEditor::SegmentVertex*>> result;
-    return result;
+  vector<CycleVertex> buildMinimalCycleBasis(vector<VectorEditor::Segment*>& segments) {
+    vector<CycleVertex> cycles;
+    while (!segments.empty()) {
+      cycles.push_back(buildCycle(segments));
+    }
   }
 
   vector<SkPath> computeFillGeometryPath(SkPath& path, VectorEditor::Network& network, ArenaAlloc& allocator) {
