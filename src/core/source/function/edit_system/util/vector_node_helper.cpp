@@ -252,12 +252,14 @@ namespace util {
         i--;
       }
     }
-    return nullptr;
   }
 
   struct CycleVertex {
     VectorEditor::SegmentVertex* vertex;
     vector<CycleVertex> cycle;
+    bool operator==(const CycleVertex& other) const {
+      return vertex == other.vertex;
+    }
   };
 
   CycleVertex buildCycle(vector<VectorEditor::Segment*>& segments) {
@@ -270,12 +272,12 @@ namespace util {
       CycleVertex cycleVertex{segmentVertex, {}};
       stack.push(cycleVertex);
       auto* vertex = segmentVertex->getVertex();
-      map.insert(vertex, cycleVertex);
+      map.insert({vertex, cycleVertex});
       if (map.contains(vertex)) {
-        auto* cycleVertex = map[vertex];
+        auto& cycleVertex = map[vertex];
         auto& cycle = cycleVertex.cycle; 
         while(stack.top() != cycleVertex) {
-          map.erase(stack.top());
+          map.erase(stack.top().vertex->getVertex());
           cycle.push_back(stack.top());
           stack.pop();
         }
@@ -291,6 +293,7 @@ namespace util {
     while (!segments.empty()) {
       cycles.push_back(buildCycle(segments));
     }
+    return {};
   }
 
   vector<SkPath> computeFillGeometry(SkPath& path, VectorEditor::Network& network, ArenaAlloc& allocator) {

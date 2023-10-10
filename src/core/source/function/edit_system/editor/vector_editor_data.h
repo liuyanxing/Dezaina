@@ -79,7 +79,7 @@ namespace VectorEditor {
       return tangentOffset.x != 0 || tangentOffset.y != 0;
     }
 
-    Vector* getVertex() {
+    Vertex* getVertex() {
       return vertex_;
     }
 

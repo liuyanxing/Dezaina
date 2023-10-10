@@ -38,7 +38,7 @@ void VectorNodeEditor::update() {
   }
   vector_path_.reset();
   util::networkToSkPath(network_, vector_path_);
-  util::computeFillGeometryPath(vector_path_, network_, arena_);
+  util::computeFillGeometry(vector_path_, network_, arena_);
 }
 
 void VectorNodeEditor::updateSelectedSegments() {
