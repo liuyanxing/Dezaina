@@ -252,6 +252,7 @@ namespace util {
         i--;
       }
     }
+    return nullptr;
   }
 
   struct CycleVertex {

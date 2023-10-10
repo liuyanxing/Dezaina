@@ -10,6 +10,8 @@ public:
 	
 	// x, y is local coordinate
 	void getNodesUnderPoint(float x, float y, vector<Node*>& nodes);
+  void clear() { children.clear(); };
+  void addChild(Node* node) { children.push_back(node); };
 private:
   vector<Node*> children;
 };

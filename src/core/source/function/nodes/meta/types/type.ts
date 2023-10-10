@@ -398,3 +398,9 @@ interface TextData {
   decorations: IArray<Decoration>
 }
 
+interface SymbolData {
+  symbolID: GUID;
+  symbolOverrides: Buffer;
+  uniformScaleFactor: float;
+}
+

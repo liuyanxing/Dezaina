@@ -108,4 +108,5 @@ namespace util {
   GeometryWithPaints getFillGeometryWithPaints(const Node* node, Desaina* desaina);
   GeometryWithPaints getStrokeGeometryWithPaints(const Node* node, Desaina* desaina);
   Geometry getHoverGeometry(const Node* node, Desaina* desaina);
+  void processInstanceNode(InstanceNode* node, Document& document);
 }

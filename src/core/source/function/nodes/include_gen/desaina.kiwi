@@ -1,0 +1,286 @@
+package Desaina_Kiwi;
+
+enum NumberUnits {
+	RAW = 0;
+	PIXELS = 1;
+	PERCENT = 2;
+}
+enum BlendMode {
+	PASS_THROUGH = 0;
+	NORMAL = 1;
+	DARKEN = 2;
+	MULTIPLY = 3;
+	LINEAR_BURN = 4;
+	COLOR_BURN = 5;
+	LIGHTEN = 6;
+	SCREEN = 7;
+	LINEAR_DODGE = 8;
+	COLOR_DODGE = 9;
+	OVERLAY = 10;
+	SOFT_LIGHT = 11;
+	HARD_LIGHT = 12;
+	DIFFERENCE = 13;
+	EXCLUSION = 14;
+	HUE = 15;
+	SATURATION = 16;
+	COLOR = 17;
+	LUMINOSITY = 18;
+}
+enum EffectType {
+	DROP_SHADOW = 0;
+	INNER_SHADOW = 1;
+	LAYER_BLUR = 2;
+	BACKGROUND_BLUR = 3;
+}
+enum ConstraintType {
+	MIN = 0;
+	CENTER = 1;
+	MAX = 2;
+	STRETCH = 3;
+	SCALE = 4;
+}
+enum LayoutAlignType {
+	MIN = 0;
+	CENTER = 1;
+	MAX = 2;
+	STRETCH = 3;
+	SCALE = 4;
+	INHERIT = 5;
+}
+enum MessageType {
+	JOIN_START = 0;
+	NODE_CHANGES = 1;
+	USER_CHANGES = 2;
+	JOIN_END = 3;
+	SIGNAL = 4;
+	STYLE = 5;
+	STYLE_SET = 6;
+	JOIN_START_SKIP_RELOAD = 7;
+	NOTIFY_SHOULD_UPGRADE = 8;
+	UPGRADE_DONE = 9;
+	UPGRADE_REFRESH = 10;
+	SCENE_GRAPH_QUERY = 11;
+	SCENE_GRAPH_REPLY = 12;
+	DIFF = 13;
+	CLIENT_BROADCAST = 14;
+	JOIN_START_JOURNALED = 15;
+}
+enum NodeType {
+	NONE = 0;
+	DOCUMENT = 1;
+	CANVAS = 2;
+	GROUP = 3;
+	FRAME = 4;
+	BOOLEAN_OPERATION = 5;
+	VECTOR = 6;
+	STAR = 7;
+	LINE = 8;
+	ELLIPSE = 9;
+	RECTANGLE = 10;
+}
+enum LayoutMode {
+	NONE = 0;
+	HORIZONTAL = 1;
+	VERTICAL = 2;
+}
+enum AxisSizingMode {
+	FIXED = 0;
+	AUTO = 1;
+}
+enum PrimaryAxisAlignItems {
+	MIN = 0;
+	MAX = 1;
+	CENTER = 2;
+	SPACE_BETWEEN = 3;
+}
+enum CounterAxisAlignItems {
+	MIN = 0;
+	MAX = 1;
+	CENTER = 2;
+	BASELINE = 3;
+}
+enum PaintType {
+	SOLID = 0;
+	GRADIENT_LINEAR = 1;
+	GRADIENT_RADIAL = 2;
+	GRADIENT_ANGULAR = 3;
+	GRADIENT_DIAMOND = 4;
+	IMAGE = 5;
+}
+enum ScaleMode {
+	FILL = 0;
+	FIT = 1;
+	CROP = 2;
+	TILE = 3;
+}
+enum StrokeCap {
+	NONE = 0;
+	ROUND = 1;
+	SQUARE = 2;
+	ARROW_LINES = 3;
+	ARROW_EQUILATERAL = 4;
+}
+enum StrokeJoin {
+	MITER = 0;
+	BEVEL = 1;
+	ROUND = 2;
+}
+enum Align {
+	CENTER = 0;
+	INSIDE = 1;
+	OUTSIDE = 2;
+}
+enum WindingRule {
+	NONZERO = 0;
+	EVENODD = 1;
+}
+
+struct ColorStop {
+	float position;
+	RGBA color;
+}
+struct RGBA {
+	float r;
+	float g;
+	float b;
+	float a;
+}
+struct RGB {
+	float r;
+	float g;
+	float b;
+}
+struct GUID {
+	uint sessionId;
+	uint localId;
+}
+struct KiwiNumber {
+	float value;
+	NumberUnits units;
+}
+struct Matrix {
+	float m00;
+	float m01;
+	float m02;
+	float m10;
+	float m11;
+	float m12;
+}
+struct Vector {
+	float x;
+	float y;
+}
+
+message VectorPath {
+	WindingRule windingRule = 1;
+	string data = 2;
+}
+message VectorSegment {
+	float start = 1;
+	float end = 2;
+	Vector tangentStart = 3;
+	Vector tangentEnd = 4;
+}
+message VectorVertex {
+	float x = 1;
+	float y = 2;
+	StrokeCap strokeCap = 3;
+	StrokeJoin strokeJoin = 4;
+	float cornerRadius = 5;
+}
+message KiwiPath {
+	WindingRule windingRule = 1;
+	uint commandsBlob = 2;
+	uint styleID = 3;
+}
+message BaseNodeMixin_pointer {
+}
+message Message {
+	MessageType type = 1;
+	uint sessionID = 2;
+	uint ackID = 3;
+	NodeChange[] nodeChanges = 4;
+}
+message Constraints {
+	ConstraintType horizontal = 1;
+	ConstraintType vertical = 2;
+}
+message NodeChange {
+	Paint[] fills = 1;
+	string fillStyleId = 2;
+	StrokeCap strokeCap = 3;
+	float strokeMiterLimit = 4;
+	KiwiPath[] fillGeometry = 5;
+	Paint[] strokes = 6;
+	string strokeStyleId = 7;
+	float strokeWeight = 8;
+	StrokeJoin strokeJoin = 9;
+	Align strokeAlign = 10;
+	float[] dashPattern = 11;
+	KiwiPath[] strokeGeometry = 12;
+	GUID id = 13;
+	GUID parent = 14;
+	string name = 15;
+	NodeType type = 16;
+	Paint[] backgrounds = 17;
+	LayoutMode layoutMode = 18;
+	AxisSizingMode primaryAxisSizingMode = 19;
+	AxisSizingMode counterAxisSizingMode = 20;
+	PrimaryAxisAlignItems primaryAxisAlignItems = 21;
+	CounterAxisAlignItems counterAxisAlignItems = 22;
+	float paddingLeft = 23;
+	float paddingRight = 24;
+	float paddingTop = 25;
+	float paddingBottom = 26;
+	float itemSpacing = 27;
+	bool itemReverseZIndex = 28;
+	bool strokesIncludedInLayout = 29;
+	float horizontalPadding = 30;
+	float verticalPadding = 31;
+	bool clipsContent = 32;
+	bool visible = 33;
+	bool locked = 34;
+	float cornerRadius = 35;
+	float cornerSmoothing = 36;
+	Constraints constraints = 37;
+	float topLeftRadius = 38;
+	float topRightRadius = 39;
+	float bottomLeftRadius = 40;
+	float bottomRightRadius = 41;
+	float strokeTopWeight = 42;
+	float strokeBottomWeight = 43;
+	float strokeLeftWeight = 44;
+	float strokeRightWeight = 45;
+	Effect[] effects = 46;
+	string effectStyleId = 47;
+	float rotation = 48;
+	LayoutAlignType layoutAlign = 49;
+	uint layoutGrow = 50;
+	float width = 51;
+	float height = 52;
+	Matrix transform = 53;
+}
+message Paint {
+	PaintType type = 1;
+	bool visible = 2;
+	float opacity = 3;
+	BlendMode blendMode = 4;
+	RGB color = 5;
+	Matrix gradientTransform = 6;
+	ColorStop[] gradientStops = 7;
+	ScaleMode scaleMode = 8;
+	string imageHash = 9;
+	Matrix imageTransform = 10;
+	float scalingFactor = 11;
+	float rotation = 12;
+}
+message Effect {
+	EffectType type = 1;
+	RGBA color = 2;
+	Vector offset = 3;
+	float radius = 4;
+	float spread = 5;
+	bool visible = 6;
+	BlendMode blendMode = 7;
+	bool showShadowBehindNode = 8;
+}
