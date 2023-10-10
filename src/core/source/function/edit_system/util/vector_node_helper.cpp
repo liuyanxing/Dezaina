@@ -292,7 +292,7 @@ namespace util {
     }
   }
 
-  vector<SkPath> computeFillGeometryPath(SkPath& path, VectorEditor::Network& network, ArenaAlloc& allocator) {
+  vector<SkPath> computeFillGeometry(SkPath& path, VectorEditor::Network& network, ArenaAlloc& allocator) {
     auto* contourList = buildSkOpContourWithIntersection(path, allocator);
     auto segments = buildPlanarSegemts(contourList, network.getSegments(), allocator);
     auto mcb = buildMinimalCycleBasis(segments);
