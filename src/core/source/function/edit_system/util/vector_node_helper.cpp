@@ -65,16 +65,17 @@ namespace util {
     return leftMost;
   }
 
-  VectorEditor::SegmentVertex* getClockwiseMost(const Vector& pre, VectorEditor::SegmentVertex* vertex) {
-    auto getDirection = [](VectorEditor::SegmentVertex* vertex) {
-      auto* tangentOffset = vertex->getTangentOffset();
-      if (tangentOffset->x == 0 && tangentOffset->y == 0) {
-        auto another = vertex->segment()->getAnotherVertex(vertex);
-        return SkVector{another->x(), another->y()};
-      }
-      return util::toSkVector(*tangentOffset);
-    };
-    SkVector curV = {pre.x - vertex->x(), pre.y - vertex->y()};
+  static  auto getDirection = [](VectorEditor::SegmentVertex* vertex) {
+    auto* tangentOffset = vertex->getTangentOffset();
+    if (tangentOffset->x == 0 && tangentOffset->y == 0) {
+      auto another = vertex->segment()->getAnotherVertex(vertex);
+      return SkVector{another->x() - vertex->x(), another->y() - vertex->y()};
+    }
+    return util::toSkVector(*tangentOffset);
+  };
+
+  VectorEditor::SegmentVertex* getClockwiseMost(const SkVector& pre, VectorEditor::SegmentVertex* vertex) {
+    SkVector curV = pre;
     auto* next = vertex;
     auto* result = vertex;
     SkVector nextV = getDirection(next);
@@ -86,13 +87,13 @@ namespace util {
         if (SkVector::CrossProduct(curV, vertexV) > 0 && SkVector::CrossProduct(vertexV, nextV) > 0) {
           result = next;
           nextV = vertexV;
-          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+          isConvex = SkVector::CrossProduct(curV, nextV) > 0;
         }
       } else {
         if (SkVector::CrossProduct(curV, vertexV) > 0 || SkVector::CrossProduct(nextV, vertexV) > 0) {
           result = next;
           nextV = vertexV;
-          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+          isConvex = SkVector::CrossProduct(curV, nextV) > 0;
         }
       }
       next = next->next();
@@ -100,26 +101,25 @@ namespace util {
     return result;
   }
 
-  VectorEditor::SegmentVertex* getCounterClockwiseMost(const Vector* pre, VectorEditor::SegmentVertex* vertex) {
-    SkVector curV = {vertex->x() - pre->x, vertex->y() - pre->y};
-    auto* next = vertex;
+  VectorEditor::SegmentVertex* getCounterClockwiseMost(const SkVector& pre, VectorEditor::SegmentVertex* vertex) {
+    SkVector curV = pre;
+    auto* next = vertex->next();
     auto* result = vertex;
-    SkVector nextV = util::toSkVector(*next->getTangentOffset());
-    bool isConvex = SkVector::CrossProduct(nextV, curV) > 0;
-    next = next->next();
+    SkVector nextV = getDirection(next);
+    bool isConvex = SkVector::CrossProduct(curV, nextV) > 0;
     while (next != vertex) {
-      SkVector vertexV = util::toSkVector(*next->getTangentOffset());
+      SkVector vertexV = getDirection(next);
       if (isConvex) {
-        if (SkVector::CrossProduct(nextV, vertexV) < 0 || SkVector::CrossProduct(vertexV, curV) < 0) {
+        if (SkVector::CrossProduct(vertexV, nextV) > 0 && SkVector::CrossProduct(vertexV, curV) > 0) {
           result = next;
           nextV = vertexV;
-          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+          isConvex = SkVector::CrossProduct(curV, nextV) > 0;
         }
       } else {
-        if (SkVector::CrossProduct(curV, vertexV) > 0 && SkVector::CrossProduct(vertexV, nextV) > 0) {
+        if (SkVector::CrossProduct(vertexV, nextV) > 0 || SkVector::CrossProduct(vertexV, curV) > 0) {
           result = next;
           nextV = vertexV;
-          isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
+          isConvex = SkVector::CrossProduct(curV, nextV) > 0;
         }
       }
       next = next->next();
@@ -240,17 +240,17 @@ namespace util {
 
   vector<VectorEditor::SegmentVertex*> walk(VectorEditor::SegmentVertex* segmentVertex) {
     vector<VectorEditor::SegmentVertex*> res;
-    res.push_back(segmentVertex);
 
     auto* vertex = segmentVertex->getVertex();
-    auto* clockwiseMost = getClockwiseMost({vertex->x, vertex->y + 1}, segmentVertex);
-    res.push_back(clockwiseMost);
+    auto* clockwiseMost = getClockwiseMost({0, 1}, segmentVertex);
+    auto* cur = clockwiseMost;
+    do {
+      res.push_back(cur);
+      auto* adjacent = cur->segment()->getAnotherVertex(cur);
+      res.push_back(adjacent);
+      cur = getCounterClockwiseMost(getDirection(cur), adjacent);
+    } while (cur && cur->getVertex() != vertex);
 
-    auto next = getCounterClockwiseMost(clockwiseMost->getTangentOffset(), clockwiseMost->segment()->getAnotherVertex(clockwiseMost));
-    while (next && vertex != next->getVertex()) {
-      res.push_back(next);
-      next = getCounterClockwiseMost(next->getTangentOffset(), next->segment()->getAnotherVertex(next));
-    }
     return res;
   }
 
