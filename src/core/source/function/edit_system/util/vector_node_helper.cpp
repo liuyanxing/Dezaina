@@ -3,6 +3,7 @@
 #include "base/math.h"
 #include "desaina_node.h"
 #include "edit_system/editor/vector_editor_data.h"
+#include "include/core/SkPoint.h"
 #include "src/base/SkArenaAlloc.h"
 #include "src/pathops/SkOpContour.h"
 #include "src/pathops/SkPathOpsCubic.h"
@@ -65,22 +66,30 @@ namespace util {
   }
 
   VectorEditor::SegmentVertex* getClockwiseMost(const Vector& pre, VectorEditor::SegmentVertex* vertex) {
-    SkVector curV = {vertex->x() - pre.x, vertex->y() - pre.y};
+    auto getDirection = [](VectorEditor::SegmentVertex* vertex) {
+      auto* tangentOffset = vertex->getTangentOffset();
+      if (tangentOffset->x == 0 && tangentOffset->y == 0) {
+        auto another = vertex->segment()->getAnotherVertex(vertex);
+        return SkVector{another->x(), another->y()};
+      }
+      return util::toSkVector(*tangentOffset);
+    };
+    SkVector curV = {pre.x - vertex->x(), pre.y - vertex->y()};
     auto* next = vertex;
     auto* result = vertex;
-    SkVector nextV = util::toSkVector(*next->getTangentOffset());
-    bool isConvex = SkVector::CrossProduct(nextV, curV) > 0;
+    SkVector nextV = getDirection(next);
+    bool isConvex = SkVector::CrossProduct(curV, nextV) > 0;
     next = next->next();
     while (next != vertex) {
-      SkVector vertexV = util::toSkVector(*next->getTangentOffset());
+      SkVector vertexV = getDirection(next);
       if (isConvex) {
-        if (SkVector::CrossProduct(nextV, vertexV) > 0 && SkVector::CrossProduct(vertexV, curV) > 0) {
+        if (SkVector::CrossProduct(curV, vertexV) > 0 && SkVector::CrossProduct(vertexV, nextV) > 0) {
           result = next;
           nextV = vertexV;
           isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
         }
       } else {
-        if (SkVector::CrossProduct(curV, vertexV) < 0 || SkVector::CrossProduct(vertexV, nextV) < 0) {
+        if (SkVector::CrossProduct(curV, vertexV) > 0 || SkVector::CrossProduct(nextV, vertexV) > 0) {
           result = next;
           nextV = vertexV;
           isConvex = SkVector::CrossProduct(nextV, curV) <= 0;
@@ -198,6 +207,9 @@ namespace util {
       SkOpSpanBase* span = opSegment->head();
       do {
         auto* pt = span->ptT();
+        if (ptVertexMap.find(pt)->second.back()->hasLink()) {
+          continue;
+        }
         const auto& point = span->pt();
         auto* startPt = pt;
         auto* nextPt = pt->next();
@@ -232,9 +244,6 @@ namespace util {
 
     auto* vertex = segmentVertex->getVertex();
     auto* clockwiseMost = getClockwiseMost({vertex->x, vertex->y + 1}, segmentVertex);
-    if (clockwiseMost == segmentVertex) {
-      return res;
-    }
     res.push_back(clockwiseMost);
 
     auto next = getCounterClockwiseMost(clockwiseMost->getTangentOffset(), clockwiseMost->segment()->getAnotherVertex(clockwiseMost));
