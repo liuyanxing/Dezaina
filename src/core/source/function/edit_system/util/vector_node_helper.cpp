@@ -119,8 +119,8 @@ namespace util {
   }
 
   SkOpContourHead* buildSkOpContourWithIntersection(SkPath& path, ArenaAlloc& allocator) {
-    SkOpContour contour;
-    SkOpContourHead* contourList = static_cast<SkOpContourHead*>(&contour);
+    SkOpContour* contour = allocator.make<SkOpContour>();
+    SkOpContourHead* contourList = static_cast<SkOpContourHead*>(contour);
     SkOpGlobalState globalState(contourList, &allocator, true, nullptr);
     SkOpCoincidence coincidence(&globalState);
     SkOpEdgeBuilder builder(SkPathWriter(path), contourList, &globalState);
@@ -165,7 +165,6 @@ namespace util {
           newSegment->setVertex(segmentVertex);
           if (ptt == 1) {
             result.push_back(newSegment);
-            newSegment = allocator.make<VectorEditor::Segment>();
           }
           ptVertexMap[span->ptT()].push_back(segmentVertex);
         } else {
@@ -176,13 +175,13 @@ namespace util {
           auto* segmentVertex1 = allocator.make<VectorEditor::SegmentVertex>(nullptr, 1);
           segmentVertex1->setTangentOffset(tangentEndPoint.fX, tangentEndPoint.fY);
           newSegment->setVertex(segmentVertex1);
+          result.push_back(newSegment);
           ptVertexMap[span->ptT()].push_back(segmentVertex1);
           newSegment = allocator.make<VectorEditor::Segment>();
-          result.push_back(newSegment);
           tangentEndPoint = cubicPair.second().fPts[1];
           auto segmentVertex2 = allocator.make<VectorEditor::SegmentVertex>(nullptr, 0);
           segmentVertex2->setTangentOffset(tangentEndPoint.fX, tangentEndPoint.fY);
-          newSegment->setVertex(segmentVertex1);
+          newSegment->setVertex(segmentVertex2);
           ptVertexMap[span->ptT()].push_back(segmentVertex2);
           segmentVertex1->setNext(segmentVertex2);
         }
@@ -199,16 +198,21 @@ namespace util {
       SkOpSpanBase* span = opSegment->head();
       do {
         auto* pt = span->ptT();
+        const auto& point = span->pt();
         auto* startPt = pt;
         auto* nextPt = pt->next();
-        auto* vertex = allocator.make<VectorEditor::Vertex>(0, 0);
+        auto* vertex = allocator.make<VectorEditor::Vertex>(point.x(), point.y());
         while (nextPt && (nextPt != startPt)) {
           VectorEditor::SegmentVertex* segmentVertex = ptVertexMap.find(pt)->second.back();
           if (segmentVertex->hasLink()) {
             break;
           }
+          ptVertexMap.find(pt)->second.front()->setVertex(vertex);
+          segmentVertex->setVertex(vertex);
           auto* nextSegmentVertex = ptVertexMap.find(nextPt)->second.front();
+          nextSegmentVertex->setVertex(vertex);
           segmentVertex->setNext(nextSegmentVertex);
+          ptVertexMap.find(nextPt)->second.back()->setVertex(vertex);
           pt = nextPt;
           nextPt = nextPt->next();
         }

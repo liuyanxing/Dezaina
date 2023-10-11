@@ -87,6 +87,10 @@ namespace VectorEditor {
       return segment_;
     }
 
+    void setSegment(Segment* segment) {
+      segment_ = segment;
+    }
+
     void setNext(SegmentVertex* next) {
       next_ = next;
     }
@@ -120,6 +124,7 @@ namespace VectorEditor {
       } else {
         vertices[1] = vertex;
       }
+      vertex->setSegment(this);
     }
 
     auto& getVerticies() {
@@ -151,9 +156,8 @@ namespace VectorEditor {
     }
   private:
       std::array<SegmentVertex*, 2> vertices;
-      Segment* prev;
-      Segment* next;
-      Path* path;
+      int id = nextID++;
+      inline static int nextID = 0;
   };
   class Network {
   public:
