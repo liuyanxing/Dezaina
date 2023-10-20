@@ -116,6 +116,8 @@ namespace VectorEditor {
     void setVertices(SegmentVertex* v0, SegmentVertex* v1) {
       vertices[0] = v0;
       vertices[1] = v1;
+      v0->setSegment(this);
+      v1->setSegment(this);
     }
 
     void setVertex(SegmentVertex* vertex) {
