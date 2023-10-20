@@ -128,33 +128,6 @@ namespace util {
     return result;
   }
 
-  SkOpContourHead* buildSkOpContourWithIntersection(SkPath& path, ArenaAlloc& allocator) {
-    SkOpContour* contour = allocator.make<SkOpContour>();
-    SkOpContourHead* contourList = static_cast<SkOpContourHead*>(contour);
-    SkOpGlobalState globalState(contourList, &allocator, true, nullptr);
-    SkOpCoincidence coincidence(&globalState);
-    SkOpEdgeBuilder builder(SkPathWriter(path), contourList, &globalState);
-    if (!builder.finish()) {
-      return nullptr;
-    }
-    if (!SortContourList(&contourList, false, false)) {
-      return nullptr;
-    }
-    SkOpContour* current = contourList;
-    do {
-      SkOpContour* next = current;
-      while (AddIntersectTs(current, next, &coincidence)
-              && (next = next->next()));
-    } while ((current = current->next()));
-
-    bool success = HandleCoincidence(contourList, &coincidence);
-    if (!success) {
-      return nullptr;
-    }
-    contourList->dumpContours();
-    return contourList;
-  }
-
   vector<VectorEditor::Segment*> buildPlanarSegemts(SkPath& path, vector<VectorEditor::Segment*> segments, ArenaAlloc& allocator) {
     SkOpContour contour;
     SkOpContourHead* contourList = static_cast<SkOpContourHead*>(&contour);
@@ -188,44 +161,56 @@ namespace util {
       auto& verticies = segment->getVerticies();
       // only one segment per contour, the order is the same as the order of the segments in the network
       auto* opSegment = cur->first();
-      SkOpSpanBase* span = opSegment->head();
-      auto* newSegment = allocator.make<VectorEditor::Segment>();
-      do {
-        auto ptt = span->ptT()->fT;
-        auto pt = span->pt();
-        if (ptt == 0 || ptt == 1) {
-          auto* segmentVertex = verticies[ptt];
-          segmentVertex->setT(ptt);
+      SkOpSpanBase* curSpan = opSegment->head();
+      SkOpSpanBase* nextSpan;
+      while (!curSpan->final() && (nextSpan = curSpan->upCast()->next())) {
+        auto* newSegment = allocator.make<VectorEditor::Segment>();
+        auto curPtt = curSpan->ptT()->fT;
+        auto curPt = curSpan->pt();
+        auto nextPtt = nextSpan->ptT()->fT;
+        auto nextPt = nextSpan->pt();
+        if (opSegment->verb() == SkPath::kCubic_Verb) {
+          SkDCubic cubic;
+          cubic.set(opSegment->pts());
+          auto cubicPair = cubic.subDivide(curPtt, nextPtt);
+        }
+        if (curPtt == 0 || curPtt == 1) {
+          auto* segmentVertex = verticies[curPtt];
+          segmentVertex->setT(curPtt);
           newSegment->setVertex(segmentVertex);
-          if (ptt == 1) {
+          if (curPtt == 1) {
             result.push_back(newSegment);
           }
-          ptVertexMap[span->ptT()].push_back(segmentVertex);
+          // ptVertexMap[span->ptT()].push_back(segmentVertex);
         } else {
+          SkDVector tangentOffset0{0, 0};
           SkDVector tangentOffset1{0, 0};
           SkDVector tangentOffset2{0, 0};
+          SkDVector tangentOffset3{0, 0};
           if (opSegment->verb() == SkPath::kCubic_Verb) {
             SkDCubic cubic;
             cubic.set(opSegment->pts());
-            auto cubicPair = cubic.chopAt(ptt);
+            auto cubicPair = cubic.chopAt(curPtt);
             auto firstCubic = cubicPair.first();
             auto secondCubic = cubicPair.second();
+            tangentOffset0 = firstCubic.fPts[1] - firstCubic.fPts[0];
             tangentOffset1 = firstCubic.fPts[2] - firstCubic.fPts[3];
             tangentOffset2 = secondCubic.fPts[1] - secondCubic.fPts[0];
+            tangentOffset3 = secondCubic.fPts[2] - secondCubic.fPts[3];
           }
           auto* segmentVertex1 = allocator.make<VectorEditor::SegmentVertex>(nullptr, 1);
           segmentVertex1->setTangentOffset(tangentOffset1.fX, tangentOffset1.fY);
           newSegment->setVertex(segmentVertex1);
           result.push_back(newSegment);
-          ptVertexMap[span->ptT()].push_back(segmentVertex1);
+          // ptVertexMap[span->ptT()].push_back(segmentVertex1);
           newSegment = allocator.make<VectorEditor::Segment>();
           auto segmentVertex2 = allocator.make<VectorEditor::SegmentVertex>(nullptr, 0);
           segmentVertex2->setTangentOffset(tangentOffset2.fX, tangentOffset2.fY);
           newSegment->setVertex(segmentVertex2);
-          ptVertexMap[span->ptT()].push_back(segmentVertex2);
+          // ptVertexMap[span->ptT()].push_back(segmentVertex2);
           segmentVertex1->setNext(segmentVertex2);
         }
-      } while(!span->final() && (span = span->upCast()->next()));
+      }
 
       cur = static_cast<SkOpContourHead*>(cur->next());
       index++;
