@@ -29,7 +29,7 @@ using Vertices = vector<VectorEditor::SegmentVertex*>;
 
 namespace util {
   void networkToSkPath(VectorEditor::Network& network, SkPath& path) {
-    for (auto* segment : network.getSegments()) {
+    for (auto* segment : *network.getSegments()) {
       auto [v0, v1] = segment->getEndVertecies();
       path.moveTo(v0->x(), v0->y());
       if (v0->hasTangent() || v1->hasTangent()) {
@@ -131,7 +131,7 @@ namespace util {
     return result;
   }
 
-  vector<VectorEditor::Segment*> buildPlanarSegemts(SkPath& path, vector<VectorEditor::Segment*> segments, ArenaAlloc& allocator) {
+  vector<VectorEditor::Segment*> buildPlanarSegemts(SkPath& path, vector<VectorEditor::Segment*>& segments, ArenaAlloc& allocator) {
     SkOpContour contour;
     SkOpContourHead* contourList = static_cast<SkOpContourHead*>(&contour);
     SkOpGlobalState globalState(contourList, &allocator, true, nullptr);
@@ -357,7 +357,7 @@ namespace util {
   }
 
   vector<SkPath> computeFillGeometry(SkPath& path, VectorEditor::Network& network, ArenaAlloc& allocator) {
-    auto segments = buildPlanarSegemts(path, network.getSegments(), allocator);
+    auto segments = buildPlanarSegemts(path, *network.getSegments(), allocator);
     auto mcb = buildMinimalCycleBasis(segments);
     return cycles2SkPaht(mcb);
   }

@@ -1,13 +1,15 @@
-#pragma once
 #include "base_type.h"
-#include "buffer.h"
-#include "desaina_node.h"
-#include "include/core/SkPoint.h"
+#include "include/core/SkPath.h"
 #include "services/blob_service.h"
+#include "desaina_node.h"
 #include "src/base/SkArenaAlloc.h"
 #include <array>
+#include <memory>
+#include <vector>
 
-namespace VectorEditor {
+using ArenaAlloc = SkArenaAlloc;
+
+namespace util {
   class Segment;
   class Path;
   class Vertex : public Vector {
@@ -165,28 +167,47 @@ namespace VectorEditor {
       int id = nextID++;
       inline static int nextID = 0;
   };
+
   class Network {
   public:
     Network() = default;
     Network(vector<Vertex*>&& vertecies, vector<Segment*>&& segments) {
-      this->vertecies = std::move(vertecies);
-      this->segments = std::move(segments);
+      this->vertecies_ = std::move(vertecies);
+      this->segments_ = std::move(segments);
+    }
+    Network(const Blob& blob, ArenaAlloc& arena);
+    Network(Network&& that) {
+      vertecies_ = std::move(that.vertecies_);
+      segments_ = std::move(that.segments_);
     }
     vector<Vertex*>* getVertecies() {
-      return &vertecies;
+      return &vertecies_;
     }
     vector<Segment*>* getSegments() {
-      return &segments;
+      return &segments_;
     }
     bool empty() {
-      return vertecies.empty() && segments.empty();
+      return vertecies_.empty() && segments_.empty();
     }
     private:
-      vector<Vertex*> vertecies;
-      vector<Segment*> segments;
+      vector<Vertex*> vertecies_;
+      vector<Segment*> segments_;
   };
-}
 
-using ArenaAlloc = SkArenaAlloc;
-VectorEditor::Network buildNetworkFromBlob(const Blob& buffer, ArenaAlloc& arena);
-Buffer network2Buffer(VectorEditor::Network& network);
+  struct CycleVertex {
+    SegmentVertex* vertex;
+    SkPath path;
+    vector<CycleVertex> cycle;
+    bool operator==(const CycleVertex& other) const {
+      return vertex == other.vertex;
+    }
+  };
+
+  struct VectorDecodedData {
+    shared_ptr<SkArenaAlloc> alloc = nullptr;
+    Network* network = nullptr;
+    vector<CycleVertex>* cycles = nullptr;
+  };
+
+  VectorDecodedData decodeVectorData(const Blob* blob);
+}

@@ -5,6 +5,7 @@
 #include "include/core/SkPath.h"
 #include "node_type.h"
 #include "rectangle.h"
+#include "services/blob_service.h"
 #include "util/skia.h"
 #include "vector.h"
 #include <_types/_uint32_t.h>
@@ -44,9 +45,18 @@ static std::optional<SkPath> buildRoundRectFillPath(const LayoutNode* node) {
   return path;
 }
 
+static SkPath buildVectorPath(const LayoutNode *layoutNode) {
+
+}
+
 namespace util {
-  SkPath buildFillPath(const LayoutNode *node) {
-    if (auto path = buildRoundRectFillPath(node); path.has_value()) {
+  SkPath buildFillPath(const LayoutNode *layoutNode) {
+    const auto* node = layoutNode->node;
+    if (util::isVector(node)) {
+      return buildVectorPath(layoutNode);
+    }
+
+    if (auto path = buildRoundRectFillPath(layoutNode); path.has_value()) {
       return path.value();
     }
     return SkPath();

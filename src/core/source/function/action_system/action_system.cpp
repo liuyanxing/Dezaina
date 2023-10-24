@@ -2,6 +2,10 @@
 #include "UpdatePropertiesAction.h"
 #include "util/node_geometry.h"
 
+void ActionSystem::updateProperty(const PropertyType& propertyType, const PropertyValue&& propertyValue, const Node* node) {
+  addAction(UpdatePropertiesAction::Make(node->get_guid(), propertyType, std::move(propertyValue)));
+}
+
 void ActionSystem::rotate(float deltaRotation, const Node* node) {
   auto rotation = util::getRotation(node);
   rotation += deltaRotation;
