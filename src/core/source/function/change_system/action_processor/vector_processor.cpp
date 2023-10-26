@@ -9,10 +9,11 @@ void processVectorData(ChangeSystem* changeSystem, const UpdatePropertiesAction&
   auto* blob = std::get<Blob*>(action.propertyValue);
   auto changeItem = changeSystem->getChangingItem(action.node_id);
   auto* pool = changeSystem->pool();
-  auto* nodeChange = changeItem->changeNode;
+  auto* changeNode = changeItem->changeNode;
   VectorData vectorData;
   vectorData.vectorNetworkBlob = changeSystem->addBlob(blob);
-  nodeChange->set_vectorData(vectorData.toChange(*pool));
+  changeNode->set_vectorData(vectorData.toChange(*pool));
+  changeItem->layoutNode->vectorData = blob;
 
   changeItem->isFillGeometryDirty = true;
   changeItem->isStrokeGeometryDirty = true;

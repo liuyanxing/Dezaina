@@ -1,3 +1,5 @@
+#pragma once
+
 #include "base_type.h"
 #include "include/core/SkPath.h"
 #include "services/blob_service.h"
@@ -9,7 +11,7 @@
 
 using ArenaAlloc = SkArenaAlloc;
 
-namespace util {
+namespace node {
   class Segment;
   class Path;
   class Vertex : public Vector {
@@ -203,11 +205,26 @@ namespace util {
     }
   };
 
-  struct VectorDecodedData {
+  struct ContourCycles {
+    vector<CycleVertex> cycles;
+  };
+
+  struct VectorDecodedData : BlobAttachment {
+    VectorDecodedData(const shared_ptr<SkArenaAlloc>& alloc, Network* network, vector<CycleVertex>* cycles, SkPath* path) {
+      this->alloc = alloc;
+      this->network = network;
+      this->cycles = cycles;
+      this->path = path;
+    }
     shared_ptr<SkArenaAlloc> alloc = nullptr;
     Network* network = nullptr;
     vector<CycleVertex>* cycles = nullptr;
+    SkPath* path;
   };
 
   VectorDecodedData decodeVectorData(const Blob* blob);
+}
+
+namespace util {
+  Buffer network2Buffer(node::Network& network);
 }

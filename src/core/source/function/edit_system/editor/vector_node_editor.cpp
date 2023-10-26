@@ -1,5 +1,6 @@
 #include "vector_node_editor.h"
 #include "action_system/UpdatePropertiesAction.h"
+#include "change_system/layouts/layout_node.h"
 #include "desaina.h"
 #include "desaina_node.h"
 #include "edit_system/editor/editor.h"
@@ -7,11 +8,12 @@
 #include "event_system/hit_tester.h"
 #include "include/core/SkRect.h"
 #include "text.h"
+#include "util/node_geometry.h"
+#include "util/node_vector.h"
 #include "vector.h"
 #include "config/editor.h"
 #include <iostream>
 #include <variant>
-#include "edit_system/util/vector_node_helper.h"
 
 void VectorNodeEditor::init() {
   bindEvents();
@@ -32,14 +34,22 @@ void VectorNodeEditor::bindEvents() {
 
 void VectorNodeEditor::update() {
   node_ = static_cast<VectorNode*>(getEditingNodes()[0]);
+
+  const auto& vectorData = util::getVectorData(node_);
+  auto* blob = desaina_->getBlob(vectorData.vectorNetworkBlob);
+  auto* vectorDecodedData = blob->getAttachment<node::VectorDecodedData>();
+  if (vectorDecodedData == nullptr) {
+    LayoutNode layoutNode;
+    layoutNode.node = node_;
+    layoutNode.vectorData = blob;
+    util::buildFillGeometry(&layoutNode, desaina_);
+    vectorDecodedData = blob->getAttachment<node::VectorDecodedData>();
+  }
+  network_ = vectorDecodedData->network;
+  vector_path_ = vectorDecodedData->path;
+
   updateSelectedSegments();
   buildInteractionArea();
-  if (network_.empty()) {
-    buildNetWork();
-  }
-  vector_path_.reset();
-  util::networkToSkPath(network_, vector_path_);
-  util::computeFillGeometry(vector_path_, network_, arena_);
 }
 
 void VectorNodeEditor::updateSelectedSegments() {
@@ -50,8 +60,8 @@ void VectorNodeEditor::updateSelectedSegments() {
   }
   for (auto* hitNode : selectedHitNodes) {
     auto* controllerNode = static_cast<ControllerNode*>(hitNode);
-    for (auto* segment : *network_.getSegments()) {
-      if (auto* vertex = std::get_if<VectorEditor::Vertex*>(&controllerNode->vertex)) {
+    for (auto* segment : *network_->getSegments()) {
+      if (auto* vertex = std::get_if<node::Vertex*>(&controllerNode->vertex)) {
         if (segment->hasVertex(*vertex)) {
           selected_segments_.push_back(segment);
         }
@@ -66,7 +76,7 @@ void VectorNodeEditor::updateSelectedSegments() {
 
 void VectorNodeEditor::buildInteractionArea() {
   vector<ControllerNode> new_hit_nodes;
-  auto addTangentToHitNodes = [&new_hit_nodes](VectorEditor::SegmentVertex* v) {
+  auto addTangentToHitNodes = [&new_hit_nodes](node::SegmentVertex* v) {
     if (!v->hasTangent()) {
       return;
     }
@@ -82,7 +92,7 @@ void VectorNodeEditor::buildInteractionArea() {
       addTangentToHitNodes(v1);
   }
 
-  for (auto* vertex : *network_.getVertecies()) {
+  for (auto* vertex : *network_->getVertecies()) {
     auto x = vertex->x;
     auto y = vertex->y;
     auto size = Config::roundCtrlNodeRadius * 2;
@@ -103,18 +113,12 @@ void VectorNodeEditor::buildInteractionArea() {
   hit_nodes_ = std::move(new_hit_nodes);
 }
 
-void VectorNodeEditor::buildNetWork() {
-  auto blobId = node_->get_vectorData().vectorNetworkBlob;
-  auto blob = desaina_->getBlob(blobId);
-  network_ = buildNetworkFromBlob(*blob, arena_);
-}
-
 void VectorNodeEditor::getPath(SkPath &fillPath, SkPath &strokePath) {
-  for (auto* vertex : *network_.getVertecies()) {
+  for (auto* vertex : *network_->getVertecies()) {
     fillPath.addCircle(vertex->x, vertex->y , Config::roundCtrlNodeRadius);
     strokePath.addCircle(vertex->x, vertex->y , Config::roundCtrlNodeRadius);
   }
-  for (auto* segment : *network_.getSegments()) {
+  for (auto* segment : *network_->getSegments()) {
     if (isSelected(segment)) {
       auto [v0, v1] = segment->getEndVertecies();
       auto t0 = v0->getTangentEnd();
@@ -126,7 +130,7 @@ void VectorNodeEditor::getPath(SkPath &fillPath, SkPath &strokePath) {
 
 }
 
-bool VectorNodeEditor::isSelected(const VectorEditor::Segment* segment) const {
+bool VectorNodeEditor::isSelected(const node::Segment* segment) const {
   for (auto* s : selected_segments_) {
     if (s == segment) {
       return true;
@@ -136,7 +140,7 @@ bool VectorNodeEditor::isSelected(const VectorEditor::Segment* segment) const {
 }
 
 void VectorNodeEditor::getEditPath(SkPath &path) {
-  path.addPath(vector_path_);
+  path.addPath(*vector_path_);
   for (auto* segment : selected_segments_) {
     auto [v0, v1] = segment->getEndVertecies();
     auto t0 = v0->getTangentEnd();
@@ -151,7 +155,7 @@ void VectorNodeEditor::getEditPath(SkPath &path) {
 void VectorNodeEditor::handleDrag(MouseEvent *event) {
   for (auto* hitNode : getSelectedHitNode()) {
     auto* controllerNode = static_cast<ControllerNode*>(hitNode);
-    if (auto* vertex = std::get_if<VectorEditor::Vertex*>(&controllerNode->vertex)) {
+    if (auto* vertex = std::get_if<node::Vertex*>(&controllerNode->vertex)) {
       auto v = *vertex;
       v->x += event->localDeltaX;
       v->y += event->localDeltaY;
@@ -161,6 +165,6 @@ void VectorNodeEditor::handleDrag(MouseEvent *event) {
       v->y += event->localDeltaY;
     }
   }
-  auto blobPair = desaina_->addBlob(network2Buffer(network_));
+  auto blobPair = desaina_->addBlob(util::network2Buffer(*network_));
   desaina_->actionSystem.updateProperty(PropertyType::kVectorData, blobPair.second, node_);
 }

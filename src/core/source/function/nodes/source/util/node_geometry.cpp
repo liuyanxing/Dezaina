@@ -8,6 +8,7 @@
 #include "services/blob_service.h"
 #include "util/skia.h"
 #include "vector.h"
+#include "node_vector.h"
 #include <_types/_uint32_t.h>
 #include <optional>
 #include <tuple>
@@ -45,17 +46,22 @@ static std::optional<SkPath> buildRoundRectFillPath(const LayoutNode* node) {
   return path;
 }
 
-static SkPath buildVectorPath(const LayoutNode *layoutNode) {
-
+static SkPath buildVectorGeometry(const LayoutNode *layoutNode, Desaina *desaina) {
+  auto vectorDecodedData = node::decodeVectorData(layoutNode->vectorData); 
+  layoutNode->vectorData->setAttachment<node::VectorDecodedData>(vectorDecodedData);
+  auto* cycles = vectorDecodedData.cycles;
+  SkPath path;
+  for (auto& cycle : *cycles) {
+    path.addPath(cycle.path);
+  }
+  return path;
 }
+
+using DesainaPath = Path;
 
 namespace util {
   SkPath buildFillPath(const LayoutNode *layoutNode) {
     const auto* node = layoutNode->node;
-    if (util::isVector(node)) {
-      return buildVectorPath(layoutNode);
-    }
-
     if (auto path = buildRoundRectFillPath(layoutNode); path.has_value()) {
       return path.value();
     }
@@ -63,11 +69,14 @@ namespace util {
   }
 
   BlobPair buildFillGeometry(const LayoutNode *node, Desaina *desaina) {
+    if (util::isVector(node->node)) {
+      return desaina->addBlob(util::toBuffer(buildVectorGeometry(node, desaina)));
+    }
     return desaina->addBlob(util::toBuffer(buildFillPath(node)));
   }
 
-  const IVector<Path>& getFillGeometry(const Node* node) {
-    static IVector<Path> empty;
+  const IVector<DesainaPath>& getFillGeometry(const Node* node) {
+    static IVector<DesainaPath> empty;
     if (util::isDefaultShapeNode(node)) {
       auto shape = static_cast<const DefaultShapeNode*>(node);
       return shape->get_fillGeometry();
@@ -75,8 +84,8 @@ namespace util {
     return empty;
   }
 
-  const IVector<Path>& getStrokeGeometry(const Node* node) {
-    static IVector<Path> empty;
+  const IVector<DesainaPath>& getStrokeGeometry(const Node* node) {
+    static IVector<DesainaPath> empty;
     if (util::isDefaultShapeNode(node)) {
       auto shape = static_cast<const DefaultShapeNode*>(node);
       return shape->get_strokeGeometry();

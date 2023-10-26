@@ -11,37 +11,8 @@
 #include <memory>
 #include <stack>
 
-Buffer network2Buffer(util::Network& network) {
-  Buffer buffer;
-  const auto* vertecies = network.getVertecies();
-  const auto* segments = network.getSegments();
-  buffer.writeUint(vertecies->size());
-  buffer.writeUint(segments->size());
-  buffer.writeUint(0);
-  std::unordered_map<util::Vertex*, int> vertexIndexMap;
-  int index = 0;
-  for (auto& vertex : *vertecies) {
-    vertexIndexMap.insert({vertex, index++});
-    buffer.writeFloat(vertex->styleID());
-    buffer.writeFloat(vertex->x);
-    buffer.writeFloat(vertex->y);
-  }
-  for (auto& segment : *segments) {
-    auto vertecies = segment->getVerticies();
-    auto vertex0 = vertecies[0]->getVertex();
-    auto vertex1 = vertecies[1]->getVertex();
-    buffer.writeUint(0);
-    buffer.writeUint(vertexIndexMap[vertex0]);
-    buffer.writeFloat(vertecies[0]->getTangentOffset()->x);
-    buffer.writeFloat(vertecies[1]->getTangentOffset()->y);
-    buffer.writeUint(vertexIndexMap[vertex1]);
-    buffer.writeFloat(vertecies[1]->getTangentOffset()->x);
-    buffer.writeFloat(vertecies[1]->getTangentOffset()->y);
-  }
-  return buffer;
-}
 
-SkPath networkToSkPath(util::Network& network) {
+static SkPath networkToSkPath(node::Network& network) {
   SkPath path;
   for (auto* segment : *network.getSegments()) {
     auto [v0, v1] = segment->getEndVertecies();
@@ -61,7 +32,7 @@ SkPath networkToSkPath(util::Network& network) {
   return path;
 }
 
-util::SegmentVertex* findTheLeftMostVertex(util::Segment* segment) {
+static node::SegmentVertex* findTheLeftMostVertex(node::Segment* segment) {
   auto vertecies = segment->getVerticies();
   auto* leftMost = vertecies[0];
   for (int i = 1; i < vertecies.size(); i++) {
@@ -73,7 +44,7 @@ util::SegmentVertex* findTheLeftMostVertex(util::Segment* segment) {
   return leftMost;
 }
 
-util::SegmentVertex* findTheLeftMostVertex(vector<util::Segment*>& segments) {
+static node::SegmentVertex* findTheLeftMostVertex(vector<node::Segment*>& segments) {
   auto* leftMost = findTheLeftMostVertex(segments[0]);
   for (int i = 1; i < segments.size(); i++) {
     auto* vertex = findTheLeftMostVertex(segments[i]);
@@ -84,7 +55,7 @@ util::SegmentVertex* findTheLeftMostVertex(vector<util::Segment*>& segments) {
   return leftMost;
 }
 
-static  auto getDirection = [](util::SegmentVertex* vertex) {
+static  auto getDirection = [](node::SegmentVertex* vertex) {
   auto* tangentOffset = vertex->getTangentOffset();
   if (tangentOffset->x == 0 && tangentOffset->y == 0) {
     auto another = vertex->segment()->getAnotherVertex(vertex);
@@ -93,7 +64,7 @@ static  auto getDirection = [](util::SegmentVertex* vertex) {
   return util::toSkVector(*tangentOffset);
 };
 
-util::SegmentVertex* getClockwiseMost(const SkVector& pre, util::SegmentVertex* vertex) {
+static node::SegmentVertex* getClockwiseMost(const SkVector& pre, node::SegmentVertex* vertex) {
   SkVector curV = pre;
   auto* next = vertex;
   auto* result = vertex;
@@ -120,7 +91,7 @@ util::SegmentVertex* getClockwiseMost(const SkVector& pre, util::SegmentVertex* 
   return result;
 }
 
-util::SegmentVertex* getCounterClockwiseMost(const SkVector& pre, util::SegmentVertex* vertex) {
+static node::SegmentVertex* getCounterClockwiseMost(const SkVector& pre, node::SegmentVertex* vertex) {
   SkVector curV = pre;
   auto* next = vertex->next();
   auto* result = vertex;
@@ -146,7 +117,7 @@ util::SegmentVertex* getCounterClockwiseMost(const SkVector& pre, util::SegmentV
   return result;
 }
 
-vector<util::Segment*> buildPlanarSegemts(SkPath& path, vector<util::Segment*>& segments, ArenaAlloc& allocator) {
+static vector<node::Segment*> buildPlanarSegemts(SkPath& path, vector<node::Segment*>& segments, ArenaAlloc& allocator) {
   SkOpContour contour;
   SkOpContourHead* contourList = static_cast<SkOpContourHead*>(&contour);
   SkOpGlobalState globalState(contourList, &allocator, true, nullptr);
@@ -170,8 +141,8 @@ vector<util::Segment*> buildPlanarSegemts(SkPath& path, vector<util::Segment*>& 
     return {};
   }
 
-  vector<util::Segment*> result;
-  std::unordered_map<SkOpPtT*, vector<util::SegmentVertex*>> ptVertexMap;
+  vector<node::Segment*> result;
+  std::unordered_map<SkOpPtT*, vector<node::SegmentVertex*>> ptVertexMap;
   cur = contourList;
   int index = 0;
   while (cur) {
@@ -179,9 +150,9 @@ vector<util::Segment*> buildPlanarSegemts(SkPath& path, vector<util::Segment*>& 
     // only one segment per contour, the order is the same as the order of the segments in the network
     auto* opSegment = cur->first();
     SkOpSpanBase* curSpan = opSegment->head(), *nextSpan = nullptr;
-    util::SegmentVertex* segmentVertex0 = nullptr, *segmentVertex1 = nullptr;
+    node::SegmentVertex* segmentVertex0 = nullptr, *segmentVertex1 = nullptr;
     while (!curSpan->final() && (nextSpan = curSpan->upCast()->next())) {
-      auto* newSegment = allocator.make<util::Segment>();
+      auto* newSegment = allocator.make<node::Segment>();
       auto curPtt = curSpan->ptT()->fT;
       auto curPt = curSpan->pt();
       auto nextPtt = nextSpan->ptT()->fT;
@@ -198,11 +169,11 @@ vector<util::Segment*> buildPlanarSegemts(SkPath& path, vector<util::Segment*>& 
         tangentOffset1 = subCubic.fPts[2] - subCubic.fPts[3];
       }
 
-      segmentVertex0 = allocator.make<util::SegmentVertex>(nullptr, 0);
+      segmentVertex0 = allocator.make<node::SegmentVertex>(nullptr, 0);
       if (segmentVertex1 != nullptr) {
         segmentVertex1->setNext(segmentVertex0);
       }
-      segmentVertex1 = allocator.make<util::SegmentVertex>(nullptr, 1);
+      segmentVertex1 = allocator.make<node::SegmentVertex>(nullptr, 1);
 
       ptVertexMap[curSpan->ptT()].push_back(segmentVertex0);
       ptVertexMap[nextSpan->ptT()].push_back(segmentVertex1);
@@ -230,9 +201,9 @@ vector<util::Segment*> buildPlanarSegemts(SkPath& path, vector<util::Segment*>& 
       const auto& point = span->pt();
       auto* startPt = pt;
       auto* nextPt = pt->next();
-      auto* vertex = allocator.make<util::Vertex>(point.x(), point.y());
-      util::SegmentVertex* preSegmentVertex = nullptr;
-      util::SegmentVertex* firstSegmentVertex = nullptr;
+      auto* vertex = allocator.make<node::Vertex>(point.x(), point.y());
+      node::SegmentVertex* preSegmentVertex = nullptr;
+      node::SegmentVertex* firstSegmentVertex = nullptr;
       do {
         auto& segmentVertices = ptVertexMap.find(pt)->second;
         auto first = segmentVertices.front();
@@ -257,8 +228,8 @@ vector<util::Segment*> buildPlanarSegemts(SkPath& path, vector<util::Segment*>& 
   return result;
 }
 
-vector<util::SegmentVertex*> walk(util::SegmentVertex* segmentVertex) {
-  vector<util::SegmentVertex*> res;
+static vector<node::SegmentVertex*> walk(node::SegmentVertex* segmentVertex) {
+  vector<node::SegmentVertex*> res;
 
   auto* vertex = segmentVertex->getVertex();
   auto* clockwiseMost = getClockwiseMost({0, 1}, segmentVertex);
@@ -273,8 +244,8 @@ vector<util::SegmentVertex*> walk(util::SegmentVertex* segmentVertex) {
   return res;
 }
 
-static void removeSegments(vector<util::SegmentVertex*>& cycleSegemtnVertices, vector<util::Segment*>& segments) {
-  std::unordered_set<util::Segment*> set;
+static void removeSegments(vector<node::SegmentVertex*>& cycleSegemtnVertices, vector<node::Segment*>& segments) {
+  std::unordered_set<node::Segment*> set;
   for (auto* segmentVertex : cycleSegemtnVertices) {
     set.insert(segmentVertex->segment());
   }
@@ -287,15 +258,15 @@ static void removeSegments(vector<util::SegmentVertex*>& cycleSegemtnVertices, v
 }
 
 
-util::CycleVertex buildCycle(vector<util::Segment*>& segments) {
+static node::CycleVertex buildCycle(vector<node::Segment*>& segments) {
   auto* leftMost = findTheLeftMostVertex(segments);
   auto cycleSegemtnVertices = walk(leftMost);
   // removeSegments(cycleSegemtnVertices, segments);
-  std::stack<util::CycleVertex> stack;
-  std::unordered_map<util::Vertex*, util::CycleVertex> map;
-  util::SegmentVertex* last = nullptr;
+  std::stack<node::CycleVertex> stack;
+  std::unordered_map<node::Vertex*, node::CycleVertex> map;
+  node::SegmentVertex* last = nullptr;
   for (auto* segmentVertex : cycleSegemtnVertices) {
-    util::CycleVertex cycleVertex{segmentVertex, {}};
+    node::CycleVertex cycleVertex{segmentVertex, {}};
     auto* vertex = segmentVertex->getVertex();
     stack.push(cycleVertex);
     if (last && last->getVertex() == vertex) {
@@ -304,7 +275,7 @@ util::CycleVertex buildCycle(vector<util::Segment*>& segments) {
     last = segmentVertex;
     if (map.contains(vertex)) {
       auto& cycleVertex = map[vertex];
-      vector<util::CycleVertex> cycle;
+      vector<node::CycleVertex> cycle;
       while(stack.size() > 1 && stack.top() != cycleVertex) {
         auto& topVertex =  stack.top();
         cycle.push_back(topVertex);
@@ -321,17 +292,17 @@ util::CycleVertex buildCycle(vector<util::Segment*>& segments) {
   return stack.top();
 }
 
-vector<util::CycleVertex> buildMinimalCycleBasis(vector<util::Segment*>& segments) {
-  vector<util::CycleVertex> cycles;
+static vector<node::CycleVertex> buildMinimalCycleBasis(vector<node::Segment*>& segments) {
+  vector<node::CycleVertex> cycles;
   // 暂时不考虑多个环的情况
   // while (!segments.empty()) {
   //   cycles.push_back(buildCycle(segments));
   // }
   cycles.push_back(buildCycle(segments));
-  return {};
+  return cycles;
 }
 
-void buildCyclesPath(vector<util::CycleVertex> &cycles) {
+static void buildCyclesPath(vector<node::CycleVertex> &cycles) {
   for (auto& cycleVertex : cycles) {
     SkPath path;
     auto* cur = cycleVertex.vertex;
@@ -362,19 +333,18 @@ void buildCyclesPath(vector<util::CycleVertex> &cycles) {
   }
 }
 
-vector<util::CycleVertex> buildCycles(SkPath& path, util::Network& network, ArenaAlloc& allocator) {
+static vector<node::CycleVertex> buildCycles(SkPath& path, node::Network& network, ArenaAlloc& allocator) {
   auto segments = buildPlanarSegemts(path, *network.getSegments(), allocator);
   auto mcb = buildMinimalCycleBasis(segments);
   buildCyclesPath(mcb);
   return mcb;
 }
 
-vector<util::CycleVertex> buildCyclesFromNetwork(util::Network& network, ArenaAlloc& allocator) {
-  SkPath path = networkToSkPath(network);
+static vector<node::CycleVertex> buildCyclesFromNetwork(node::Network& network, SkPath& path, ArenaAlloc& allocator) {
   return buildCycles(path, network, allocator);
 }
 
-namespace util {
+namespace node {
   Network::Network(const Blob& blob, ArenaAlloc& arena) {
     auto* data = blob.buffer()->data();
     auto* floatData = reinterpret_cast<float*>(data);
@@ -384,8 +354,8 @@ namespace util {
     auto segmentCount = uintData[1];
     auto pathCount = uintData[2];
     
-    auto* vertecies = arena.makeArray<util::Vertex>(vertexCount);
-    auto* segments = arena.makeArray<util::Segment>(segmentCount);
+    auto* vertecies = arena.makeArray<node::Vertex>(vertexCount);
+    auto* segments = arena.makeArray<node::Segment>(segmentCount);
 
     vertecies_.reserve(vertexCount);
     segments_.reserve(segmentCount);
@@ -407,12 +377,12 @@ namespace util {
       auto networkIndex = uintData[segmentStart];
       auto v0Index = uintData[segmentStart + 1];
       auto& vertex0 = vertecies[v0Index];
-      auto* v0 = arena.make<util::SegmentVertex>(&vertex0, 0);
+      auto* v0 = arena.make<node::SegmentVertex>(&vertex0, 0);
       v0->setTangentOffset(floatData[segmentStart + 2], floatData[segmentStart + 3]);
 
       auto v1Index = uintData[segmentStart + 4];
       auto& vertex1 = vertecies[v1Index];
-      auto* v1 = arena.make<util::SegmentVertex>(&vertex1, 1);
+      auto* v1 = arena.make<node::SegmentVertex>(&vertex1, 1);
       v1->setTangentOffset(floatData[segmentStart + 5], floatData[segmentStart + 6]);
       segment.setVertices(v0, v1);
 
@@ -425,7 +395,42 @@ namespace util {
     auto arena = make_shared<SkArenaAlloc>(kArenaAllocSize);
     auto* network = arena->make<Network>(*blob, *arena);
     auto* cycles = arena->make<vector<CycleVertex>>();
-    *cycles = buildCyclesFromNetwork(*network, *arena);
-    return { arena, network, cycles };
+    auto* path = arena->make<SkPath>();
+    *path = networkToSkPath(*network);
+    *cycles = buildCyclesFromNetwork(*network, *path, *arena);
+    buildCyclesPath(*cycles);
+    return { arena, network, cycles, path };
   }
+}
+
+namespace util {
+Buffer network2Buffer(node::Network& network) {
+  Buffer buffer;
+  const auto* vertecies = network.getVertecies();
+  const auto* segments = network.getSegments();
+  buffer.writeUint(vertecies->size());
+  buffer.writeUint(segments->size());
+  buffer.writeUint(0);
+  std::unordered_map<node::Vertex*, int> vertexIndexMap;
+  int index = 0;
+  for (auto& vertex : *vertecies) {
+    vertexIndexMap.insert({vertex, index++});
+    buffer.writeFloat(vertex->styleID());
+    buffer.writeFloat(vertex->x);
+    buffer.writeFloat(vertex->y);
+  }
+  for (auto& segment : *segments) {
+    auto vertecies = segment->getVerticies();
+    auto vertex0 = vertecies[0]->getVertex();
+    auto vertex1 = vertecies[1]->getVertex();
+    buffer.writeUint(0);
+    buffer.writeUint(vertexIndexMap[vertex0]);
+    buffer.writeFloat(vertecies[0]->getTangentOffset()->x);
+    buffer.writeFloat(vertecies[1]->getTangentOffset()->y);
+    buffer.writeUint(vertexIndexMap[vertex1]);
+    buffer.writeFloat(vertecies[1]->getTangentOffset()->x);
+    buffer.writeFloat(vertecies[1]->getTangentOffset()->y);
+  }
+  return buffer;
+}
 }

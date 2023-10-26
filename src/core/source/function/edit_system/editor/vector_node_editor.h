@@ -5,11 +5,11 @@
 #include "event_system/mouse_event.h"
 #include "include/core/SkPath.h"
 #include "node_editor.h"
+#include "util/node_vector.h"
 #include "vector.h"
-#include "vector_editor_data.h"
 
 constexpr int kArenaAllocSize = 16 * 1024;
-using ControllerVertex =  std::variant<VectorEditor::Vertex*, Vector*>;
+using ControllerVertex =  std::variant<node::Vertex*, Vector*>;
 
 struct ControllerNode : public EditorHitNode {
   ControllerVertex vertex;
@@ -32,7 +32,6 @@ public:
   void update() override;
   void buildInteractionArea();
   void bindEvents();
-  void buildNetWork();
   void updateBlob();
   void getPath(SkPath& fillPath, SkPath& strokePath) override;
   void getEditPath(SkPath& path) override;
@@ -40,14 +39,14 @@ public:
   void handleDrag(MouseEvent* event);
 private:
   ArenaAlloc arena_{kArenaAllocSize};
-  VectorEditor::Network network_{};
+  node::Network* network_;
   VectorNode* node_;
   Desaina* desaina_;
   vector<ControllerNode> hit_nodes_;
-  vector<VectorEditor::Segment*> selected_segments_;
-  SkPath vector_path_;
+  vector<node::Segment*> selected_segments_;
+  SkPath* vector_path_;
 
   void updateSelectedSegments();
-  bool isSelected(const VectorEditor::Segment*) const;
+  bool isSelected(const node::Segment*) const;
 };
 
