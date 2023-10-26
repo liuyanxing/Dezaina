@@ -179,8 +179,12 @@ namespace node {
     }
     Network(const Blob& blob, ArenaAlloc& arena);
     Network(Network&& that) {
+      *this = std::move(that);
+    }
+    Network& operator=(Network&& that) {
       vertecies_ = std::move(that.vertecies_);
       segments_ = std::move(that.segments_);
+      return *this;
     }
     vector<Vertex*>* getVertecies() {
       return &vertecies_;

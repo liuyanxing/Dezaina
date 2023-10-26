@@ -45,7 +45,9 @@ void VectorNodeEditor::update() {
     util::buildFillGeometry(&layoutNode, desaina_);
     vectorDecodedData = blob->getAttachment<node::VectorDecodedData>();
   }
-  network_ = vectorDecodedData->network;
+  if (network_.empty()) {
+    network_ = std::move(*vectorDecodedData->network);
+  }
   vector_path_ = vectorDecodedData->path;
 
   updateSelectedSegments();
@@ -60,7 +62,7 @@ void VectorNodeEditor::updateSelectedSegments() {
   }
   for (auto* hitNode : selectedHitNodes) {
     auto* controllerNode = static_cast<ControllerNode*>(hitNode);
-    for (auto* segment : *network_->getSegments()) {
+    for (auto* segment : *network_.getSegments()) {
       if (auto* vertex = std::get_if<node::Vertex*>(&controllerNode->vertex)) {
         if (segment->hasVertex(*vertex)) {
           selected_segments_.push_back(segment);
@@ -92,7 +94,7 @@ void VectorNodeEditor::buildInteractionArea() {
       addTangentToHitNodes(v1);
   }
 
-  for (auto* vertex : *network_->getVertecies()) {
+  for (auto* vertex : *network_.getVertecies()) {
     auto x = vertex->x;
     auto y = vertex->y;
     auto size = Config::roundCtrlNodeRadius * 2;
@@ -114,11 +116,11 @@ void VectorNodeEditor::buildInteractionArea() {
 }
 
 void VectorNodeEditor::getPath(SkPath &fillPath, SkPath &strokePath) {
-  for (auto* vertex : *network_->getVertecies()) {
+  for (auto* vertex : *network_.getVertecies()) {
     fillPath.addCircle(vertex->x, vertex->y , Config::roundCtrlNodeRadius);
     strokePath.addCircle(vertex->x, vertex->y , Config::roundCtrlNodeRadius);
   }
-  for (auto* segment : *network_->getSegments()) {
+  for (auto* segment : *network_.getSegments()) {
     if (isSelected(segment)) {
       auto [v0, v1] = segment->getEndVertecies();
       auto t0 = v0->getTangentEnd();
@@ -165,6 +167,6 @@ void VectorNodeEditor::handleDrag(MouseEvent *event) {
       v->y += event->localDeltaY;
     }
   }
-  auto blobPair = desaina_->addBlob(util::network2Buffer(*network_));
+  auto blobPair = desaina_->addBlob(util::network2Buffer(network_));
   desaina_->actionSystem.updateProperty(PropertyType::kVectorData, blobPair.second, node_);
 }

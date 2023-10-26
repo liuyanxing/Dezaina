@@ -39,7 +39,7 @@ public:
   void handleDrag(MouseEvent* event);
 private:
   ArenaAlloc arena_{kArenaAllocSize};
-  node::Network* network_;
+  node::Network network_;
   VectorNode* node_;
   Desaina* desaina_;
   vector<ControllerNode> hit_nodes_;
