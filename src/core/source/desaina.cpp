@@ -14,6 +14,20 @@
 #include "desaina_node.h"
 #include "util/node_geometry.h"
 #include "desaina.h"
+#include "change_system/change_system.h"
+#include "viewport_system/viewport_system.h"
+
+bool Desaina::loadDocument(kiwi::ByteBuffer &buffer) {
+  bool is_loaded = changeSystem->processMessage(buffer);
+  if (!is_loaded) {
+    return false;
+  }
+  document.setLoaded(true);
+  document.buildDocTree();
+  document.builPath();
+  return true;
+
+}
 
 bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 	kiwi::MemoryPool pool;
@@ -31,24 +45,14 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 }
 
 void Desaina::buildEvents() {
-  viewPortSystem.addEventListener(EventType::kViewPortChange, [this](Event* event) {
+  viewPortSystem->addEventListener(EventType::kViewPortChange, [this](Event* event) {
     if (auto* curPage = document.getCurrentPage()) {
-      curPage->setViewMatrix(viewPortSystem.getViewMatrix());
+      curPage->setViewMatrix(viewPortSystem->getViewMatrix());
     }
-  });
-  editSystem.addEventListener(EventType::kEditorChagne, [this](Event* event) {
-    editor = editSystem.getEditor();
   });
 }
 
 void Desaina::addSystems() {
-	systems_.push_back(&eventSystem);
-  systems_.push_back(&viewPortSystem);
-  systems_.push_back(&editSystem);
-  systems_.push_back(&selectSystem);
-  systems_.push_back(&actionSystem);
-  systems_.push_back(&changeSystem);
-  systems_.push_back(&renderSystem);
 }
 
 void Desaina::tick() {

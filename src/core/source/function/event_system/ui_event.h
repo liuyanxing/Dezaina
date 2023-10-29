@@ -16,10 +16,12 @@ struct UIEvent : public Event {
   float windowHeight;
   float windowX;
   float windowY;
-  float deltaX;
-  float deltaY;
-  float localDeltaX;
-  float localDeltaY;
+  float deltaX = 0;
+  float deltaY = 0;
+  float localDeltaX = 0;
+  float localDeltaY = 0;
+  float dragDistanceX = 0;
+  float dragDistanceY = 0;
   float devicePixelRatio;
   SkRect activeLocalRect;
   CursorType cursorType;

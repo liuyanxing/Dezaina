@@ -22,6 +22,8 @@
 #include "util/node_geometry.h"
 #include "config/color.h"
 #include "config/editor.h"
+#include "viewport_system/viewport_system.h"
+#include "edit_system/edit_system.h"
 
 #include <iostream>
 
@@ -31,7 +33,7 @@ Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
 
 void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
-    canvas_->setMatrix(desaina_->viewPortSystem.getProjectionMatrix());
+    canvas_->setMatrix(desaina_->viewPortSystem->getProjectionMatrix());
     drawNode(document_->getCurrentPage());
     drawHoverSelectionNode();
   }
@@ -111,7 +113,7 @@ void Canvas::drawHighlightNode(const Node* node) {
 void Canvas::drawHighlightNode() {
   const auto hoverNode = desaina_->document.getHoverNode();
   drawHighlightNode(hoverNode);
-  auto* editor = desaina_->editSystem.getEditor();
+  auto* editor = desaina_->editSystem->getEditor();
   if (editor == nullptr) {
     return;
   }
@@ -126,7 +128,7 @@ void Canvas::drawHighlightNode() {
 
 void Canvas::drawEditor() {
   SkAutoCanvasRestore auto_save(canvas_, true);
-  auto* editor = desaina_->editSystem.getEditor();
+  auto* editor = desaina_->editSystem->getEditor();
   if (editor == nullptr) {
     return;
   }

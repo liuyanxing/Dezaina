@@ -24,6 +24,8 @@ class ActionSystem : public System {
   void resize(float deltaWidth, float deltaHeight, const Node* node);
   void setSize(float width, float height, const Node* node);
   void setTransform(const SkMatrix& transform, const Node* node);
+
+  void createNode(const Node* node);
   
  private:
   vector<ActionPtr> actions_;

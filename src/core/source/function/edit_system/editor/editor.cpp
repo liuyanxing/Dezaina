@@ -8,6 +8,7 @@
 #include "util/node_geometry.h"
 #include "base/math.h"
 #include "config/editor.h"
+#include "action_system/action_system.h"
 
 void Editor::init() {
   update();
@@ -117,7 +118,7 @@ void Editor::rotate(float degrees, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.rotate(degrees, node);
+  desaina->actionSystem->rotate(degrees, node);
 
 }
 
@@ -126,7 +127,7 @@ void Editor::resize(float width, float height, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.resize(width, height, node);
+  desaina->actionSystem->resize(width, height, node);
 }
 
 void Editor::translate(float x, float y, std::optional<GUID> id) {
@@ -134,7 +135,7 @@ void Editor::translate(float x, float y, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.translate(x, y, node);
+  desaina->actionSystem->translate(x, y, node);
 }
 
 void Editor::setRotatation(float degrees, std::optional<GUID> id) {
@@ -142,7 +143,7 @@ void Editor::setRotatation(float degrees, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.setRotate(degrees, node);
+  desaina->actionSystem->setRotate(degrees, node);
 }
 
 void Editor::setSize(float width, float height, std::optional<GUID> id) {
@@ -150,7 +151,7 @@ void Editor::setSize(float width, float height, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.setSize(width, height, node);
+  desaina->actionSystem->setSize(width, height, node);
 }
 
 void Editor::setTranslate(float x, float y, std::optional<GUID> id) {
@@ -158,7 +159,7 @@ void Editor::setTranslate(float x, float y, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.setTranslate(x, y, node);
+  desaina->actionSystem->setTranslate(x, y, node);
 }
 
 void Editor::setTranslateX(float x, std::optional<GUID> id) {
@@ -167,7 +168,7 @@ void Editor::setTranslateX(float x, std::optional<GUID> id) {
     return;
   }
   auto matrix = util::getWorldMatrix(node, &desaina->document);
-  desaina->actionSystem.setTranslate(x, matrix.getTranslateY(), node);
+  desaina->actionSystem->setTranslate(x, matrix.getTranslateY(), node);
 }
 
 void Editor::setTranslateY(float y, std::optional<GUID> id) {
@@ -176,7 +177,7 @@ void Editor::setTranslateY(float y, std::optional<GUID> id) {
     return;
   }
   auto matrix = util::getWorldMatrix(node, &desaina->document);
-  desaina->actionSystem.setTranslate(matrix.getTranslateX(), y, node);
+  desaina->actionSystem->setTranslate(matrix.getTranslateX(), y, node);
 }
 
 void Editor::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
@@ -184,7 +185,7 @@ void Editor::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
   if (!node) {
     return;
   }
-  desaina->actionSystem.setTransform(transform, node);
+  desaina->actionSystem->setTransform(transform, node);
 }
 
 void Editor::updateHitNodes(const vector<EditorHitNode*>& nodes, std::function<bool(EditorHitNode*, EditorHitNode*)> isSameHitNode) {

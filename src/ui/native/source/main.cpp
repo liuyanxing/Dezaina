@@ -63,7 +63,7 @@ int main() {
   int drawable_width, drawable_height;
   SDL_GL_GetDrawableSize(window, &drawable_width, &drawable_height);
   auto devicePixelRatio = drawable_width / (float)width;
-  desaina.eventSystem.dispatchWindowResizeEvent(width, height, devicePixelRatio);
+  desaina.eventSystem->dispatchWindowResizeEvent(width, height, devicePixelRatio);
 
 	while (!done) {
 		// Poll and handle events (inputs, window resize, etc.)

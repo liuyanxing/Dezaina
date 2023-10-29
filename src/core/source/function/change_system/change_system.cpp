@@ -11,7 +11,7 @@ void ChangeSystem::convertActionsToChange(const vector<ActionPtr>& actions) {
     addChangingItem(action.get());
     processAction(action.get());
   }
-  desaina_->actionSystem.clearActions();
+  desaina_->actionSystem->clearActions();
 }
 
 void ChangeSystem::processAction(const Action *action) {
@@ -55,7 +55,7 @@ void ChangeSystem::addChangingItem(const Action *action) {
 }
 
 void ChangeSystem::tick() {
-  const auto& actions = desaina_->actionSystem.getActions();
+  const auto& actions = desaina_->actionSystem->getActions();
   if (actions.empty()) {
     return;
   }

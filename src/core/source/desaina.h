@@ -3,8 +3,6 @@
 #include "base_type.h"
 #include "desaina_node.h"
 #include "document.h"
-#include "edit_system/edit_system.h"
-#include "edit_system/editor/editor.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "include/core/SkPath.h"
@@ -16,14 +14,18 @@
 #include "services/blob_service.h"
 #include "services/id_generator.h"
 #include "services/services.h"
-#include "event_system/event_system.h"
-#include "render_system/render_system.h"
 #include "system/system.h"
-#include "viewport_system/viewport_system.h"
-#include "action_system/action_system.h"
-#include "change_system/change_system.h"
-#include "edit_system/edit_system.h"
 #include "types/cursor.h"
+#include "util/node_geometry.h"
+
+class EventSystem;
+class RenderSystem;
+class ViewPortSystem;
+class SelectSystem;
+class ActionSystem;
+class ChangeSystem;
+class EditSystem;
+class CreateSystem;
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -52,16 +54,7 @@ class Desaina : public EventEmitter {
 		~Desaina() = default;
 		void tick();
 
-		bool loadDocument(kiwi::ByteBuffer& buffer) {
-			bool is_loaded = changeSystem.processMessage(buffer);
-			if (!is_loaded) {
-				return false;
-			}
-			document.setLoaded(true);
-			document.buildDocTree();
-			document.builPath();
-			return true;
-		};
+		bool loadDocument(kiwi::ByteBuffer& buffer);
 
     void buildEvents();
     void addSystems();
@@ -103,14 +96,14 @@ class Desaina : public EventEmitter {
 
 		Services services;
 		Document document;
-    EventSystem eventSystem{this};
-		RenderSystem renderSystem{this};
-		ViewPortSystem viewPortSystem{this};
-    SelectSystem selectSystem{this};
-  	ActionSystem actionSystem{};
-  	ChangeSystem changeSystem{this};
-    EditSystem editSystem{this};
-    Editor* editor = nullptr;
+    shared_ptr<EventSystem> eventSystem = nullptr;
+		shared_ptr<RenderSystem> renderSystem = nullptr;
+		shared_ptr<ViewPortSystem> viewPortSystem = nullptr;
+    shared_ptr<SelectSystem> selectSystem = nullptr;
+  	shared_ptr<ActionSystem> actionSystem = nullptr;
+  	shared_ptr<ChangeSystem> changeSystem = nullptr;
+    shared_ptr<EditSystem> editSystem = nullptr;
+    shared_ptr<CreateSystem> createSystem = nullptr;
 	private:
     void remapBlobId();
 		uint32_t sessionId_ = 0;

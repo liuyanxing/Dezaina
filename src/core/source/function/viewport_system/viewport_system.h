@@ -37,6 +37,15 @@ public:
     return point;
   }
 
+  float mapScreenToWorld(float length) {
+    SkPoint point;
+    SkMatrix inverse;
+    if (world_screen_matrix_.invert(&inverse)) {
+      inverse.mapXY(1, 0, &point);
+    }
+    return point.length() * length;
+  }
+
 private:
   Desaina *desaina_;
 	SkMatrix view_matrix_;

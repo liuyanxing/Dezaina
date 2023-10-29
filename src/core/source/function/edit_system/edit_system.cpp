@@ -7,9 +7,10 @@
 #include <iostream>
 #include "edit_system/editor/rectangle_node_editor.h"
 #include "util/skia.h"
+#include "select_system/select_system.h"
 
 void EditSystem::bindEvents() {
-  desaina_->selectSystem.addEventListener(EventType::kSelectionChange, [this](Event* event) {
+  desaina_->selectSystem->addEventListener(EventType::kSelectionChange, [this](Event* event) {
     setEditorBySelection();
   });
   

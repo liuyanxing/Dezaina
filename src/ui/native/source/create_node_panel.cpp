@@ -6,20 +6,16 @@
 #include "desaina.h"
 #include "function/change/desaina_change.h"
 #include "kiwi.h"
+#include "function/creaet_system/create_system.h"
 
 void CreateNodePanel(Desaina* desaina) {
 	ImGui::Begin("Create Node");
 
 	if (ImGui::Button("Rect")) {
-		kiwi::ByteBuffer buffer;
-		desaina_change::createNodeChangeMessage(NodeType::RECTANGLE, buffer, desaina);	
-		// desaina->processMessage(buffer);
+    desaina->createSystem->startCreating();
 	}
 
 	if (ImGui::Button("Frame")) {
-		kiwi::ByteBuffer buffer;
-		desaina_change::createNodeChangeMessage(NodeType::FRAME, buffer, desaina);	
-		// desaina->processMessage(buffer);
 	}
 
 	ImGui::End();

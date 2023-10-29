@@ -5,6 +5,7 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "select_system/selection.h"
+#include "render_system/render_system.h"
 #include <iostream>
 
 void SelectSystem::buildEvents() {
@@ -26,7 +27,7 @@ void SelectSystem::handleMouseMove(Event* event) {
     SkPaint paint;
     paint.setColor(SK_ColorWHITE);
     for (auto& node : nodes) {
-      if (desaina_->renderSystem.readColorAtPointOfNode(node, mouseEvent->x, mouseEvent->y, {paint}) != 0) {
+      if (desaina_->renderSystem->readColorAtPointOfNode(node, mouseEvent->x, mouseEvent->y, {paint}) != 0) {
         desaina_->document.setHoverNode(node);
         break;
       }
