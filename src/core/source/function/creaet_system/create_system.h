@@ -6,6 +6,7 @@
 #include "node_type.h"
 #include "system/system.h"
 #include <string>
+#include "desaina.h"
 
 class Desaina;
 
@@ -21,10 +22,16 @@ class CreateSystem : public System {
   void init();
   void bindEvents();
 
-  void startCreating() {};
+  template<typename T>
+  void startCreating() {
+    // todo: check if creating_node_ is nullptr if not nullptr, delete it
+    if (creating_node_ != nullptr) {
+    }
+    creating_node_ = desaina_->document.createNode<T>();
+  };
   
  private:
   void handleMouseDrag(MouseEvent* event);
   Desaina* desaina_;
-  shared_ptr<Node> creating_node_type_;
+  Node* creating_node_;
 };

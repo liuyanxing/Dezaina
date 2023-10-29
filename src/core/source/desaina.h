@@ -48,8 +48,8 @@ class Desaina : public EventEmitter {
 			sessionId_(option.sessionId),
 			services({std::make_unique<IdGenerator>(option.sessionId), std::make_unique<BlobService>()}),
 			document(&services) {
-        buildEvents();
         addSystems();
+        buildEvents();
       };
 		~Desaina() = default;
 		void tick();
@@ -57,6 +57,8 @@ class Desaina : public EventEmitter {
 		bool loadDocument(kiwi::ByteBuffer& buffer);
 
     void buildEvents();
+    template<typename T, typename N>
+    void registerSystem(N** desainaSystem);
     void addSystems();
 
 		bool encode(kiwi::ByteBuffer& buffer);
@@ -96,14 +98,14 @@ class Desaina : public EventEmitter {
 
 		Services services;
 		Document document;
-    shared_ptr<EventSystem> eventSystem = nullptr;
-		shared_ptr<RenderSystem> renderSystem = nullptr;
-		shared_ptr<ViewPortSystem> viewPortSystem = nullptr;
-    shared_ptr<SelectSystem> selectSystem = nullptr;
-  	shared_ptr<ActionSystem> actionSystem = nullptr;
-  	shared_ptr<ChangeSystem> changeSystem = nullptr;
-    shared_ptr<EditSystem> editSystem = nullptr;
-    shared_ptr<CreateSystem> createSystem = nullptr;
+    EventSystem* eventSystem = nullptr;
+		RenderSystem* renderSystem = nullptr;
+		ViewPortSystem* viewPortSystem = nullptr;
+    SelectSystem* selectSystem = nullptr;
+  	ActionSystem* actionSystem = nullptr;
+  	ChangeSystem* changeSystem = nullptr;
+    EditSystem* editSystem = nullptr;
+    CreateSystem* createSystem = nullptr;
 	private:
     void remapBlobId();
 		uint32_t sessionId_ = 0;

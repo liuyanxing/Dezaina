@@ -12,7 +12,7 @@ void CreateNodePanel(Desaina* desaina) {
 	ImGui::Begin("Create Node");
 
 	if (ImGui::Button("Rect")) {
-    desaina->createSystem->startCreating();
+    desaina->createSystem->startCreating<RectangleNode>();
 	}
 
 	if (ImGui::Button("Frame")) {

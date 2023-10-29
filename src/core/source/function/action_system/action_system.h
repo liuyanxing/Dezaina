@@ -2,6 +2,7 @@
 
 #include "action_system/action.h"
 #include "base_type.h"
+#include "event_system/event_system.h"
 #include "include/core/SkMatrix.h"
 #include "node_type.h"
 #include "system/system.h"
@@ -10,7 +11,7 @@ using ActionPtr = shared_ptr<Action>;
 
 class ActionSystem : public System {
  public:
-  ActionSystem() {};
+  ActionSystem(Desaina*) {};
   ~ActionSystem() = default;
   void tick() override {};
   void addAction(ActionPtr&& action) { actions_.push_back(std::move(action)); };

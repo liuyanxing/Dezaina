@@ -14,8 +14,14 @@
 #include "desaina_node.h"
 #include "util/node_geometry.h"
 #include "desaina.h"
+
+#include "event_system/event_system.h"
 #include "change_system/change_system.h"
 #include "viewport_system/viewport_system.h"
+#include "creaet_system/create_system.h"
+#include "edit_system/edit_system.h"
+#include "action_system/action_system.h"
+#include "render_system/render_system.h"
 
 bool Desaina::loadDocument(kiwi::ByteBuffer &buffer) {
   bool is_loaded = changeSystem->processMessage(buffer);
@@ -52,7 +58,22 @@ void Desaina::buildEvents() {
   });
 }
 
+template<typename T, typename N>
+void Desaina::registerSystem(N** desainaSystem) {
+  // todo destruct
+  auto* system = new T(this);
+  systems_.push_back(system);
+  *desainaSystem = system;
+}
+
 void Desaina::addSystems() {
+	registerSystem<EventSystem>(&eventSystem);
+  registerSystem<SelectSystem>(&selectSystem);
+  registerSystem<ViewPortSystem>(&viewPortSystem);
+  registerSystem<EditSystem>(&editSystem);
+  registerSystem<ActionSystem>(&actionSystem);
+  registerSystem<ChangeSystem>(&changeSystem);
+  registerSystem<RenderSystem>(&renderSystem);
 }
 
 void Desaina::tick() {
