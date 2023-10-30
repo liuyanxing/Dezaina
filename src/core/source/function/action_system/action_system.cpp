@@ -1,5 +1,6 @@
 #include "action_system.h"
 #include "UpdatePropertiesAction.h"
+#include "create_delete_action.h"
 #include "util/node_geometry.h"
 
 void ActionSystem::rotate(float deltaRotation, const Node* node) {
@@ -35,6 +36,6 @@ void ActionSystem::setTransform(const SkMatrix& transform, const Node* node) {
   addAction(UpdatePropertiesAction::MakeSetTransform(transform, node));
 }
 
-void ActionSystem::createNode(const Node *node) {
-
+void ActionSystem::createNode(const Node* node, const Node* parent, const Node* before) {
+  addAction(CreateDeleteAction::MakeCreate(node, parent, before));
 }

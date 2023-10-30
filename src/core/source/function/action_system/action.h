@@ -3,6 +3,8 @@
 enum class ActionType {
   kNone,
   kUpdateProperties,
+  kCreate,
+  kDelete,
 };
 
 struct Action {

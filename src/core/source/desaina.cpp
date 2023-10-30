@@ -74,6 +74,7 @@ void Desaina::addSystems() {
   registerSystem<ActionSystem>(&actionSystem);
   registerSystem<ChangeSystem>(&changeSystem);
   registerSystem<RenderSystem>(&renderSystem);
+  registerSystem<CreateSystem>(&createSystem);
 }
 
 void Desaina::tick() {
