@@ -2,9 +2,11 @@
 
 #include "action.h"
 #include "base_type.h"
+#include "buffer.h"
 #include "desaina_node.h"
 #include "include/core/SkMatrix.h"
 #include "node_type.h"
+#include "services/blob_service.h"
 #include "util/node_props.h"
 #include "util/skia.h"
 #include "util/node_geometry.h"
@@ -15,8 +17,9 @@ enum class PropertyType  {
   kSize,
   kResizeDelta,
   kRotation,
+  kVectorData,
 };
-using PropertyValue = variant<float, int, Vector, Matrix>;
+using PropertyValue = variant<float, int, Vector, Matrix, Blob*>;
 
 struct UpdatePropertiesAction : public Action {
   UpdatePropertiesAction(GUID id, const PropertyType& property_type, const PropertyValue& property_value) : 
@@ -28,6 +31,11 @@ struct UpdatePropertiesAction : public Action {
 
   static auto Make(const GUID id, const PropertyType& property_type, const PropertyValue& property_value) {
     auto action = make_shared<UpdatePropertiesAction>(id, property_type, property_value);
+    return action;
+  }
+
+  static auto Make(const GUID id, const PropertyType& property_type, const PropertyValue&& property_value) {
+    auto action = make_shared<UpdatePropertiesAction>(id, property_type, std::move(property_value));
     return action;
   }
 

@@ -1,13 +1,17 @@
 #pragma once
+
 #include "base_type.h"
-#include "buffer.h"
-#include "desaina_node.h"
-#include "include/core/SkPoint.h"
+#include "include/core/SkPath.h"
 #include "services/blob_service.h"
+#include "desaina_node.h"
 #include "src/base/SkArenaAlloc.h"
 #include <array>
+#include <memory>
+#include <vector>
 
-namespace VectorEditor {
+using ArenaAlloc = SkArenaAlloc;
+
+namespace node {
   class Segment;
   class Path;
   class Vertex : public Vector {
@@ -31,6 +35,10 @@ namespace VectorEditor {
 
     void setStyleID(int styleID) {
       styleID_ = styleID;
+    }
+
+    int styleID() {
+      return styleID_;
     }
 
   
@@ -79,12 +87,16 @@ namespace VectorEditor {
       return tangentOffset.x != 0 || tangentOffset.y != 0;
     }
 
-    Vector* getVertex() {
+    Vertex* getVertex() {
       return vertex_;
     }
 
     Segment* segment() {
       return segment_;
+    }
+
+    void setSegment(Segment* segment) {
+      segment_ = segment;
     }
 
     void setNext(SegmentVertex* next) {
@@ -112,6 +124,8 @@ namespace VectorEditor {
     void setVertices(SegmentVertex* v0, SegmentVertex* v1) {
       vertices[0] = v0;
       vertices[1] = v1;
+      v0->setSegment(this);
+      v1->setSegment(this);
     }
 
     void setVertex(SegmentVertex* vertex) {
@@ -120,6 +134,7 @@ namespace VectorEditor {
       } else {
         vertices[1] = vertex;
       }
+      vertex->setSegment(this);
     }
 
     auto& getVerticies() {
@@ -151,32 +166,69 @@ namespace VectorEditor {
     }
   private:
       std::array<SegmentVertex*, 2> vertices;
-      Segment* prev;
-      Segment* next;
-      Path* path;
+      int id = nextID++;
+      inline static int nextID = 0;
   };
+
   class Network {
   public:
     Network() = default;
     Network(vector<Vertex*>&& vertecies, vector<Segment*>&& segments) {
-      this->vertecies = std::move(vertecies);
-      this->segments = std::move(segments);
+      this->vertecies_ = std::move(vertecies);
+      this->segments_ = std::move(segments);
     }
-    vector<Vertex*>& getVertecies() {
-      return vertecies;
+    Network(const Blob& blob, ArenaAlloc& arena);
+    Network(Network&& that) {
+      *this = std::move(that);
     }
-    vector<Segment*>& getSegments() {
-      return segments;
+    Network& operator=(Network&& that) {
+      vertecies_ = std::move(that.vertecies_);
+      segments_ = std::move(that.segments_);
+      return *this;
+    }
+    vector<Vertex*>* getVertecies() {
+      return &vertecies_;
+    }
+    vector<Segment*>* getSegments() {
+      return &segments_;
     }
     bool empty() {
-      return vertecies.empty() && segments.empty();
+      return vertecies_.empty() && segments_.empty();
     }
     private:
-      vector<Vertex*> vertecies;
-      vector<Segment*> segments;
+      vector<Vertex*> vertecies_;
+      vector<Segment*> segments_;
   };
+
+  struct CycleVertex {
+    SegmentVertex* vertex;
+    SkPath path;
+    vector<CycleVertex> cycle;
+    bool operator==(const CycleVertex& other) const {
+      return vertex == other.vertex;
+    }
+  };
+
+  struct ContourCycles {
+    vector<CycleVertex> cycles;
+  };
+
+  struct VectorDecodedData : BlobAttachment {
+    VectorDecodedData(const shared_ptr<SkArenaAlloc>& alloc, Network* network, vector<CycleVertex>* cycles, SkPath* path) {
+      this->alloc = alloc;
+      this->network = network;
+      this->cycles = cycles;
+      this->path = path;
+    }
+    shared_ptr<SkArenaAlloc> alloc = nullptr;
+    Network* network = nullptr;
+    vector<CycleVertex>* cycles = nullptr;
+    SkPath* path;
+  };
+
+  VectorDecodedData decodeVectorData(const Blob* blob);
 }
 
-using ArenaAlloc = SkArenaAlloc;
-VectorEditor::Network buildNetworkFromBlob(const Blob& buffer, ArenaAlloc& arena);
-
+namespace util {
+  Buffer network2Buffer(node::Network& network);
+}

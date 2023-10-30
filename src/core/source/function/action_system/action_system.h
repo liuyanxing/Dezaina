@@ -1,13 +1,12 @@
 #pragma once
 
+#include "action_system/UpdatePropertiesAction.h"
 #include "action_system/action.h"
 #include "base_type.h"
 #include "event_system/event_system.h"
 #include "include/core/SkMatrix.h"
 #include "node_type.h"
 #include "system/system.h"
-
-using ActionPtr = shared_ptr<Action>;
 
 class ActionSystem : public System {
  public:
@@ -18,6 +17,7 @@ class ActionSystem : public System {
   const vector<ActionPtr>& getActions() const { return actions_; };
   void clearActions() { actions_.clear(); };
 
+  void updateProperty(const PropertyType& propertyType, const PropertyValue&& propertyValue, const Node* node);
   void rotate(float deltaRotation, const Node* node);
   void setRotate(float degrees, const Node* node);
   void translate(float deltaX, float deltaY, const Node* node);
