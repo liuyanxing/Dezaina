@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base_type.h"
+#include "node_type.h"
 enum class ActionType {
   kNone,
   kUpdateProperties,
@@ -9,9 +10,10 @@ enum class ActionType {
 };
 
 struct Action {
-  Action(ActionType type) : type(type) {};
+  Action(ActionType type, Node* n = nullptr) : type(type), node(n) {};
   virtual ~Action() = default;
   const ActionType type;
+  Node* node = nullptr;
 };
 
 using ActionPtr = shared_ptr<Action>;

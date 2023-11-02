@@ -11,23 +11,22 @@
 #include "util/node_geometry.h"
 
 struct CreateDeleteAction : public Action {
-  CreateDeleteAction(const Node* node, const Node* parent, const Node* before, ActionType actionType) : 
-    node(node), parent(parent), before(before), Action(actionType) {};
+  CreateDeleteAction(Node* n, Node* b, ActionType actionType) : 
+    node(n), before(b), Action(actionType, n) {};
   
-  const Node* node;
-  const Node* parent;
-  const Node* before;
+  Node* node;
+  Node* before;
 
-  static auto Make(const Node* node, const Node* parent, const Node* before, ActionType actionType) {
-    auto action = make_shared<CreateDeleteAction>(node, parent, before, actionType);
+  static auto Make(Node* node, Node* before, ActionType actionType) {
+    auto action = make_shared<CreateDeleteAction>(node, before, actionType);
     return action;
   }
 
-  static auto MakeCreate(const Node* node, const Node* parent, const Node* before) {
-    return Make(node, parent, before, ActionType::kCreate);
+  static auto MakeCreate(Node* node, Node* before) {
+    return Make(node, before, ActionType::kCreate);
   }
 
-  static auto MakeDelete(const Node* node) {
-    return Make(node, nullptr, nullptr, ActionType::kDelete);
+  static auto MakeDelete(Node* node) {
+    return Make(node, nullptr, ActionType::kDelete);
   }
 };

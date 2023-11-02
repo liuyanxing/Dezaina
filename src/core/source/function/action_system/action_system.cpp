@@ -40,6 +40,6 @@ void ActionSystem::setTransform(const SkMatrix& transform, const Node* node) {
   addAction(UpdatePropertiesAction::MakeSetTransform(transform, node));
 }
 
-void ActionSystem::createNode(const Node* node, const Node* parent, const Node* before) {
-  addAction(CreateDeleteAction::MakeCreate(node, parent, before));
+void ActionSystem::createNode(Node* node, Node* before) {
+  addAction(CreateDeleteAction::MakeCreate(node, before));
 }

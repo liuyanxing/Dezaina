@@ -14,6 +14,7 @@
 #include "config/editor.h"
 #include <iostream>
 #include <variant>
+#include "action_system/action_system.h"
 
 void VectorNodeEditor::init() {
   bindEvents();
@@ -168,5 +169,5 @@ void VectorNodeEditor::handleDrag(MouseEvent *event) {
     }
   }
   auto blobPair = desaina_->addBlob(util::network2Buffer(network_));
-  desaina_->actionSystem.updateProperty(PropertyType::kVectorData, blobPair.second, node_);
+  desaina_->actionSystem->updateProperty(PropertyType::kVectorData, blobPair.second, node_);
 }

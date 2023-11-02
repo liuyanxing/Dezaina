@@ -9,7 +9,7 @@ void processVectorData(ChangeSystem* changeSystem, const UpdatePropertiesAction&
   auto* blob = std::get<Blob*>(action.propertyValue);
   auto changeItem = changeSystem->getChangingItem(action.node_id);
   auto* pool = changeSystem->pool();
-  auto* changeNode = changeItem->changeNode;
+  auto* changeNode = changeItem->nodeChange;
   VectorData vectorData;
   vectorData.vectorNetworkBlob = changeSystem->addBlob(blob);
   changeNode->set_vectorData(vectorData.toChange(*pool));

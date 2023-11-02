@@ -16,11 +16,14 @@ void ChangeSystem::applyActions(const vector<ActionPtr>& actions) {
 
 void ChangeSystem::processAction(const Action *action) {
   for (auto& proc : action_procs_) {
+    if (!proc->shouldProcess(action)) {
+      continue;
+    }
     proc->process(action);
   }
 }
 
-void ChangeSystem::addChangingItem(const Action *action) {
+void ChangeSystem::addChangingItem(Action *action) {
   std::optional<GUID> id;
   switch (action->type) {
     case ActionType::kUpdateProperties:
@@ -29,16 +32,21 @@ void ChangeSystem::addChangingItem(const Action *action) {
     default:
       break;
   }
+  if (action->node != nullptr) {
+    id = action->node->get_guid();
+  } else {
+    action->node = desaina_->document.getNodeById(id.value()).value();
+  }
   if (id.has_value()) {
     auto& nodeId = id.value();
     auto node = desaina_->document.getNodeById(nodeId);
-    if (!node.has_value() || changing_items_.find(id.value()) != changing_items_.end()) {
+    if (changing_items_.find(id.value()) != changing_items_.end()) {
       return;
     }
     auto* changeNode = change_pool_.allocate<Desaina_Kiwi::NodeChange>();
     changeNode->set_guid(nodeId.toChange(change_pool_));
     
-    changing_items_[id.value()] = ChangeItem::Make(appendLayoutNode(node.value()), changeNode);
+    changing_items_[id.value()] = ChangeItem::Make(appendLayoutNode(action->node), changeNode);
   }
 }
 
@@ -60,11 +68,8 @@ void ChangeSystem::tick() {
   for (auto& changeItemPair : changing_items_) {
     auto& guid = changeItemPair.first;
     auto& changeItem = changeItemPair.second;
-    auto& changeNode = *changeItem.changeNode;
+    auto& changeNode = *changeItem.nodeChange;
     auto node = desaina_->document.getNodeById(guid);
-    if (!node.has_value()) {
-      continue;
-    }
     if (changeItem.isFillGeometryDirty) {
       auto blobPair = util::buildFillGeometry(changeItem.layoutNode, desaina_);
       int blobIndex = addBlob(blobPair.second);

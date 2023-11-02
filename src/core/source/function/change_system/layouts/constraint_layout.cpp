@@ -28,9 +28,9 @@ bool ConstraintLayout::processUpdatePropertiesAction(const UpdatePropertiesActio
 
 void ConstraintLayout::hanldeTransfrom(const UpdatePropertiesAction *action, kiwiPool &pool) {
   auto changeItem = desaina_->changeSystem->getChangingItem(action->node_id);
-  auto* changeNode = changeItem->changeNode;
+  auto* nodeChange = changeItem->nodeChange;
   auto transform = get<Matrix>(action->propertyValue);
-  changeNode->set_transform(transform.toChange(pool));
+  nodeChange->set_transform(transform.toChange(pool));
 }
 
 void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPool &pool) {
@@ -39,7 +39,7 @@ void ConstraintLayout::hanldeResize(const UpdatePropertiesAction *action, kiwiPo
   auto& layoutNode = changeItem->layoutNode;
   layoutNode->size = size;
 
-  auto* nodeChange = changeItem->changeNode;
+  auto* nodeChange = changeItem->nodeChange;
   nodeChange->set_size(size.toChange(pool));
   changeItem->isFillGeometryDirty = true;
   changeItem->isStrokeGeometryDirty = true;
@@ -52,7 +52,7 @@ void ConstraintLayout::hanldeResizeDelta(const UpdatePropertiesAction *action, k
   layoutNode->size.x += deltaSize.x;
   layoutNode->size.y += deltaSize.y;
 
-  auto* nodeChange = changeItem->changeNode;
+  auto* nodeChange = changeItem->nodeChange;
   nodeChange->set_size(layoutNode->size.toChange(pool));
   changeItem->isFillGeometryDirty = true;
   changeItem->isStrokeGeometryDirty = true;

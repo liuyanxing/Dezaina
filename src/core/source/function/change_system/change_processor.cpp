@@ -133,13 +133,15 @@ Node* ChangeProcessor::applyNodeChange(const Desaina_Kiwi::NodeChange &node_chan
 				assert(false);
 				break;
 		}
-		document.addNodeToMap(node);
 	} else {
 		node = node_or_null.value();
 	}
 
 	node->applyChange(node_change);
 	message_nodes_.push_back(node);
+  if (!node_or_null.has_value()) {
+    document.addNode(node);
+  }
   return node;
 }
 

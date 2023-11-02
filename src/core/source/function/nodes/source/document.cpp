@@ -1,7 +1,9 @@
 #include "node_type.h"
 #include "document.h"
 #include "page.h"
+#include "util/node_container.h"
 #include "util/node_create.h"
+#include <cassert>
 #include <iostream>
 
 void Document::buildDocTree() {
@@ -84,7 +86,18 @@ vector<Node*> Document::getSelectedNodes() const {
   return nodes;
 };
  
-Node* Document::cloneNodeDeep(Node *node) {
+Node* Document::cloneNodeDeep(Node* node) {
   auto* clone = util::cloneNodeDeep(node, *this);
   return clone;
+}
+
+void Document::addNode(Node* node) {
+  addNodeToMap(node);
+  if (isLoaded_) {
+    auto parent = getNodeById(node->get_parentIndex().guid);
+    if (!parent.has_value()) {
+      return;
+    }
+    util::appendChild(parent.value(), node);
+  }
 }

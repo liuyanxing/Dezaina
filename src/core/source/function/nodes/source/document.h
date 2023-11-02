@@ -83,6 +83,7 @@ public:
 		auto guid = node->get_guid();
 		idNodeMap_[guid] = node;
 	}
+  void addNode(Node*);
 
 	void createDefaultFile();
 	void encode(Desaina_Kiwi::Message& message, kiwi::MemoryPool& pool);

@@ -57,7 +57,7 @@ int main() {
 	// Main loop
 	bool done = false;
 
-	Desaina desaina{{0}};
+	Desaina desaina{{6}};
   bindEvents(desaina);
 
   int drawable_width, drawable_height;

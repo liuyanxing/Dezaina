@@ -17,12 +17,13 @@
 #include <vector>
 #include "layouts/layout_node.h"
 #include "change_system/action_processor/update_properties_processor.h"
+#include "change_system/action_processor/create_delete_processor.h"
 
 using LayoutPtr = shared_ptr<Layout>;
 
 struct ChangeItem {
   LayoutNode* layoutNode = nullptr;
-  NodeChange* changeNode = nullptr;
+  NodeChange* nodeChange = nullptr;
   bool isFillGeometryDirty;
   bool isStrokeGeometryDirty;
   
@@ -35,6 +36,7 @@ class ChangeSystem : public System {
  public:
   ChangeSystem(Desaina* desaina) : desaina_(desaina) {
     action_procs_.push_back(std::make_shared<UpdatePropertiesActionProc>(this));
+    action_procs_.push_back(std::make_shared<CreateDeleteActionProc>(this));
   };
   ~ChangeSystem() = default;
 
@@ -56,7 +58,7 @@ class ChangeSystem : public System {
   int addBlob(const Blob* blob);
   
  private:
-  void addChangingItem(const Action* action);
+  void addChangingItem(Action* action);
   void applyActions(const vector<ActionPtr>& actions);
   void processAction(const Action* action);
   void processAction(const UpdatePropertiesAction* action);
