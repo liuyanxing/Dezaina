@@ -16,10 +16,10 @@ class EditSystem : public System {
   };
   ~EditSystem() = default;
  
-  Editor* getEditor() {
+  EditorView* getEditor() {
     return editor_.get();
   }
-  void setEditor(std::unique_ptr<Editor>&& editor) {
+  void setEditor(std::unique_ptr<EditorView>&& editor) {
     editor_ = std::move(editor);
     auto event = Event::Builder(EventType::kEditorChagne).build();
     emit(event);
@@ -32,5 +32,5 @@ class EditSystem : public System {
   void setEditorBySelection();
  
   Desaina* desaina_;
-  std::unique_ptr<Editor> editor_;
+  std::unique_ptr<EditorView> editor_;
 };

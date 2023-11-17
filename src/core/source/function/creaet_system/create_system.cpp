@@ -5,7 +5,9 @@
 #include "include/core/SkPoint.h"
 #include "desaina.h"
 #include "action_system/action_system.h"
+#include "util/node_geometry.h"
 #include "util/skia.h"
+#include "util/node_fill.h"
 #include <iostream>
 
 void CreateSystem::init() {
@@ -22,25 +24,34 @@ void CreateSystem::bindEvents() {
 }
 
 void CreateSystem::handleMouseDrag(MouseEvent* event) {
-  if (event->dragDistanceX >= 10 || event->dragDistanceY >= 10) {
+  if (!creating_node_) {
+    return;
+  }
+  auto dragDistanceX = event->dragDistanceX;
+  auto dragDistanceY = event->dragDistanceY;
+  if (dragDistanceX >= 10 || dragDistanceY >= 10) {
     auto* hoverNode = desaina_->document.getHoverNode();
+    auto localX = event->localX - dragDistanceX;
+    auto localY = event->localY - dragDistanceY;
     if (!hoverNode) {
       hoverNode = desaina_->document.getCurrentPage();
+      localX = event->x - dragDistanceX;
+      localY = event->y - dragDistanceY;
     }
     ParentIndex parentIndex;
     parentIndex.guid = hoverNode->get_guid();
     parentIndex.position = "";
     creating_node_->set_parentIndex(parentIndex);
-    auto* defaultShapNode = static_cast<DefaultShapeNode*>(creating_node_);
-    defaultShapNode->set_size({100, 100});
-    SkMatrix matrix;
-    matrix.setTranslate(100, 100);
-    defaultShapNode->set_transform(util::toMatrix(matrix));
     SolidPaint paint;
-    paint.set_color({1, 0, 0, 1});
-    IVector<PaintUnion> paints = { {paint}};
-    defaultShapNode->set_fillPaints(paints);
+    node::setFillPaints(creating_node_, {{node::MakeSolidPaint(1, 0, 0, 1)}});
+    util::setSize(creating_node_, {dragDistanceX, dragDistanceY});
+    util::setTransform(creating_node_, {1, 0, localX, 0, 1, localY});
     desaina_->actionSystem->createNode(creating_node_, nullptr);
+    auto id = creating_node_->get_guid();
+    desaina_->nextTick([this, &id]() {
+      desaina_->selectSystem->setSelectionByIds({id});
+    });
     creating_node_ = nullptr;
   }
 }
+

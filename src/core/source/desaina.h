@@ -8,6 +8,7 @@
 #include "include/core/SkPath.h"
 #include "kiwi.h"
 #include <_types/_uint32_t.h>
+#include <functional>
 #include <memory>
 #include <stdint.h>
 #include "select_system/select_system.h"
@@ -41,6 +42,7 @@ struct WindowInfo {
 
 using BlobReMap = unordered_map<uint32_t, uint32_t>;
 using Systems = vector<System*>;
+using NextTickHandler = std::function<void()>;
 
 class Desaina : public EventEmitter {
 	public:
@@ -53,6 +55,9 @@ class Desaina : public EventEmitter {
       };
 		~Desaina() = default;
 		void tick();
+    void nextTick(const NextTickHandler& nextTickHandler) {
+      nextTickHandlers_.push_back(nextTickHandler);
+    }
 
 		bool loadDocument(kiwi::ByteBuffer& buffer);
 
@@ -113,4 +118,5 @@ class Desaina : public EventEmitter {
     Systems systems_{};
     WindowInfo windowInfo_{};
     uint32_t frameCount = 0;
+    vector<NextTickHandler> nextTickHandlers_{};
 };

@@ -20,7 +20,7 @@ struct BoundEditorHitNode : public EditorHitNode {
 
 class BoundEditor {
 public:
-	BoundEditor(Editor* editor);
+	BoundEditor(EditorView* editor);
 	void init();
 	void update() { hit_nodes_.clear(); bindInteractionArea(); };
   void getPath(SkPath& fillPath, SkPath& strokePath);
@@ -38,7 +38,7 @@ private:
 
 	void addHitNode(EditorHitNodeType type, int index, const SkPoint& direction, const SkRect& rect);
 	
-  Editor* editor_;
+  EditorView* editor_view_;
   SkRect bound_;
   vector<BoundEditorHitNode> hit_nodes_;
 };

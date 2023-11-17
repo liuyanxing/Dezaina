@@ -47,14 +47,14 @@ struct EditorHitNode : public HitTestNode {
   }
 };
 
-class Editor : public EventEmitter {
+class EditorView : public EventEmitter {
 public:
-  Editor(EditorType type, Desaina* desaina) {
+  EditorView(EditorType type, Desaina* desaina) {
     this->desaina = desaina;
     this->type = type;
     init();
   };
-  virtual ~Editor() = default;
+  virtual ~EditorView() = default;
   virtual void update() {
     hit_tester->clear();
     buildEditingNodesBound();

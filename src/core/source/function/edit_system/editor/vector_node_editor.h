@@ -22,9 +22,9 @@ struct ControllerNode : public EditorHitNode {
   }
 };
 
-class VectorNodeEditor : public Editor {
+class VectorNodeEditor : public EditorView {
 public:
-  VectorNodeEditor(Desaina* desaina): desaina_(desaina), Editor(EditorType::kVector, desaina) {
+  VectorNodeEditor(Desaina* desaina): desaina_(desaina), EditorView(EditorType::kVector, desaina) {
     init();
   };
 

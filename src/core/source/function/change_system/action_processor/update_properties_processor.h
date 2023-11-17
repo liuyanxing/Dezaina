@@ -8,12 +8,14 @@
 
 class ChangeSystem;
 
+using UpdatePropertiesProcessor = std::function<bool(ChangeSystem* changeSystem, const UpdatePropertiesAction&)>; 
+
 class UpdatePropertiesActionProc : public ActionProc {
 public:
   UpdatePropertiesActionProc(ChangeSystem* change_system) : ActionProc(change_system) {
     action_types_ = { ActionType::kUpdateProperties };
     processors_.push_back(processVector);
-    // processors_.push_back(processLayout);
+    processors_.push_back(processLayout);
   };
 
   void process(const Action* action) override {
@@ -28,5 +30,5 @@ public:
   }
 
 private:
-  vector<std::function<bool(ChangeSystem* changeSystem, const UpdatePropertiesAction&)> > processors_;
+  vector<UpdatePropertiesProcessor> processors_;
 };

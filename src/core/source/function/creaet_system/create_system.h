@@ -33,5 +33,5 @@ class CreateSystem : public System {
  private:
   void handleMouseDrag(MouseEvent* event);
   Desaina* desaina_;
-  Node* creating_node_;
+  Node* creating_node_ = nullptr;
 };

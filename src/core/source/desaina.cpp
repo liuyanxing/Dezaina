@@ -69,8 +69,8 @@ void Desaina::registerSystem(N** desainaSystem) {
 void Desaina::addSystems() {
 	registerSystem<EventSystem>(&eventSystem);
   registerSystem<SelectSystem>(&selectSystem);
-  registerSystem<ViewPortSystem>(&viewPortSystem);
   registerSystem<EditSystem>(&editSystem);
+  registerSystem<ViewPortSystem>(&viewPortSystem);
   registerSystem<ActionSystem>(&actionSystem);
   registerSystem<ChangeSystem>(&changeSystem);
   registerSystem<RenderSystem>(&renderSystem);
@@ -84,5 +84,9 @@ void Desaina::tick() {
   for (const auto &system : systems_) {
     system->afterTick();
   }
+  for (const auto& nextTickHandler : nextTickHandlers_) {
+    nextTickHandler();
+  }
+  nextTickHandlers_.clear();
   frameCount++;
 }

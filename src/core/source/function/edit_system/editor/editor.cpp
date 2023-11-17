@@ -10,12 +10,12 @@
 #include "config/editor.h"
 #include "action_system/action_system.h"
 
-void Editor::init() {
+void EditorView::init() {
   update();
   bindEvents();
 }
 
-void Editor::bindEvents() {
+void EditorView::bindEvents() {
   addEventListener(EventType::kAny, [this](Event* event) {
     if (event->isMouseEvent()) {
       handleMouseEvent(event);
@@ -23,11 +23,11 @@ void Editor::bindEvents() {
   });
 }
 
-vector<Node*> Editor::getEditingNodes() {
+vector<Node*> EditorView::getEditingNodes() {
   return desaina->document.getSelectedNodes();
 }
 
-void Editor::buildEditingNodesBound() {
+void EditorView::buildEditingNodesBound() {
   auto selectedNodes = getEditingNodes();
   if (selectedNodes.size() == 1) {
     edit_bound_ = util::getLocalBound(selectedNodes[0]);
@@ -44,7 +44,7 @@ void Editor::buildEditingNodesBound() {
   edit_bound_ = {0, 0, bound.width(), bound.height()};
 }
 
-void Editor::handleMouseEvent(Event* event) {
+void EditorView::handleMouseEvent(Event* event) {
   switch (event->type) {
     case EventType::kMouseDown:
       handleMouseDown(event);
@@ -60,7 +60,7 @@ void Editor::handleMouseEvent(Event* event) {
   }
 }
 
-void Editor::handleMouseDown(Event* event) {
+void EditorView::handleMouseDown(Event* event) {
   auto mouseEvent = static_cast<MouseEvent*>(event);
   selected_hit_nodes_.clear();
   if (hover_hit_node_) {
@@ -69,11 +69,11 @@ void Editor::handleMouseDown(Event* event) {
   }
 }
 
-void Editor::handleMouseUp(Event* event) {
+void EditorView::handleMouseUp(Event* event) {
   auto mouseEvent = static_cast<MouseEvent*>(event);
 }
 
-void Editor::handleMouseMove(Event* event) {
+void EditorView::handleMouseMove(Event* event) {
   auto raduis = Config::editorMouseRadius;
   auto mouseEvent = static_cast<MouseEvent*>(event);
   auto localX = mouseEvent->localX;
@@ -86,7 +86,7 @@ void Editor::handleMouseMove(Event* event) {
   }
 }
 
-void Editor::mapEventToLocal(Event* event) {
+void EditorView::mapEventToLocal(Event* event) {
   auto mouseEvent = static_cast<UIEvent*>(event);
   auto selectedNodes = getEditingNodes();
   
@@ -101,7 +101,7 @@ void Editor::mapEventToLocal(Event* event) {
 }
 
 
-Node* Editor::getEditNodeById(const std::optional<GUID>& id) {
+Node* EditorView::getEditNodeById(const std::optional<GUID>& id) {
   if (id.has_value()) {
     auto node = desaina->document.getNodeById(id.value());
     return node.has_value() ? node.value() : nullptr;
@@ -113,7 +113,7 @@ Node* Editor::getEditNodeById(const std::optional<GUID>& id) {
   return nullptr;
 }
 
-void Editor::rotate(float degrees, std::optional<GUID> id) {
+void EditorView::rotate(float degrees, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -122,7 +122,7 @@ void Editor::rotate(float degrees, std::optional<GUID> id) {
 
 }
 
-void Editor::resize(float width, float height, std::optional<GUID> id) {
+void EditorView::resize(float width, float height, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -130,7 +130,7 @@ void Editor::resize(float width, float height, std::optional<GUID> id) {
   desaina->actionSystem->resize(width, height, node);
 }
 
-void Editor::translate(float x, float y, std::optional<GUID> id) {
+void EditorView::translate(float x, float y, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -138,7 +138,7 @@ void Editor::translate(float x, float y, std::optional<GUID> id) {
   desaina->actionSystem->translate(x, y, node);
 }
 
-void Editor::setRotatation(float degrees, std::optional<GUID> id) {
+void EditorView::setRotatation(float degrees, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -146,7 +146,7 @@ void Editor::setRotatation(float degrees, std::optional<GUID> id) {
   desaina->actionSystem->setRotate(degrees, node);
 }
 
-void Editor::setSize(float width, float height, std::optional<GUID> id) {
+void EditorView::setSize(float width, float height, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -154,7 +154,7 @@ void Editor::setSize(float width, float height, std::optional<GUID> id) {
   desaina->actionSystem->setSize(width, height, node);
 }
 
-void Editor::setTranslate(float x, float y, std::optional<GUID> id) {
+void EditorView::setTranslate(float x, float y, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -162,7 +162,7 @@ void Editor::setTranslate(float x, float y, std::optional<GUID> id) {
   desaina->actionSystem->setTranslate(x, y, node);
 }
 
-void Editor::setTranslateX(float x, std::optional<GUID> id) {
+void EditorView::setTranslateX(float x, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -171,7 +171,7 @@ void Editor::setTranslateX(float x, std::optional<GUID> id) {
   desaina->actionSystem->setTranslate(x, matrix.getTranslateY(), node);
 }
 
-void Editor::setTranslateY(float y, std::optional<GUID> id) {
+void EditorView::setTranslateY(float y, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -180,7 +180,7 @@ void Editor::setTranslateY(float y, std::optional<GUID> id) {
   desaina->actionSystem->setTranslate(matrix.getTranslateX(), y, node);
 }
 
-void Editor::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
+void EditorView::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
   auto* node = getEditNodeById(id);
   if (!node) {
     return;
@@ -188,7 +188,7 @@ void Editor::setTransform(const SkMatrix& transform, std::optional<GUID> id) {
   desaina->actionSystem->setTransform(transform, node);
 }
 
-void Editor::updateHitNodes(const vector<EditorHitNode*>& nodes, std::function<bool(EditorHitNode*, EditorHitNode*)> isSameHitNode) {
+void EditorView::updateHitNodes(const vector<EditorHitNode*>& nodes, std::function<bool(EditorHitNode*, EditorHitNode*)> isSameHitNode) {
   auto selectedHitNodes = selected_hit_nodes_;
   selected_hit_nodes_.clear();
   hit_tester->clear();

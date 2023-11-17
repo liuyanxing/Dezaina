@@ -34,7 +34,7 @@ struct ChangeItem {
 
 class ChangeSystem : public System {
  public:
-  ChangeSystem(Desaina* desaina) : desaina_(desaina) {
+  ChangeSystem(Desaina* desaina) : desaina(desaina) {
     action_procs_.push_back(std::make_shared<UpdatePropertiesActionProc>(this));
     action_procs_.push_back(std::make_shared<CreateDeleteActionProc>(this));
   };
@@ -57,20 +57,20 @@ class ChangeSystem : public System {
   kiwi::MemoryPool* pool() { return &change_pool_; }
   int addBlob(const Blob* blob);
   
+  Desaina* desaina;
  private:
   void addChangingItem(Action* action);
   void applyActions(const vector<ActionPtr>& actions);
   void processAction(const Action* action);
   void processAction(const UpdatePropertiesAction* action);
  
-  Desaina* desaina_;
   vector<LayoutPtr> layouts;
   vector<LayoutNode> layout_nodes_;
  
   kiwi::MemoryPool change_pool_;
   NodePool node_pool_{10};
   unordered_map<GUID, ChangeItem> changing_items_;
-  ChangeProcessor change_processor_{desaina_};
+  ChangeProcessor change_processor_{desaina};
   vector<const Blob*> blobs_;
   vector<shared_ptr<ActionProc>> action_procs_;
 };

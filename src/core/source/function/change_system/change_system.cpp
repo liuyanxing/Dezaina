@@ -11,7 +11,7 @@ void ChangeSystem::applyActions(const vector<ActionPtr>& actions) {
     addChangingItem(action.get());
     processAction(action.get());
   }
-  desaina_->actionSystem->clearActions();
+  desaina->actionSystem->clearActions();
 }
 
 void ChangeSystem::processAction(const Action *action) {
@@ -35,11 +35,11 @@ void ChangeSystem::addChangingItem(Action *action) {
   if (action->node != nullptr) {
     id = action->node->get_guid();
   } else {
-    action->node = desaina_->document.getNodeById(id.value()).value();
+    action->node = desaina->document.getNodeById(id.value()).value();
   }
   if (id.has_value()) {
     auto& nodeId = id.value();
-    auto node = desaina_->document.getNodeById(nodeId);
+    auto node = desaina->document.getNodeById(nodeId);
     if (changing_items_.find(id.value()) != changing_items_.end()) {
       return;
     }
@@ -56,7 +56,7 @@ int ChangeSystem::addBlob(const Blob* blob) {
 }
 
 void ChangeSystem::tick() {
-  const auto& actions = desaina_->actionSystem->getActions();
+  const auto& actions = desaina->actionSystem->getActions();
   if (actions.empty()) {
     return;
   }
@@ -69,9 +69,9 @@ void ChangeSystem::tick() {
     auto& guid = changeItemPair.first;
     auto& changeItem = changeItemPair.second;
     auto& changeNode = *changeItem.nodeChange;
-    auto node = desaina_->document.getNodeById(guid);
+    auto node = desaina->document.getNodeById(guid);
     if (changeItem.isFillGeometryDirty) {
-      auto blobPair = util::buildFillGeometry(changeItem.layoutNode, desaina_);
+      auto blobPair = util::buildFillGeometry(changeItem.layoutNode, desaina);
       int blobIndex = addBlob(blobPair.second);
       changeNode.set_fillGeometry(change_pool_, 1)[0].set_commandsBlob(blobIndex);
     }

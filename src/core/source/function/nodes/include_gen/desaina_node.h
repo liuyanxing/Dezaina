@@ -756,7 +756,7 @@ class NodeBase  {
 private:
 
 public:
-	virtual void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {};
+	virtual void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {};
 	virtual void applyChange(const Desaina_Kiwi::NodeChange& change) {};
 	virtual NodeBase* clone(NodeBase* src, NodePool& pool) const { return nullptr; };
 	virtual bool isDocument() { return false; };
@@ -819,6 +819,7 @@ void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_parentIndex, parentIndex, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_name, name, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_type, type, pool);
+	NodeBase::toChange(change, pool);
 }
 
 };
@@ -1215,6 +1216,7 @@ void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_backgroundColor, backgroundColor, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_backgroundOpacity, backgroundOpacity, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_backgroundEnabled, backgroundEnabled, pool);
+	BaseNodeMixin::toChange(change, pool);
 }
 
 };
@@ -1228,6 +1230,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	BaseNodeMixin::toChange(change, pool);
 }
 
 };
@@ -1240,7 +1243,8 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 	DimensionAndPositionMixin::applyChange(change);
 }
 
-void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {
+void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DimensionAndPositionMixin::toChange(change, pool);
 }
 
 };
@@ -1388,6 +1392,7 @@ void toChange(Desaina_Kiwi::Effect& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_visible, visible, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_blendMode, blendMode, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_showShadowBehindNode, showShadowBehindNode, pool);
+	Effect::toChange(change, pool);
 }
 
 };
@@ -1467,6 +1472,7 @@ void toChange(Desaina_Kiwi::Effect& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_spread, spread, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_visible, visible, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_blendMode, blendMode, pool);
+	Effect::toChange(change, pool);
 }
 
 };
@@ -1502,6 +1508,7 @@ void applyChange(const Desaina_Kiwi::Effect& change) {
 void toChange(Desaina_Kiwi::Effect& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_radius, radius, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Effect::set_visible, visible, pool);
+	Effect::toChange(change, pool);
 }
 
 };
@@ -1526,6 +1533,7 @@ void applyChange(const Desaina_Kiwi::Paint& change) {
 
 void toChange(Desaina_Kiwi::Paint& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::Paint::set_color, color, pool);
+	Paint::toChange(change, pool);
 }
 
 };
@@ -1561,6 +1569,7 @@ void applyChange(const Desaina_Kiwi::Paint& change) {
 void toChange(Desaina_Kiwi::Paint& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::Paint::set_transform, transform, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Paint::set_stops, stops, pool);
+	Paint::toChange(change, pool);
 }
 
 };
@@ -1596,6 +1605,7 @@ void applyChange(const Desaina_Kiwi::Paint& change) {
 void toChange(Desaina_Kiwi::Paint& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::Paint::set_imageScaleMode, imageScaleMode, pool);
   toChangeImpl(&change, &Desaina_Kiwi::Paint::set_transform, transform, pool);
+	Paint::toChange(change, pool);
 }
 
 };
@@ -1766,6 +1776,8 @@ void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_strokeCap, strokeCap, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_miterLimit, miterLimit, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_fillGeometry, fillGeometry, pool);
+	MinimalStrokesMixin::toChange(change, pool);
+	MinimalFillsMixin::toChange(change, pool);
 }
 
 };
@@ -1784,6 +1796,12 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	BaseNodeMixin::toChange(change, pool);
+	SceneNodeMixin::toChange(change, pool);
+	ExportMixin::toChange(change, pool);
+	BlendMixin::toChange(change, pool);
+	GeometryMixin::toChange(change, pool);
+	LayoutMixin::toChange(change, pool);
 }
 
 };
@@ -1801,6 +1819,11 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DefaultShapeNode::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
+	CornerMixin::toChange(change, pool);
+	RectangleCornerMixin::toChange(change, pool);
+	IndividualStrokesMixin::toChange(change, pool);
 }
 
 };
@@ -1815,6 +1838,8 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DefaultShapeNode::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
 }
 
 };
@@ -1841,6 +1866,9 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_arcData, arcData, pool);
+	DefaultShapeNode::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
+	CornerMixin::toChange(change, pool);
 }
 
 };
@@ -1867,6 +1895,9 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_count, count, pool);
+	DefaultShapeNode::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
+	CornerMixin::toChange(change, pool);
 }
 
 };
@@ -1893,6 +1924,9 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_count, count, pool);
+	DefaultShapeNode::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
+	CornerMixin::toChange(change, pool);
 }
 
 };
@@ -1919,6 +1953,9 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_vectorData, vectorData, pool);
+	DefaultShapeNode::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
+	CornerMixin::toChange(change, pool);
 }
 
 };
@@ -1965,6 +2002,7 @@ void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_styleID, styleID, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_letterSpacing, letterSpacing, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_lineHeight, lineHeight, pool);
+	DefaultShapeNode::toChange(change, pool);
 }
 
 };
@@ -1978,6 +2016,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DefaultShapeNode::toChange(change, pool);
 }
 
 };
@@ -2030,6 +2069,12 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DefaultShapeNode::toChange(change, pool);
+	CornerMixin::toChange(change, pool);
+	RectangleCornerMixin::toChange(change, pool);
+	EffectMixin::toChange(change, pool);
+	ConstraintMixin::toChange(change, pool);
+	IndividualStrokesMixin::toChange(change, pool);
 }
 
 };
@@ -2043,6 +2088,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	BaseFrameMixin::toChange(change, pool);
 }
 
 };
@@ -2056,6 +2102,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DefaultFrameMixin::toChange(change, pool);
 }
 
 };
@@ -2069,6 +2116,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 }
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
+	DefaultFrameMixin::toChange(change, pool);
 }
 
 };
@@ -2104,6 +2152,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_symbolData, symbolData, pool);
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_derivedSymbolData, derivedSymbolData, pool);
+	DefaultFrameMixin::toChange(change, pool);
 }
 
 };
@@ -2229,6 +2278,7 @@ void applyChange(const Desaina_Kiwi::NodeChange& change) {
 
 void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) const {
   toChangeImpl(&change, &Desaina_Kiwi::NodeChange::set_textData, textData, pool);
+	TextNodeMixin::toChange(change, pool);
 }
 
 };

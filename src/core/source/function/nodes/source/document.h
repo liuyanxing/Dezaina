@@ -6,6 +6,7 @@
 #include <optional>
 #include <functional>
 #include <unordered_map>
+#include <vector>
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "event_system/event_system.h"
@@ -114,11 +115,14 @@ public:
     }
     hover_node_id_ = node->get_guid();
   }
-  void setSelectedNodes(const vector<Node*>& ids) {
+  void setSelectedNodes(const vector<Node*>& nodes) {
     selectedNodes_.clear();
-    for (auto node : ids) {
+    for (auto node : nodes) {
       selectedNodes_.push_back(node->get_guid());
     }
+  }
+  void setSelectedNodeByIds(const vector<GUID>& ids) {
+    selectedNodes_ = ids;
   }
   vector<Node*> getSelectedNodes() const;
 

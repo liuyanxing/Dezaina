@@ -94,6 +94,9 @@ void toChange(Desaina_Kiwi::{{kiwiChangeType}}& change, kiwi::MemoryPool& pool) 
 {{#propsMembers}}
   toChangeImpl(&change, &Desaina_Kiwi::{{kiwiChangeType}}::set_{{name}}, {{name}}, pool);
 {{/propsMembers}}
+{{#kiwiMixins}}
+	{{.}}::toChange(change, pool);
+{{/kiwiMixins}}
 }
 
 {{/kiwiChangeType}}

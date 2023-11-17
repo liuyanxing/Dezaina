@@ -94,7 +94,7 @@ void toChangeImpl(T &change, const U& value, kiwi::MemoryPool& pool) {
 
 template<typename O, typename T, typename R>
 void toChangeImpl(O* obj, kiwi::Array<R>& (O::*setChangeFunc)(kiwi::MemoryPool &pool, uint32_t count), T& value, kiwi::MemoryPool& pool) {
-  auto& changes = (obj->*setChangeFunc)(pool, 10);
+  auto& changes = (obj->*setChangeFunc)(pool, value.size());
   for (int i = 0; i < value.size(); i++) {
     auto& item = value[i];
     auto& change = changes[i];
