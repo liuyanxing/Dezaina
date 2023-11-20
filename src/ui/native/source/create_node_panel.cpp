@@ -1,4 +1,5 @@
 #include "document.h"
+#include "frame.h"
 #include "type_traits"
 
 #include "desaina_node.h"
@@ -16,6 +17,7 @@ void CreateNodePanel(Desaina* desaina) {
 	}
 
 	if (ImGui::Button("Frame")) {
+    desaina->createSystem->startCreating<FrameNode>();
 	}
 
 	ImGui::End();

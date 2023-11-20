@@ -1,6 +1,9 @@
 #include "create_system.h"
 #include "change/change_type.h"
 #include "desaina_node.h"
+#include "edit_system/edit_system.h"
+#include "event_system/event.h"
+#include "event_system/mouse_event.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
 #include "desaina.h"
@@ -48,8 +51,10 @@ void CreateSystem::handleMouseDrag(MouseEvent* event) {
     util::setTransform(creating_node_, {1, 0, localX, 0, 1, localY});
     desaina_->actionSystem->createNode(creating_node_, nullptr);
     auto id = creating_node_->get_guid();
-    desaina_->nextTick([this, &id]() {
+    auto e = *event;
+    desaina_->nextTick([this, id, e]() {
       desaina_->selectSystem->setSelectionByIds({id});
+      desaina_->editSystem->selectCtrlNodeByPoint({e.x, e.y});
     });
     creating_node_ = nullptr;
   }

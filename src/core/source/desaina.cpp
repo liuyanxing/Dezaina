@@ -68,8 +68,8 @@ void Desaina::registerSystem(N** desainaSystem) {
 
 void Desaina::addSystems() {
 	registerSystem<EventSystem>(&eventSystem);
-  registerSystem<SelectSystem>(&selectSystem);
   registerSystem<EditSystem>(&editSystem);
+  registerSystem<SelectSystem>(&selectSystem);
   registerSystem<ViewPortSystem>(&viewPortSystem);
   registerSystem<ActionSystem>(&actionSystem);
   registerSystem<ChangeSystem>(&changeSystem);

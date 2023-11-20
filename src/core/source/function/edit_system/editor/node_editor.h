@@ -8,6 +8,7 @@ class NodeEditor : public EditorView {
 public:
   NodeEditor(Desaina* desaina, EditorType type = EditorType::kNode): EditorView(type, desaina), boundEditor_(this) {
     bindEvents();
+    update();
   };
   virtual ~NodeEditor() = default;
   

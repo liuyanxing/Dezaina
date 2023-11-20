@@ -7,7 +7,7 @@
 
 class RectangleNodeEditor : public NodeEditor {
 public:
-  RectangleNodeEditor(Desaina* desaina): NodeEditor(desaina, EditorType::kRectangel) {};
+  RectangleNodeEditor(Desaina* desaina): NodeEditor(desaina, EditorType::kRectangle) {};
 
   void bindEvents() {}
   

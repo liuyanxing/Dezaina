@@ -76,13 +76,26 @@ void EditorView::handleMouseUp(Event* event) {
 void EditorView::handleMouseMove(Event* event) {
   auto raduis = Config::editorMouseRadius;
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto localX = mouseEvent->localX;
-  auto localY = mouseEvent->localY;
-  auto hitNode = hit_tester->getNodesIntersectWithRect(SkRect::MakeXYWH(localX - raduis, localY - raduis, raduis * 2, raduis * 2));
+  auto x = mouseEvent->x;
+  auto y = mouseEvent->y;
+  hover_hit_node_ = getNodeUnderPoint({x, y});
+}
+
+EditorHitNode* EditorView::getNodeUnderPoint(const SkPoint& point) {
+  auto [x, y] = base::mapPointToLocal(point, edit_transform_);
+  auto raduis = Config::editorMouseRadius;
+  auto hitNode = hit_tester->getNodesIntersectWithRect(SkRect::MakeXYWH(x - raduis, y - raduis, raduis * 2, raduis * 2));
   if (!hitNode.empty()) {
-    hover_hit_node_ = static_cast<EditorHitNode*>(hitNode[0]);
-  } else {
-    hover_hit_node_ = nullptr;
+    return static_cast<EditorHitNode*>(hitNode[0]);
+  } 
+  return nullptr;
+}
+
+void EditorView::setSelectNodeByPoint(const SkPoint &point) {
+  auto hitNode = getNodeUnderPoint(point);
+  if (hitNode) {
+    selected_hit_nodes_.clear();
+    selected_hit_nodes_.push_back(hitNode);
   }
 }
 
