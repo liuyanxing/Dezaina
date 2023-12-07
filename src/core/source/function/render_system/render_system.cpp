@@ -52,6 +52,5 @@ SkColor RenderSystem::readColorAtPointOfNode(const Node* node, float x, float y,
   for (const auto& paint : paints) {
     canvas->drawPath(path, paint);
   }
-  canvas->recordingContext()->asDirectContext();
   return SkColorSetARGB(pixes_[3], pixes_[0], pixes_[1], pixes_[2]);
 }

@@ -6,11 +6,13 @@
 #include "include/gpu/GrBackendSurface.h"
 #include "include/gpu/GrContextOptions.h"
 #include "include/gpu/GrTypes.h"
-#include "include/gpu/gl/GrGLInterface.h"
 #include "include/gpu/GrDirectContext.h"
+#include "include/gpu/gl/GrGLInterface.h"
+#include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/private/gpu/ganesh/GrTypesPriv.h"
 #include "src/gpu/ganesh/gl/GrGLDefines.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
+#include "include/gpu/ganesh/gl/GrGLBackendSurface.h"
 
 
 bool Canvas::createSurface() {
@@ -18,21 +20,20 @@ bool Canvas::createSurface() {
     
     GrContextOptions defaultOptions;
     defaultOptions.fSkipGLErrorChecks = GrContextOptions::Enable::kNo;
-    sk_sp<GrDirectContext> context = GrDirectContext::MakeGL(interface, defaultOptions);
-    // GrBackendRenderTarget backendRenderTarget(width_, height_, 0, 8, GrMockRenderTargetInfo(GrColorType::kRGBA_8888_SRGB, 0));
+    sk_sp<GrDirectContext> context = GrDirectContexts::MakeGL(interface, defaultOptions);
+    GrGLFramebufferInfo info;
+    info.fFBOID = 0;
+    info.fFormat = GR_GL_RGBA8;
+    auto backendRenderTarget = GrBackendRenderTargets::MakeGL(width_, height_, 0, 8, info);
 
-    // surface_ = SkSurface::MakeFromBackendRenderTarget(
-    //     context.get(),
-    //     backendRenderTarget,
-    //     GrSurfaceOrigin::kBottomLeft_GrSurfaceOrigin,
-    //     SkColorType::kRGBA_8888_SkColorType,
-    //     nullptr,
-    //     nullptr
-    //     );
-    // // surface_ = SkSurface::MakeRenderTarget(context.get(), skgpu::Budgeted::kNo, info);
-    SkImageInfo info = SkImageInfo::Make(width_, height_, kRGBA_8888_SkColorType, kPremul_SkAlphaType);
-    // SkImageInfo info = SkImageInfo::MakeN32Premul(width_, height_);
-    surface_ = SkSurfaces::RenderTarget(context.get(), skgpu::Budgeted::kNo, info, 0, nullptr);
+    surface_ = SkSurfaces::WrapBackendRenderTarget(
+        context.get(),
+        backendRenderTarget,
+        GrSurfaceOrigin::kBottomLeft_GrSurfaceOrigin,
+        SkColorType::kRGBA_8888_SkColorType,
+        nullptr,
+        nullptr
+        );
 
     if (!surface_) {
         SkDebugf("SkSurface::MakeRenderTarget returned null\n");

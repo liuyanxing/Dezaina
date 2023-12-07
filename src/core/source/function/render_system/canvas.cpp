@@ -38,6 +38,7 @@ void Canvas::tick() {
     drawNode(document_->getCurrentPage());
     drawHoverSelectionNode();
   }
+  flush();
 }
 
 void Canvas::flush() {
@@ -48,7 +49,7 @@ void Canvas::flush() {
   auto* context = canvas_->recordingContext()->asDirectContext();
   if (context != nullptr) {
     context->flush();
-    context->submit(true);
+    context->submit();
   }
 }
 

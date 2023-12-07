@@ -118,7 +118,6 @@ int main() {
         CreatePropsPanel(&desaina);
 		}
 
-    desaina.renderSystem.flush();
 		// Rendering
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
