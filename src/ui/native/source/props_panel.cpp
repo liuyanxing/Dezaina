@@ -5,30 +5,30 @@
 #include <cmath>
 
 void CreatePropsPanel(Desaina* desaina) {
-  ImGui::Begin("Props");
+  // ImGui::Begin("Props");
 
-  auto* editor = desaina->editSystem.getEditor();
-  if (!editor) {
-    ImGui::End();
-    return;
-  }
+  // auto* editor = desaina->editSystem->getEditor();
+  // if (!editor) {
+  //   ImGui::End();
+  //   return;
+  // }
 
-  auto transform = editor->getEditTransform();
-  float rotation = base::getRotation(transform);
-  if (ImGui::InputFloat("rotation", &rotation)) {
-    editor->setRotatation(rotation);
-  }
+  // auto transform = editor->getEditTransform();
+  // float rotation = base::getRotation(transform);
+  // if (ImGui::InputFloat("rotation", &rotation)) {
+  //   editor->setRotatation(rotation);
+  // }
 
-  float x = transform.getTranslateX();
-  if (ImGui::InputFloat("x", &x)) {
-    editor->setTranslateX(x);
-  }
+  // float x = transform.getTranslateX();
+  // if (ImGui::InputFloat("x", &x)) {
+  //   editor->setTranslateX(x);
+  // }
 
-  float y = transform.getTranslateY();
-  if (ImGui::InputFloat("y", &y)) {
-    editor->setTranslateY(y);
-  }
-  ImGui::Text("%.2f %.2f %.2f", transform.get(0), transform.get(1), transform.get(2));
-  ImGui::Text("%.2f %.2f %.2f", transform.get(3), transform.get(4), transform.get(5));
-  ImGui::End();
+  // float y = transform.getTranslateY();
+  // if (ImGui::InputFloat("y", &y)) {
+  //   editor->setTranslateY(y);
+  // }
+  // ImGui::Text("%.2f %.2f %.2f", transform.get(0), transform.get(1), transform.get(2));
+  // ImGui::Text("%.2f %.2f %.2f", transform.get(3), transform.get(4), transform.get(5));
+  // ImGui::End();
 }

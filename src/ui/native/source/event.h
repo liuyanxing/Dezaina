@@ -21,7 +21,7 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
       auto deltaX = event.wheel.x;
       auto deltaY = event.wheel.y;
       // std::cout << "mouse wheel" << std::endl;
-      desaina.eventSystem.dispatchMouseEvent(
+      desaina.eventSystem->dispatchMouseEvent(
         deltaX,
         deltaY,
         EventType::kMouseWheel,
@@ -32,7 +32,7 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
     }
     case SDL_MOUSEBUTTONDOWN: {
       // std::cout << "mouse down" << std::endl;
-      desaina.eventSystem.dispatchMouseEvent(
+      desaina.eventSystem->dispatchMouseEvent(
         mouseX,
         mouseY,
         EventType::kMouseDown,
@@ -43,7 +43,7 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
     }
     case SDL_MOUSEBUTTONUP: {
       // std::cout << "mouse up" << std::endl;
-      desaina.eventSystem.dispatchMouseEvent(
+      desaina.eventSystem->dispatchMouseEvent(
         mouseX,
         mouseY,
         EventType::kMouseUp,
@@ -54,7 +54,7 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
     }
     case SDL_MOUSEMOTION: {
       // std::cout << "mouse move" << std::endl;
-      desaina.eventSystem.dispatchMouseEvent(
+      desaina.eventSystem->dispatchMouseEvent(
         mouseX,
         mouseY,
         EventType::kMouseMove,
@@ -67,7 +67,7 @@ inline void processMouseEvent(Desaina& desaina, SDL_Event& event) {
       // std::cout << "gesture" << std::endl;
       if (fabs(event.mgesture.dDist) > 0.001) {
         std::cout << "pinch: " << event.mgesture.dDist << std::endl;
-        desaina.eventSystem.dispatchMouseEvent(
+        desaina.eventSystem->dispatchMouseEvent(
           event.mgesture.dDist,
           0,
           EventType::kMouseWheel,

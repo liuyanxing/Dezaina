@@ -3,27 +3,30 @@
 #include "base_type.h"
 #include "desaina_node.h"
 #include "document.h"
-#include "edit_system/edit_system.h"
-#include "edit_system/editor/editor.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "include/core/SkPath.h"
 #include "kiwi.h"
 #include <_types/_uint32_t.h>
+#include <functional>
 #include <memory>
 #include <stdint.h>
 #include "select_system/select_system.h"
 #include "services/blob_service.h"
 #include "services/id_generator.h"
 #include "services/services.h"
-#include "event_system/event_system.h"
-#include "render_system/render_system.h"
 #include "system/system.h"
-#include "viewport_system/viewport_system.h"
-#include "action_system/action_system.h"
-#include "change_system/change_system.h"
-#include "edit_system/edit_system.h"
 #include "types/cursor.h"
+#include "util/node_geometry.h"
+
+class EventSystem;
+class RenderSystem;
+class ViewPortSystem;
+class SelectSystem;
+class ActionSystem;
+class ChangeSystem;
+class EditSystem;
+class CreateSystem;
 
 struct DesainaOption {
 	uint32_t sessionId;
@@ -39,6 +42,7 @@ struct WindowInfo {
 
 using BlobReMap = unordered_map<uint32_t, uint32_t>;
 using Systems = vector<System*>;
+using NextTickHandler = std::function<void()>;
 
 class Desaina : public EventEmitter {
 	public:
@@ -46,24 +50,20 @@ class Desaina : public EventEmitter {
 			sessionId_(option.sessionId),
 			services({std::make_unique<IdGenerator>(option.sessionId), std::make_unique<BlobService>()}),
 			document(&services) {
-        buildEvents();
         addSystems();
+        buildEvents();
       };
 		~Desaina() = default;
 		void tick();
+    void nextTick(const NextTickHandler& nextTickHandler) {
+      nextTickHandlers_.push_back(nextTickHandler);
+    }
 
-		bool loadDocument(kiwi::ByteBuffer& buffer) {
-			bool is_loaded = changeSystem.processMessage(buffer);
-			if (!is_loaded) {
-				return false;
-			}
-			document.setLoaded(true);
-			document.buildDocTree();
-			document.builPath();
-			return true;
-		};
+		bool loadDocument(kiwi::ByteBuffer& buffer);
 
     void buildEvents();
+    template<typename T, typename N>
+    void registerSystem(N** desainaSystem);
     void addSystems();
 
 		bool encode(kiwi::ByteBuffer& buffer);
@@ -103,14 +103,14 @@ class Desaina : public EventEmitter {
 
 		Services services;
 		Document document;
-    EventSystem eventSystem{this};
-		RenderSystem renderSystem{this};
-		ViewPortSystem viewPortSystem{this};
-    SelectSystem selectSystem{this};
-  	ActionSystem actionSystem{};
-  	ChangeSystem changeSystem{this};
-    EditSystem editSystem{this};
-    Editor* editor = nullptr;
+    EventSystem* eventSystem = nullptr;
+		RenderSystem* renderSystem = nullptr;
+		ViewPortSystem* viewPortSystem = nullptr;
+    SelectSystem* selectSystem = nullptr;
+  	ActionSystem* actionSystem = nullptr;
+  	ChangeSystem* changeSystem = nullptr;
+    EditSystem* editSystem = nullptr;
+    CreateSystem* createSystem = nullptr;
 	private:
     void remapBlobId();
 		uint32_t sessionId_ = 0;
@@ -118,4 +118,5 @@ class Desaina : public EventEmitter {
     Systems systems_{};
     WindowInfo windowInfo_{};
     uint32_t frameCount = 0;
+    vector<NextTickHandler> nextTickHandlers_{};
 };

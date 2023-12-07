@@ -1,6 +1,11 @@
 #include "action_system.h"
 #include "UpdatePropertiesAction.h"
+#include "create_delete_action.h"
 #include "util/node_geometry.h"
+
+void ActionSystem::updateProperty(const PropertyType& propertyType, const PropertyValue&& propertyValue, const Node* node) {
+  addAction(UpdatePropertiesAction::Make(node->get_guid(), propertyType, std::move(propertyValue)));
+}
 
 void ActionSystem::rotate(float deltaRotation, const Node* node) {
   auto rotation = util::getRotation(node);
@@ -33,4 +38,8 @@ void ActionSystem::setSize(float width, float height, const Node* node) {
 
 void ActionSystem::setTransform(const SkMatrix& transform, const Node* node) {
   addAction(UpdatePropertiesAction::MakeSetTransform(transform, node));
+}
+
+void ActionSystem::createNode(Node* node, Node* before) {
+  addAction(CreateDeleteAction::MakeCreate(node, before));
 }

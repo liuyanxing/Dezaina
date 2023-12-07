@@ -12,11 +12,12 @@ public:
     buildEvents();
   }
 	void tick() override {}
+	void setSelection(const vector<Node*>& nodes);
+  void setSelectionByIds(const vector<GUID>& nodesIds);
 	
 private:
 	void buildEvents();
 	void handleMouseMove(Event* event);
 	void handleMouseDown(Event* event);
-	void setSelection(vector<Node*> nodes);
 	Desaina* desaina_;
 };

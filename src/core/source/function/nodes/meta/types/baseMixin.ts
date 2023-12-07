@@ -3,7 +3,7 @@ interface NodeChange_kiwi {}
 interface NodeBase extends NodeChange_kiwi {
   encode_function: "virtual void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {};";
   applyChange_function: "virtual void applyChange(const Desaina_Kiwi::NodeChange& change) {};";
-  clone_function: "virtual Node* clone(Node* src, NodePool& pool) const { return nullptr; };";
+  clone_function: "virtual NodeBase* clone(NodeBase* src, NodePool& pool) const { return nullptr; };";
   isDocument_function: "virtual bool isDocument() { return false; };"
   isPage_function: "virtual bool isPage() { return false; };"
   isFrame_function: "virtual bool isFrame() { return false; };;"

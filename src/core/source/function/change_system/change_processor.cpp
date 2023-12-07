@@ -1,5 +1,6 @@
 #include "change_processor.h"
 #include "desaina.h"
+#include "desaina_node.h"
 #include "node_type.h"
 
 static Buffer copyBlob(const Desaina_Kiwi::Blob& blob) {
@@ -122,17 +123,25 @@ Node* ChangeProcessor::applyNodeChange(const Desaina_Kiwi::NodeChange &node_chan
       case NodeType::TEXT:
         node = document.createNode<TextNode>(id);
         break;
+      case NodeType::SYMBOL:
+        node = document.createNode<SymbolNode>(id);
+        break;
+      case NodeType::INSTANCE:
+        node = document.createNode<InstanceNode>(id);
+        break;
 			default:
 				assert(false);
 				break;
 		}
-		document.addNodeToMap(node);
 	} else {
 		node = node_or_null.value();
 	}
 
 	node->applyChange(node_change);
 	message_nodes_.push_back(node);
+  if (!node_or_null.has_value()) {
+    document.addNode(node);
+  }
   return node;
 }
 

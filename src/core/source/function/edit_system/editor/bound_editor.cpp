@@ -14,7 +14,7 @@
 #include "config/editor.h"
 #include <iostream>
 
-BoundEditor::BoundEditor(Editor* editor): editor_(editor) {
+BoundEditor::BoundEditor(EditorView* editor): editor_view_(editor) {
   init();
 }
 
@@ -26,33 +26,33 @@ void BoundEditor::init() {
 void BoundEditor::addHitNode(EditorHitNodeType type, int index, const SkPoint& direction, const SkRect& rect) {
   hit_nodes_.push_back(BoundEditorHitNode::Make(type, index, direction, rect));
   auto* hit_node = &hit_nodes_.back();
-  editor_->insertHitNode(hit_node);
+  editor_view_->insertHitNode(hit_node);
 }
 
 void BoundEditor::bindEvents() {
-  editor_->addEventListener(EventType::kMouseDrag, [this](Event* event) {
+  editor_view_->addEventListener(EventType::kMouseDrag, [this](Event* event) {
     handleMouseDrag(event);
   });
-  editor_->addEventListener(EventType::kMouseMove, [this](Event* event) {
+  editor_view_->addEventListener(EventType::kMouseMove, [this](Event* event) {
     handleMouseMove(event);
   });
 }
 
 void BoundEditor::handleDragBound(Event* event) {
-  auto& actionSystem = editor_->desaina->actionSystem;
+  auto& actionSystem = editor_view_->desaina->actionSystem;
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto selectedNodes = editor_->getEditingNodes();
+  auto selectedNodes = editor_view_->getEditingNodes();
   auto deltaX = mouseEvent->deltaX;
   auto deltaY = mouseEvent->deltaY;
   
   for (auto node : selectedNodes) {
     auto m = util::getTransfromMatrix(node);
-    editor_->translate(deltaX, deltaY, node->get_guid());
+    editor_view_->translate(deltaX, deltaY, node->get_guid());
   }
 }
 
 void BoundEditor::hanldeDrageCtrlNode(Event* event) {
-  auto* hitNode = editor_->getFirstSelectedHitNode();
+  auto* hitNode = editor_view_->getFirstSelectedHitNode();
   if (!hitNode) {
     return;
   }
@@ -73,13 +73,13 @@ void BoundEditor::hanldeDrageCtrlNode(Event* event) {
 }
 
 void BoundEditor::handleDragBoundResize(Event* event) {
-  auto* hitNode = static_cast<BoundEditorHitNode*>(editor_->getFirstSelectedHitNode());
+  auto* hitNode = static_cast<BoundEditorHitNode*>(editor_view_->getFirstSelectedHitNode());
   if (!hitNode) {
     return;
   }
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto bound = editor_->getEditBound();
-  auto boundTransform = editor_->getEditTransform();
+  auto bound = editor_view_->getEditBound();
+  auto boundTransform = editor_view_->getEditTransform();
   auto deltaX = mouseEvent->deltaX;
   auto deltaY = mouseEvent->deltaY;
   auto localDeltaX = mouseEvent->localDeltaX;
@@ -102,11 +102,11 @@ void BoundEditor::handleDragBoundResize(Event* event) {
   transform.postRotate(rotatation, bound.width() / 2, bound.height() / 2);
   transform.postTranslate(translate.x(), translate.y());
 
-  auto selectedNodes = editor_->getEditingNodes();
+  auto selectedNodes = editor_view_->getEditingNodes();
   if (selectedNodes.size() == 1) {
     auto* node = selectedNodes[0];
-    editor_->resize(sizeDelta.x(), sizeDelta.y());
-    editor_->setTransform(transform);
+    editor_view_->resize(sizeDelta.x(), sizeDelta.y());
+    editor_view_->setTransform(transform);
 
   } else {}
   
@@ -114,7 +114,7 @@ void BoundEditor::handleDragBoundResize(Event* event) {
 
 void BoundEditor::handleDragBoundRotate(Event* event) {
   auto mouseEvent = *static_cast<MouseEvent*>(event);
-  auto bound = editor_->getEditBound();
+  auto bound = editor_view_->getEditBound();
   auto deltaX = mouseEvent.localDeltaX;
   auto deltaY = mouseEvent.localDeltaY;
   auto localCenterX = mouseEvent.localX - bound.width() / 2;
@@ -122,16 +122,16 @@ void BoundEditor::handleDragBoundRotate(Event* event) {
   auto oldCenterX = localCenterX - deltaX;
   auto oldCenterY = localCenterY - deltaY;
  
-  auto selectedNodes = editor_->getEditingNodes();
+  auto selectedNodes = editor_view_->getEditingNodes();
   if (selectedNodes.size() == 1) {
     auto* node = selectedNodes[0];
    float angle = base::vectorsAngle({oldCenterX, oldCenterY}, {localCenterX, localCenterY});
-   editor_->rotate(angle);
+   editor_view_->rotate(angle);
   } else {}
 }
 
 void BoundEditor::handleMouseDrag(Event* event) {
-  if (editor_->getFirstSelectedHitNode()) {
+  if (editor_view_->getFirstSelectedHitNode()) {
     hanldeDrageCtrlNode(event);
   } else {
     handleDragBound(event);
@@ -140,7 +140,7 @@ void BoundEditor::handleMouseDrag(Event* event) {
 
 void BoundEditor::handleMouseMove(Event* event) {
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto* hoverNode = editor_->getHoverHitNode();
+  auto* hoverNode = editor_view_->getHoverHitNode();
   auto cursorType = CursorType::kDefault;
   if (hoverNode) {
     switch (hoverNode->type) {
@@ -162,11 +162,11 @@ void BoundEditor::handleMouseMove(Event* event) {
     }
     event->stop();
   }
-  editor_->desaina->setCursor(cursorType);
+  editor_view_->desaina->setCursor(cursorType);
 }
 
 void BoundEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
-  auto& bound = editor_->getEditBound();
+  auto& bound = editor_view_->getEditBound();
   strokePath.addRect(bound);
   
   constexpr float kCornerCtrlNodeSize = Config::boundCornerCtrlNodeSize;
@@ -182,7 +182,7 @@ void BoundEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
 }
 
 void BoundEditor::bindInteractionArea() {
-  const auto& bound = editor_->getEditBound();
+  const auto& bound = editor_view_->getEditBound();
   constexpr float kCornerCtrlNodeSize = Config::boundCornerCtrlNodeSize - 2 * Config::editorMouseRadius;
   constexpr float kRotationCtrlNodeSize = Config::boundCornerCtrlNodeSize;
   constexpr float kEdgeCtrlNodeSize = Config::boundEdgeCtrlNodeWith;

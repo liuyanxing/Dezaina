@@ -6,12 +6,14 @@
 #include <optional>
 #include <functional>
 #include <unordered_map>
+#include <vector>
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "event_system/event_system.h"
 #include "guid.h"
 #include "include/core/SkPath.h"
 #include "node_pool.h"
+#include "node_type.h"
 #include "page.h"
 #include "frame.h"
 #include "rectangle.h"
@@ -19,6 +21,8 @@
 #include "polygon.h"
 #include "line.h"
 #include "text.h"
+#include "symbol.h"
+#include "instance.h"
 #include "system/system.h"
 #include "vector.h"
 #include "ellipse.h"
@@ -54,6 +58,8 @@ public:
 		return createNode<T>(id);
 	};
 
+  Node* cloneNodeDeep(Node* node);
+
 	std::optional<Node*> getNodeById(GUID id) const {
     auto it = idNodeMap_.find(id);
     if (it == idNodeMap_.end()) {
@@ -78,6 +84,7 @@ public:
 		auto guid = node->get_guid();
 		idNodeMap_[guid] = node;
 	}
+  void addNode(Node*);
 
 	void createDefaultFile();
 	void encode(Desaina_Kiwi::Message& message, kiwi::MemoryPool& pool);
@@ -108,13 +115,20 @@ public:
     }
     hover_node_id_ = node->get_guid();
   }
-  void setSelectedNodes(const vector<Node*>& ids) {
+  void setSelectedNodes(const vector<Node*>& nodes) {
     selectedNodes_.clear();
-    for (auto node : ids) {
+    for (auto node : nodes) {
       selectedNodes_.push_back(node->get_guid());
     }
   }
+  void setSelectedNodeByIds(const vector<GUID>& ids) {
+    selectedNodes_ = ids;
+  }
   vector<Node*> getSelectedNodes() const;
+
+  auto* getNodePool() {
+    return &nodePool;
+  }
   
 private:
 	bool isLoaded_ = false;

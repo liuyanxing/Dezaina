@@ -1,16 +1,13 @@
 #pragma once
 
-#include "layout.h"
 #include "node_type.h"
 
-class ConstraintLayout : public Layout {
-  public:
-    ConstraintLayout(Desaina* desaina) : Layout(desaina) {};
-    ~ConstraintLayout() = default;
+class ChangeSystem;
+class UpdatePropertiesAction;
 
-    void hanldeTransfrom(const UpdatePropertiesAction* action, kiwiPool& pool);
-    void hanldeResize(const UpdatePropertiesAction* action, kiwiPool& pool);
-    void hanldeResizeDelta(const UpdatePropertiesAction* action, kiwiPool& pool);
-    
-    bool processUpdatePropertiesAction(const UpdatePropertiesAction* action, kiwiPool& pool) override;
+namespace constraintLayout {
+  void hanldeTransfrom(ChangeSystem* changeSystem, const UpdatePropertiesAction& action);
+  void hanldeResize(ChangeSystem* changeSystem, const UpdatePropertiesAction& action);
+  void hanldeResizeDelta(ChangeSystem* changeSystem, const UpdatePropertiesAction& action);
+  bool processUpdatePropertiesAction(ChangeSystem* changeSystem, const UpdatePropertiesAction& action);
 };

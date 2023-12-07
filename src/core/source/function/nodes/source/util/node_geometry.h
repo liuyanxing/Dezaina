@@ -75,10 +75,16 @@ namespace util {
     return Vector{0, 0};
   }
 
+  inline void setSize(Node* node, const Vector& size) {
+    if (util::isDefaultShapeNode(node)) {
+      auto shape = static_cast<DefaultShapeNode*>(node);
+      shape->set_size(size);
+    }
+  }
+
   inline bool isPointInNodeGeometry(Node* node, float x, float y) {
-    auto size = getGeometryBound(node);
-    auto rect = SkRect::MakeIWH(size.width(), size.height());
-    return rect.contains(x, y);
+    auto bound = getGeometryBound(node);
+    return bound.contains(x, y);
   }
   inline auto getWorldMatrix(const Node* node, Document* document) {
     auto matrix = util::getTransfromMatrix(node);
@@ -131,6 +137,12 @@ namespace util {
     transform.setRotate(rotation, size.x / 2, size.y / 2);
     transform.postTranslate(translate.x(), translate.y());
     return transform;
+  }
+
+  inline void setTransform(Node* node, const Matrix& transform) {
+    if (util::isDefaultShapeNode(node)) {
+      static_cast<DefaultShapeNode*>(node)->set_transform(transform);
+    }
   }
 
   SkPath buildFillPath(const Node* node);

@@ -4,15 +4,16 @@
 #include "bound_editor.h"
 #include "event_system/event_system.h"
 
-class NodeEditor : public Editor {
+class NodeEditor : public EditorView {
 public:
-  NodeEditor(Desaina* desaina, EditorType type = EditorType::kNode): Editor(type, desaina), boundEditor_(this) {
+  NodeEditor(Desaina* desaina, EditorType type = EditorType::kNode): EditorView(type, desaina), boundEditor_(this) {
     bindEvents();
+    update();
   };
   virtual ~NodeEditor() = default;
   
   virtual void update() {
-    Editor::update();
+    EditorView::update();
     boundEditor_.update();
   };
 

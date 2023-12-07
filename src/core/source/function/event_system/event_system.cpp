@@ -3,6 +3,7 @@
 #include "event_system/event_system.h"
 #include "event_system/mouse_event.h"
 #include "event_system/ui_event.h"
+#include "viewport_system/viewport_system.h"
 #include <iostream>
 #include <stdint.h>
 
@@ -25,12 +26,16 @@ void EventSystem::dispatchEvent(Event &event) {
 }
 
 void EventSystem::dispatchUIEvent(UIEvent &event) {
-  auto point = desaina_->viewPortSystem.mapScreenToWorld(event.clientX, event.clientY);
+  auto point = desaina_->viewPortSystem->mapScreenToWorld(event.clientX, event.clientY);
   event.x = point.x();
   event.y = point.y();
   if (lastMouseEvent_.has_value()) {
     event.deltaX = event.x - lastMouseEvent_->x;
     event.deltaY = event.y - lastMouseEvent_->y;
+    if (event.type == EventType::kMouseDrag) {
+      event.dragDistanceX = lastMouseEvent_->dragDistanceX + event.deltaX;
+      event.dragDistanceY = lastMouseEvent_->dragDistanceY + event.deltaY;
+    }
   }
   dispatchEvent(event);
 }
@@ -63,7 +68,6 @@ void EventSystem::dispatchMouseEvent(float x, float y, EventType type, int butto
 
     if (type == EventType::kMouseDown  ) {
       if (desaina_->frame() - lastMouseDownFrame_ < 60) {
-        std::cout << "double click" << std::endl;
         event.type = EventType::kMouseDoubleClick;
       }
       lastMouseDownFrame_ = desaina_->frame();

@@ -3,6 +3,7 @@
 #include "base_type.h"
 #include "edit_system/editor/editor.h"
 #include "event_system/event.h"
+#include "include/core/SkPoint.h"
 #include "system/system.h"
 #include <memory>
 #include <vector>
@@ -11,19 +12,19 @@ class Desaina;
 
 class EditSystem : public System {
  public:
-  EditSystem(Desaina* desaina) : desaina_(desaina) {
-    bindEvents();
-  };
+  EditSystem(Desaina* desaina);
   ~EditSystem() = default;
  
-  Editor* getEditor() {
-    return editor_.get();
+  EditorView* getEditor() {
+    return editorView_.get();
   }
-  void setEditor(std::unique_ptr<Editor>&& editor) {
-    editor_ = std::move(editor);
+  void setEditor(std::unique_ptr<EditorView>&& editor) {
+    editorView_ = std::move(editor);
     auto event = Event::Builder(EventType::kEditorChagne).build();
     emit(event);
   }
+
+  void selectCtrlNodeByPoint(const SkPoint& point);
 
   void afterTick() override;
   
@@ -32,5 +33,5 @@ class EditSystem : public System {
   void setEditorBySelection();
  
   Desaina* desaina_;
-  std::unique_ptr<Editor> editor_;
+  std::unique_ptr<EditorView> editorView_;
 };

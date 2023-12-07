@@ -41,6 +41,14 @@ interface VectorNodeBase extends
 interface FrameNodeBase extends DefaultFrameMixin {
 }
 
+interface SymbolNodeBase extends DefaultFrameMixin {
+}
+
+interface InstanceNodeBase extends DefaultFrameMixin {
+  symbolData: SymbolData,
+  derivedSymbolData: Buffer,
+}
+
 interface TextNodeBase extends
     TextNodeMixin {
       textData: TextData

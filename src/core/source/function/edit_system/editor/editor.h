@@ -8,6 +8,7 @@
 #include "event_system/simple_hit_tester.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPath.h"
+#include "include/core/SkPoint.h"
 #include "node_type.h"
 #include <optional>
 
@@ -16,7 +17,7 @@ class Desaina;
 enum class EditorType {
   kNode,
   kVector,
-  kRectangel,
+  kRectangle,
   kFrame,
 };
 
@@ -47,14 +48,14 @@ struct EditorHitNode : public HitTestNode {
   }
 };
 
-class Editor : public EventEmitter {
+class EditorView : public EventEmitter {
 public:
-  Editor(EditorType type, Desaina* desaina) {
+  EditorView(EditorType type, Desaina* desaina) {
     this->desaina = desaina;
     this->type = type;
     init();
   };
-  virtual ~Editor() = default;
+  virtual ~EditorView() = default;
   virtual void update() {
     hit_tester->clear();
     buildEditingNodesBound();
@@ -86,6 +87,8 @@ public:
     hit_tester->insert(node);
   };
   void updateHitNodes(const vector<EditorHitNode*>& nodes, std::function<bool(EditorHitNode*, EditorHitNode*)> isSameHitNode);
+  EditorHitNode* getNodeUnderPoint(const SkPoint& point);
+  void setSelectNodeByPoint(const SkPoint& point);
 
   void rotate(float degrees, std::optional<GUID> id = std::nullopt);
   void translate(float x, float y, std::optional<GUID> id = std::nullopt);

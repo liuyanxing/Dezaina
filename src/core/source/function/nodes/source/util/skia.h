@@ -32,6 +32,20 @@ namespace util {
 		);
 	}
 
+  inline SkPoint toSkPoint(const Vector& vector) {
+    return SkPoint{
+      vector.x,
+      vector.y,
+    };
+  }
+
+  inline SkVector toSkVector(const Vector& vector) {
+    return SkVector{
+      vector.x,
+      vector.y,
+    };
+  }
+
   inline SkRect rotate(const SkRect& rect, float angle, float x = 0, float y = 0) {
     SkMatrix matrix;
     matrix.setRotate(angle, x, y);
@@ -50,7 +64,7 @@ namespace util {
     skPaint.setAntiAlias(true);
     if (auto value = std::get_if<SolidPaint>(&paint)) {
       skPaint.setAlphaf(value->opacity);
-      skPaint.setBlendMode(static_cast<SkBlendMode>(value->blendMode));
+      // skPaint.setBlendMode(static_cast<SkBlendMode>(value->blendMode));
       skPaint.setColor(toSkColor(value->get_color()));
     }
     return skPaint;

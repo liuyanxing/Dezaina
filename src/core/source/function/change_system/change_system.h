@@ -12,15 +12,18 @@
 #include "node_type.h"
 #include "node_pool.h"
 #include "system/system.h"
+#include <memory>
 #include <unordered_map>
 #include <vector>
 #include "layouts/layout_node.h"
+#include "change_system/action_processor/update_properties_processor.h"
+#include "change_system/action_processor/create_delete_processor.h"
 
 using LayoutPtr = shared_ptr<Layout>;
 
 struct ChangeItem {
   LayoutNode* layoutNode = nullptr;
-  NodeChange* changeNode = nullptr;
+  NodeChange* nodeChange = nullptr;
   bool isFillGeometryDirty;
   bool isStrokeGeometryDirty;
   
@@ -31,9 +34,9 @@ struct ChangeItem {
 
 class ChangeSystem : public System {
  public:
-  ChangeSystem(Desaina* desaina) : desaina_(desaina) {
-    layouts.push_back(make_shared<AutoLayout>(desaina_));
-    layouts.push_back(make_shared<ConstraintLayout>(desaina_));
+  ChangeSystem(Desaina* desaina) : desaina(desaina) {
+    action_procs_.push_back(std::make_shared<UpdatePropertiesActionProc>(this));
+    action_procs_.push_back(std::make_shared<CreateDeleteActionProc>(this));
   };
   ~ChangeSystem() = default;
 
@@ -50,20 +53,24 @@ class ChangeSystem : public System {
   bool processMessage(kiwi::ByteBuffer& buffer) { return change_processor_.processMessage(buffer); }
   LayoutNode* appendLayoutNode(Node* node);
   void tick() override;
+
+  kiwi::MemoryPool* pool() { return &change_pool_; }
+  int addBlob(const Blob* blob);
   
+  Desaina* desaina;
  private:
-  void addChangingItem(const Action* action);
-  void convertActionsToChange(const vector<ActionPtr>& actions);
+  void addChangingItem(Action* action);
+  void applyActions(const vector<ActionPtr>& actions);
   void processAction(const Action* action);
   void processAction(const UpdatePropertiesAction* action);
-
  
-  Desaina* desaina_;
   vector<LayoutPtr> layouts;
   vector<LayoutNode> layout_nodes_;
  
   kiwi::MemoryPool change_pool_;
   NodePool node_pool_{10};
   unordered_map<GUID, ChangeItem> changing_items_;
-  ChangeProcessor change_processor_{desaina_};
+  ChangeProcessor change_processor_{desaina};
+  vector<const Blob*> blobs_;
+  vector<shared_ptr<ActionProc>> action_procs_;
 };
