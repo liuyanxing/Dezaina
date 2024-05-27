@@ -1,5 +1,6 @@
 #pragma once
 
+#include <initializer_list>
 #include <type_traits>
 #include <variant>
 #include <vector>
@@ -34,6 +35,8 @@ void applyChangeImpl(T& value, const C& change) {
 template<typename T>
 class IVector : public std::vector<T> {
 public:
+  IVector(std::initializer_list<T> list) : std::vector<T>(list) {}
+
   template<typename N>
   void applyChange(const N& change) {
     std::vector<T>::clear();

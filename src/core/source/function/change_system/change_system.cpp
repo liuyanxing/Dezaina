@@ -6,7 +6,7 @@
 #include "util/node_create.h"
 #include "util/node_props.h"
 
-void ChangeSystem::applyActions(const vector<ActionPtr>& actions) {
+void ChangeSystem::applyEditRecords(const vector<ActionPtr>& actions) {
   for (auto& action : actions) {
     addChangingItem(action.get());
     processAction(action.get());
@@ -16,9 +16,6 @@ void ChangeSystem::applyActions(const vector<ActionPtr>& actions) {
 
 void ChangeSystem::processAction(const Action *action) {
   for (auto& proc : action_procs_) {
-    if (!proc->shouldProcess(action)) {
-      continue;
-    }
     proc->process(action);
   }
 }
@@ -60,7 +57,7 @@ void ChangeSystem::tick() {
   if (actions.empty()) {
     return;
   }
-  applyActions(actions);
+  applyEditRecords(actions);
   Desaina_Kiwi::Message message;
   message.set_type(Desaina_Kiwi::MessageType::NODE_CHANGES);
   auto& nodeChanges = message.set_nodeChanges(change_pool_, changing_items_.size());

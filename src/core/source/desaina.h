@@ -3,6 +3,7 @@
 #include "base_type.h"
 #include "desaina_node.h"
 #include "document.h"
+#include "edit_system/editor/editor.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "include/core/SkPath.h"
@@ -101,6 +102,10 @@ class Desaina : public EventEmitter {
       return frameCount;
     }
 
+    Editor* getEditor() {
+      return editor_.get();
+    }
+
 		Services services;
 		Document document;
     EventSystem* eventSystem = nullptr;
@@ -119,4 +124,5 @@ class Desaina : public EventEmitter {
     WindowInfo windowInfo_{};
     uint32_t frameCount = 0;
     vector<NextTickHandler> nextTickHandlers_{};
+    std::unique_ptr<Editor> editor_ = std::make_unique<Editor>(this);
 };

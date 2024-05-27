@@ -9,9 +9,11 @@
 #include "change_system/layouts/constraint_layout.h"
 #include "change_system/layouts/layout.h"
 #include "desaina_node.h"
+#include "edit_system/editor/editor.h"
 #include "node_type.h"
 #include "node_pool.h"
 #include "system/system.h"
+#include <functional>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -19,7 +21,10 @@
 #include "change_system/action_processor/update_properties_processor.h"
 #include "change_system/action_processor/create_delete_processor.h"
 
+class ChangeSystem;
+
 using LayoutPtr = shared_ptr<Layout>;
+using EditRecordProcessor = std::function<void(const EditRecordItem&, const ChangeSystem* ChangeSystem)>;
 
 struct ChangeItem {
   LayoutNode* layoutNode = nullptr;
@@ -60,9 +65,11 @@ class ChangeSystem : public System {
   Desaina* desaina;
  private:
   void addChangingItem(Action* action);
-  void applyActions(const vector<ActionPtr>& actions);
+  void applyEditRecords(const vector<ActionPtr>& actions);
   void processAction(const Action* action);
   void processAction(const UpdatePropertiesAction* action);
+
+  void reset();
  
   vector<LayoutPtr> layouts;
   vector<LayoutNode> layout_nodes_;
