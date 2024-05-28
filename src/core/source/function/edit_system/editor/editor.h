@@ -140,6 +140,7 @@ using ResizeValue = std::array<SkPoint, 2>;
 using RecordValue = std::variant<float, SkMatrix, std::array<float, 2>, ResizeValue>;
 
 struct EditRecordItem {
+  EditRecordItem(const GUID& layerId, const RecordType& type, const RecordValue& value) : nodeId(layerId), type(type), value(value) {}
   GUID nodeId;
   RecordType type;
   RecordValue value;
@@ -160,11 +161,13 @@ public:
   Editor* rotate(float degrees);
   Editor* translate(float x, float y);
   Editor* resize(float width, float height, const SkPoint& anchor);
+  Editor* resize(float width, float height);
   Editor* setRotatation(float degrees);
   Editor* setTranslate(float x, float y);
   Editor* setTranslateX(float x);
   Editor* setTranslateY(float y);
   Editor* setSize(float width, float height, const SkPoint& anchor);
+  Editor* setSize(float width, float height);
   Editor* setTransform(const SkMatrix& transform);
   ~Editor() = default;
 private:

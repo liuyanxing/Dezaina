@@ -3,12 +3,12 @@
 #include "event_system/event.h"
 #include <iostream>
 
-ViewPortSystem::ViewPortSystem(Desaina* desaina) {
+ViewPort::ViewPort(Desaina* desaina) {
   desaina_ = desaina;
   bindEvents();
 }
 
-void ViewPortSystem::bindEvents() {
+void ViewPort::bindEvents() {
   addEventListener(EventType::kWindowResize, [this](Event* event) {
     const auto& [width, height, devicePixelRatio] = desaina_->getWindowInfo();
     width_ = width;

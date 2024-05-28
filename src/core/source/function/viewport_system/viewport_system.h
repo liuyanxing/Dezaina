@@ -3,12 +3,11 @@
 #include "event_system/event_emitter.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
-#include "system/system.h"
 
 class Desaina;
-class ViewPortSystem: public System {
+class ViewPort: public EventEmitter {
 public:
-  ViewPortSystem(Desaina* desaina);
+  ViewPort(Desaina* desaina);
 
   void tick() {};
   void bindEvents();

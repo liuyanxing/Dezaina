@@ -51,9 +51,9 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 }
 
 void Desaina::buildEvents() {
-  viewPortSystem->addEventListener(EventType::kViewPortChange, [this](Event* event) {
+  viewPort->addEventListener(EventType::kViewPortChange, [this](Event* event) {
     if (auto* curPage = document.getCurrentPage()) {
-      curPage->setViewMatrix(viewPortSystem->getViewMatrix());
+      curPage->setViewMatrix(viewPort->getViewMatrix());
     }
   });
 }
@@ -70,7 +70,7 @@ void Desaina::addSystems() {
 	registerSystem<EventSystem>(&eventSystem);
   registerSystem<EditSystem>(&editSystem);
   registerSystem<SelectSystem>(&selectSystem);
-  registerSystem<ViewPortSystem>(&viewPortSystem);
+  registerSystem<ViewPort>(&viewPort);
   registerSystem<ActionSystem>(&actionSystem);
   registerSystem<ChangeSystem>(&changeSystem);
   registerSystem<RenderSystem>(&renderSystem);

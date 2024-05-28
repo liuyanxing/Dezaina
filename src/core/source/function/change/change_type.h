@@ -36,6 +36,7 @@ template<typename T>
 class IVector : public std::vector<T> {
 public:
   IVector(std::initializer_list<T> list) : std::vector<T>(list) {}
+  IVector() = default;
 
   template<typename N>
   void applyChange(const N& change) {

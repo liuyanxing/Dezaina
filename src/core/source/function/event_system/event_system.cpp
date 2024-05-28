@@ -26,7 +26,7 @@ void EventSystem::dispatchEvent(Event &event) {
 }
 
 void EventSystem::dispatchUIEvent(UIEvent &event) {
-  auto point = desaina_->viewPortSystem->mapScreenToWorld(event.clientX, event.clientY);
+  auto point = desaina_->viewPort->mapScreenToWorld(event.clientX, event.clientY);
   event.x = point.x();
   event.y = point.y();
   if (lastMouseEvent_.has_value()) {

@@ -34,7 +34,7 @@ Canvas::Canvas(Desaina* desaina) : desaina_(desaina) {
 
 void Canvas::tick() {
   if (document_->getCurrentPage() != nullptr) {
-    canvas_->setMatrix(desaina_->viewPortSystem->getProjectionMatrix());
+    canvas_->setMatrix(desaina_->viewPort->getProjectionMatrix());
     drawNode(document_->getCurrentPage());
     drawHoverSelectionNode();
   }

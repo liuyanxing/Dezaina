@@ -19,10 +19,12 @@
 #include "system/system.h"
 #include "types/cursor.h"
 #include "util/node_geometry.h"
+#include "util/node_util.h"
+#include "viewport_system/viewport_system.h"
 
 class EventSystem;
 class RenderSystem;
-class ViewPortSystem;
+class ViewPort;
 class SelectSystem;
 class ActionSystem;
 class ChangeSystem;
@@ -110,12 +112,13 @@ class Desaina : public EventEmitter {
 		Document document;
     EventSystem* eventSystem = nullptr;
 		RenderSystem* renderSystem = nullptr;
-		ViewPortSystem* viewPortSystem = nullptr;
+		ViewPort viewPort{this};
     SelectSystem* selectSystem = nullptr;
   	ActionSystem* actionSystem = nullptr;
   	ChangeSystem* changeSystem = nullptr;
     EditSystem* editSystem = nullptr;
     CreateSystem* createSystem = nullptr;
+    NodeUtil nodeUtil{&document};
 	private:
     void remapBlobId();
 		uint32_t sessionId_ = 0;

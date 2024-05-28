@@ -22,6 +22,8 @@ public:
     consumers_.push_back({type, func});
   }
 
+  virtual ~EventEmitter() = default;
+
 private:
   std::vector<EventListener> consumers_;
 };

@@ -14,22 +14,22 @@
 #include "config/editor.h"
 #include <iostream>
 
-BoundEditor::BoundEditor(EditorView* editor): editor_view_(editor) {
+NodeEditor::NodeEditor(EditorView* editor): editor_view_(editor) {
   init();
 }
 
-void BoundEditor::init() {
+void NodeEditor::init() {
   bindEvents();
   bindInteractionArea();
 }
 
-void BoundEditor::addHitNode(EditorHitNodeType type, int index, const SkPoint& direction, const SkRect& rect) {
+void NodeEditor::addHitNode(EditorHitNodeType type, int index, const SkPoint& direction, const SkRect& rect) {
   hit_nodes_.push_back(BoundEditorHitNode::Make(type, index, direction, rect));
   auto* hit_node = &hit_nodes_.back();
   editor_view_->insertHitNode(hit_node);
 }
 
-void BoundEditor::bindEvents() {
+void NodeEditor::bindEvents() {
   editor_view_->addEventListener(EventType::kMouseDrag, [this](Event* event) {
     handleMouseDrag(event);
   });
@@ -38,7 +38,7 @@ void BoundEditor::bindEvents() {
   });
 }
 
-void BoundEditor::handleDragBound(Event* event) {
+void NodeEditor::handleDragBound(Event* event) {
   auto& actionSystem = editor_view_->desaina->actionSystem;
   auto mouseEvent = static_cast<MouseEvent*>(event);
   auto selectedNodes = editor_view_->getEditingNodes();
@@ -51,7 +51,7 @@ void BoundEditor::handleDragBound(Event* event) {
   }
 }
 
-void BoundEditor::hanldeDrageCtrlNode(Event* event) {
+void NodeEditor::hanldeDrageCtrlNode(Event* event) {
   auto* hitNode = editor_view_->getFirstSelectedHitNode();
   if (!hitNode) {
     return;
@@ -72,7 +72,7 @@ void BoundEditor::hanldeDrageCtrlNode(Event* event) {
   }
 }
 
-void BoundEditor::handleDragBoundResize(Event* event) {
+void NodeEditor::handleDragBoundResize(Event* event) {
   auto* hitNode = static_cast<BoundEditorHitNode*>(editor_view_->getFirstSelectedHitNode());
   if (!hitNode) {
     return;
@@ -112,7 +112,7 @@ void BoundEditor::handleDragBoundResize(Event* event) {
   
 }
 
-void BoundEditor::handleDragBoundRotate(Event* event) {
+void NodeEditor::handleDragBoundRotate(Event* event) {
   auto mouseEvent = *static_cast<MouseEvent*>(event);
   auto bound = editor_view_->getEditBound();
   auto deltaX = mouseEvent.localDeltaX;
@@ -130,7 +130,7 @@ void BoundEditor::handleDragBoundRotate(Event* event) {
   } else {}
 }
 
-void BoundEditor::handleMouseDrag(Event* event) {
+void NodeEditor::handleMouseDrag(Event* event) {
   if (editor_view_->getFirstSelectedHitNode()) {
     hanldeDrageCtrlNode(event);
   } else {
@@ -138,7 +138,7 @@ void BoundEditor::handleMouseDrag(Event* event) {
   }
 }
 
-void BoundEditor::handleMouseMove(Event* event) {
+void NodeEditor::handleMouseMove(Event* event) {
   auto mouseEvent = static_cast<MouseEvent*>(event);
   auto* hoverNode = editor_view_->getHoverHitNode();
   auto cursorType = CursorType::kDefault;
@@ -165,7 +165,7 @@ void BoundEditor::handleMouseMove(Event* event) {
   editor_view_->desaina->setCursor(cursorType);
 }
 
-void BoundEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
+void NodeEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
   auto& bound = editor_view_->getEditBound();
   strokePath.addRect(bound);
   
@@ -181,7 +181,7 @@ void BoundEditor::getPath(SkPath& fillPath, SkPath& strokePath) {
   fillPath.addRect(leftTopCornerCtrlRect.makeOffset(0, height));
 }
 
-void BoundEditor::bindInteractionArea() {
+void NodeEditor::bindInteractionArea() {
   const auto& bound = editor_view_->getEditBound();
   constexpr float kCornerCtrlNodeSize = Config::boundCornerCtrlNodeSize - 2 * Config::editorMouseRadius;
   constexpr float kRotationCtrlNodeSize = Config::boundCornerCtrlNodeSize;

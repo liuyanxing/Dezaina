@@ -18,9 +18,9 @@ struct BoundEditorHitNode : public EditorHitNode {
 	}
 };
 
-class BoundEditor {
+class NodeEditor {
 public:
-	BoundEditor(EditorView* editor);
+	NodeEditor(EditorView* editor);
 	void init();
 	void update() { hit_nodes_.clear(); bindInteractionArea(); };
   void getPath(SkPath& fillPath, SkPath& strokePath);
