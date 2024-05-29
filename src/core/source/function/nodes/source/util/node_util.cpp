@@ -13,7 +13,7 @@ SkMatrix NodeUtil::getWorldMatrix(const Node* node) {
   auto matrix = getTransfromMatrix(node);
   auto* parent = getParent(node);
   while (parent != nullptr) {
-    if (util::isPage(node)) {
+    if (util::isPage(parent)) {
       break;
     }
     matrix.preConcat(getTransfromMatrix(parent));

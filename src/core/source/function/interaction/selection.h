@@ -12,9 +12,7 @@ class Desaina;
 
 class Selection : public EventEmitter, public EventsConsumer {
 public:
-  explicit Selection(Interaction* interaction) : EventsConsumer(this), interaction_(interaction) {
-    bindEvents();
-  };
+  explicit Selection(Interaction* interaction) : EventsConsumer(this), interaction_(interaction) {};
 
   bool empty() const {
     return selection_.empty();
@@ -32,7 +30,6 @@ private:
   vector<Node*> selection_;
   Node* hoverNode_ = nullptr;
 
-  void bindEvents();
 	void handleMouseMove(MouseEvent* event) override;
 	void handleMouseDown(MouseEvent* event) override;
 

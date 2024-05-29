@@ -33,7 +33,6 @@ public:
           handleWindowResize(event);
           break;
         default:
-          assert(false);
           break;
         }
       }

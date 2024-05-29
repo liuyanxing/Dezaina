@@ -2,8 +2,6 @@
 #include "interaction.h"
 #include "desaina.h"
 
-void Selection::bindEvents() {}
-
 void Selection::handleMouseMove(MouseEvent* event) {
   vector<Node*> nodes;
   auto mouseEvent = static_cast<MouseEvent*>(event);
