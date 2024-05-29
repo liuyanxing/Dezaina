@@ -1,7 +1,7 @@
 #include "create_system.h"
 #include "change/change_type.h"
 #include "desaina_node.h"
-#include "edit_system/edit_system.h"
+#include "edit/editor.h"
 #include "event_system/event.h"
 #include "event_system/mouse_event.h"
 #include "include/core/SkMatrix.h"
@@ -54,7 +54,7 @@ void CreateSystem::handleMouseDrag(MouseEvent* event) {
     auto e = *event;
     desaina_->nextTick([this, id, e]() {
       desaina_->selectSystem->setSelectionByIds({id});
-      desaina_->editSystem->selectCtrlNodeByPoint({e.x, e.y});
+      // desaina_->editSystem->selectCtrlNodeByPoint({e.x, e.y});
     });
     creating_node_ = nullptr;
   }

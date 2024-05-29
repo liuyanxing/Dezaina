@@ -1,6 +1,9 @@
 #include "rectangle_editor.h"
 #include "include/private/base/SkPoint_impl.h"
+#include "rectangle.h"
 #include "viewport_system/viewport_system.h"
+#include <cassert>
+#include "desaina.h"
 
 void RectangleEditor::buildEditor() {
   SkVector moveAxises[4] = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
@@ -16,6 +19,16 @@ void RectangleEditor::buildEditor() {
 }
 
 void RectangleEditor::handleDragResizeCornerCtrl(int index, const SkVector& moveAxis, MouseEvent *event) {
-  auto moveDistance = moveAxis.cross({event->deltaX, event->deltaY});
-  auto delta = desaina_->viewPort.mapScreenToWorld(moveDistance);
+  auto delta = moveAxis.cross({event->deltaX, event->deltaY});
+  auto* editor = desaina_->getEditor();
+  // editor->resizeCornerRadius(delta);
 }
+
+void RectangleEditor::update(const vector<Node *> &nodes) {
+  if (nodes.size() != 1) {
+    assert(false);
+  }
+  RectangleNode* node = static_cast<RectangleNode*>(nodes[0]); 
+  NodeEditor::update(nodes);
+}
+

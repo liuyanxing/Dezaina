@@ -1,17 +1,10 @@
 #include "selection.h"
 #include "interaction.h"
+#include "desaina.h"
 
-void Selection::bindEvents() {
-  addEventListener(EventType::kMouseMove, [this](Event* event) {
-    handleMouseMove(event);
-  });
-  
-  addEventListener(EventType::kMouseDown, [this](Event* event) {
-    handleMouseDown(event);
-  });
-}
+void Selection::bindEvents() {}
 
-void Selection::handleMouseMove(Event* event) {
+void Selection::handleMouseMove(MouseEvent* event) {
   vector<Node*> nodes;
   auto mouseEvent = static_cast<MouseEvent*>(event);
   auto* desaina = interaction_->getDezaina();
@@ -38,7 +31,7 @@ void Selection::handleMouseMove(Event* event) {
   }
 }
 
-void Selection::handleMouseDown(Event* event) {
+void Selection::handleMouseDown(MouseEvent* event) {
   if (hoverNode_ != nullptr) {
     setSelection({hoverNode_});
   } else {

@@ -19,7 +19,6 @@
 #include "change_system/change_system.h"
 #include "viewport_system/viewport_system.h"
 #include "creaet_system/create_system.h"
-#include "edit_system/edit_system.h"
 #include "action_system/action_system.h"
 #include "render_system/render_system.h"
 
@@ -51,9 +50,9 @@ bool Desaina::encode(kiwi::ByteBuffer &buffer) {
 }
 
 void Desaina::buildEvents() {
-  viewPort->addEventListener(EventType::kViewPortChange, [this](Event* event) {
+  viewPort.addEventListener(EventType::kViewPortChange, [this](Event* event) {
     if (auto* curPage = document.getCurrentPage()) {
-      curPage->setViewMatrix(viewPort->getViewMatrix());
+      curPage->setViewMatrix(viewPort.getViewMatrix());
     }
   });
 }
@@ -68,13 +67,12 @@ void Desaina::registerSystem(N** desainaSystem) {
 
 void Desaina::addSystems() {
 	registerSystem<EventSystem>(&eventSystem);
-  registerSystem<EditSystem>(&editSystem);
-  registerSystem<SelectSystem>(&selectSystem);
-  registerSystem<ViewPort>(&viewPort);
-  registerSystem<ActionSystem>(&actionSystem);
   registerSystem<ChangeSystem>(&changeSystem);
   registerSystem<RenderSystem>(&renderSystem);
-  registerSystem<CreateSystem>(&createSystem);
+}
+
+void Desaina::addEventConsumers() {
+  event_consumers_.push_back(&interaction);
 }
 
 void Desaina::tick() {

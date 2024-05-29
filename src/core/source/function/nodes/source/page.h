@@ -9,14 +9,14 @@ public:
 		set_type(NodeType::CANVAS);
 	};
 
-	const auto& getViewMatrix() const {
-		return view_matrix_;
+	const auto& getTransform() const {
+		return transform_;
 	};
 
   void setViewMatrix(const SkMatrix& m) {
-    view_matrix_ = m;
+    transform_ = m;
   } 
 
 private:
-	SkMatrix view_matrix_;
+	SkMatrix transform_;
 };

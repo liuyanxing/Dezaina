@@ -1,7 +1,6 @@
 #include "layout_processor.h"
 #include "desaina_node.h"
-#include "edit_system/edit_system.h"
-#include "edit_system/editor/editor.h"
+#include "edit/editor.h"
 #include "change_system/change_system.h"
 #include "include/core/SkMatrix.h"
 

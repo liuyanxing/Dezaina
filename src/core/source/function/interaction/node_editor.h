@@ -1,15 +1,18 @@
 #pragma once
 
 #include "change/change_type.h"
-#include "desaina.h"
 #include "desaina_node.h"
+#include "event_system/event_system.h"
 #include "event_system/mouse_event.h"
+#include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
 #include "node/rectangle.h"
 #include "node/frame.h"
 #include <array>
 #include <vector>
+
+class Desaina;
 
 class NodeEditor {
 public:
@@ -20,7 +23,7 @@ public:
 
   Frame* getContainer() { return &container_; }
   virtual void update(const vector<Node*>& nodes);
-  void update(const SkRect& bound);
+  void update(const SkMatrix& transform, const SkRect& bound);
   void appendChildToContainer(Node* node) { container_.appendChild(node); }
 
 protected:

@@ -1,4 +1,7 @@
 #include "node_util.h"
+#include "frame.h"
+#include "rectangle.h"
+#include <cassert>
 
 
 Node* NodeUtil::getParent(const Node* node) {
@@ -22,7 +25,7 @@ SkMatrix NodeUtil::getWorldMatrix(const Node* node) {
 
 SkMatrix NodeUtil::getTransfromMatrix(const Node* node) {
   if (util::isPage(node)) {
-    return static_cast<const PageNode*>(node)->getViewMatrix();
+    return static_cast<const PageNode*>(node)->getTransform();
   }
   if (util::isDefaultShapeNode(node)) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
@@ -39,3 +42,18 @@ SkRect NodeUtil::getLocalBound(const Node* node) {
     }
   return SkRect::MakeEmpty();
 }
+
+std::array<float, 4> NodeUtil::getCornerRadius(const Node* node) {
+  auto getCornerRaduis = [](auto* node) -> std::array<float, 4> {
+    return {
+      node->get_rectangleTopLeftCornerRadius(),
+	    node->get_rectangleTopRightCornerRadius(),
+	    node->get_rectangleBottomLeftCornerRadius(),
+	    node->get_rectangleBottomRightCornerRadius(),
+    };
+  };
+  if (isRectangle(node)) return getCornerRadius(static_cast<const RectangleNode*>(node));
+  if (isFrame(node)) return getCornerRadius(static_cast<const FrameNode*>(node));
+  assert(false);
+}
+

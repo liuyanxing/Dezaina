@@ -3,15 +3,17 @@
 #include "base_type.h"
 #include "desaina_node.h"
 #include "document.h"
-#include "edit_system/editor/editor.h"
+#include "edit/editor.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
 #include "include/core/SkPath.h"
+#include "interaction/selection.h"
 #include "kiwi.h"
 #include <_types/_uint32_t.h>
 #include <functional>
 #include <memory>
 #include <stdint.h>
+#include <vector>
 #include "select_system/select_system.h"
 #include "services/blob_service.h"
 #include "services/id_generator.h"
@@ -21,6 +23,7 @@
 #include "util/node_geometry.h"
 #include "util/node_util.h"
 #include "viewport_system/viewport_system.h"
+#include "interaction/interaction.h"
 
 class EventSystem;
 class RenderSystem;
@@ -54,6 +57,7 @@ class Desaina : public EventEmitter {
 			services({std::make_unique<IdGenerator>(option.sessionId), std::make_unique<BlobService>()}),
 			document(&services) {
         addSystems();
+        addEventConsumers();
         buildEvents();
       };
 		~Desaina() = default;
@@ -68,6 +72,7 @@ class Desaina : public EventEmitter {
     template<typename T, typename N>
     void registerSystem(N** desainaSystem);
     void addSystems();
+    void addEventConsumers();
 
 		bool encode(kiwi::ByteBuffer& buffer);
 
@@ -105,7 +110,11 @@ class Desaina : public EventEmitter {
     }
 
     Editor* getEditor() {
-      return editor_.get();
+      return &editor_;
+    }
+
+    const auto* getEventConsumers () const {
+      return &event_consumers_;
     }
 
 		Services services;
@@ -127,5 +136,7 @@ class Desaina : public EventEmitter {
     WindowInfo windowInfo_{};
     uint32_t frameCount = 0;
     vector<NextTickHandler> nextTickHandlers_{};
-    std::unique_ptr<Editor> editor_ = std::make_unique<Editor>(this);
+    Interaction interaction{this};
+    Editor editor_{this};
+    vector<EventEmitter*> event_consumers_;
 };

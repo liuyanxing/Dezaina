@@ -35,7 +35,7 @@ class Geometry;
 namespace util {
   inline auto getTransfromMatrix(const Node* node) {
     if (util::isPage(node)) {
-      return static_cast<const PageNode*>(node)->getViewMatrix();
+      return static_cast<const PageNode*>(node)->getTransform();
     }
     if (util::isDefaultShapeNode(node)) {
       auto shape = static_cast<const DefaultShapeNode*>(node);

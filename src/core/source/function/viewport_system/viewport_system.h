@@ -10,13 +10,32 @@ public:
   ViewPort(Desaina* desaina);
 
   void tick() {};
-  void bindEvents();
+
+  void update();
+  void translate(float dx, float dy);
+
   const auto& getVPMatrix() {
     return view_projection_matrix_;
   }
 
   const auto& getProjectionMatrix() {
     return projection_matrix_;
+  }
+
+  void setProjectionMatrix(const SkMatrix& matrix) {
+    projection_matrix_ = matrix;
+    updateVPMatrix();
+  }
+
+  void setViewMatrix(const SkMatrix& matrix) {
+    view_matrix_ = matrix;
+    updateVPMatrix();
+  }
+
+  void updateVPMatrix() {
+    view_projection_matrix_ = projection_matrix_ * view_matrix_ ;
+    world_screen_matrix_ = view_projection_matrix_;
+    world_screen_matrix_.postScale(1 / devicePixelRatio_, 1 / devicePixelRatio_);
   }
 
   const auto& getViewMatrix() {

@@ -9,7 +9,7 @@
 #include "change_system/layouts/constraint_layout.h"
 #include "change_system/layouts/layout.h"
 #include "desaina_node.h"
-#include "edit_system/editor/editor.h"
+#include "edit/editor.h"
 #include "node_type.h"
 #include "node_pool.h"
 #include "system/system.h"

@@ -1,6 +1,10 @@
 #include "interaction.h"
+#include "event_system/mouse_event.h"
 #include "include/core/SkPath.h"
 #include "interaction/selection.h"
+
+void Interaction::bindEvents() {
+}
 
 void Interaction::tick() {
   handleSelection();
@@ -32,8 +36,13 @@ void Interaction::handleSelection() {
 void Interaction::handleHover() {
   auto* hoverNode = selection_.getHoverNode();
   if (hoverNode == nullptr) {
-    hover_.clearPath();
+    // hover_.clearPath();
     return;
   }
-  hover_.setPath(SkPath());
+  // hover_.setPath(SkPath());
 }
+
+void Interaction::handleMouseEvent(MouseEvent* event) {
+  selection_.emit(*event);
+}
+

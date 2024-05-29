@@ -12,6 +12,10 @@ public:
   SkMatrix getWorldMatrix(const Node* node);
   SkMatrix getTransfromMatrix(const Node* node);
   SkRect getLocalBound(const Node* node);
+  SkRect getScreenBound(const Node* node);
+  SkMatrix getScreenTransformMatrix(const Node* node);
+
+  std::array<float, 4> getCornerRadius(const Node* node);
 
 	bool isDocument(const Node* node) { return node->get_type() == NodeType::DOCUMENT; }
 	bool isPage(const Node* node) { return node->get_type() == NodeType::CANVAS; }

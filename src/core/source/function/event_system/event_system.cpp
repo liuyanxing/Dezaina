@@ -8,13 +8,13 @@
 #include <stdint.h>
 
 void EventSystem::tick() {
-  const Systems& systems = *desaina_->getSystems();
-  for (const auto &system : systems) {
+  auto* consumers = desaina_->getEventConsumers();
+  for (const auto &consumer : *consumers) {
     for (auto* event : events_) {
       if (event->isStop()) {
         continue;
       }
-      system->emit(*event);
+      consumer->emit(*event);
     }
   }
   clearEvents();
@@ -26,7 +26,7 @@ void EventSystem::dispatchEvent(Event &event) {
 }
 
 void EventSystem::dispatchUIEvent(UIEvent &event) {
-  auto point = desaina_->viewPort->mapScreenToWorld(event.clientX, event.clientY);
+  auto point = desaina_->viewPort.mapScreenToWorld(event.clientX, event.clientY);
   event.x = point.x();
   event.y = point.y();
   if (lastMouseEvent_.has_value()) {

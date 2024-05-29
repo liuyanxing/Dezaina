@@ -14,3 +14,4 @@ template <class... Types>
 constexpr size_t max_size() {
     return static_max(sizeof(Types)...);
 };
+

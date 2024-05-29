@@ -1,10 +1,13 @@
+#pragma once
+
 #include "base_type.h"
-#include "desaina.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkSurface.h"
+#include "interaction/node/rectangle.h"
 #include "node_type.h"
 
+class Desaina;
 class InteractionUtil {
 public:
   InteractionUtil(Desaina* desaina) : desaina_(desaina) {
@@ -20,3 +23,9 @@ private:
 
   void init();
 };
+
+namespace interaction_util {
+
+void layoutRectsToCornersOfRect(std::array<Rectangle, 4>& rects, const SkRect& frame);
+
+}

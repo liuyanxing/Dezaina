@@ -1,15 +1,18 @@
 #pragma once
 
-#include "desaina.h"
 #include "event_system/event_emitter.h"
+#include "event_system/mouse_event.h"
+#include "event_system/mouse_events_consumer.h"
 #include "node_type.h"
+#include "base_type.h"
 #include <vector>
 
 class Interaction;
+class Desaina;
 
-class Selection : public EventEmitter {
+class Selection : public EventEmitter, public EventsConsumer {
 public:
-  explicit Selection(Interaction* interaction) : interaction_(interaction) {
+  explicit Selection(Interaction* interaction) : EventsConsumer(this), interaction_(interaction) {
     bindEvents();
   };
 
@@ -30,8 +33,8 @@ private:
   Node* hoverNode_ = nullptr;
 
   void bindEvents();
-	void handleMouseMove(Event* event);
-	void handleMouseDown(Event* event);
+	void handleMouseMove(MouseEvent* event) override;
+	void handleMouseDown(MouseEvent* event) override;
 
 	void setSelection(const vector<Node*>& nodes);
   void setSelection(const vector<GUID>& nodesIds);
