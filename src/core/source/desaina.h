@@ -1,20 +1,15 @@
 #pragma once
 
 #include "base_type.h"
-#include "desaina_node.h"
 #include "document.h"
 #include "edit/editor.h"
 #include "event_system/event.h"
 #include "event_system/event_emitter.h"
-#include "include/core/SkPath.h"
 #include "interaction/selection.h"
 #include "kiwi.h"
-#include <_types/_uint32_t.h>
 #include <functional>
 #include <memory>
 #include <stdint.h>
-#include <vector>
-#include "select_system/select_system.h"
 #include "services/blob_service.h"
 #include "services/id_generator.h"
 #include "services/services.h"
@@ -113,20 +108,12 @@ class Desaina : public EventEmitter {
       return &editor_;
     }
 
-    const auto* getEventConsumers () const {
-      return &event_consumers_;
-    }
-
 		Services services;
 		Document document;
     EventSystem* eventSystem = nullptr;
+  	ChangeSystem* changeSystem = nullptr;
 		RenderSystem* renderSystem = nullptr;
 		ViewPort viewPort{this};
-    SelectSystem* selectSystem = nullptr;
-  	ActionSystem* actionSystem = nullptr;
-  	ChangeSystem* changeSystem = nullptr;
-    EditSystem* editSystem = nullptr;
-    CreateSystem* createSystem = nullptr;
     NodeUtil nodeUtil{&document};
 	private:
     void remapBlobId();
@@ -136,7 +123,6 @@ class Desaina : public EventEmitter {
     WindowInfo windowInfo_{};
     uint32_t frameCount = 0;
     vector<NextTickHandler> nextTickHandlers_{};
-    Interaction interaction{this};
+    interaction::Interaction interaction{this};
     Editor editor_{this};
-    vector<EventEmitter*> event_consumers_;
 };

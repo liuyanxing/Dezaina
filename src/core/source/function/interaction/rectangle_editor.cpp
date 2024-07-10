@@ -24,7 +24,7 @@ void RectangleEditor::handleDragResizeCornerCtrl(int index, const SkVector& move
   // editor->resizeCornerRadius(delta);
 }
 
-void RectangleEditor::update(const vector<Node *> &nodes) {
+void RectangleEditor::update(const vector<Node*> &nodes) {
   if (nodes.size() != 1) {
     assert(false);
   }

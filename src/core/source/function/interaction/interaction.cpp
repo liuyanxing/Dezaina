@@ -1,17 +1,9 @@
 #include "interaction.h"
-#include "event_system/mouse_event.h"
-#include "include/core/SkPath.h"
 #include "interaction/selection.h"
 
-void Interaction::bindEvents() {
-}
+namespace interaction {
 
-void Interaction::tick() {
-  handleSelection();
-  handleHover();
-}
-
-void Interaction::handleSelection() {
+void Interaction::updateSelection() {
   if (selection_.empty()) {
     if (node_editor_ != nullptr) {
       auto* editorContainer = node_editor_->getContainer();
@@ -19,6 +11,10 @@ void Interaction::handleSelection() {
       node_editor_ = nullptr;
       return;
     }
+    return;
+  }
+
+  if (node_editor_) {
     return;
   }
 
@@ -42,7 +38,14 @@ void Interaction::handleHover() {
   // hover_.setPath(SkPath());
 }
 
-void Interaction::handleMouseEvent(MouseEvent* event) {
-  selection_.emit(*event);
+void Interaction::onEvent(Event* event) {
+  selection_.onEvent(event);
+  creation_.onEvent(event);
 }
 
+void Interaction::onAfterTick(Event* event) {
+  updateSelection();
+  handleHover();
+}
+
+}

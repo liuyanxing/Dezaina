@@ -2,10 +2,12 @@
 #include "interaction.h"
 #include "desaina.h"
 
-void Selection::handleMouseMove(MouseEvent* event) {
+namespace interaction {
+
+void Selection::onMouseMove(MouseEvent* event) {
   vector<Node*> nodes;
   auto mouseEvent = static_cast<MouseEvent*>(event);
-  auto* desaina = interaction_->getDezaina();
+  auto* desaina = interaction_->dezaina();
   auto& nodeUtil = desaina->nodeUtil;
   if (auto* curPage = desaina->document.getCurrentPage()) {
     curPage->getNodesUnderPoint(mouseEvent->x, mouseEvent->y, nodes);
@@ -29,7 +31,7 @@ void Selection::handleMouseMove(MouseEvent* event) {
   }
 }
 
-void Selection::handleMouseDown(MouseEvent* event) {
+void Selection::onMouseDown(MouseEvent* event) {
   if (hoverNode_ != nullptr) {
     setSelection({hoverNode_});
   } else {
@@ -53,4 +55,6 @@ void Selection::emitSelectionChange() {
   UIEvent event;
   event.type = EventType::kSelectionChange;
   emit(event);
+}
+
 }

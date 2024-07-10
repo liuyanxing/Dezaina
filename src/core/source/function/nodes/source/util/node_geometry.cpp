@@ -1,15 +1,12 @@
 #include "change_system/layouts/layout_node.h"
 #include "desaina.h"
 #include "desaina_node.h"
-#include "frame.h"
 #include "include/core/SkPath.h"
 #include "node_type.h"
-#include "rectangle.h"
 #include "services/blob_service.h"
 #include "util/skia.h"
 #include "vector.h"
 #include "node_vector.h"
-#include <_types/_uint32_t.h>
 #include <optional>
 #include <tuple>
 

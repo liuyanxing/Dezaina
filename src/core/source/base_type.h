@@ -1,12 +1,12 @@
 #pragma once
 
 #include <memory>
+#include <variant>
 #include <vector>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include "include/core/SkData.h"
-#include "include/core/SkRefCnt.h"
 
 using Data = SkData;
 

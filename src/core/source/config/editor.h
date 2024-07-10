@@ -1,4 +1,4 @@
-namespace Config {
+namespace config {
    constexpr float editorStrokeWidth = 3;
    constexpr float editorMouseRadius = 3;
    constexpr float boundCornerCtrlNodeSize = 8; 

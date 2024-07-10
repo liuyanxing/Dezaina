@@ -114,7 +114,7 @@ void Canvas::drawHighlightNode(const Node* node) {
     auto shape = static_cast<const DefaultShapeNode*>(node);
     auto geometry = util::getHoverGeometry(shape, desaina_);
     SkPaint paint;
-    paint.setColor(Config::primaryColor);
+    paint.setColor(config::primaryColor);
     paint.setStyle(SkPaint::kStroke_Style);
     paint.setStrokeWidth(2);
     canvas_->drawPath(geometry.path, paint);

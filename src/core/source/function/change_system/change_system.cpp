@@ -11,7 +11,6 @@ void ChangeSystem::applyEditRecords(const vector<ActionPtr>& actions) {
     addChangingItem(action.get());
     processAction(action.get());
   }
-  desaina->actionSystem->clearActions();
 }
 
 void ChangeSystem::processAction(const Action *action) {
@@ -53,10 +52,7 @@ int ChangeSystem::addBlob(const Blob* blob) {
 }
 
 void ChangeSystem::tick() {
-  const auto& actions = desaina->actionSystem->getActions();
-  if (actions.empty()) {
-    return;
-  }
+  vector<ActionPtr> actions{};
   applyEditRecords(actions);
   Desaina_Kiwi::Message message;
   message.set_type(Desaina_Kiwi::MessageType::NODE_CHANGES);

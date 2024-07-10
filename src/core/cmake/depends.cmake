@@ -10,7 +10,7 @@ FetchContent_Declare(
 	skia
 	GIT_REPOSITORY git@github.com:liuyanxing/skia.git
 	GIT_TAG         desaina/chrome/m121
-	GIT_SHALLOW			FALSE
+	GIT_SHALLOW			TRUE
 	GIT_PROGRESS		TRUE
 	USES_TERMINAL_DOWNLOAD	TRUE
 	SOURCE_DIR			${FETCHCONTENT_BASE_DIR}/skia

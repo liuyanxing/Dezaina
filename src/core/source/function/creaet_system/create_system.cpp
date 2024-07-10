@@ -49,11 +49,11 @@ void CreateSystem::handleMouseDrag(MouseEvent* event) {
     node::setFillPaints(creating_node_, {{node::MakeSolidPaint(1, 0, 0, 1)}});
     util::setSize(creating_node_, {dragDistanceX, dragDistanceY});
     util::setTransform(creating_node_, {1, 0, localX, 0, 1, localY});
-    desaina_->actionSystem->createNode(creating_node_, nullptr);
+    // desaina_->actionSystem->createNode(creating_node_, nullptr);
     auto id = creating_node_->get_guid();
     auto e = *event;
     desaina_->nextTick([this, id, e]() {
-      desaina_->selectSystem->setSelectionByIds({id});
+      // desaina_->selectSystem->setSelectionByIds({id});
       // desaina_->editSystem->selectCtrlNodeByPoint({e.x, e.y});
     });
     creating_node_ = nullptr;

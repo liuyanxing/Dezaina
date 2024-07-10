@@ -69,12 +69,10 @@ void Desaina::addSystems() {
 	registerSystem<EventSystem>(&eventSystem);
   registerSystem<ChangeSystem>(&changeSystem);
   registerSystem<RenderSystem>(&renderSystem);
-  registerSystem<ActionSystem>(&actionSystem);
 }
 
 void Desaina::addEventConsumers() {
-  event_consumers_.push_back(&interaction);
-  event_consumers_.push_back(renderSystem);
+  eventSystem->addListener(&interaction);
 }
 
 void Desaina::tick() {

@@ -2,6 +2,7 @@
 
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
+#include "include/core/SkScalar.h"
 #include "include/core/SkSize.h"
 #include <algorithm>
 #include <cmath>
@@ -30,12 +31,12 @@ namespace base {
   }
   inline float vectorsAngle(const SkPoint& a, const SkPoint& b) {
     auto acosValue = std::clamp(a.dot(b) / (a.length() * b.length()), -1.0f, 1.0f);
-    auto angle = acosf(acosValue) * 180 / M_PI;
+    auto angle = SkRadiansToDegrees(acosf(acosValue));
     return a.cross(b) < 0 ? -angle : angle;
   }
 
   inline SkVector mapVector(const SkVector& vector, const SkMatrix& matrix) {
-    auto rotation = acosf(float(matrix.getScaleX())) * 180 / M_PI;
+    auto rotation =  SkRadiansToDegrees(acosf(float(matrix.getScaleX())));
     int sign = asinf(float(matrix.getSkewY())) > 0 ? 1 : -1;
     rotation *= -sign;
     SkMatrix m;
@@ -44,7 +45,7 @@ namespace base {
   }
   
   inline float getRotation(const SkMatrix& matrix) {
-    return atan2f(matrix.getSkewY(), matrix.getScaleX()) * 180 / M_PI;
+    return SkRadiansToDegrees(atan2f(matrix.getSkewY(), matrix.getScaleX()));
   }
 
   inline SkVector getTranslateOfBound(const SkRect& bound, const SkMatrix& matrix) {

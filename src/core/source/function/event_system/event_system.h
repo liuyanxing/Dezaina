@@ -2,11 +2,10 @@
 
 #include <optional>
 #include <stdint.h>
-#include <vector>
 #include "base_type.h"
 #include "event.h"
+#include "event_system/listener.h"
 #include "mouse_event.h"
-#include "event_emitter.h"
 #include "system/system.h"
 
 class Desaina;
@@ -28,6 +27,10 @@ public:
     events_.clear();
   }
 
+  void addListener(Listener* listener) {
+    listeners_.push_back(listener);
+  }
+
   void tick() override;
 
 private:
@@ -37,4 +40,5 @@ private:
   float mouseDeltaY_ = 0;
   vector<Event*> events_;
   uint32_t lastMouseDownFrame_ = 0;
+  vector<Listener*> listeners_;
 };

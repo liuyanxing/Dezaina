@@ -12,6 +12,8 @@ enum class EventType {
   kViewPortChange, kSelectionChange,
   kSetCursor,
   kEditorChagne,
+  kBeforeTick,
+  kAfterTick,
   kAny,
 };
 

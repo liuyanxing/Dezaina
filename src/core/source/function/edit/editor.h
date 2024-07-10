@@ -7,9 +7,7 @@
 #include "node_type.h"
 #include <array>
 #include <functional>
-#include <optional>
 #include <variant>
-#include <vector>
 
 enum class RecordType {
   kRotate,
@@ -36,24 +34,24 @@ class Desaina;
 
 class Editor {
 public:
-  explicit Editor(Desaina* desaina) {
-    this->desaina = desaina;
-  };
+  Editor(Desaina* desaina, bool editSelectedNodes = true);
 
-  bool setSelectedNodeToEdit();
-  Editor* setEditNodes(vector<Node*> nodes);
-  Editor* rotate(float degrees);
-  Editor* translate(float x, float y);
-  Editor* resize(float width, float height, const SkPoint& anchor);
-  Editor* resize(float width, float height);
-  Editor* setRotatation(float degrees);
-  Editor* setTranslate(float x, float y);
-  Editor* setTranslateX(float x);
-  Editor* setTranslateY(float y);
-  Editor* setSize(float width, float height, const SkPoint& anchor);
-  Editor* setSize(float width, float height);
-  Editor* setTransform(const SkMatrix& transform);
+  bool editSelectedNodes();
+  Editor& createAndSelect(NodeType type, Node* parent);
+  Editor& setEditNodes(vector<Node*> nodes);
+  Editor& rotate(float degrees);
+  Editor& translate(float x, float y);
+  Editor& resize(float width, float height, const SkPoint& anchor);
+  Editor& resize(float width, float height);
+  Editor& setRotatation(float degrees);
+  Editor& setTranslate(float x, float y);
+  Editor& setTranslateX(float x);
+  Editor& setTranslateY(float y);
+  Editor& setSize(float width, float height, const SkPoint& anchor);
+  Editor& setSize(float width, float height);
+  Editor& setTransform(const SkMatrix& transform);
   ~Editor() = default;
+
 private:
   Desaina* desaina;
   vector<Node*> edit_nodes_;

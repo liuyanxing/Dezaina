@@ -29,6 +29,7 @@ namespace util {
     } else {
 			assert(false);
 		}
+    assert(false);
 	}
 
 	inline void appendChild(Node* parent, Node* child) {

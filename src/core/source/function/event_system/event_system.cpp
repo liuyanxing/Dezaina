@@ -4,17 +4,15 @@
 #include "event_system/mouse_event.h"
 #include "event_system/ui_event.h"
 #include "viewport_system/viewport_system.h"
-#include <iostream>
 #include <stdint.h>
 
 void EventSystem::tick() {
-  auto* consumers = desaina_->getEventConsumers();
-  for (const auto &consumer : *consumers) {
+  for (const auto& listener : listeners_) {
     for (auto* event : events_) {
       if (event->isStop()) {
         continue;
       }
-      consumer->emit(*event);
+      listener->onEvent(event);
     }
   }
   clearEvents();

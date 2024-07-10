@@ -6,8 +6,8 @@
 #include "util/skia.h"
 #include "util.h"
 #include <array>
-#include <vector>
 #include "desaina.h"
+#include "config/interaction.h"
 
 void NodeEditor::handleDragResizeCtrlNode(int index, MouseEvent *event) {
   if (desaina_->document.getSelectedNodes().size() == 1) {
@@ -21,13 +21,33 @@ void NodeEditor::handleDragResizeCtrlNode(int index, MouseEvent *event) {
 
 }
 
+void NodeEditor::handleDragResizeCtrlEdge(MouseEvent *event) {
+  const auto& transform = bound_ctrl_.get_transform();
+  const auto [x, y] = base::mapPointToLocal({event->clientX, event->clientY}, util::toSkMatrix(transform));
+  const auto [width, height] = bound_ctrl_.get_size();
+  int index = 0;
+  auto pointerRadius = config::pointerRadius;
+  if (x > width - pointerRadius) {
+    index = 1;
+  } else if (y > height - pointerRadius) {
+    index = 2;
+  } else if (x < pointerRadius) {
+    index = 3;
+  }
+
+  if (desaina_->document.getSelectedNodes().size() == 1) {
+  } else {
+    // todo 处理选中多个图层
+  }
+}
+
 void NodeEditor::buildEditor() {
     SolidPaint strokePaint;
     strokePaint.set_color({0, 0, 0, 255});
     bound_ctrl_.set_strokePaints({strokePaint});
     bound_ctrl_.set_strokeWeight(1.0);
     bound_ctrl_.addEventListener(EventType::kMouseDrag, [this](Event* event) {
-      // handleDragResizeCtrlEdge(static_cast<MouseEvent*>(event));
+      handleDragResizeCtrlEdge(static_cast<MouseEvent*>(event));
     });
     container_.appendChild(&bound_ctrl_);
 

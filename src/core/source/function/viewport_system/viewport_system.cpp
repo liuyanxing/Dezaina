@@ -1,7 +1,6 @@
 #include "desaina.h"
 #include "viewport_system.h"
 #include "event_system/event.h"
-#include <iostream>
 
 ViewPort::ViewPort(Desaina* desaina) {
   desaina_ = desaina;

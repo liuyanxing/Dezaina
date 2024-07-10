@@ -2,17 +2,16 @@
 
 #include "event_system/event_emitter.h"
 #include "event_system/mouse_event.h"
-#include "event_system/mouse_events_consumer.h"
+#include "event_system/listener.h"
 #include "node_type.h"
 #include "base_type.h"
-#include <vector>
+
+namespace interaction {
 
 class Interaction;
-class Desaina;
-
-class Selection : public EventEmitter, public EventsConsumer {
+class Selection : public EventEmitter, public Listener {
 public:
-  explicit Selection(Interaction* interaction) : EventsConsumer(this), interaction_(interaction) {};
+  explicit Selection(Interaction* interaction) : Listener(), interaction_(interaction) {};
 
   bool empty() const {
     return selection_.empty();
@@ -30,11 +29,13 @@ private:
   vector<Node*> selection_;
   Node* hoverNode_ = nullptr;
 
-	void handleMouseMove(MouseEvent* event) override;
-	void handleMouseDown(MouseEvent* event) override;
+	void onMouseMove(MouseEvent* event) override;
+	void onMouseDown(MouseEvent* event) override;
 
 	void setSelection(const vector<Node*>& nodes);
   void setSelection(const vector<GUID>& nodesIds);
 
   void emitSelectionChange();
 };
+
+}
