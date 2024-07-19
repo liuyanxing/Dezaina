@@ -1,16 +1,4 @@
-interface NodeChange_kiwi {}
-
-interface NodeBase extends NodeChange_kiwi {
-  encode_function: "virtual void toChange(Desaina_Kiwi::NodeChange& change, kiwi::MemoryPool& pool) {};";
-  applyChange_function: "virtual void applyChange(const Desaina_Kiwi::NodeChange& change) {};";
-  clone_function: "virtual NodeBase* clone(NodeBase* src, NodePool& pool) const { return nullptr; };";
-  isDocument_function: "virtual bool isDocument() { return false; };"
-  isPage_function: "virtual bool isPage() { return false; };"
-  isFrame_function: "virtual bool isFrame() { return false; };;"
-  isRect_function: "virtual bool isRect() { return false; };;"
-}
-
-interface BaseNodeMixin extends NodeBase {
+interface BaseNodeMixin {
   guid: GUID;
   parentIndex: ParentIndex;
   name: string;
@@ -79,7 +67,7 @@ interface BlendMixin {
 
 }
 
-interface AutoLayoutMixin extends NodeChange_kiwi {
+interface AutoLayoutMixin {
   stackMode: StackMode
   stackWrap: StackWrap
   stackPaddingRight: float | 0
