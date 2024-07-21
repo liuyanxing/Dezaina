@@ -17,12 +17,14 @@ bool Change::applyMessage(kiwi::ByteBuffer& buffer) {
 	return true;
 }
 
-bool Change::processBlobChanges(const kiwi::Array<message::Blob>& blobs) {
+bool Change::processBlobMessage(const kiwi::Array<message::Blob>& blobs) {
+	uint32_t index = 0;
 	for (const auto& blob : blobs) {
 		auto* bytes = blob.bytes();
 		auto& data = base::Data::MakeWithCopy(bytes->data(), bytes->size());
 		auto* resourceItem = resource::BlobResource::add(data);
 		if (resourceItem) {
+			blobIdMap_[index++] = resourceItem->id();
 		}
 	}
 	return true;
@@ -42,6 +44,8 @@ bool Change::processMessage(const message::Message& message) {
 		default:
 			break;
 	}
+
+	blobIdMap_.clear();
 	
 	return true;
 }
@@ -101,6 +105,11 @@ bool Change::processNodeChanges(const message::Message& message) {
 			}
 			doc_.append(node);
 		} 
+
+		for (auto& fillGeometry : *node_change.fillGeometry()) {
+			fillGeometry.set_commandsBlob(blobIdMap_[*fillGeometry.commandsBlob()]);
+		}
+
 
 		node->applyChange(node_change);
 		return node;
