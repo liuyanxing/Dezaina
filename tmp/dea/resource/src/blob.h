@@ -57,7 +57,7 @@ private:
 struct BlobResource {
 	friend class BlobResourceProvider;
 
-	static ResourceItem* add(const base::Data& data) {
+	static const ResourceItem* add(const base::Data& data) {
 		auto& instance = Resource::getInstance();
 		auto* provider = static_cast<BlobResourceProvider*>(instance.getProvider(ResourceProvider::Type()));
 		assert(provider);

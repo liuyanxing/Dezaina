@@ -55,11 +55,7 @@ private:
   bool is_owned_ = false;
 };
 
-struct Data {
-private:
-  size_t size_ = 0;
-  char data_[1];
-};
+
 
 using shData = std::shared_ptr<Data>;
 using wkData = std::weak_ptr<Data>;
