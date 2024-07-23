@@ -1,0 +1,25 @@
+#pragma once
+
+#include "node.h"
+#include <type_traits>
+
+namespace dea::node
+{
+
+{{#nodes}}
+class {{node}};
+{{/nodes}}
+
+template<typename T>
+T node_cast(Node* node) {
+{{#nodes}}
+	if (node->getType() == NodeType::{{nodeType}}) {
+		if constexpr (std::is_convertible_v<{{node}}, T>) {
+			return static_cast<T>(({{node}}*)(node));
+		}
+	}
+{{/nodes}}
+	return nullptr;
+}
+
+} // namespace dea::node

@@ -1,0 +1,33 @@
+set(TARGET_NAME App)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/depends.cmake)
+set(TARGET_INCLUE_DIRS
+	${PROJECT_SOURCE_DIR}/dea
+	${SDL_INCLUDE_DIR}
+	${imgui_SOURCE_DIR})
+
+set(TARGET_LINK_LIBS
+	Dea
+  ${SDL_LIBRARIES}
+  imgui)
+
+if(APPLE)
+  set(TARGET_LINK_LIBS ${TARGET_LINK_LIBS} "-framework OpenGL")
+else()
+  set(TARGET_LINK_LIBS ${TARGET_LINK_LIBS} OpenGL32)
+endif()
+ 
+
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "*.h")
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.cpp")
+add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+
+set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 20)
+
+target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})
+# target_link_directories(${TARGET_NAME} PUBLIC ${TARGET_LINK_DIRS})
+
+target_link_libraries(${TARGET_NAME} PUBLIC ${TARGET_LINK_LIBS})
