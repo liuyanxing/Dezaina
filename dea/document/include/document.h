@@ -4,6 +4,7 @@
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
 #include <cstdint>
+#include <iostream>
 #include <unordered_map>
 
 namespace dea::document {
@@ -12,13 +13,13 @@ using NodeMap = std::unordered_map<node::GUID, node::Node*>;
 
 class Document {
 public:
-	Document(uint32_t sessionId) : sessionId_(sessionId), change_(*this) {
-	}
+	Document(uint32_t sessionId);
 
 	template<typename T>
 	T* createNode(const node::GUID& id) {
 		auto* node = new T();
 		node->setGuid(id);
+		nodeMap_[id] = node;
 		return node;
 	};
 
@@ -36,7 +37,7 @@ public:
 	}
 
 	void append(node::Node* child) {
-		auto* root = node::node_cast<node::DocumentNode*>(child); 
+		auto* root = node::node_cast<node::DocumentNode*>(child);
 		if (root) {
 			root_ = root;
 			return;
@@ -45,6 +46,9 @@ public:
 	}
 
 	void append(node::Node* parent, node::Node* child) {
+		if (!parent) {
+			return;
+		}
 		node::Container::append(parent, child);
 	}
 
@@ -54,6 +58,7 @@ public:
 	void setRoot(node::DocumentNode* root) {
 		root_ = root;
 	}
+	auto* root() const { return root_; }
 
 	node::DocumentNode* getRoot() {
 		return root_;
@@ -84,22 +89,27 @@ public:
 		return editor_;
 	}
 
+	void dump();
+
 class Iter {
+friend class Document;
 public:
-	Iter(node::Node* node) : node_(node) {
-	}
-  
+	Iter(node::Node* node) : node_(node) {}
+	void operator++();
+	bool isValid() { return node_ != nullptr; }
+	auto* get() { return node_; }
 private:
 	node::Node* node_;
+  static inline Document* doc_ = nullptr;
 };
 
 private:
-	NodeMap nodeMap_;
+	NodeMap nodeMap_{100};
 	Change change_;
   node::DocumentNode* root_;
 	Editor editor_;
 	uint32_t sessionId_;
-	uint32_t localId_;
+	uint32_t localId_{0};
 };
 
 } // namespace dea::document

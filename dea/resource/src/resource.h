@@ -3,25 +3,36 @@
 #include <cstdint>
 #include <memory>
 #include <unordered_map>
+#include <utility>
 #include <vector>
+#include "primitives.h"
 
 namespace dea::resource {
 using ResourceId = uint32_t;
-using ResourceType = uint8_t;
+
+class ResourceAttachment {
+public:
+	virtual ~ResourceAttachment() = default;
+};
 
 class ResourceItem {
 public:
   ResourceItem(ResourceType type) : type_(type) {}
 	ResourceId id() const { return id_; }
   ResourceType type() const { return type_; }
+	void setAttachment(std::unique_ptr<ResourceAttachment> attachment) { attachment_ = std::move(attachment); }
+	template<typename T>
+	auto attachment() const { return static_cast<T>(attachment_.get()); }
 	virtual ~ResourceItem();
 private:
-  ResourceId id_;
+  ResourceId id_{};
   ResourceType type_;
+  std::unique_ptr<ResourceAttachment> attachment_{};
 };
 
 class ResourceProvider {
 public:
+	ResourceProvider(ResourceType type) : type_(type) {}
 	virtual void remove(const ResourceItem* item) = 0;
 	virtual bool isType(ResourceType type) const { return type == type_; }
 	virtual ~ResourceProvider() = default;
@@ -40,6 +51,11 @@ public:
 
 	static void Init();
 
+	template<typename T = ResourceItem*>
+	static auto Get(ResourceId id) {
+		return static_cast<T>(getInstance().get(id));
+	}
+
 	ResourceId add(const ResourceItem* item) {
 		auto id = nextId_++;
 		resources_.emplace(id, *item);
@@ -47,7 +63,6 @@ public:
 	}
 
 	void addProvider(std::unique_ptr<ResourceProvider>&& provider) {
-	  provider->setType(nextType_++);
 		providers_.push_back(std::move(provider));
 	}
 
@@ -84,7 +99,6 @@ private:
 
 	Resource() = default;
 	std::vector<std::unique_ptr<ResourceProvider>> providers_;
-	ResourceType nextType_ = 1;
 	ResourceId nextId_ = 1;
 	std::unordered_map<ResourceId, ResourceItem> resources_;
 };

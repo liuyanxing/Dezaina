@@ -58,6 +58,7 @@ bool Change::processNodeChanges(message::Message& message) {
 		auto* guid = node_change.guid();
 		id.applyChange(*guid);
 		auto* node = doc_.getNodeById(id);
+		bool isNewNode = !node;
 		if (!node) {
 			auto type = *node_change.type();
 			using message::NodeType;
@@ -103,14 +104,18 @@ bool Change::processNodeChanges(message::Message& message) {
 					assert(false);
 					break;
 			}
-			doc_.append(node);
-		} 
+		}
 
-		for (auto& fillGeometry : *node_change.fillGeometry()) {
-			fillGeometry.set_commandsBlob(blobIdMap_[*fillGeometry.commandsBlob()]);
+		if (node_change.fillGeometry()) {
+			for (auto& fillGeometry : *node_change.fillGeometry()) {
+				fillGeometry.set_commandsBlob(blobIdMap_[*fillGeometry.commandsBlob()]);
+			}
 		}
 
 		node->applyChange(node_change);
+		if (isNewNode) {
+			doc_.append(node);
+		}
 	}
 	return true;
 }

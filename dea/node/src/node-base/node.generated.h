@@ -1087,11 +1087,11 @@ struct SymbolData  {
 
 class BaseNodeMixin  {
 private:
-	GUID guid_;
+	GUID guid_{};
 	ParentIndex parentIndex_;
 	string name_;
 	NodeType type_;
-	BaseNodeMixinPointer nextSibling_;
+	BaseNodeMixinPointer nextSibling_ = nullptr;
 
 public:
 

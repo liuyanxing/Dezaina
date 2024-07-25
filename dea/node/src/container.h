@@ -17,8 +17,15 @@ public:
     lastChild_->setNextSibling(node);
     lastChild_ = node;
   };
+
+  Node* firstChild() const {
+    return firstChild_;
+  };
 	
   static void append(Node* parent, Node* child) {
+    if (!parent) {
+      return;
+    }
     auto container = node_cast<Container*>(parent);
     if (container) {
       container->appendChild(child);

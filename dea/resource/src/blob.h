@@ -18,11 +18,12 @@ private:
 
 class BlobResourceProvider : public ResourceProvider {
 public:
+	BlobResourceProvider() : ResourceProvider(Type) {}
 	BlobResourceItem* store(const base::Data& resource) {
 		if (resources_.find(&resource) != resources_.end()) {
 			return nullptr;
 		}
-	  auto* item =	&resourceItems_.emplace_back(type_);
+	  auto* item =	&resourceItems_.emplace_back(Type);
 		auto& instance = Resource::getInstance();
 		instance.add(item);
 		return item;
@@ -35,17 +36,8 @@ public:
 		return resources_.find(&data) != resources_.end();
 	}
 
-	void setType(ResourceType type) override {
-		type_ = type;
-		Type_ = type;
-	}
-
-	static auto Type() {
-		return Type_;	
-	}
-
+	static inline constexpr ResourceType Type = ResourceType::Blob;
 private:
-	static inline ResourceType Type_;
 	static inline std::unordered_set<const base::Data*> resources_;
 	static inline std::vector<BlobResourceItem> resourceItems_;
 };
@@ -53,9 +45,9 @@ private:
 struct BlobResource {
 	friend class BlobResourceProvider;
 
-	static const ResourceItem* add(const base::Data& data) {
+	static ResourceItem* add(base::Data&& data) {
 		auto& instance = Resource::getInstance();
-		auto* provider = static_cast<BlobResourceProvider*>(instance.getProvider(BlobResourceProvider::Type()));
+		auto* provider = static_cast<BlobResourceProvider*>(instance.getProvider(BlobResourceProvider::Type));
 		assert(provider);
 
 		return provider->store(data);

@@ -63,13 +63,17 @@ public:
     return point.length() * length;
   }
 
+  auto width() const { return width_; }
+  auto height() const { return height_; }
+  auto devicePixelRatio()  const { return devicePixelRatio_; }
+
 private:
 	SkMatrix view_matrix_;
 	SkMatrix projection_matrix_;
   SkMatrix view_projection_matrix_;
   SkMatrix world_screen_matrix_;
-  int width_ = 800;
-  int height_ = 600;
+  uint32_t width_ = 800;
+  uint32_t height_ = 600;
   float devicePixelRatio_ = 1;
 };
 }
