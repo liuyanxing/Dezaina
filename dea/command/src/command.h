@@ -9,9 +9,9 @@ namespace dea::command {
 
 class Command {
 public:
-	template<typename ...T>
-	static auto Make(T... args) {
-		return Cmd{args...};
+	template<typename CmdConfig>
+	static auto Make(const CmdConfig& args) {
+		return Cmd{args};
 	}
 
 	void init() {
@@ -20,9 +20,9 @@ public:
 		buildDefaultCmd();
 	}
 
-	template<typename Props, typename Args>
-	void addCmdToRepo(const Props& props, const Args& args, DeaState condition) {
-		repo_.addCmd(Make(props, args, condition));
+	template<typename CmdConfig>
+	void addCmdToRepo() {
+		repo_.addCmd(Make(CmdConfig{}));
 	}
 
 	template<typename CmdConfig>

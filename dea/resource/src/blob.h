@@ -10,35 +10,39 @@ namespace dea::resource {
 
 class BlobResourceItem : public ResourceItem {
 public:
-	BlobResourceItem(ResourceType type) : ResourceItem(type) {}
-  const auto* data() const { return data_; }
+	BlobResourceItem(ResourceType type, base::Data&& data) : ResourceItem(type), data_(std::move(data)) {}
+	BlobResourceItem(BlobResourceItem&& other) : ResourceItem(std::move(other)), data_(std::move(other.data_)) {}
+
+  const auto* data() const { return &data_; }
 private:
-	base::Data* data_;
+	base::Data data_;
 };
 
 class BlobResourceProvider : public ResourceProvider {
 public:
 	BlobResourceProvider() : ResourceProvider(Type) {}
-	BlobResourceItem* store(const base::Data& resource) {
-		if (resources_.find(&resource) != resources_.end()) {
+	BlobResourceProvider(const BlobResourceProvider&) = delete;
+
+	BlobResourceItem* store(base::Data&& data) {
+		if (data_.find(data) != data_.end()) {
 			return nullptr;
 		}
-	  auto* item =	&resourceItems_.emplace_back(Type);
+	  auto item = &resourceItems_.emplace_back(Type, std::move(data));
 		auto& instance = Resource::getInstance();
 		instance.add(item);
-		return item;
+		return nullptr;
 	}
 
 	void remove(const ResourceItem* item) override {
 	}
 
 	bool has(const base::Data& data) const {
-		return resources_.find(&data) != resources_.end();
+		return data_.find(data) != data_.end();
 	}
 
 	static inline constexpr ResourceType Type = ResourceType::Blob;
 private:
-	static inline std::unordered_set<const base::Data*> resources_;
+	static inline std::unordered_set<base::Data> data_;
 	static inline std::vector<BlobResourceItem> resourceItems_;
 };
 
@@ -50,7 +54,7 @@ struct BlobResource {
 		auto* provider = static_cast<BlobResourceProvider*>(instance.getProvider(BlobResourceProvider::Type));
 		assert(provider);
 
-		return provider->store(data);
+		return provider->store(std::move(data));
 	}
 };
 

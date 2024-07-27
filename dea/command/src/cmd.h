@@ -11,29 +11,29 @@ class Dezaina;
 
 class CmdBase {
 public:
-	CmdBase(CmdType type, DeaState condition) : type{type}, condition{condition} {}
+	CmdBase(CmdType type, DeaStateFlags condition) : type{type}, condition{condition} {}
 	const CmdType type;
-	const DeaState condition;
-	virtual size_t size() const = 0;
+	const DeaStateFlags condition;
+	size_t size() const {
+		return size_;
+	}
+protected:
+	size_t size_;
 };
 
 template <typename CmdConfig, typename Args = typename CmdConfig::Args, typename Props = typename CmdConfig::Props> 
 class Cmd : public CmdBase {
+friend class Command;
 public:
-
 	const Args& data() const {
 		return *reinterpret_cast<const Args*>(args_);
 	}
 
-	size_t size() const override {
-		return sizeof(Cmd<CmdConfig>);
-	}
-
 private:
-friend class Command;
-	Cmd(const Props& props, const Args& args, DeaState condition) : CmdBase{CmdConfig::type, condition} {
-		memcpy(args_, &args, sizeof(Args));
-		memcpy(props_, &props, sizeof(Props));
+	Cmd(const CmdConfig &config) : CmdBase{CmdConfig::type, CmdConfig::condition} {
+		memcpy(args_, &config.args, sizeof(Args));
+		memcpy(props_, &config.props, sizeof(Props));
+		size_ = sizeof(Cmd<CmdConfig>);
 	}
 	alignas(alignof(Args)) char args_[sizeof(Args)];
 	alignas(alignof(Props)) char props_[sizeof(Props)];
@@ -46,7 +46,7 @@ public:
 		auto size = cmd.size();
 		auto type = cmd.type;
 		assert(cursor_ + size < cmdsBuffer_ + N);
-		memcpy(cursor_, cmd, size);
+		memcpy(cursor_, &cmd, size);
 		cursor_ += size;
 	}
 
@@ -62,7 +62,6 @@ public:
 	void clear() {
 		cursor_ = cmdsBuffer_;
 	}
-
 	void empty() const {
 		return cursor_ == cmdsBuffer_;
 	}

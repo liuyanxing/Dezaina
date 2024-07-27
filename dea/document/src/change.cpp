@@ -21,8 +21,8 @@ bool Change::processBlobMessage(kiwi::Array<message::Blob>& blobs) {
 	uint32_t index = 0;
 	for (const auto& blob : blobs) {
 		auto* bytes = blob.bytes();
-		auto& data = base::Data::MakeWithCopy(bytes->data(), bytes->size());
-		auto* resourceItem = resource::BlobResource::add(data);
+		auto&& data = base::Data::MakeWithCopy(bytes->data(), bytes->size());
+		auto* resourceItem = resource::BlobResource::add(std::move(data));
 		if (resourceItem) {
 			blobIdMap_[index++] = resourceItem->id();
 		}

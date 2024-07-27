@@ -40,11 +40,13 @@ add_library(${TARGET_NAME} STATIC ${SOURCES})
 add_subdirectory(node)
 add_subdirectory(document)
 add_subdirectory(resource)
+add_subdirectory(command)
 
 set(TARGET_LINK_LIBS
   Node
   Document
   Resource
+  Cmd
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})

@@ -1,12 +1,13 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <string_view>
+#include "object.h"
 
 namespace dea::base {
-class Buffer {
+class Buffer : public NonCopyable {
 public:
   Buffer();
   Buffer(uint8_t *data, size_t size);
@@ -55,11 +56,3 @@ private:
 
 }
 
-namespace std {
-  template<>
-  struct hash<dea::base::Buffer> {
-    size_t operator()(const dea::base::Buffer& Buffer) const {
-      return std::hash<std::string_view>()(std::string_view(reinterpret_cast<const char*>(Buffer.data()), Buffer.size()));
-    }
-  };
-}

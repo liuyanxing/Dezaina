@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include "primitives.h"
+#include "common/object.h"
 
 namespace dea::resource {
 using ResourceId = uint32_t;
@@ -15,19 +16,27 @@ public:
 	virtual ~ResourceAttachment() = default;
 };
 
-class ResourceItem {
+class ResourceItem : public base::NonCopyable {
 public:
   ResourceItem(ResourceType type) : type_(type) {}
+
+	ResourceItem(ResourceItem&& other) : id_(other.id_), type_(other.type_), attachment_(std::move(other.attachment_)) {
+		other.id_ = 0;
+		other.attachment_ = nullptr;
+	}
+
 	ResourceId id() const { return id_; }
   ResourceType type() const { return type_; }
+
 	void setAttachment(std::unique_ptr<ResourceAttachment> attachment) { attachment_ = std::move(attachment); }
 	template<typename T>
 	auto attachment() const { return static_cast<T>(attachment_.get()); }
+
 	virtual ~ResourceItem();
 private:
   ResourceId id_{};
   ResourceType type_;
-  std::unique_ptr<ResourceAttachment> attachment_{};
+  std::unique_ptr<ResourceAttachment> attachment_ = nullptr;
 };
 
 class ResourceProvider {
@@ -36,7 +45,6 @@ public:
 	virtual void remove(const ResourceItem* item) = 0;
 	virtual bool isType(ResourceType type) const { return type == type_; }
 	virtual ~ResourceProvider() = default;
-	virtual void setType(ResourceType type) = 0;
 protected:
 	ResourceType type_;
 };
@@ -58,7 +66,7 @@ public:
 
 	ResourceId add(const ResourceItem* item) {
 		auto id = nextId_++;
-		resources_.emplace(id, *item);
+		// resources_.emplace(id, *item);
 		return id;
 	}
 
