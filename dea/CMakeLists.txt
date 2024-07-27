@@ -42,6 +42,10 @@ add_subdirectory(document)
 add_subdirectory(resource)
 add_subdirectory(command)
 
+if (BUILD_SKIA)
+  add_dependencies(${TARGET_NAME} build_skia)
+endif()
+
 set(TARGET_LINK_LIBS
   Node
   Document
