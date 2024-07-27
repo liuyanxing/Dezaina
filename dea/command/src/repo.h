@@ -20,13 +20,13 @@ namespace dea::command {
 			CommandArray<N>::addCmd(cmd);
 		}
 
-		template<typename... T>
+		template<typename CmdConfig>
 	  auto* getCmd(CmdType type) {
 			auto* cmd = reinterpret_cast<CmdBase*>(indexes_[static_cast<int>(type)]);
 			if (cmd->type != type) {
 				assert(false);
 			}
-			return static_cast<Cmd<T...>>(cmd);
+			return static_cast<Cmd<CmdConfig>>(cmd);
 		}
 
 	private:

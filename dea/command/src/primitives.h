@@ -10,6 +10,7 @@ enum class CmdType {
 	ADD_NODE,
 	REMOVE_NODE,
 	CLONE_NODE,
+	Align,
 	// View commands
 	Zoom,
 	// Selection commands

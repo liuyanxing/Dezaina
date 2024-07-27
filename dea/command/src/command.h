@@ -21,17 +21,16 @@ public:
 	}
 
 	template<typename Props, typename Args>
-	void addCmdToRepo(CmdType type, const Props& props, const Args& args, DeaState condition) {
-		repo_.addCmd(Make(type, props, args, condition));
+	void addCmdToRepo(const Props& props, const Args& args, DeaState condition) {
+		repo_.addCmd(Make(props, args, condition));
 	}
 
-	template<typename... T>
+	template<typename CmdConfig>
 	auto getCmd(CmdType type) {
-		return repo_.getCmd<T...>(type);
+		return repo_.getCmd<CmdConfig>(type);
 	}
 
-	template<typename... T>
-	void addCmdToExecute(const Cmd<T...>& cmd) {
+	void addCmdToExecute(const CmdBase& cmd) {
 		cmdArray_.addCmd(cmd);
 	}
 

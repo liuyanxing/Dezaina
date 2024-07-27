@@ -17,7 +17,7 @@ public:
 	virtual size_t size() const = 0;
 };
 
-template <typename Args, typename Props> 
+template <typename CmdConfig, typename Args = typename CmdConfig::Args, typename Props = typename CmdConfig::Props> 
 class Cmd : public CmdBase {
 public:
 
@@ -26,12 +26,12 @@ public:
 	}
 
 	size_t size() const override {
-		return sizeof(Cmd<Args, Props>);
+		return sizeof(Cmd<CmdConfig>);
 	}
 
 private:
 friend class Command;
-	Cmd(CmdType type, const Props& props, const Args& args, DeaState condition) : CmdBase{type, condition} {
+	Cmd(const Props& props, const Args& args, DeaState condition) : CmdBase{CmdConfig::type, condition} {
 		memcpy(args_, &args, sizeof(Args));
 		memcpy(props_, &props, sizeof(Props));
 	}
