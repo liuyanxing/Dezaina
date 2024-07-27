@@ -3,7 +3,7 @@ set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_BASE_DIR ${PROJECT_SOURCE_DIR}/deps)
 
-option(BUILD_SKIA "Build Skia" OFF)
+option(BUILD_SKIA "Build Skia" ON)
 
 message(STATUS "Fetching skia")
 FetchContent_Declare(
@@ -35,7 +35,7 @@ if (BUILD_SKIA)
       WORKING_DIRECTORY ${skia_SOURCE_DIR}
       COMMAND python tools/git-sync-deps
       COMMAND "${gn_path};gen;${skia_BINARY_DIR}/$<CONFIG>;--args=is_debug=true is_official_build=false is_component_build=false skia_use_system_freetype2=false skia_use_freetype=true"
-      COMMAND ninja -C ${skia_BINARY_DIR}/$<CONFIG> skia skunicode skshaper skparagraph
+      COMMAND ninja -C ${skia_BINARY_DIR}/$<CONFIG> skia
       VERBATIM
       COMMAND_EXPAND_LISTS
       USES_TERMINAL

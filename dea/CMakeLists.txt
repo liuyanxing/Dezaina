@@ -47,6 +47,7 @@ set(TARGET_LINK_LIBS
   Document
   Resource
   Cmd
+  skia
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})
