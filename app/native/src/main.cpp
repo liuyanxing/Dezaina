@@ -88,7 +88,7 @@ int main(int argv, char** args) {
 		}
 
 		glViewport(0, 0, drawable_width, drawable_height);
-    // desaina.tick();
+    dezaina.tick();
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();

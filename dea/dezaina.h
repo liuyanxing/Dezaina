@@ -2,12 +2,13 @@
 
 #include "document/include/document.h"
 #include "viewport/viewport.h"
+#include "render.h"
 
 namespace dea {
 
 class Dezaina {
 public:
-	Dezaina() : doc_(0) {
+	Dezaina() : doc_(0), viewport_(), render_(doc_, viewport_) {
 	}
 	bool loadDocument(char* data, size_t size) {
 		auto res = doc_.load(data, size);
@@ -23,9 +24,14 @@ public:
 		doc_.dump();
 	}
 
+	void tick() {
+		render_.render();
+	}
+
 private:
 	document::Document doc_;
 	ViewPort viewport_;
+	render::Render render_;
 };
 
 }

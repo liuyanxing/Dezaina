@@ -10,7 +10,7 @@
 #include "common/buffer.h"
 
 #include "vendor/figma/kiwi.h"
-#include "schema/include/message.h"
+#include "schema/message.h"
 
 namespace dea::node {
 

@@ -4,7 +4,39 @@
 #include "geometry/geometry.h"
 #include "paint.h"
 
+#include "include/core/SkColorSpace.h"
+#include "include/gpu/GrBackendSurface.h"
+#include "include/gpu/GrDirectContext.h"
+#include "include/gpu/ganesh/SkSurfaceGanesh.h"
+#include "include/gpu/ganesh/gl/GrGLBackendSurface.h"
+#include <include/gpu/ganesh/gl/egl/GrGLMakeEGLInterface.h>
+#include "include/gpu/ganesh/gl/egl/GrGLMakeEGLInterface.h"
+#include "include/gpu/ganesh/gl/GrGLDirectContext.h"
+#include "include/gpu/gl/GrGLInterface.h"
+
 namespace dea::render {
+
+	bool Render::makeSurface() {
+    sk_sp<const GrGLInterface> interface = GrGLInterfaces::MakeEGL();
+    sk_sp<GrDirectContext> context = GrDirectContexts::MakeGL(interface);
+
+		GrGLFramebufferInfo info;
+		info.fFBOID = 0;
+		auto backendRT = GrBackendRenderTargets::MakeGL(width_,
+																											height_,
+																											0,
+																											8,
+																											info);
+		surface_ = SkSurfaces::WrapBackendRenderTarget(context.get(),
+                                                           backendRT,
+                                                           kBottomLeft_GrSurfaceOrigin,
+                                                           kRGBA_8888_SkColorType,
+																													 nullptr,
+																													 nullptr
+                                                           );
+		return surface_ != nullptr;
+	}
+
 	void Render::render() {
 		if (!checkViewPort()) {
 			updateViewPort();
@@ -31,7 +63,7 @@ namespace dea::render {
 			auto& fillPaintDrawers = buildFillPaintDrawers(node);
 		  for (auto& drawer : fillPaintDrawers) {
 				// render fill
-				drawer->draw();
+				// drawer->draw();
 			}
 		}
 		{
@@ -42,19 +74,19 @@ namespace dea::render {
 			auto& strokePaintDrawers = buildStrokePaintDrawers(node);
 			for (auto& drawer : strokePaintDrawers) {
 				// render stroke
-				drawer->draw();
+				// drawer->draw();
 			}
 		}
 	}
 
 	bool Render::checkViewPort() {
-		return viewPort_.width() == width_ && viewPort_.height() == height_ && viewPort_.devicePixelRatio() == devicePixelRatio_; 
+		return viewport_.width() == width_ && viewport_.height() == height_ && viewport_.devicePixelRatio() == devicePixelRatio_; 
 	}
 
 	void Render::updateViewPort() {
-		width_ = viewPort_.width();
-		height_ = viewPort_.height();
-		devicePixelRatio_ = viewPort_.devicePixelRatio();
+		width_ = viewport_.width();
+		height_ = viewport_.height();
+		devicePixelRatio_ = viewport_.devicePixelRatio();
 		wWidth_ = width_ * devicePixelRatio_;
 		wHeight_ = height_ * devicePixelRatio_;
 	}

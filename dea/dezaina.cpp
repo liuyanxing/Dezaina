@@ -2,4 +2,4 @@
 #define IMPLEMENT_SCHEMA_H
 
 #include "vendor/figma/kiwi.h"
-#include "schema/include/message.h"
+#include "schema/message.h"

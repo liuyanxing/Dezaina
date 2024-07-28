@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vendor/figma/kiwi.h"
-#include "schema/include/message.h"
+#include "schema/message.h"
 #include <unordered_map>
 
 namespace dea::document {

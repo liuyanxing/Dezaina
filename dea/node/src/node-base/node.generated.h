@@ -4,7 +4,7 @@
 #include <variant>
 
 #include "common/buffer.h"
-#include "schema/include/message.h"
+#include "schema/message.h"
 #include "type.h"
 
 namespace dea::node
@@ -1087,11 +1087,11 @@ struct SymbolData  {
 
 class BaseNodeMixin  {
 private:
-	GUID guid_{};
+	GUID guid_;
 	ParentIndex parentIndex_;
 	string name_;
 	NodeType type_;
-	BaseNodeMixinPointer nextSibling_ = nullptr;
+	BaseNodeMixinPointer nextSibling_;
 
 public:
 

@@ -3,24 +3,34 @@ set(TARGET_NAME Dea)
 include(${CMAKE_CURRENT_SOURCE_DIR}/depends.cmake)
 
 set(TARGET_INCLUE_DIRS
-	${SKIA_INCLUDE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/node/include
-	${CMAKE_CURRENT_SOURCE_DIR}/change/include)
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${SKIA_INCLUDE_DIR}  
+)
 
-set(SUBDIRECTORIES
+set(TARGET_LINK_DIRS
+  ${skia_BINARY_DIR}
+)
+
+set(SUB_DIR
     common
     viewport
 )
-foreach(SUBDIR ${SUBDIRECTORIES})
+set(SUB_MODULES
+    command
+    document
+    node
+    change
+    render
+    resource
+)
+
+foreach(SUBDIR ${SUB_DIR})
     # Glob source files
     set(SUBDIR_SOURCES)
     aux_source_directory(./${SUBDIR} SUBDIR_SOURCES)
 
-    # Glob header files
-    file(GLOB SUBDIR_HEADERS "./${SUBDIR}/*.h*")
-
     # Combine sources and headers
-    set(SUBDIR_FILES ${SUBDIR_SOURCES} ${SUBDIR_HEADERS})
+    set(SUBDIR_FILES ${SUBDIR_SOURCES})
 
     # Add sources and headers under subdir named folder
     string(REPLACE "/" "\\" SUBDIR_NAME ${SUBDIR})
@@ -30,29 +40,41 @@ foreach(SUBDIR ${SUBDIRECTORIES})
     set(LIB_SOURCES ${LIB_SOURCES} ${SUBDIR_FILES})
 endforeach(SUBDIR)
 
+foreach(SUBDIR ${SUB_MODULES})
+    # Glob source files
+    set(TARGET_INCLUE_DIRS ${TARGET_INCLUE_DIRS} ./${SUBDIR}/include)
+    set(SUBDIR_SOURCES)
+    aux_source_directory(./${SUBDIR}/src SUBDIR_SOURCES)
+
+    # Combine sources and headers
+    set(SUBDIR_FILES ${SUBDIR_SOURCES})
+
+    # Add sources and headers under subdir named folder
+    string(REPLACE "/" "\\" SUBDIR_NAME ${SUBDIR})
+    source_group("${SUBDIR_NAME}" FILES ${SUBDIR_FILES})
+
+    # Add sources and headers to library target
+    set(MODULE_SOURCES ${MODULE_SOURCES} ${SUBDIR_FILES})
+endforeach(SUBDIR)
+
 list(APPEND SOURCES
 		${LIB_SOURCES}
+    ${MODULE_SOURCES}
 		${CMAKE_CURRENT_SOURCE_DIR}/dezaina.cpp
-		)
-
+		) 
 add_library(${TARGET_NAME} STATIC ${SOURCES})
-
-add_subdirectory(node)
-add_subdirectory(document)
-add_subdirectory(resource)
-add_subdirectory(command)
 
 if (BUILD_SKIA)
   add_dependencies(${TARGET_NAME} build_skia)
 endif()
 
-set(TARGET_LINK_LIBS
-  Node
-  Document
-  Resource
-  Cmd
-  skia
+target_compile_definitions(${TARGET_NAME} PUBLIC
+  SK_DEBUG
+	SK_GL
+	SK_GANESH
+  SK_TRIVIAL_ABI=[[clang::trivial_abi]]
 )
 
+target_link_directories(${TARGET_NAME} PUBLIC ${TARGET_LINK_DIRS})
 target_include_directories(${TARGET_NAME} PUBLIC ${TARGET_INCLUE_DIRS})
 target_link_libraries(${TARGET_NAME} PUBLIC ${TARGET_LINK_LIBS})
