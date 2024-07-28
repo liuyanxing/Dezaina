@@ -1,6 +1,9 @@
 set(TARGET_NAME Dea)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/depends.cmake)
+set(TARGET_LINK_LIBS
+    skia
+  )
 
 set(TARGET_INCLUE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -13,6 +16,7 @@ set(TARGET_LINK_DIRS
 
 set(SUB_DIR
     common
+    geometry
     viewport
 )
 set(SUB_MODULES
@@ -72,7 +76,6 @@ target_compile_definitions(${TARGET_NAME} PUBLIC
   SK_DEBUG
 	SK_GL
 	SK_GANESH
-  SK_TRIVIAL_ABI=[[clang::trivial_abi]]
 )
 
 target_link_directories(${TARGET_NAME} PUBLIC ${TARGET_LINK_DIRS})

@@ -1,5 +1,5 @@
 #include "geometry.h"
-#include "blob.h"
+#include "resource.h"
 #include "common/data.h"
 #include "node/src/node-base/node.generated.h"
 #include "node/src/node-base/type.generated.h"
@@ -17,12 +17,10 @@ namespace dea::geometry {
 		constexpr float raduisRatio = 0.447715521F;
 		GeometryType path{};
 
-		auto [tl, tr, br, bl] = {
-			node->getRectangleTopLeftCornerRadius(),
-			node->getRectangleTopRightCornerRadius(),
-			node->getRectangleBottomRightCornerRadius(),
-			node->getRectangleBottomLeftCornerRadius(),
-		};
+    float tl = node->getRectangleTopLeftCornerRadius();
+    float tr = node->getRectangleTopRightCornerRadius(); 
+    float br = node->getRectangleBottomRightCornerRadius();
+    float bl = node->getRectangleBottomLeftCornerRadius();
 
 		auto size = node->getSize();
 		// beizer control point radius
@@ -81,31 +79,32 @@ namespace dea::geometry {
 	}
 
 	GeometryType buildFill(const Node* node) {
-		if (node->getType() == NodeType::RECTANGLE) {
-			return buildFill(node_cast<const RectangleNode*>(node));
-		} else if (node->getType() == NodeType::ELLIPSE) {
-			return buildFill(node_cast<const EllipseNode*>(node));
-		} else if (node->getType() == NodeType::REGULAR_POLYGON) {
-			return buildFill(node_cast<const PolygonNode*>(node));
-		} else if (node->getType() == NodeType::STAR) {
-			return buildFill(node_cast<const StarNode*>(node));
-		} else if (node->getType() == NodeType::VECTOR) {
-			return buildFill(node_cast<const VectorNode*>(node));
-		} else if (node->getType() == NodeType::FRAME) {
-			return buildFill(node_cast<const FrameNode*>(node));
-		} else if (node->getType() == NodeType::SYMBOL) {
-			return buildFill(node_cast<const SymbolNode*>(node));
-		} else if (node->getType() == NodeType::INSTANCE) {
-			return buildFill(node_cast<const InstanceNode*>(node));
-		} else if (node->getType() == NodeType::TEXT) {
-			return buildFill(node_cast<const TextNode*>(node));
-		} else if (node->getType() == NodeType::PAGE) {
-			return buildFill(node_cast<const PageNode*>(node));
-		} else if (node->getType() == NodeType::DOCUMENT) {
-			return buildFill(node_cast<const DocumentNode*>(node));
-		} else {
-			assert(false);
-		}
+    return GeometryType{};
+		// if (node->getType() == NodeType::RECTANGLE) {
+		// 	return buildFill(node_cast<const RectangleNode*>(node));
+		// } else if (node->getType() == NodeType::ELLIPSE) {
+		// 	return buildFill(node_cast<const EllipseNode*>(node));
+		// } else if (node->getType() == NodeType::REGULAR_POLYGON) {
+		// 	return buildFill(node_cast<const PolygonNode*>(node));
+		// } else if (node->getType() == NodeType::STAR) {
+		// 	return buildFill(node_cast<const StarNode*>(node));
+		// } else if (node->getType() == NodeType::VECTOR) {
+		// 	return buildFill(node_cast<const VectorNode*>(node));
+		// } else if (node->getType() == NodeType::FRAME) {
+		// 	return buildFill(node_cast<const FrameNode*>(node));
+		// } else if (node->getType() == NodeType::SYMBOL) {
+		// 	return buildFill(node_cast<const SymbolNode*>(node));
+		// } else if (node->getType() == NodeType::INSTANCE) {
+		// 	return buildFill(node_cast<const InstanceNode*>(node));
+		// } else if (node->getType() == NodeType::TEXT) {
+		// 	return buildFill(node_cast<const TextNode*>(node));
+		// } else if (node->getType() == NodeType::PAGE) {
+		// 	return buildFill(node_cast<const PageNode*>(node));
+		// } else if (node->getType() == NodeType::DOCUMENT) {
+		// 	return buildFill(node_cast<const DocumentNode*>(node));
+		// } else {
+		// 	assert(false);
+		// }
 	}
 
 	static GeometryType* getGeometry(ResourceId id) {
@@ -127,13 +126,12 @@ namespace dea::geometry {
 		return getGeometry(strokeId);
 	}
 
-	static base::Data serialize(const GeometryType& geometry) {
-		base::Data data{};
-		return data;
-	}
+	// static base::Data serialize(const GeometryType& geometry) {
+	// 	return base::Data{};
+	// }
 
-	static ResourceItem* store(GeometryType&& geometry) {
-	}
+	// static ResourceItem* store(GeometryType&& geometry) {
+	// }
 
 	static GeometryType buildGeometry(const base::Data& data) {
 		GeometryType geometry{};
@@ -153,18 +151,18 @@ namespace dea::geometry {
 	}
 
 	GeometryType* getOrBuildFill(const node::Node* node) {
-		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
-		if (shapeNode) {
-			return getOrBuild(shapeNode->getFillGeometry().front().commandsBlob);
-		}
+		// auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
+		// if (shapeNode) {
+		// 	return getOrBuild(shapeNode->getFillGeometry().front().commandsBlob);
+		// }
 		return nullptr;
 	}
 
 	GeometryType* getOrBuildStroke(const node::Node* node) {
-		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
-		if (shapeNode) {
-			return getOrBuild(shapeNode->getStrokeGeometry().front().commandsBlob);
-		}
+		// auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
+		// if (shapeNode) {
+		// 	return getOrBuild(shapeNode->getStrokeGeometry().front().commandsBlob);
+		// }
 		return nullptr;
 	}
 	

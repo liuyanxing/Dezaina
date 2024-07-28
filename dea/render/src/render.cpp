@@ -9,15 +9,14 @@
 #include "include/gpu/GrDirectContext.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
 #include "include/gpu/ganesh/gl/GrGLBackendSurface.h"
-#include <include/gpu/ganesh/gl/egl/GrGLMakeEGLInterface.h>
-#include "include/gpu/ganesh/gl/egl/GrGLMakeEGLInterface.h"
+#include "include/gpu/ganesh/gl/glx/GrGLMakeGLXInterface.h"
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
 
 namespace dea::render {
 
 	bool Render::makeSurface() {
-    sk_sp<const GrGLInterface> interface = GrGLInterfaces::MakeEGL();
+    sk_sp<const GrGLInterface> interface = GrGLInterfaces::MakeGLX();
     sk_sp<GrDirectContext> context = GrDirectContexts::MakeGL(interface);
 
 		GrGLFramebufferInfo info;
@@ -54,29 +53,29 @@ namespace dea::render {
 	}
 
 	void Render::renderNode(node::Node* node) {
-		RenderLayerSaveScope scope{node};
-		{
-			auto* fill =	geometry::getOrBuildFill(node);
-			if (fill) {
-				// render fill
-			}
-			auto& fillPaintDrawers = buildFillPaintDrawers(node);
-		  for (auto& drawer : fillPaintDrawers) {
-				// render fill
-				// drawer->draw();
-			}
-		}
-		{
-			auto* stroke = geometry::getOrBuildStroke(node);
-			if (stroke) {
-				// render stroke
-			}
-			auto& strokePaintDrawers = buildStrokePaintDrawers(node);
-			for (auto& drawer : strokePaintDrawers) {
-				// render stroke
-				// drawer->draw();
-			}
-		}
+		// RenderLayerSaveScope scope{node};
+		// {
+		// 	auto* fill =	geometry::getOrBuildFill(node);
+		// 	if (fill) {
+		// 		// render fill
+		// 	}
+		// 	auto& fillPaintDrawers = buildFillPaintDrawers(node);
+		//   for (auto& drawer : fillPaintDrawers) {
+		// 		// render fill
+		// 		// drawer->draw();
+		// 	}
+		// }
+		// {
+		// 	auto* stroke = geometry::getOrBuildStroke(node);
+		// 	if (stroke) {
+		// 		// render stroke
+		// 	}
+		// 	auto& strokePaintDrawers = buildStrokePaintDrawers(node);
+		// 	for (auto& drawer : strokePaintDrawers) {
+		// 		// render stroke
+		// 		// drawer->draw();
+		// 	}
+		// }
 	}
 
 	bool Render::checkViewPort() {
