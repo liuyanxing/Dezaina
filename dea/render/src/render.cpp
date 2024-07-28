@@ -65,6 +65,7 @@ namespace dea::render {
 			renderNode(node);
 			++iter;
 		}
+    canvas_->recordingContext()->asDirectContext()->flush();
 	}
 
 	void Render::renderNode(node::Node* node) {
