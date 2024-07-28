@@ -16,8 +16,10 @@ set(TARGET_LINK_LIBS
 
 if(APPLE)
   set(TARGET_LINK_LIBS ${TARGET_LINK_LIBS} "-framework OpenGL")
-else()
+elseif(WIN32)
   set(TARGET_LINK_LIBS ${TARGET_LINK_LIBS} OpenGL32)
+else()
+  set(TARGET_LINK_LIBS ${TARGET_LINK_LIBS} GLX)
 endif()
  
 

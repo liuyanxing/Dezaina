@@ -7,6 +7,7 @@
 #include <new>
 #include <cassert>
 #include <string_view>
+#include <cstring>
 
 namespace dea::base {
 class Data : public NonCopyable {
