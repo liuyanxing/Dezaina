@@ -5,6 +5,7 @@
 #include "paint.h"
 
 #include "include/core/SkColorSpace.h"
+#include "include/core/SkCanvas.h"
 #include "include/gpu/GrBackendSurface.h"
 #include "include/gpu/GrDirectContext.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
@@ -12,6 +13,7 @@
 #include "include/gpu/ganesh/gl/glx/GrGLMakeGLXInterface.h"
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
+#include <GL/gl.h>
 
 namespace dea::render {
 
@@ -21,6 +23,7 @@ namespace dea::render {
 
 		GrGLFramebufferInfo info;
 		info.fFBOID = 0;
+    info.fFormat = GL_RGBA8;
 		auto backendRT = GrBackendRenderTargets::MakeGL(width_,
 																											height_,
 																											0,
@@ -33,7 +36,11 @@ namespace dea::render {
 																													 nullptr,
 																													 nullptr
                                                            );
-		return surface_ != nullptr;
+    if (!surface_) {
+      return false;
+    }
+    canvas_ = surface_->getCanvas();
+    return true;
 	}
 
 	void Render::render() {
@@ -43,6 +50,14 @@ namespace dea::render {
 				return;
 			}
 		}
+
+    if (!canvas_) {
+      if (!makeSurface()) {
+        return;
+      }
+    }
+    canvas_->clear(SK_ColorWHITE);
+    canvas_->drawColor(SK_ColorRED);
 
 		document::Document::Iter iter{doc_.root()};
 		while (iter.isValid()) {

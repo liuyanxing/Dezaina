@@ -29,6 +29,7 @@ private:
 	uint32_t width_ = 0;
 	uint32_t height_ = 0;
 	sk_sp<SkSurface> surface_;
+  SkCanvas* canvas_ = nullptr;
 };
 
 class RenderLayerSaveScope {

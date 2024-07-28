@@ -65,7 +65,9 @@ int main(int argv, char** args) {
   int drawable_width, drawable_height;
   SDL_GL_GetDrawableSize(window, &drawable_width, &drawable_height);
   auto devicePixelRatio = drawable_width / (float)width;
-  // desaina.eventSystem->dispatchWindowResizeEvent(width, height, devicePixelRatio);
+  glViewport(0, 0, drawable_width, drawable_height);
+
+  dezaina.initViewport(drawable_width, drawable_height, devicePixelRatio);
 
 	while (!done) {
 		// Poll and handle events (inputs, window resize, etc.)
@@ -87,8 +89,7 @@ int main(int argv, char** args) {
 				}
 		}
 
-		glViewport(0, 0, drawable_width, drawable_height);
-    dezaina.tick();
+    // dezaina.tick();
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -125,6 +126,8 @@ int main(int argv, char** args) {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		SDL_GL_SwapWindow(window);
+
+    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 	}
 
 	// Cleanup
