@@ -20,9 +20,9 @@ class PageNode;
 class DocumentNode;
 
 template<typename T>
-T node_cast(Node* node) {
+T node_cast(const Node* node) {
 	using U = std::remove_cv_t<std::remove_pointer_t<T>>;
-	if (node->getType() == NodeType::RECTANGLE) {
+	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
 		if constexpr (std::is_convertible_v<RectangleNode, U>) {
 			return static_cast<T>((RectangleNode*)(node));
 		}

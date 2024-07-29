@@ -11,7 +11,7 @@ class {{node}};
 {{/nodes}}
 
 template<typename T>
-T node_cast(Node* node) {
+T node_cast(const Node* node) {
 	using U = std::remove_cv_t<std::remove_pointer_t<T>>;
 {{#nodes}}
 	if (node->getType() == NodeType::{{nodeType}}) {

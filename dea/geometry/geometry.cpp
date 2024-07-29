@@ -151,10 +151,10 @@ namespace dea::geometry {
 	}
 
 	GeometryType* getOrBuildFill(const node::Node* node) {
-		// auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
-		// if (shapeNode) {
-		// 	return getOrBuild(shapeNode->getFillGeometry().front().commandsBlob);
-		// }
+		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
+		if (shapeNode) {
+			return getOrBuild(shapeNode->getFillGeometry().front().commandsBlob);
+		}
 		return nullptr;
 	}
 

@@ -665,7 +665,7 @@ struct Paint  {
 
 };
 
-struct SolidPaint  {
+struct SolidPaint : public Paint {
 	Color color;
 
 	void applyChange(const message::Paint& change) {
@@ -686,7 +686,7 @@ struct SolidPaint  {
 
 };
 
-struct GradientPaint  {
+struct GradientPaint : public Paint {
 	Matrix transform;
 	Array<ColorStop> stops;
 
@@ -712,7 +712,7 @@ struct GradientPaint  {
 
 };
 
-struct ImagePaint  {
+struct ImagePaint : public Paint {
 	ImageScaleMode imageScaleMode;
 	Matrix transform;
 
@@ -1091,7 +1091,7 @@ private:
 	ParentIndex parentIndex_;
 	string name_;
 	NodeType type_;
-	BaseNodeMixinPointer nextSibling_;
+	BaseNodeMixinPointer nextSibling_{};
 
 public:
 
@@ -1126,7 +1126,7 @@ public:
 		nextSibling_ = value;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+	virtual void applyChange(const message::NodeChange& change) {
 		if (change.guid() != nullptr) {
 			applyChangeImpl(guid_, *change.guid());
 		}

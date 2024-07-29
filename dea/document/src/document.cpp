@@ -9,28 +9,29 @@ Document::Document(uint32_t sessionId) : sessionId_(sessionId), change_(*this) {
 	Iter::doc_ = this;
 }
 
-void Document::Iter::operator++() {
+Document::Iter::IterDirection Document::Iter::operator++() {
 	if (!node_) {
-		return;
+		return End;
 	}
 
 	auto* container = node::node_cast<node::Container*>(node_);
 	if (container) {
 		node_ = container->firstChild();
-		return;
+		return Forward;
 	}
 
 	auto* next = node_->getNextSibling();
 	if (next) {
 		node_ = next;
-		return;
+		return Forward;
 	}
 	auto* parent = doc_->getNodeParent(node_);
 	if (!parent) {
 		node_ = nullptr;
-		return;
+		return End;
 	}
 	node_ = parent->getNextSibling();
+  return Backword;
 }
 
 void Document::dump() {

@@ -272,6 +272,7 @@ export const structs = [
 		"name": "SolidPaint",
 		"type": "struct",
 		"changeType": "Paint",
+    "extends": ["Paint"],
 		"members": [
 			{
 				"name": "color",
@@ -283,6 +284,7 @@ export const structs = [
 		"name": "GradientPaint",
 		"type": "struct",
 		"changeType": "Paint",
+    "extends": ["Paint"],
 		"members": [
 			{
 				"name": "transform",
@@ -298,6 +300,7 @@ export const structs = [
 		"name": "ImagePaint",
 		"type": "struct",
 		"changeType": "Paint",
+    "extends": ["Paint"],
 		"members": [
 			{
 				"name": "imageScaleMode",

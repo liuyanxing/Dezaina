@@ -1,6 +1,7 @@
 #pragma once
 #include "../src/executor.h"
 #include "node/include/node.h"
+#include "node/src/page.h"
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
 #include <cstdint>
@@ -30,7 +31,11 @@ public:
 
 	bool load(char* data, size_t size) {
 		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data), size);
-	  return change_.applyMessage(buffer);
+	  auto res = change_.applyMessage(buffer);
+    if (!root_->empty()) {
+      setCurrentPage(static_cast<node::PageNode*>(root_->firstChild()));
+    }
+    return res;
 	}
 
 	void unload() {
@@ -59,6 +64,11 @@ public:
 		root_ = root;
 	}
 	auto* root() const { return root_; }
+
+  void setCurrentPage(node::PageNode* page) {
+    currentPage_ = page;
+  }
+  auto* currentPage() const { return currentPage_; }
 
 	node::DocumentNode* getRoot() {
 		return root_;
@@ -94,8 +104,14 @@ public:
 class Iter {
 friend class Document;
 public:
+  enum IterDirection {
+    Forward,
+    Backword,
+    End,
+  };
+
 	Iter(node::Node* node) : node_(node) {}
-	void operator++();
+	IterDirection operator++();
 	bool isValid() { return node_ != nullptr; }
 	auto* get() { return node_; }
 private:
@@ -107,6 +123,7 @@ private:
 	NodeMap nodeMap_{100};
 	Change change_;
   node::DocumentNode* root_;
+  node::PageNode* currentPage_;
 	Editor editor_;
 	uint32_t sessionId_;
 	uint32_t localId_{0};

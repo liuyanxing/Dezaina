@@ -17,7 +17,7 @@ public:
     return view_projection_matrix_;
   }
 
-  const auto& projectionMatrix() {
+  const auto& projectionMatrix() const {
     return projection_matrix_;
   }
 

@@ -21,6 +21,10 @@ public:
   Node* firstChild() const {
     return firstChild_;
   };
+
+  bool empty() const {
+    return !firstChild_;
+  };
 	
   static void append(Node* parent, Node* child) {
     if (!parent) {

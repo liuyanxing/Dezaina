@@ -2,6 +2,9 @@
 #include "document/include/document.h"
 #include "node/include/node.h"
 #include "geometry/geometry.h"
+#include "node/src/node-base/node.generated.h"
+#include "node/src/node-base/type.generated.h"
+#include "node/src/page.h"
 #include "paint.h"
 
 #include "include/core/SkColorSpace.h"
@@ -13,6 +16,7 @@
 #include "include/gpu/ganesh/gl/glx/GrGLMakeGLXInterface.h"
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
+#include "utility/skia.h"
 #include <GL/gl.h>
 
 namespace dea::render {
@@ -56,42 +60,58 @@ namespace dea::render {
         return;
       }
     }
-    canvas_->clear(SK_ColorWHITE);
-    canvas_->drawColor(SK_ColorRED);
 
+    canvas_->clear(SK_ColorWHITE);
+
+    canvas_->setMatrix(viewport_.projectionMatrix());
 		document::Document::Iter iter{doc_.root()};
+    ++iter;
 		while (iter.isValid()) {
 			auto* node = iter.get();
 			renderNode(node);
 			++iter;
 		}
-    canvas_->recordingContext()->asDirectContext()->flush();
+    auto* context = canvas_->recordingContext()->asDirectContext();
+    if (context != nullptr) {
+      context->flush();
+      context->submit();
+    }
 	}
 
 	void Render::renderNode(node::Node* node) {
-		// RenderLayerSaveScope scope{node};
-		// {
-		// 	auto* fill =	geometry::getOrBuildFill(node);
-		// 	if (fill) {
-		// 		// render fill
-		// 	}
-		// 	auto& fillPaintDrawers = buildFillPaintDrawers(node);
-		//   for (auto& drawer : fillPaintDrawers) {
-		// 		// render fill
-		// 		// drawer->draw();
-		// 	}
-		// }
-		// {
-		// 	auto* stroke = geometry::getOrBuildStroke(node);
-		// 	if (stroke) {
-		// 		// render stroke
-		// 	}
-		// 	auto& strokePaintDrawers = buildStrokePaintDrawers(node);
-		// 	for (auto& drawer : strokePaintDrawers) {
-		// 		// render stroke
-		// 		// drawer->draw();
-		// 	}
-		// }
+    auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
+    if (!shapeNode) {
+      if (node::node_cast<node::PageNode*>(node)) {
+        canvas_->concat(utility::toSkMatrix(doc_.currentPage()->getTransform()));
+        return;
+      }
+      return;
+    }
+
+    canvas_->concat(utility::toSkMatrix(shapeNode->getTransform()));
+		RenderSaveLayerScope scope{node};
+		{
+			auto* fill =	geometry::getOrBuildFill(node);
+			if (fill) {
+				// render fill
+			}
+			auto& fillPaintDrawers = buildFillPaintDrawers(node);
+		  for (auto& drawer : fillPaintDrawers) {
+				// render fill
+				// drawer->draw();
+			}
+		}
+		{
+			auto* stroke = geometry::getOrBuildStroke(node);
+			if (stroke) {
+				// render stroke
+			}
+			auto& strokePaintDrawers = buildStrokePaintDrawers(node);
+			for (auto& drawer : strokePaintDrawers) {
+				// render stroke
+				// drawer->draw();
+			}
+		}
 	}
 
 	bool Render::checkViewPort() {

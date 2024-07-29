@@ -30,7 +30,12 @@ public:
 
 	void setAttachment(std::unique_ptr<ResourceAttachment> attachment) { attachment_ = std::move(attachment); }
 	template<typename T>
-	auto attachment() const { return static_cast<T>(attachment_.get()); }
+	auto* attachment() const {
+    if (attachment_ == nullptr) {
+      return nullptr;
+    }
+    return static_cast<T>(attachment_.get());
+  }
 
 	virtual ~ResourceItem();
 private:

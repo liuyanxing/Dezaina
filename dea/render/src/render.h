@@ -32,15 +32,15 @@ private:
   SkCanvas* canvas_ = nullptr;
 };
 
-class RenderLayerSaveScope {
+class RenderSaveLayerScope {
 public:
-  explicit RenderLayerSaveScope(const node::Node* node)
+  explicit RenderSaveLayerScope(const node::Node* node)
 		: node_(node) {
 			if (checkIfNeedSave()) {
 				save();
 			}
 	}
-	~RenderLayerSaveScope() {
+	~RenderSaveLayerScope() {
 		if (needSave_) {
 			restore();
 		}
@@ -48,9 +48,9 @@ public:
 private:
 	bool needSave_ = false;
 	const node::Node* node_;
-	void save();
-	void restore();
-	bool checkIfNeedSave();
+	void save() {};
+	void restore() {};
+	bool checkIfNeedSave() { return true; };
 };
 
 } // namespace dea::render
