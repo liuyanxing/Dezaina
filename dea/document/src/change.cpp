@@ -35,6 +35,8 @@ bool Change::processMessage(message::Message& message) {
 	if (type == nullptr) {
 		return false;
 	}
+
+  processBlobMessage(*message.blobs());
   
 	using message::MessageType;
 	switch (*type) {

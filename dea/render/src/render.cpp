@@ -1,5 +1,7 @@
 #include "render.h"
 #include "document/include/document.h"
+#include "include/core/SkColor.h"
+#include "include/core/SkPaint.h"
 #include "node/include/node.h"
 #include "geometry/geometry.h"
 #include "node/src/node-base/node.generated.h"
@@ -93,7 +95,8 @@ namespace dea::render {
 		{
 			auto* fill =	geometry::getOrBuildFill(node);
 			if (fill) {
-				// render fill
+        canvas_->resetMatrix();
+        canvas_->drawPath(*fill, SkPaint{SkColors::kBlue});
 			}
 			auto& fillPaintDrawers = buildFillPaintDrawers(node);
 		  for (auto& drawer : fillPaintDrawers) {

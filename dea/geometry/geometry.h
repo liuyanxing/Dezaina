@@ -20,6 +20,6 @@ namespace dea::geometry {
 	GeometryType* getOrBuildFill(const node::Node* node);
 	GeometryType* getOrBuildStroke(const node::Node* node);
 
-	GeometryType buildFill(const node::Node* node);
+	GeometryType buildGeometry(const node::Node* node);
 	GeometryType buildStroke(const node::Node* node);
 }

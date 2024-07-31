@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 #include <memory>
 #include <unordered_map>
 #include <utility>
@@ -17,6 +18,7 @@ public:
 };
 
 class ResourceItem : public base::NonCopyable {
+friend class Resource;
 public:
   ResourceItem(ResourceType type) : type_(type) {}
 
@@ -32,7 +34,7 @@ public:
 	template<typename T>
 	auto* attachment() const {
     if (attachment_ == nullptr) {
-      return nullptr;
+      return static_cast<T>(nullptr);
     }
     return static_cast<T>(attachment_.get());
   }
@@ -69,9 +71,11 @@ public:
 		return static_cast<T>(getInstance().get(id));
 	}
 
-	ResourceId add(const ResourceItem* item) {
+	ResourceId add(ResourceItem* item) {
 		auto id = nextId_++;
-		// resources_.emplace(id, *item);
+		resources_[id] = item;
+    item->id_ = id;
+  
 		return id;
 	}
 
@@ -91,6 +95,7 @@ public:
 	ResourceItem* get(ResourceId id) {
 		auto it = resources_.find(id);
 		if (it != resources_.end()) {
+      return it->second;
 		}
 		return nullptr;
 	}
@@ -113,7 +118,7 @@ private:
 	Resource() = default;
 	std::vector<std::unique_ptr<ResourceProvider>> providers_;
 	ResourceId nextId_ = 1;
-	std::unordered_map<ResourceId, ResourceItem> resources_;
+	std::unordered_map<ResourceId, ResourceItem*> resources_;
 };
 
 } // namespace dea::change

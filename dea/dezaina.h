@@ -1,6 +1,7 @@
 #pragma once
 
 #include "document/include/document.h"
+#include "resource/src/resource.h"
 #include "viewport/viewport.h"
 #include "render.h"
 
@@ -9,6 +10,7 @@ namespace dea {
 class Dezaina {
 public:
 	Dezaina() : doc_(0), viewport_(), render_(doc_, viewport_) {
+    resource::Resource::Init();
 	}
 	bool loadDocument(char* data, size_t size) {
 		auto res = doc_.load(data, size);

@@ -30,7 +30,7 @@ public:
 	  auto item = &resourceItems_.emplace_back(Type, std::move(data));
 		auto& instance = Resource::getInstance();
 		instance.add(item);
-		return nullptr;
+		return item;
 	}
 
 	void remove(const ResourceItem* item) override {

@@ -1,4 +1,5 @@
 #include "geometry.h"
+#include "common/buffer.h"
 #include "resource.h"
 #include "common/data.h"
 #include "node/src/node-base/node.generated.h"
@@ -6,6 +7,8 @@
 #include "node/src/rectangle.h"
 #include "resource.h"
 #include <cassert>
+#include <cstdint>
+#include <iostream>
 #include <memory>
 #include <utility>
 
@@ -79,32 +82,31 @@ namespace dea::geometry {
 	}
 
 	GeometryType buildFill(const Node* node) {
-    return GeometryType{};
-		// if (node->getType() == NodeType::RECTANGLE) {
-		// 	return buildFill(node_cast<const RectangleNode*>(node));
-		// } else if (node->getType() == NodeType::ELLIPSE) {
-		// 	return buildFill(node_cast<const EllipseNode*>(node));
-		// } else if (node->getType() == NodeType::REGULAR_POLYGON) {
-		// 	return buildFill(node_cast<const PolygonNode*>(node));
-		// } else if (node->getType() == NodeType::STAR) {
-		// 	return buildFill(node_cast<const StarNode*>(node));
-		// } else if (node->getType() == NodeType::VECTOR) {
-		// 	return buildFill(node_cast<const VectorNode*>(node));
-		// } else if (node->getType() == NodeType::FRAME) {
-		// 	return buildFill(node_cast<const FrameNode*>(node));
-		// } else if (node->getType() == NodeType::SYMBOL) {
-		// 	return buildFill(node_cast<const SymbolNode*>(node));
-		// } else if (node->getType() == NodeType::INSTANCE) {
-		// 	return buildFill(node_cast<const InstanceNode*>(node));
-		// } else if (node->getType() == NodeType::TEXT) {
-		// 	return buildFill(node_cast<const TextNode*>(node));
-		// } else if (node->getType() == NodeType::PAGE) {
-		// 	return buildFill(node_cast<const PageNode*>(node));
-		// } else if (node->getType() == NodeType::DOCUMENT) {
-		// 	return buildFill(node_cast<const DocumentNode*>(node));
-		// } else {
-		// 	assert(false);
-		// }
+		if (node->getType() == NodeType::RECTANGLE) {
+			return buildFill(node_cast<const RectangleNode*>(node));
+		} else if (node->getType() == NodeType::ELLIPSE) {
+			return buildFill(node_cast<const EllipseNode*>(node));
+		} else if (node->getType() == NodeType::REGULAR_POLYGON) {
+			return buildFill(node_cast<const PolygonNode*>(node));
+		} else if (node->getType() == NodeType::STAR) {
+			return buildFill(node_cast<const StarNode*>(node));
+		} else if (node->getType() == NodeType::VECTOR) {
+			return buildFill(node_cast<const VectorNode*>(node));
+		} else if (node->getType() == NodeType::FRAME) {
+			return buildFill(node_cast<const FrameNode*>(node));
+		} else if (node->getType() == NodeType::SYMBOL) {
+			return buildFill(node_cast<const SymbolNode*>(node));
+		} else if (node->getType() == NodeType::INSTANCE) {
+			return buildFill(node_cast<const InstanceNode*>(node));
+		} else if (node->getType() == NodeType::TEXT) {
+			return buildFill(node_cast<const TextNode*>(node));
+		} else if (node->getType() == NodeType::CANVAS) {
+			return buildFill(node_cast<const PageNode*>(node));
+		} else if (node->getType() == NodeType::DOCUMENT) {
+			return buildFill(node_cast<const DocumentNode*>(node));
+		} else {
+			assert(false);
+		}
 	}
 
 	static GeometryType* getGeometry(ResourceId id) {
@@ -134,12 +136,55 @@ namespace dea::geometry {
 	// }
 
 	static GeometryType buildGeometry(const base::Data& data) {
-		GeometryType geometry{};
-		return geometry;
+		GeometryType path{};
+    base::Buffer buffer(data.data<uint8_t*>(), data.size());
+    size_t i = 0;
+    buffer.seek(0);
+    
+    while (!buffer.isEnd()) {
+      auto type = buffer.readByte();
+      switch (type) {
+        case 0: {
+          path.close();
+          break;
+        }
+        case 1: {
+          path.moveTo(buffer.readFloat(), buffer.readFloat());
+          break;
+        }
+        case 2: {
+          path.lineTo(buffer.readFloat(), buffer.readFloat());
+          break;
+        }
+        case 3: {
+          path.quadTo(
+            buffer.readFloat(), buffer.readFloat(),
+            buffer.readFloat(), buffer.readFloat()
+          );
+          break;
+        }
+        case 4: {
+          path.cubicTo(
+            buffer.readFloat(), buffer.readFloat(),
+            buffer.readFloat(), buffer.readFloat(),
+            buffer.readFloat(), buffer.readFloat()
+          );
+          break;
+        }
+        default: {
+          assert(false);
+          break;
+        }
+      }
+    }
+		return path;
 	}
 
 	static GeometryType* getOrBuild(ResourceId id) {
 	  auto* blobItem = Resource::Get<BlobResourceItem*>(id);
+    if (!blobItem) {
+      assert(false);
+    }
 		auto* attachment = blobItem->attachment<GeometryResourceAttachment*>();
 		if (attachment) {
 			return attachment->geometry();

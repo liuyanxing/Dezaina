@@ -17,11 +17,12 @@ public:
 		if (!d) {
 			assert(false);
 		}
-		Data res(size, static_cast<char*>(d));
+    memcpy(d, data, size);
+		Data res(static_cast<char*>(d), size);
 		return res;
 	}
 
-	Data(size_t size, char* ptr) : size_(size), data_(ptr) {}
+	Data(char* ptr, size_t size) : size_(size), data_(ptr) {}
 	Data(Data&& other) noexcept : size_(other.size_), data_(other.data_) {
 		other.size_ = 0;
 		other.data_ = nullptr;
@@ -32,7 +33,9 @@ public:
 	}
 
 	size_t size() const { return size_; }
-	const char* data() const { return data_; }
+  template<typename T>
+	const T data() const { return T(data_); }
+  const char* data() const { return data_; }
 private:
   size_t size_ = 0;
 	char* data_ = nullptr;
