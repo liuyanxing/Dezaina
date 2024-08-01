@@ -2,8 +2,11 @@
 
 #include <variant>
 #include <vector>
+#include "include/core/SkCanvas.h"
+#include "include/core/SkPaint.h"
 #include "node/include/node.h"
 #include "node/src/node-base/node.generated.h"
+#include "utility/skia.h"
 
 namespace dea::render {
 
@@ -14,6 +17,9 @@ public:
 class SolidPaintDrawer : public PaintDrawer {
 public:
   SolidPaintDrawer(const node::SolidPaint& paint) : paint_{paint} {}
+  void draw(SkCanvas* canvas) {
+    canvas->drawColor(utility::toSkColor(paint_.color));
+  }
 private:
   node::SolidPaint paint_;
 };
@@ -21,6 +27,8 @@ private:
 class GradientPaintDrawer : public PaintDrawer {
 public:
   GradientPaintDrawer(const node::GradientPaint& paint) : paint_{paint} {}
+  void draw(SkCanvas* canvas) {
+  }
 private:
   node::GradientPaint paint_;
 };
@@ -28,6 +36,8 @@ private:
 class ImagePaintDrawer : public PaintDrawer {
 public:
   ImagePaintDrawer(const node::ImagePaint& paint) : paint_{paint} {}
+  void draw(SkCanvas* canvas) {
+  }
 private:
   node::ImagePaint paint_;
 };

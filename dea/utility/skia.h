@@ -15,4 +15,13 @@ namespace dea::utility {
 			0, 0, 1
 		);
 	}
+  inline SkColor toSkColor(const node::Color& color) {
+    SkColor4f skColorf{
+      color.r,
+      color.g,
+      color.b,
+      color.a,
+    };
+    return skColorf.toSkColor();
+  }
 }

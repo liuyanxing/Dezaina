@@ -26,7 +26,7 @@ Document::Iter::IterDirection Document::Iter::operator++() {
 		return Forward;
 	}
 	auto* parent = doc_->getNodeParent(node_);
-	if (!parent) {
+	if (!parent || parent == root_) {
 		node_ = nullptr;
 		return End;
 	}

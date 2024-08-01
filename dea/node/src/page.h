@@ -21,7 +21,7 @@ public:
   } 
 
 private:
-	Matrix transform_{1, 0, 0, 1, 0, 0};
+	Matrix transform_{1, 0, 0, 0, 1, 0};
 };
 
 } // namespace dea::node

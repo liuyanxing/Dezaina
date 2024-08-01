@@ -20,6 +20,7 @@
 #include "include/gpu/gl/GrGLInterface.h"
 #include "utility/skia.h"
 #include <GL/gl.h>
+#include <variant>
 
 namespace dea::render {
 
@@ -63,11 +64,10 @@ namespace dea::render {
       }
     }
 
-    canvas_->clear(SK_ColorWHITE);
+    canvas_->resetMatrix();
 
     canvas_->setMatrix(viewport_.projectionMatrix());
-		document::Document::Iter iter{doc_.root()};
-    ++iter;
+		document::Document::Iter iter{doc_.currentPage()};
 		while (iter.isValid()) {
 			auto* node = iter.get();
 			renderNode(node);
@@ -83,7 +83,9 @@ namespace dea::render {
 	void Render::renderNode(node::Node* node) {
     auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
     if (!shapeNode) {
-      if (node::node_cast<node::PageNode*>(node)) {
+      if (auto* page = node::node_cast<node::PageNode*>(node)) {
+        auto color = utility::toSkColor(page->getBackgroundColor()); 
+        canvas_->clear(color);
         canvas_->concat(utility::toSkMatrix(doc_.currentPage()->getTransform()));
         return;
       }
@@ -93,15 +95,18 @@ namespace dea::render {
     canvas_->concat(utility::toSkMatrix(shapeNode->getTransform()));
 		RenderSaveLayerScope scope{node};
 		{
+      SkAutoCanvasRestore acr(canvas_, true); 
 			auto* fill =	geometry::getOrBuildFill(node);
 			if (fill) {
-        canvas_->resetMatrix();
-        canvas_->drawPath(*fill, SkPaint{SkColors::kBlue});
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        canvas_->clipPath(*fill, true);
 			}
 			auto& fillPaintDrawers = buildFillPaintDrawers(node);
 		  for (auto& drawer : fillPaintDrawers) {
-				// render fill
-				// drawer->draw();
+        std::visit([&](auto&& drawer) {
+          drawer.draw(canvas_);
+        }, drawer);
 			}
 		}
 		{

@@ -27,7 +27,9 @@ public:
 	}
 
 	void tick() {
-		render_.render();
+    if (doc_.loaded()) {
+      render_.render();
+    }
 	}
 
 private:

@@ -47,6 +47,7 @@ public:
 			root_ = root;
 			return;
 		}
+
 		append(getNodeParent(child), child);
 	}
 
@@ -64,6 +65,10 @@ public:
 		root_ = root;
 	}
 	auto* root() const { return root_; }
+
+  bool loaded() const {
+    return root_ != nullptr;
+  }
 
   void setCurrentPage(node::PageNode* page) {
     currentPage_ = page;
@@ -110,12 +115,13 @@ public:
     End,
   };
 
-	Iter(node::Node* node) : node_(node) {}
+	Iter(node::Node* node) : node_(node), root_(node) {}
 	IterDirection operator++();
 	bool isValid() { return node_ != nullptr; }
 	auto* get() { return node_; }
 private:
 	node::Node* node_;
+	node::Node* root_;
   static inline Document* doc_ = nullptr;
 };
 
