@@ -2,7 +2,7 @@
 #include "interaction.h"
 #include "desaina.h"
 
-namespace interaction {
+namespace dea::interaction {
 
 void Selection::onMouseMove(MouseEvent* event) {
   vector<Node*> nodes;
@@ -12,13 +12,13 @@ void Selection::onMouseMove(MouseEvent* event) {
   if (auto* curPage = desaina->document.getCurrentPage()) {
     curPage->getNodesUnderPoint(mouseEvent->x, mouseEvent->y, nodes);
     for (auto& node : nodes) {
-      if (interaction_->util.isCursorOnNodePixel(mouseEvent->x, mouseEvent->y, node)) {
+      if (isCursorOnNodePixel(mouseEvent->x, mouseEvent->y, node)) {
         if (node != hoverNode_) {
           event->target = node;
         }
         hoverNode_ = node;
         auto matrix = nodeUtil.getWorldMatrix(node);
-        auto point = base::mapPointToLocal({mouseEvent->x, mouseEvent->y}, matrix);
+        auto point = utility::mapPointToLocal(matrix, {mouseEvent->x, mouseEvent->y});
         mouseEvent->localX = point.x();
         mouseEvent->localY = point.y();
         break;

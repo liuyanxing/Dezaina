@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/editor.h"
+#include "editor.h"
 #include "change.h"
 
 namespace dea::document {

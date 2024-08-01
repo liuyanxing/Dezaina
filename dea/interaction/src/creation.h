@@ -1,21 +1,21 @@
 #pragma once
 
-#include "event_system/listener.h"
+#include "listener.h"
 
 
-namespace interaction {
+namespace dea::interaction {
 
 class Interaction;
 
-class Creation : public Listener {
+class Creation : public InListener {
 public:
-	Creation(Interaction* interaction);
+	Creation(Interaction& interaction);
 	~Creation() = default;
 
 	void onMouseDrag(MouseEvent* event) override;
 	void onMouseUp(MouseEvent* event) override;
 private:
-  Interaction* interaction_;
+  Interaction& interaction_;
   Node* creating_node_ = nullptr;
 };
 

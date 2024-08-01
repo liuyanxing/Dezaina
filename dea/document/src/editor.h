@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node/include/node.h"
+#include "node.h"
 #include <array>
 #include <functional>
 #include <variant>

@@ -6,7 +6,7 @@
 #include "node_type.h"
 #include "base_type.h"
 
-namespace interaction {
+namespace dea::interaction {
 
 class Interaction;
 class Selection : public EventEmitter, public Listener {

@@ -1,8 +1,7 @@
 #pragma once
 
 #include "creation.h"
-#include "desaina_node.h"
-#include "event_system/listener.h"
+#include "event.h"
 #include "interaction/node/path.h"
 #include "node_pool.h"
 #include "page.h"
@@ -10,19 +9,18 @@
 #include "util.h"
 #include "selection.h"
 
-namespace interaction {
+namespace dea::interaction {
 
-class Interaction : public Listener {
+class Interaction : public InteractionListener {
 public:
-  explicit Interaction(Desaina* desaina) : Listener(), desaina_(desaina), util(desaina), selection_(this), creation_(this) {
+  explicit Interaction(Dezana& desaina) : InteractionListener(), desaina_(desaina), util(desaina), selection_(this), creation_(this) {
     page_.appendChild(&hover_);
   }
-  InteractionUtil util;
 
   auto* dezaina() { return desaina_; }
   void onEvent(Event* event) override;
 private:
-  Desaina* desaina_;
+  Dezana& desaina_;
   PageNode page_;
   NodePool node_pool_{100};
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;

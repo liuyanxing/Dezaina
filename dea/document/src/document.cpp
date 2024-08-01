@@ -34,6 +34,19 @@ Document::Iter::IterDirection Document::Iter::operator++() {
   return Backword;
 }
 
+Document::Iter::IterDirection Document::Iter::operator--() {
+	if (!node_) {
+		return End;
+	}
+
+	auto* parent = doc_->getNodeParent(node_);
+	if (!parent) {
+		node_ = nullptr;
+		return End;
+	}
+  return Backword;
+}
+
 void Document::dump() {
 	Iter iter(root_);
 	while (iter.isValid()) {

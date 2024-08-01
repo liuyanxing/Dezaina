@@ -1,7 +1,7 @@
 #include "interaction.h"
 #include "interaction/selection.h"
 
-namespace interaction {
+namespace dea::interaction {
 
 void Interaction::updateSelection() {
   if (selection_.empty()) {

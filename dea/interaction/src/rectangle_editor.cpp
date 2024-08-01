@@ -5,6 +5,8 @@
 #include <cassert>
 #include "desaina.h"
 
+namespace dea::interaction {
+
 void RectangleEditor::buildEditor() {
   SkVector moveAxises[4] = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
   for (int i = 0; i < 4; i++) {
@@ -32,3 +34,4 @@ void RectangleEditor::update(const vector<Node*> &nodes) {
   NodeEditor::update(nodes);
 }
 
+}

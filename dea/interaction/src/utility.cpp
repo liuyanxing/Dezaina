@@ -4,7 +4,11 @@
 #include "util/node_props.h"
 #include "desaina.h"
 
-void InteractionUtil::init() {
+namespace dea::interaction {
+
+static sk_sp<SkSurface> readColorSurface = nullptr;
+
+void initSurface() {
   int width = 2;
   int height = 2;
 
@@ -14,22 +18,20 @@ void InteractionUtil::init() {
       SkImageInfo::Make(width, height, SkColorType::kRGBA_8888_SkColorType,
                         SkAlphaType::kOpaque_SkAlphaType);
   int rowBytes = width * 4;
-  read_color_surface_ = SkSurfaces::WrapPixels(imageInfo, pixes_, rowBytes, nullptr);
+  readColorSurface = SkSurfaces::WrapPixels(imageInfo, pixes_, rowBytes, nullptr);
 }
 
-bool InteractionUtil::isCursorOnNodePixel(float x, float y, const Node* node) {
-  SkPaint paint;
-  paint.setColor(SK_ColorWHITE);
-  return readColorAtPointOfNode(x, y, node, {paint}) != SK_ColorTRANSPARENT;
-}
-
-SkColor InteractionUtil::readColorAtPointOfNode(float x, float y, const Node* node, const vector<SkPaint>& paints) {
+SkColor readColorAtPointOfNode(float x, float y, const Node* node, const vector<SkPaint>& paints) {
   auto geometryWithPaints = util::getFillGeometryWithPaints(node, desaina_);
   auto& path = geometryWithPaints.geometry[0];
   if (path.isEmpty()) {
     return SK_ColorTRANSPARENT;
   }
   auto matrix = util::getWorldMatrix(node, &desaina_->document);
+  if (!read_color_surface_) {
+    initSurface();
+  }
+
   auto* canvas = read_color_surface_->getCanvas();
   canvas->clear(SK_ColorTRANSPARENT);
   SkAutoCanvasRestore acr(canvas, true);
@@ -44,7 +46,11 @@ SkColor InteractionUtil::readColorAtPointOfNode(float x, float y, const Node* no
   return SkColorSetARGB(pixes_[3], pixes_[0], pixes_[1], pixes_[2]);
 }
 
-namespace interaction_util {
+bool isCursorOnNodePixel(float x, float y, const Node* node) {
+  SkPaint paint;
+  paint.setColor(SK_ColorWHITE);
+  return readColorAtPointOfNode(x, y, node, {paint}) != SK_ColorTRANSPARENT;
+}
 
 void layoutRectsToCornersOfRect(std::array<Rectangle, 4>& rects, const SkRect& frame) {
   SkMatrix matrix;

@@ -1,6 +1,6 @@
 #include "creation.h"
 
-namespace interaction {
+namespace dea::interaction {
 
 void Creation::onMouseDrag(MouseEvent* event) {
 	if (creating_node_ == nullptr) {

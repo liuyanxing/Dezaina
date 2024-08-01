@@ -8,6 +8,8 @@
 #include "node/frame.h"
 #include <array>
 
+namespace dea::interaction {
+
 class Desaina;
 
 class NodeEditor {
@@ -35,3 +37,5 @@ protected:
   void handleDragRotateCtrlNode(int index, MouseEvent *event);
   void handleDragResizeCtrlEdge(MouseEvent *event);
 };
+
+}
