@@ -13,7 +13,7 @@ namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
-  explicit Interaction(Dezana& desaina) : InteractionListener(), desaina_(desaina), util(desaina), selection_(this), creation_(this) {
+  explicit Interaction() : InteractionListener(), selection_(), creation_() {
     page_.appendChild(&hover_);
   }
 

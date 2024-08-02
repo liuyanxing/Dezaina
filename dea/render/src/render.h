@@ -45,6 +45,9 @@ public:
 			restore();
 		}
 	}
+
+	void init() {}
+
 private:
 	bool needSave_ = false;
 	const node::Node* node_;

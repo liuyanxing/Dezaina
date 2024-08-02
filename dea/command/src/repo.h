@@ -21,9 +21,9 @@ namespace dea::command {
 		}
 
 		template<typename CmdConfig>
-	  auto* getCmd(CmdType type) {
-			auto* cmd = reinterpret_cast<CmdBase*>(indexes_[static_cast<int>(type)]);
-			if (cmd->type != type) {
+	  auto* getCmd() {
+			auto* cmd = reinterpret_cast<CmdBase*>(indexes_[static_cast<int>(CmdConfig::type)]);
+			if (cmd->type != CmdConfig::type) {
 				assert(false);
 			}
 			return static_cast<Cmd<CmdConfig>>(cmd);

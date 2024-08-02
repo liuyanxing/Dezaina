@@ -3,14 +3,14 @@
 namespace dea::event {
 
 enum class EventType {
-  kMouseMove,
-  kMouseDown,
-  kMouseUp,
-  kMouseDrag,
-  kMouseWheel,
-  kKeyDown,
-  kKeyUp,
-  kKeyPress,
+  MouseMove,
+  MouseDown,
+  MouseUp,
+  MouseDrag,
+  MouseWheel,
+  KeyDown,
+  KeyUp,
+  KeyPress,
 };
 
 }

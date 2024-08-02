@@ -26,6 +26,7 @@ set(SUB_MODULES
     change
     render
     resource
+    event
 )
 
 foreach(SUBDIR ${SUB_DIR})

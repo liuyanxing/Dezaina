@@ -6,7 +6,7 @@ namespace dea::event {
 
 class Listener {
 public:
-	virtual void onEvent(Event* event) = 0;
+	virtual void onEvent(Event& event) = 0;
 };
 
 }

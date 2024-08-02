@@ -107,7 +107,7 @@ int main(int, char**)
     io.IniFilename = NULL;
     EMSCRIPTEN_MAINLOOP_BEGIN
 #else
-    dea::Dezaina dezaina;
+    auto& dezaina = dea::Dezaina::instance();
     dezaina.initViewport(1280, 720, 1);
     while (!done)
 #endif

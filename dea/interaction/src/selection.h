@@ -9,9 +9,9 @@
 namespace dea::interaction {
 
 class Interaction;
-class Selection : public EventEmitter, public Listener {
+class Selection : public Listener {
 public:
-  explicit Selection(Interaction* interaction) : Listener(), interaction_(interaction) {};
+  explicit Selection() : Listener() {};
 
   bool empty() const {
     return selection_.empty();
@@ -35,7 +35,6 @@ private:
 	void setSelection(const vector<Node*>& nodes);
   void setSelection(const vector<GUID>& nodesIds);
 
-  void emitSelectionChange();
 };
 
 }

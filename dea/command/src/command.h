@@ -26,8 +26,8 @@ public:
 	}
 
 	template<typename CmdConfig>
-	auto getCmd(CmdType type) {
-		return repo_.getCmd<CmdConfig>(type);
+	auto getCmd() {
+		return repo_.getCmd<CmdConfig>();
 	}
 
 	void addCmdToExecute(const CmdBase& cmd) {

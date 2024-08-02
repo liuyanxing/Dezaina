@@ -17,7 +17,7 @@ void Selection::onMouseMove(MouseEvent* event) {
           event->target = node;
         }
         hoverNode_ = node;
-        auto matrix = nodeUtil.getWorldMatrix(node);
+        auto matrix = document::getWorldMatrix(node);
         auto point = utility::mapPointToLocal(matrix, {mouseEvent->x, mouseEvent->y});
         mouseEvent->localX = point.x();
         mouseEvent->localY = point.y();
@@ -44,17 +44,10 @@ void Selection::setSelection(const vector<Node*>& nodes) {
     hoverNode_ = nullptr;
   } 
   selection_ = nodes;
-  emitSelectionChange();
 }
 
 void Selection::setSelection(const vector<GUID>& nodesIds) {
 
-}
-
-void Selection::emitSelectionChange() {
-  UIEvent event;
-  event.type = EventType::kSelectionChange;
-  emit(event);
 }
 
 }
