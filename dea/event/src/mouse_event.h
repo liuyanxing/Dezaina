@@ -20,9 +20,9 @@ struct MouseEvent : public UIEvent {
   }
 };
 
-inline bool isMouse(Event& event) {
-  return static_cast<int>(event.type) <= static_cast<int>(EventType::MouseDown) &&
-    static_cast<int>(event.type) >= static_cast<int>(EventType::MouseWheel);
+inline bool isMouse(const Event& event) {
+  return static_cast<int>(event.type) >= static_cast<int>(EventType::MouseMove) &&
+    static_cast<int>(event.type) <= static_cast<int>(EventType::MouseWheel);
 }
 
 } // namespace event

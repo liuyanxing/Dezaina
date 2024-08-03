@@ -43,6 +43,7 @@ void Interaction::handleHover() {
 void Interaction::onEvent(event::Event& event) {
   selection_.onEvent(event);
   creation_.onEvent(event);
+  InteractionListener::onEvent(event);
 }
 
 void Interaction::onAfterTick(Event& event) {

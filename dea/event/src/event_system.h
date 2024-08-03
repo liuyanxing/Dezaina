@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cassert>
 #include <variant>
 #include "mouse_event.h"
 #include "listener.h"
@@ -14,6 +15,9 @@ using EventUnion = std::variant<MouseEvent>;
 class EventSystem {
 public:
 	void addListener(Listener* listener) {
+    if (listenerCount_ == listeners_.size() - 1) {
+      assert(false);
+    }
 		listeners_[listenerCount_++] = listener;
 	}
 
@@ -22,7 +26,10 @@ public:
 			return;
 		}
 
-		if (event.type == EventType::MouseDown) {
+		if (isMouse(event)) {
+      if (eventCount_ == events_.size() - 1) {
+        return;
+      }
 			events_[eventCount_++] = static_cast<const MouseEvent&>(event);
 		}
 	}

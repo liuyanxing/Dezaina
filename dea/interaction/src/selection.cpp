@@ -2,6 +2,7 @@
 #include "dezaina.h"
 #include "interaction.h"
 #include "utility.h"
+#include <iostream>
 
 namespace dea::interaction {
 
@@ -17,22 +18,24 @@ void Selection::onMouseMove(MouseEvent& event) {
 
   if (auto* curPage = doc.currentPage()) {
     auto nodes = doc.getNodesWithRadius({event.worldX, event.worldY}, viewport.mapScreenToWorld(6));
+    if (nodes.empty()) {
+      // mouseEvent->localX = mouseEvent->x;
+      // mouseEvent->localY = mouseEvent->y;
+      hoverNode_ = nullptr;
+    }
     for (auto& node : nodes) {
       if (isCursorOnNodePixel(mouseEvent.worldX, mouseEvent.worldY, node)) {
         if (node != hoverNode_) {
           // event->target = node;
+          std::cout << "hovering on node" << std::endl;
         }
         hoverNode_ = node;
-        auto matrix = document::getWorldMatrix(node);
+        auto matrix = doc.getWorldMatrix(node);
         // auto point = utility::mapPointToLocal(matrix, {mouseEvent->x, mouseEvent->y});
         // mouseEvent->localX = point.x();
         // mouseEvent->localY = point.y();
         break;
       }
-    }
-    if (nodes.empty()) {
-      // mouseEvent->localX = mouseEvent->x;
-      // mouseEvent->localY = mouseEvent->y;
     }
   }
 }

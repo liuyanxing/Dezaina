@@ -18,15 +18,4 @@ inline SkMatrix getTransfromMatrix(const node::Node* node) {
   return SkMatrix::I();
 }
 
-inline SkMatrix getWorldMatrix(node::Node* node) {
-	document::Document::Iter iter(node);
-	SkMatrix matrix = SkMatrix::I();
-	while(iter.isValid() && !node::node_cast<const node::DocumentNode*>(iter.get())) {
-    matrix.preConcat(getTransfromMatrix(iter.get()));
-		--iter;
-	};
-	return matrix;
-}
-
-
 }

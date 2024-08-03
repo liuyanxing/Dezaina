@@ -49,7 +49,11 @@ public:
 	}
 
   void dispatchMouseEvent(float x, float y, event::EventType type, int button, int buttons) {
-    eventSystem_.dispatchEvent(event::MouseEvent::Make(x, y, type, button, buttons));
+    auto event = event::MouseEvent::Make(x, y, type, button, buttons);
+    auto worldCoord = viewport_.mapScreenToWorld(event.clientX, event.clientY);
+    event.worldX = worldCoord.x();
+    event.worldY = worldCoord.y();
+    eventSystem_.dispatchEvent(event);
   }
 
 	void tick() {

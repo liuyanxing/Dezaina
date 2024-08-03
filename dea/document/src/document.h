@@ -97,6 +97,8 @@ public:
 		return iter->second;
 	}
 
+  SkMatrix getWorldMatrix(node::Node* node);
+
   std::vector<node::Node*> getNodes(float x, float y);
   std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
 
@@ -125,11 +127,12 @@ public:
     End,
   };
 
-	Iter(node::Node* node) : node_(node), root_(node) {}
+	Iter(node::Node* node);
 	IterDirection operator++();
 	IterDirection operator--();
 	bool isValid() { return node_ != nullptr; }
 	auto* get() { return node_; }
+  auto& getWorldMatrix() { return world_; }
 private:
 	node::Node* node_;
 	node::Node* root_;
@@ -137,7 +140,7 @@ private:
   std::array<SkMatrix, 16> wordStack_;
   int8_t stackTop_ = -1;
   static inline Document* doc_ = nullptr;
-  void setNode(node::Node* node, IterDirection direction);
+  bool setNode(node::Node* node, IterDirection direction);
 };
 
 private:

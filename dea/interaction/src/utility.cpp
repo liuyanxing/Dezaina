@@ -1,3 +1,4 @@
+#include "dezaina.h"
 #include "geometry/geometry.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkSurface.h"
@@ -30,7 +31,7 @@ SkColor readColorAtPointOfNode(float x, float y, Node* node, const std::vector<S
   if (geometry->isEmpty()) {
     return SK_ColorTRANSPARENT;
   }
-  auto matrix = document::getWorldMatrix(node);
+  auto matrix = Dezaina::instance().getDocument().getWorldMatrix(node);
   if (!readColorSurface) {
     initSurface();
   }

@@ -55,12 +55,12 @@ public:
   }
 
   float mapScreenToWorld(float length) {
-    SkPoint point;
+    SkRect rect = SkRect::MakeWH(length, 0);
     SkMatrix inverse;
     if (world_screen_matrix_.invert(&inverse)) {
-      inverse.mapXY(1, 0, &point);
+      return inverse.mapRect(rect).width();
     }
-    return point.length() * length;
+    return inverse.getMaxScale() * length;
   }
 
   auto width() const { return width_; }
