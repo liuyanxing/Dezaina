@@ -1,6 +1,5 @@
 #pragma once
 
-#include "document/include/editor.h"
 #include <cstdint>
 #include <type_traits>
 namespace dea {

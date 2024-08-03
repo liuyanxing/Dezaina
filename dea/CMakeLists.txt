@@ -27,6 +27,7 @@ set(SUB_MODULES
     render
     resource
     event
+    interaction
 )
 
 foreach(SUBDIR ${SUB_DIR})

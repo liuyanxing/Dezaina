@@ -22,6 +22,41 @@ public:
     return firstChild_;
   };
 
+  Node* removeChild(Node* node) {
+    if (!node) {
+      return nullptr;
+    }
+    if (node == firstChild_) {
+      firstChild_ = node->getNextSibling();
+      return firstChild_;
+    }
+    // find pre node
+    Node* preNode = firstChild_;
+    while (preNode && preNode->getNextSibling() != node) {
+      preNode = preNode->getNextSibling();
+    }
+    if (preNode) {
+      auto* next = node->getNextSibling();
+      preNode->setNextSibling(next);
+      return next;
+    }
+    return nullptr;
+  }
+
+  Node* findChild(Node* node) {
+    if (!node) {
+      return nullptr;
+    }
+    Node* current = firstChild_;
+    while (current) {
+      if (current == node) {
+        return current;
+      }
+      current = current->getNextSibling();
+    }
+    return nullptr;
+  }
+
   bool empty() const {
     return !firstChild_;
   };

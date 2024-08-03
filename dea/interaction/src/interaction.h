@@ -1,28 +1,24 @@
 #pragma once
 
+#include <memory>
 #include "creation.h"
 #include "event.h"
-#include "interaction/node/path.h"
-#include "node_pool.h"
-#include "page.h"
+#include "event/src/listener.h"
+#include "interaction/src/listener.h"
 #include "node_editor.h"
-#include "util.h"
 #include "selection.h"
+#include "node/path.h"
 
 namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
-  explicit Interaction() : InteractionListener(), selection_(), creation_() {
+  explicit Interaction() {
     page_.appendChild(&hover_);
   }
 
-  auto* dezaina() { return desaina_; }
-  void onEvent(Event* event) override;
 private:
-  Dezana& desaina_;
-  PageNode page_;
-  NodePool node_pool_{100};
+  node::PageNode page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
   Selection selection_;
   Creation creation_;
@@ -30,10 +26,11 @@ private:
 
   void updateSelection();
   void handleHover();
-  void onBeforeTick(Event* event) override;
-  void onAfterTick(Event* event) override;
-  void onMouseWheel(MouseEvent* event) override;
-  void onWindowResize(Event* event) override;
+  void onEvent(event::Event& event) override;
+  // void onBeforeTick(event::Event* event) override;
+  void onAfterTick(event::Event& event) override;
+  void onMouseWheel(event::MouseEvent& event) override;
+  void onWindowResize(event::Event& event) override;
 };
 
 } // namespace interaction

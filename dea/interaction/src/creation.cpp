@@ -2,14 +2,14 @@
 
 namespace dea::interaction {
 
-void Creation::onMouseDrag(MouseEvent* event) {
-	if (creating_node_ == nullptr) {
+void Creation::onMouseDrag(event::MouseEvent& event) {
+	if (creatingNode_ == nullptr) {
 		return;
 	}
 }
 
-void Creation::onMouseUp(MouseEvent* event) {
-	creating_node_ = nullptr;
+void Creation::onMouseUp(event::MouseEvent& event) {
+	creatingNode_ = nullptr;
 }
 
 } // namespace interaction

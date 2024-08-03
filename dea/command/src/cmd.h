@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <functional>
 #include "prims.h"
+#include <cstring>
+#include <cassert>
 
 namespace dea::command {
 

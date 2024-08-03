@@ -11,6 +11,9 @@ enum class EventType {
   KeyDown,
   KeyUp,
   KeyPress,
+  BeforeTick,
+  AfterTick,
+  Any,
 };
 
 }

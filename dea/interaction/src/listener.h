@@ -1,29 +1,39 @@
 #pragma once
 
 #include "event.h"
+#include "event/src/listener.h"
+#include "event/src/mouse_event.h"
 
 namespace dea::interaction {
 
-class InteractionListener : public Listener {
+class InteractionListener : public event::SystemHookListener {
 public:
 	void onEvent(event::Event& event) override {
+    event::SystemHookListener::onEvent(event);
 		switch (event.type) {
 			case event::EventType::MouseDown:
-				onMouseDown(static_cast<event::MouseDown&>(event));
+				onMouseDown(static_cast<event::MouseEvent&>(event));
 				break;
 			case event::EventType::MouseMove:
-				onMouseMove(static_cast<event::MouseMove&>(event));
+				onMouseMove(static_cast<event::MouseEvent&>(event));
 				break;
 			case event::EventType::MouseUp:
-				onMouseUp(static_cast<event::MouseUp&>(event));
+				onMouseUp(static_cast<event::MouseEvent&>(event));
 				break;
+      default:
+        break;
 		}
 	}
 
 protected:
-	virtual void onMouseDown(event::MouseDown& event) {};
-	virtual void onMouseMove(event::MouseMove& event) {};
-	virtual void onMouseUp(event::MouseUp& event) {};
+	virtual void onMouseDown(event::MouseEvent& event) {};
+	virtual void onMouseMove(event::MouseEvent& event) {};
+	virtual void onMouseUp(event::MouseEvent& event) {};
+	virtual void onMouseDrag(event::MouseEvent& event) {};
+	virtual void onMouseWheel(event::MouseEvent& event) {};
+	virtual void onWindowResize(event::Event& event) {};
+  virtual void onAfterTick(event::Event& event) override {};
+  virtual void onBeforeTick(event::Event& event) override {};
 };
 
 } // namespace interaction

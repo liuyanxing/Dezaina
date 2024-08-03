@@ -17,29 +17,28 @@ public:
 		listeners_[listenerCount_++] = listener;
 	}
 
-	void dispatchEvent(Event& event) {
+	void dispatchEvent(const Event& event) {
 		if (isStop_) {
 			return;
 		}
 
-		if (event.type == EventType::MOUSE) {
-			auto mouseEvent = static_cast<MouseEvent&>(event);
-			events_[eventCount_++] = mouseEvent;
+		if (event.type == EventType::MouseDown) {
+			events_[eventCount_++] = static_cast<const MouseEvent&>(event);
 		}
 	}
 
 	void removeListener(Listener* listener);
 
 	void fireEvent(MouseEvent& event) {
-		for (auto& listener : listeners_) {
-			listener->onEvent(event);
-		}
+    for (int i = 0; i < listenerCount_; i++) {
+      listeners_[i]->onEvent(event);
+    }
 	};
 
 	void fireAllEvents() {
-		for (auto& event : events_) {
-			std::visit([this](auto&& arg) { fireEvent(arg); }, event);
-		}
+    for (int i = 0; i < eventCount_; i++) {
+      std::visit([this](auto&& arg) { fireEvent(arg); }, events_[i]);
+    }
 		eventCount_ = 0;
 	};
 

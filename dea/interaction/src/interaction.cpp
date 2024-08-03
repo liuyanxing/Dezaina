@@ -1,7 +1,9 @@
 #include "interaction.h"
-#include "interaction/selection.h"
+#include "selection.h"
 
 namespace dea::interaction {
+
+using namespace event;
 
 void Interaction::updateSelection() {
   if (selection_.empty()) {
@@ -19,7 +21,7 @@ void Interaction::updateSelection() {
   }
 
   if (node_editor_ == nullptr) {
-    node_editor_ = std::make_unique<NodeEditor>(desaina_);
+    node_editor_ = std::make_unique<NodeEditor>();
   }
 
   auto* editorContainer = node_editor_->getContainer();
@@ -38,12 +40,12 @@ void Interaction::handleHover() {
   // hover_.setPath(SkPath());
 }
 
-void Interaction::onEvent(Event* event) {
+void Interaction::onEvent(event::Event& event) {
   selection_.onEvent(event);
   creation_.onEvent(event);
 }
 
-void Interaction::onAfterTick(Event* event) {
+void Interaction::onAfterTick(Event& event) {
   updateSelection();
   handleHover();
 }

@@ -1,27 +1,32 @@
 #pragma once
+
+#include "include/core/SkMatrix.h"
 #include "document.h"
+#include "node.h"
+#include "node/src/node-base/type.generated.h"
+#include "utility/skia.h"
 
 namespace dea::document {
 
-SkMatrix getTransfromMatrix(const Node* node) {
-  if (util::isPage(node)) {
-    return static_cast<const PageNode*>(node)->getTransform();
+inline SkMatrix getTransfromMatrix(const node::Node* node) {
+  if (auto* page = node::node_cast<const node::PageNode*>(node)) {
+    return utility::toSkMatrix(page->getTransform());
   }
-  if (util::isDefaultShapeNode(node)) {
-    auto shape = static_cast<const DefaultShapeNode*>(node);
-    return util::toSkMatrix(shape->get_transform());
+  if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
+    return utility::toSkMatrix(shape->getTransform());
   }
   return SkMatrix::I();
 }
 
-SkMatrix getWorldMatrix(const Node* node) {
-	document::Iter iter(node);
+inline SkMatrix getWorldMatrix(node::Node* node) {
+	document::Document::Iter iter(node);
 	SkMatrix matrix = SkMatrix::I();
-	while(iter.valid()&& !node::cast<node::DocumentNode>(iter.get())) {
+	while(iter.isValid() && !node::node_cast<const node::DocumentNode*>(iter.get())) {
     matrix.preConcat(getTransfromMatrix(iter.get()));
-		iter--;
+		--iter;
 	};
 	return matrix;
 }
+
 
 }

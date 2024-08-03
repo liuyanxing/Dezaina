@@ -1,39 +1,35 @@
 #pragma once
 
-#include "event_system/event_emitter.h"
-#include "event_system/mouse_event.h"
-#include "event_system/listener.h"
-#include "node_type.h"
-#include "base_type.h"
+#include <vector>
+#include "node.h"
+#include "listener.h"
 
 namespace dea::interaction {
 
 class Interaction;
-class Selection : public Listener {
+class Selection : public InteractionListener {
 public:
-  explicit Selection() : Listener() {};
-
   bool empty() const {
     return selection_.empty();
   }
-  const vector<Node*>& getSelection() const {
+  const std::vector<node::Node*>& getSelection() const {
     return selection_;
   }
 
-  const Node* getHoverNode() const {
+  const node::Node* getHoverNode() const {
     return hoverNode_;
   }
 
 private:
   Interaction* interaction_;
-  vector<Node*> selection_;
-  Node* hoverNode_ = nullptr;
+  std::vector<node::Node*> selection_;
+  node::Node* hoverNode_ = nullptr;
 
-	void onMouseMove(MouseEvent* event) override;
-	void onMouseDown(MouseEvent* event) override;
 
-	void setSelection(const vector<Node*>& nodes);
-  void setSelection(const vector<GUID>& nodesIds);
+	void setSelection(const std::vector<node::Node*>& nodes);
+  void setSelection(const std::vector<node::GUID>& nodesIds);
+  void onMouseMove(event::MouseEvent& event) override;
+  void onMouseDown(event::MouseEvent& event) override;
 
 };
 

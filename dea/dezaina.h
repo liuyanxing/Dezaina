@@ -31,7 +31,7 @@ public:
 		auto res = doc_.load(data, size);
 		doc_.dump();
 		if (res) {
-			render_.init();
+			// render_.init();
 			eventSystem_.start();
 		}
 		return res;
@@ -48,12 +48,25 @@ public:
 	void dispatchEvent(event::Event& event) {
 	}
 
+  void dispatchMouseEvent(float x, float y, event::EventType type, int button, int buttons) {
+    eventSystem_.dispatchEvent(event::MouseEvent::Make(x, y, type, button, buttons));
+  }
+
 	void tick() {
     if (!doc_.loaded()) {
 			return;
     }
 		eventSystem_.fireAllEvents();
+    render_.render();
 	}
+
+  auto& getDocument() {
+    return doc_;
+  }
+
+  auto& getViewport() {
+    return viewport_;
+  }
 
 private:
 	document::Document doc_;

@@ -1,5 +1,8 @@
 #pragma once
 
+
+namespace dea::interaction {
+
 class InteractionNode {
 public:
   bool isActiveByPixel() const { return is_active_by_pixel_; }
@@ -8,3 +11,5 @@ private:
   // if not active by pixel, it is active by bound
   bool is_active_by_pixel_ = true;
 };
+
+}

@@ -1,9 +1,15 @@
 #pragma once
 #include "executor.h"
+#include "include/core/SkCanvas.h"
+#include "include/core/SkMatrix.h"
+#include "include/core/SkRect.h"
+#include "include/private/base/SkPoint_impl.h"
 #include "node/include/node.h"
+#include "node/src/node-base/node.h"
 #include "node/src/page.h"
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
+#include <array>
 #include <cstdint>
 #include <iostream>
 #include <unordered_map>
@@ -48,7 +54,7 @@ public:
 			return;
 		}
 
-		append(getNodeParent(child), child);
+		append(getParent(child), child);
 	}
 
 	void append(node::Node* parent, node::Node* child) {
@@ -91,6 +97,9 @@ public:
 		return iter->second;
 	}
 
+  std::vector<node::Node*> getNodes(float x, float y);
+  std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
+
 	void flushEditor() {
 		if (editor_.empty()) {
 			return;
@@ -112,6 +121,7 @@ public:
   enum IterDirection {
     Forward,
     Backword,
+    Right,
     End,
   };
 
@@ -123,7 +133,11 @@ public:
 private:
 	node::Node* node_;
 	node::Node* root_;
+  SkMatrix world_;
+  std::array<SkMatrix, 16> wordStack_;
+  int8_t stackTop_ = -1;
   static inline Document* doc_ = nullptr;
+  void setNode(node::Node* node, IterDirection direction);
 };
 
 private:
