@@ -62,6 +62,7 @@ public:
     }
 		eventSystem_.fireAllEvents();
     render_.render();
+    eventSystem_.afterTick();
 	}
 
   auto& getDocument() {

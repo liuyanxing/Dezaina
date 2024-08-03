@@ -6,7 +6,6 @@
 #include "include/private/base/SkPoint_impl.h"
 #include "node/src/node-base/type.generated.h"
 #include "utility/coords.h"
-#include <iostream>
 
 namespace dea::document {
 
@@ -27,12 +26,11 @@ bool Document::Iter::setNode(node::Node* node, IterDirection direction) {
   }
   if (direction == Forward) {
     world_ = getTransfromMatrix(node) * world_;
-    wordStack_[++stackTop_] = world_;
+    wordStack_.push_back(world_);
   } else {
-    world_ = wordStack_[--stackTop_];
+    world_ = wordStack_.pop_back();
     world_ = getTransfromMatrix(node) * world_;
   }
-  assert(stackTop_ >= -1 && stackTop_ < 16);
   node_ = node;
   return true;
 }
@@ -82,7 +80,6 @@ void Document::dump() {
 	Iter iter(root_);
 	while (iter.isValid()) {
 		auto* node = iter.get();
-		std::cout << node->getName() << std::endl;
 		++iter;
 	}
 }

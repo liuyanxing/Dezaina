@@ -11,8 +11,8 @@
 #include "editor.h"
 #include <array>
 #include <cstdint>
-#include <iostream>
 #include <unordered_map>
+#include "common/array.h"
 
 namespace dea::document {
 
@@ -137,8 +137,7 @@ private:
 	node::Node* node_;
 	node::Node* root_;
   SkMatrix world_;
-  std::array<SkMatrix, 16> wordStack_;
-  int8_t stackTop_ = -1;
+  base::array<SkMatrix, 16> wordStack_;
   static inline Document* doc_ = nullptr;
   bool setNode(node::Node* node, IterDirection direction);
 };

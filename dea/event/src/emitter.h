@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <functional>
 
+#include "common/array.h"
 #include "event.h"
 
 namespace dea::event {
@@ -27,14 +28,13 @@ public:
   }
 
   void addEventListener(const EventType& type, const ListenerFunc& func) {
-    consumers_[index_++] = {type, func};
+    consumers_.push_back({type, func});
   }
 
   virtual ~EventEmitter() = default;
 
 private:
-  std::array<EventListener, Count> consumers_;
-  uint8_t index_ = 0;
+  base::array<EventListener, Count> consumers_;
 };
 
 }

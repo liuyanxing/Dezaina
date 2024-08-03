@@ -7,6 +7,7 @@
 #include <variant>
 #include "mouse_event.h"
 #include "listener.h"
+#include "common/array.h"
 
 namespace dea::event {
 
@@ -15,10 +16,7 @@ using EventUnion = std::variant<MouseEvent>;
 class EventSystem {
 public:
 	void addListener(Listener* listener) {
-    if (listenerCount_ == listeners_.size() - 1) {
-      assert(false);
-    }
-		listeners_[listenerCount_++] = listener;
+    listeners_.push_back(listener);
 	}
 
 	void dispatchEvent(const Event& event) {
@@ -26,28 +24,31 @@ public:
 			return;
 		}
 
-		if (isMouse(event)) {
-      if (eventCount_ == events_.size() - 1) {
-        return;
-      }
-			events_[eventCount_++] = static_cast<const MouseEvent&>(event);
+		if (isMouse(event) && !events_.full()) {
+      events_.push_back(static_cast<const MouseEvent&>(event));
 		}
 	}
 
 	void removeListener(Listener* listener);
 
-	void fireEvent(MouseEvent& event) {
-    for (int i = 0; i < listenerCount_; i++) {
-      listeners_[i]->onEvent(event);
-    }
+	void fireEvent(Event& event) {
+    listeners_.forEach([&event](Listener* listener) {
+      listener->onEvent(event);
+    });
 	};
 
 	void fireAllEvents() {
-    for (int i = 0; i < eventCount_; i++) {
-      std::visit([this](auto&& arg) { fireEvent(arg); }, events_[i]);
-    }
-		eventCount_ = 0;
+    events_.forEach([this](auto& event) {
+      std::visit([this](auto&& arg) { fireEvent(arg); }, event);
+    });
+    events_.clear();
 	};
+
+  void afterTick() {
+    Event event;
+    event.type = EventType::AfterTick;
+    fireEvent(event);
+  }
 
 	bool empty() {
 		return events_.empty();
@@ -63,10 +64,8 @@ public:
 
 private:
   bool isStop_ = false;
-	uint8_t listenerCount_ = 0;
-  uint8_t eventCount_ = 0;
-	std::array<Listener*, 10> listeners_;
-	std::array<EventUnion, 10> events_;
+	base::array<Listener*, 10> listeners_;
+	base::array<EventUnion, 10> events_;
 };
 
 }

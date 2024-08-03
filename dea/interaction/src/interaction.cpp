@@ -1,5 +1,7 @@
 #include "interaction.h"
 #include "selection.h"
+#include "rectangle_editor.h"
+#include <iostream>
 
 namespace dea::interaction {
 
@@ -20,15 +22,19 @@ void Interaction::updateSelection() {
     return;
   }
 
-  if (node_editor_ == nullptr) {
+  if (selection_.getSelection().size() > 1) {
     node_editor_ = std::make_unique<NodeEditor>();
+  } else {
+    auto* node = selection_.getSelection()[0];
+    if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node)) {
+      node_editor_ = std::make_unique<RectangleEditor>(rectangleNode);
+    }
   }
 
   auto* editorContainer = node_editor_->getContainer();
   if (!page_.findChild(editorContainer)) {
     page_.appendChild(editorContainer);
   }
-  node_editor_->update(selection_.getSelection());
 }
 
 void Interaction::handleHover() {
