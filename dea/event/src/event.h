@@ -32,7 +32,7 @@ enum class Keymod {
 
 struct Event {
   EventType type;  
-  KeyMode keyMode;
+  KeyMode mode;
   void stop() {
     isStop_ = true;
   }
@@ -42,7 +42,7 @@ struct Event {
 
   template<Keymod Mod>
   bool isPressed() {
-      return (keyMode & static_cast<KeyMode>(Mod)) != 0;
+      return (mode & static_cast<KeyMode>(Mod)) != 0;
   }
 
 private:

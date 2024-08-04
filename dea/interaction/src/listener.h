@@ -22,6 +22,9 @@ public:
       case event::EventType::MouseWheel:
         onMouseWheel(static_cast<event::MouseEvent&>(event));
         break;
+      case event::EventType::MouseDrag:
+        onMouseDrag(static_cast<event::MouseEvent&>(event));
+        break;
       default:
         break;
 		}

@@ -47,6 +47,13 @@ public:
 	}
 
 	void dispatchEvent(event::Event& event) {
+    if (event::isMouse(event)) {
+      auto& mouseEvent = static_cast<event::MouseEvent&>(event);
+      auto worldCoord = viewport_.mapScreenToWorld(mouseEvent.clientX, mouseEvent.clientY);
+      mouseEvent.worldX = worldCoord.x();
+      mouseEvent.worldY = worldCoord.y();
+    }
+    eventSystem_.dispatchEvent(event);
 	}
 
   void dispatchMouseEvent(float x, float y, event::EventType type, int button, int buttons) {
@@ -60,6 +67,10 @@ public:
   void dispatchKeyEvent(event::EventType type, event::KeyCode code, event::KeyMode mode) {
     auto event = event::KeyEvent::Make(type, code, mode);
     eventSystem_.dispatchEvent(event);
+  }
+
+  bool isKeyPressed(event::Key code) {
+    return eventSystem_.isKeyPressed(code);
   }
 
 	void tick() {

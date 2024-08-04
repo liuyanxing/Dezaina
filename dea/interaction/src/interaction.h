@@ -40,6 +40,7 @@ private:
   // void onBeforeTick(event::Event* event) override;
   void onAfterTick(event::Event& event) override;
   void onMouseWheel(event::MouseEvent& event) override;
+  void onMouseDrag(event::MouseEvent& event) override;
   void onWindowResize(event::Event& event) override;
 };
 

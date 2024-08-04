@@ -20,14 +20,10 @@ inline void processEvent(Dezaina& desaina, SDL_Event& sdlEvent) {
     case SDL_MOUSEWHEEL: {
       auto deltaX = sdlEvent.wheel.x;
       auto deltaY = sdlEvent.wheel.y;
-      // std::cout << "mouse wheel" << std::endl;
-      desaina.dispatchMouseEvent(
-        deltaX,
-        deltaY,
-        event::EventType::MouseWheel,
-        0,
-        0
-      );
+      auto event = event::MouseEvent::Make(mouseX, mouseY, event::EventType::MouseWheel, 0, 0);
+      event.dx = deltaX;
+      event.dy = deltaY;
+      desaina.dispatchEvent(event);
       break;
     }
     case SDL_MOUSEBUTTONDOWN: {
@@ -54,13 +50,12 @@ inline void processEvent(Dezaina& desaina, SDL_Event& sdlEvent) {
     }
     case SDL_MOUSEMOTION: {
       // std::cout << "mouse move" << std::endl;
-      desaina.dispatchMouseEvent(
-        mouseX,
-        mouseY,
-        event::EventType::MouseMove,
-        0,
-        0
-      );
+      auto dx = sdlEvent.motion.xrel;
+      auto dy = sdlEvent.motion.yrel;
+      auto event = event::MouseEvent::Make(mouseX, mouseY, event::EventType::MouseMove, 0, 0);
+      event.dx = dx;
+      event.dy = dy;
+      desaina.dispatchEvent(event);
       break;
     }
     case SDL_MULTIGESTURE: {
@@ -81,6 +76,15 @@ inline void processEvent(Dezaina& desaina, SDL_Event& sdlEvent) {
       // std::cout << "key down" << std::endl;
       desaina.dispatchKeyEvent(
         event::EventType::KeyDown,
+        sdlEvent.key.keysym.sym,
+        sdlEvent.key.keysym.mod
+      );
+      break;
+    }
+    case SDL_KEYUP: {
+      // std::cout << "key up" << std::endl;
+      desaina.dispatchKeyEvent(
+        event::EventType::KeyUp,
         sdlEvent.key.keysym.sym,
         sdlEvent.key.keysym.mod
       );

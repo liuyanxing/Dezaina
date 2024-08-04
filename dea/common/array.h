@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstddef>
 #include <functional>
+#include <iostream>
 namespace dea::base {
 
 template <typename T, std::size_t U>
@@ -33,6 +34,32 @@ public:
     for (int i = 0; i <= size_; i++) {
       func(this->at(i));
     }
+  }
+
+  void filter(const std::function<bool(T&)>& func) {
+    for (int i = 0; i <= size_; i++) {
+      if (!func(this->at(i))) {
+        this->at(i) = this->at(size_--);
+      }
+    }
+  }
+
+  void remove(const T& value) {
+    for (int i = 0; i <= size_; i++) {
+      if (this->at(i) == value) {
+        this->at(i) = this->at(size_--);
+        return;
+      }
+    }
+  }
+
+  bool contains(const T& value) {
+    for (int i = 0; i <= size_; i++) {
+      if (this->at(i) == value) {
+        return true;
+      }
+    }
+    return false;
   }
 
 private:
