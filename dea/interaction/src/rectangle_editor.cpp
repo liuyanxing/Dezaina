@@ -9,11 +9,18 @@ namespace dea::interaction {
 
 using namespace node;
 
+RectangleEditor::RectangleEditor(node::RectangleNode* node) : node_(node), NodeEditor() {
+    auto& doc = Dezaina::instance().getDocument();
+    NodeEditor::update(doc.getScreenMatrix(node), doc.getScreenBound(node));
+    
+    buildEditor();
+}
+
 void RectangleEditor::buildEditor() {
   SkVector moveAxises[4] = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
   for (int i = 0; i < 4; i++) {
     SkVector::Normalize(&moveAxises[i]);
-    auto& ctrl = corner_size_ctrls_[i];
+    auto& ctrl = cornerSizeCtrls_[i];
     ctrl.setSize({20, 20});
     ctrl.addEventListener(event::EventType::MouseDrag, [this, i, moveAxises](event::Event &event) {
       handleDragResizeCornerCtrl(i, moveAxises[i], static_cast<event::MouseEvent&>(event));
@@ -32,7 +39,7 @@ void RectangleEditor::update(const std::vector<Node*> &nodes) {
   if (nodes.size() != 1) {
     assert(false);
   }
-  RectangleNode* node = node_cast<RectangleNode*>(nodes[0]); 
+  RectangleNode* node = node::node_cast<RectangleNode*>(nodes[0]); 
   NodeEditor::update(nodes);
 }
 

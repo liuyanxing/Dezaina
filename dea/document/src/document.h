@@ -13,10 +13,12 @@
 #include <cstdint>
 #include <unordered_map>
 #include "common/array.h"
+#include "utility/node_utility.h"
 
 namespace dea::document {
 
 using NodeMap = std::unordered_map<node::GUID, node::Node*>;
+using SkBound = SkRect;
 
 class Document {
 public:
@@ -98,6 +100,10 @@ public:
 	}
 
   SkMatrix getWorldMatrix(node::Node* node);
+  SkBound getWorldBound(node::Node* node);
+  SkBound getLocalBound(node::Node* node);
+  SkBound getScreenBound(node::Node* node);
+  SkMatrix getScreenMatrix(node::Node* node);
 
   std::vector<node::Node*> getNodes(float x, float y);
   std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
@@ -117,29 +123,11 @@ public:
 
 	void dump();
 
-class Iter {
-friend class Document;
+class Iter : public utility::NodeIter {
 public:
-  enum IterDirection {
-    Forward,
-    Backword,
-    Right,
-    End,
-  };
-
-	Iter(node::Node* node);
-	IterDirection operator++();
-	IterDirection operator--();
-	bool isValid() { return node_ != nullptr; }
-	auto* get() { return node_; }
-  auto& getWorldMatrix() { return world_; }
-private:
-	node::Node* node_;
-	node::Node* root_;
-  SkMatrix world_;
-  base::array<SkMatrix, 16> wordStack_;
+	Iter(node::Node* node) : utility::NodeIter(node, [this](node::Node* node) { return doc_->getParent(node); }) {
+  }
   static inline Document* doc_ = nullptr;
-  bool setNode(node::Node* node, IterDirection direction);
 };
 
 private:

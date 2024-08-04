@@ -7,13 +7,13 @@ namespace dea::interaction {
 
 class RectangleEditor : public NodeEditor {
  public:
-  RectangleEditor(node::RectangleNode* node) : node_(node) {}
+  RectangleEditor(node::RectangleNode* node);
 
   void buildEditor();
   void update(const std::vector<node::Node*>& nodes) override;
 
 private:
-  std::array<Rectangle, 4> corner_size_ctrls_;
+  std::array<Rectangle, 4> cornerSizeCtrls_;
   void handleDragResizeCornerCtrl(int index, const SkVector& moveAxis, event::MouseEvent &event);
   node::RectangleNode* node_;
 };

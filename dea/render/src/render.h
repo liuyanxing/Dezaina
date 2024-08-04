@@ -20,6 +20,8 @@ public:
 private:
 	bool checkViewPort();
 	void updateViewPort();
+  void renderDocument();
+  void renderInteraction();
 	void renderNode(node::Node* node);
 	const ViewPort& viewport_;
 	const document::Document& doc_;

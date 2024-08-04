@@ -18,6 +18,7 @@ set(SUB_DIR
     common
     geometry
     viewport
+    utility
 )
 set(SUB_MODULES
     command

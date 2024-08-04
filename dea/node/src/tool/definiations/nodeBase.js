@@ -13,6 +13,7 @@ export const nodeBase = [
     "members": [],
     "node": "RectangleNode",
     "nodeType": "RECTANGLE",
+    "alias": [ "ROUNDED_RECTANGLE" ]
   },
   {
     "name": "LineNodeBase",

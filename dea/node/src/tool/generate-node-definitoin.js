@@ -37,7 +37,7 @@ function procClassGetterAndSetter(o) {
 	});	
 }
 
-data.structs.forEach(o => { procExtends(o); procChangeType(o); });
+data.structs.forEach(o => { procExtends(o); procChangeType(o); procClassGetterAndSetter(o); });
 data.classes.forEach(o => { procExtends(o); procClassGetterAndSetter(o); });
 
 let template = fs.readFileSync('./node.mustache').toString();

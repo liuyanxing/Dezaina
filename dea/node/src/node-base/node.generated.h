@@ -264,8 +264,21 @@ enum class WindingRule {
 
 
 struct GUID  {
-	uint sessionID;
-	uint localID;
+	uint sessionID{};
+	uint localID{};
+
+	const uint& getSessionID() const {
+		return sessionID;
+	}
+	void setSessionID(const uint& v) {
+		sessionID = v;
+	}
+	const uint& getLocalID() const {
+		return localID;
+	}
+	void setLocalID(const uint& v) {
+		localID = v;
+	}
 
 	void applyChange(const message::GUID& change) {
 		if (change.sessionID() != nullptr) {
@@ -290,8 +303,21 @@ struct GUID  {
 };
 
 struct Vector  {
-	float x;
-	float y;
+	float x{};
+	float y{};
+
+	const float& getX() const {
+		return x;
+	}
+	void setX(const float& v) {
+		x = v;
+	}
+	const float& getY() const {
+		return y;
+	}
+	void setY(const float& v) {
+		y = v;
+	}
 
 	void applyChange(const message::Vector& change) {
 		if (change.x() != nullptr) {
@@ -316,10 +342,35 @@ struct Vector  {
 };
 
 struct Rect  {
-	float x;
-	float y;
-	float w;
-	float h;
+	float x{};
+	float y{};
+	float w{};
+	float h{};
+
+	const float& getX() const {
+		return x;
+	}
+	void setX(const float& v) {
+		x = v;
+	}
+	const float& getY() const {
+		return y;
+	}
+	void setY(const float& v) {
+		y = v;
+	}
+	const float& getW() const {
+		return w;
+	}
+	void setW(const float& v) {
+		w = v;
+	}
+	const float& getH() const {
+		return h;
+	}
+	void setH(const float& v) {
+		h = v;
+	}
 
 	void applyChange(const message::Rect& change) {
 		if (change.x() != nullptr) {
@@ -352,12 +403,49 @@ struct Rect  {
 };
 
 struct Matrix  {
-	float m00;
-	float m01;
-	float m02;
-	float m10;
-	float m11;
-	float m12;
+	float m00{};
+	float m01{};
+	float m02{};
+	float m10{};
+	float m11{};
+	float m12{};
+
+	const float& getM00() const {
+		return m00;
+	}
+	void setM00(const float& v) {
+		m00 = v;
+	}
+	const float& getM01() const {
+		return m01;
+	}
+	void setM01(const float& v) {
+		m01 = v;
+	}
+	const float& getM02() const {
+		return m02;
+	}
+	void setM02(const float& v) {
+		m02 = v;
+	}
+	const float& getM10() const {
+		return m10;
+	}
+	void setM10(const float& v) {
+		m10 = v;
+	}
+	const float& getM11() const {
+		return m11;
+	}
+	void setM11(const float& v) {
+		m11 = v;
+	}
+	const float& getM12() const {
+		return m12;
+	}
+	void setM12(const float& v) {
+		m12 = v;
+	}
 
 	void applyChange(const message::Matrix& change) {
 		if (change.m00() != nullptr) {
@@ -398,8 +486,21 @@ struct Matrix  {
 };
 
 struct Number  {
-	float value;
-	NumberUnits units;
+	float value{};
+	NumberUnits units{};
+
+	const float& getValue() const {
+		return value;
+	}
+	void setValue(const float& v) {
+		value = v;
+	}
+	const NumberUnits& getUnits() const {
+		return units;
+	}
+	void setUnits(const NumberUnits& v) {
+		units = v;
+	}
 
 	void applyChange(const message::Number& change) {
 		if (change.value() != nullptr) {
@@ -424,10 +525,35 @@ struct Number  {
 };
 
 struct Color  {
-	float r;
-	float g;
-	float b;
-	float a;
+	float r{};
+	float g{};
+	float b{};
+	float a{};
+
+	const float& getR() const {
+		return r;
+	}
+	void setR(const float& v) {
+		r = v;
+	}
+	const float& getG() const {
+		return g;
+	}
+	void setG(const float& v) {
+		g = v;
+	}
+	const float& getB() const {
+		return b;
+	}
+	void setB(const float& v) {
+		b = v;
+	}
+	const float& getA() const {
+		return a;
+	}
+	void setA(const float& v) {
+		a = v;
+	}
 
 	void applyChange(const message::Color& change) {
 		if (change.r() != nullptr) {
@@ -460,7 +586,14 @@ struct Color  {
 };
 
 struct Effect  {
-	EffectType type;
+	EffectType type{};
+
+	const EffectType& getType() const {
+		return type;
+	}
+	void setType(const EffectType& v) {
+		type = v;
+	}
 
 	void applyChange(const message::Effect& change) {
 		if (change.type() != nullptr) {
@@ -481,13 +614,56 @@ struct Effect  {
 };
 
 struct DropShadowEffect  {
-	Color color;
-	Vector offset;
-	float radius;
-	float spread;
-	bool visible;
-	BlendMode blendMode;
-	bool showShadowBehindNode;
+	Color color{};
+	Vector offset{};
+	float radius{};
+	float spread{};
+	bool visible{};
+	BlendMode blendMode{};
+	bool showShadowBehindNode{};
+
+	const Color& getColor() const {
+		return color;
+	}
+	void setColor(const Color& v) {
+		color = v;
+	}
+	const Vector& getOffset() const {
+		return offset;
+	}
+	void setOffset(const Vector& v) {
+		offset = v;
+	}
+	const float& getRadius() const {
+		return radius;
+	}
+	void setRadius(const float& v) {
+		radius = v;
+	}
+	const float& getSpread() const {
+		return spread;
+	}
+	void setSpread(const float& v) {
+		spread = v;
+	}
+	const bool& getVisible() const {
+		return visible;
+	}
+	void setVisible(const bool& v) {
+		visible = v;
+	}
+	const BlendMode& getBlendMode() const {
+		return blendMode;
+	}
+	void setBlendMode(const BlendMode& v) {
+		blendMode = v;
+	}
+	const bool& getShowShadowBehindNode() const {
+		return showShadowBehindNode;
+	}
+	void setShowShadowBehindNode(const bool& v) {
+		showShadowBehindNode = v;
+	}
 
 	void applyChange(const message::Effect& change) {
 		if (change.color() != nullptr) {
@@ -532,12 +708,49 @@ struct DropShadowEffect  {
 };
 
 struct InnerShadowEffect  {
-	Color color;
-	Vector offset;
-	float radius;
-	float spread;
-	bool visible;
-	BlendMode blendMode;
+	Color color{};
+	Vector offset{};
+	float radius{};
+	float spread{};
+	bool visible{};
+	BlendMode blendMode{};
+
+	const Color& getColor() const {
+		return color;
+	}
+	void setColor(const Color& v) {
+		color = v;
+	}
+	const Vector& getOffset() const {
+		return offset;
+	}
+	void setOffset(const Vector& v) {
+		offset = v;
+	}
+	const float& getRadius() const {
+		return radius;
+	}
+	void setRadius(const float& v) {
+		radius = v;
+	}
+	const float& getSpread() const {
+		return spread;
+	}
+	void setSpread(const float& v) {
+		spread = v;
+	}
+	const bool& getVisible() const {
+		return visible;
+	}
+	void setVisible(const bool& v) {
+		visible = v;
+	}
+	const BlendMode& getBlendMode() const {
+		return blendMode;
+	}
+	void setBlendMode(const BlendMode& v) {
+		blendMode = v;
+	}
 
 	void applyChange(const message::Effect& change) {
 		if (change.color() != nullptr) {
@@ -578,8 +791,21 @@ struct InnerShadowEffect  {
 };
 
 struct BlurEffect  {
-	float radius;
-	bool visible;
+	float radius{};
+	bool visible{};
+
+	const float& getRadius() const {
+		return radius;
+	}
+	void setRadius(const float& v) {
+		radius = v;
+	}
+	const bool& getVisible() const {
+		return visible;
+	}
+	void setVisible(const bool& v) {
+		visible = v;
+	}
 
 	void applyChange(const message::Effect& change) {
 		if (change.radius() != nullptr) {
@@ -604,8 +830,21 @@ struct BlurEffect  {
 };
 
 struct ColorStop  {
-	float position;
-	Color color;
+	float position{};
+	Color color{};
+
+	const float& getPosition() const {
+		return position;
+	}
+	void setPosition(const float& v) {
+		position = v;
+	}
+	const Color& getColor() const {
+		return color;
+	}
+	void setColor(const Color& v) {
+		color = v;
+	}
 
 	void applyChange(const message::ColorStop& change) {
 		if (change.position() != nullptr) {
@@ -630,10 +869,35 @@ struct ColorStop  {
 };
 
 struct Paint  {
-	PaintType type;
-	bool visible;
-	float opacity;
-	BlendMode blendMode;
+	PaintType type{};
+	bool visible{};
+	float opacity{};
+	BlendMode blendMode{};
+
+	const PaintType& getType() const {
+		return type;
+	}
+	void setType(const PaintType& v) {
+		type = v;
+	}
+	const bool& getVisible() const {
+		return visible;
+	}
+	void setVisible(const bool& v) {
+		visible = v;
+	}
+	const float& getOpacity() const {
+		return opacity;
+	}
+	void setOpacity(const float& v) {
+		opacity = v;
+	}
+	const BlendMode& getBlendMode() const {
+		return blendMode;
+	}
+	void setBlendMode(const BlendMode& v) {
+		blendMode = v;
+	}
 
 	void applyChange(const message::Paint& change) {
 		if (change.type() != nullptr) {
@@ -666,7 +930,14 @@ struct Paint  {
 };
 
 struct SolidPaint : public Paint {
-	Color color;
+	Color color{};
+
+	const Color& getColor() const {
+		return color;
+	}
+	void setColor(const Color& v) {
+		color = v;
+	}
 
 	void applyChange(const message::Paint& change) {
 		if (change.color() != nullptr) {
@@ -687,8 +958,21 @@ struct SolidPaint : public Paint {
 };
 
 struct GradientPaint : public Paint {
-	Matrix transform;
-	Array<ColorStop> stops;
+	Matrix transform{};
+	Array<ColorStop> stops{};
+
+	const Matrix& getTransform() const {
+		return transform;
+	}
+	void setTransform(const Matrix& v) {
+		transform = v;
+	}
+	const Array<ColorStop>& getStops() const {
+		return stops;
+	}
+	void setStops(const Array<ColorStop>& v) {
+		stops = v;
+	}
 
 	void applyChange(const message::Paint& change) {
 		if (change.transform() != nullptr) {
@@ -713,8 +997,21 @@ struct GradientPaint : public Paint {
 };
 
 struct ImagePaint : public Paint {
-	ImageScaleMode imageScaleMode;
-	Matrix transform;
+	ImageScaleMode imageScaleMode{};
+	Matrix transform{};
+
+	const ImageScaleMode& getImageScaleMode() const {
+		return imageScaleMode;
+	}
+	void setImageScaleMode(const ImageScaleMode& v) {
+		imageScaleMode = v;
+	}
+	const Matrix& getTransform() const {
+		return transform;
+	}
+	void setTransform(const Matrix& v) {
+		transform = v;
+	}
 
 	void applyChange(const message::Paint& change) {
 		if (change.imageScaleMode() != nullptr) {
@@ -739,8 +1036,21 @@ struct ImagePaint : public Paint {
 };
 
 struct Path  {
-	WindingRule windingRule;
-	uint commandsBlob;
+	WindingRule windingRule{};
+	uint commandsBlob{};
+
+	const WindingRule& getWindingRule() const {
+		return windingRule;
+	}
+	void setWindingRule(const WindingRule& v) {
+		windingRule = v;
+	}
+	const uint& getCommandsBlob() const {
+		return commandsBlob;
+	}
+	void setCommandsBlob(const uint& v) {
+		commandsBlob = v;
+	}
 
 	void applyChange(const message::Path& change) {
 		if (change.windingRule() != nullptr) {
@@ -765,8 +1075,21 @@ struct Path  {
 };
 
 struct ParentIndex  {
-	GUID guid;
-	string position;
+	GUID guid{};
+	string position{};
+
+	const GUID& getGuid() const {
+		return guid;
+	}
+	void setGuid(const GUID& v) {
+		guid = v;
+	}
+	const string& getPosition() const {
+		return position;
+	}
+	void setPosition(const string& v) {
+		position = v;
+	}
 
 	void applyChange(const message::ParentIndex& change) {
 		if (change.guid() != nullptr) {
@@ -791,8 +1114,21 @@ struct ParentIndex  {
 };
 
 struct AssetRef  {
-	string key;
-	string version;
+	string key{};
+	string version{};
+
+	const string& getKey() const {
+		return key;
+	}
+	void setKey(const string& v) {
+		key = v;
+	}
+	const string& getVersion() const {
+		return version;
+	}
+	void setVersion(const string& v) {
+		version = v;
+	}
 
 	void applyChange(const message::AssetRef& change) {
 		if (change.key() != nullptr) {
@@ -817,8 +1153,21 @@ struct AssetRef  {
 };
 
 struct StyleId  {
-	GUID guid;
-	AssetRef assetRef;
+	GUID guid{};
+	AssetRef assetRef{};
+
+	const GUID& getGuid() const {
+		return guid;
+	}
+	void setGuid(const GUID& v) {
+		guid = v;
+	}
+	const AssetRef& getAssetRef() const {
+		return assetRef;
+	}
+	void setAssetRef(const AssetRef& v) {
+		assetRef = v;
+	}
 
 	void applyChange(const message::StyleId& change) {
 		if (change.guid() != nullptr) {
@@ -843,9 +1192,28 @@ struct StyleId  {
 };
 
 struct ArcData  {
-	float startingAngle;
-	float endingAngle;
-	float innerRadius;
+	float startingAngle{};
+	float endingAngle{};
+	float innerRadius{};
+
+	const float& getStartingAngle() const {
+		return startingAngle;
+	}
+	void setStartingAngle(const float& v) {
+		startingAngle = v;
+	}
+	const float& getEndingAngle() const {
+		return endingAngle;
+	}
+	void setEndingAngle(const float& v) {
+		endingAngle = v;
+	}
+	const float& getInnerRadius() const {
+		return innerRadius;
+	}
+	void setInnerRadius(const float& v) {
+		innerRadius = v;
+	}
 
 	void applyChange(const message::ArcData& change) {
 		if (change.startingAngle() != nullptr) {
@@ -874,7 +1242,14 @@ struct ArcData  {
 };
 
 struct VectorData  {
-	uint vectorNetworkBlob;
+	uint vectorNetworkBlob{};
+
+	const uint& getVectorNetworkBlob() const {
+		return vectorNetworkBlob;
+	}
+	void setVectorNetworkBlob(const uint& v) {
+		vectorNetworkBlob = v;
+	}
 
 	void applyChange(const message::VectorData& change) {
 		if (change.vectorNetworkBlob() != nullptr) {
@@ -895,11 +1270,42 @@ struct VectorData  {
 };
 
 struct Glyph  {
-	uint styleID;
-	uint commandsBlob;
-	Vector position;
-	float fontSize;
-	float advance;
+	uint styleID{};
+	uint commandsBlob{};
+	Vector position{};
+	float fontSize{};
+	float advance{};
+
+	const uint& getStyleID() const {
+		return styleID;
+	}
+	void setStyleID(const uint& v) {
+		styleID = v;
+	}
+	const uint& getCommandsBlob() const {
+		return commandsBlob;
+	}
+	void setCommandsBlob(const uint& v) {
+		commandsBlob = v;
+	}
+	const Vector& getPosition() const {
+		return position;
+	}
+	void setPosition(const Vector& v) {
+		position = v;
+	}
+	const float& getFontSize() const {
+		return fontSize;
+	}
+	void setFontSize(const float& v) {
+		fontSize = v;
+	}
+	const float& getAdvance() const {
+		return advance;
+	}
+	void setAdvance(const float& v) {
+		advance = v;
+	}
 
 	void applyChange(const message::Glyph& change) {
 		if (change.styleID() != nullptr) {
@@ -936,7 +1342,14 @@ struct Glyph  {
 };
 
 struct Decoration  {
-	Array<Rect> rects;
+	Array<Rect> rects{};
+
+	const Array<Rect>& getRects() const {
+		return rects;
+	}
+	void setRects(const Array<Rect>& v) {
+		rects = v;
+	}
 
 	void applyChange(const message::Decoration& change) {
 		if (change.rects() != nullptr) {
@@ -957,13 +1370,56 @@ struct Decoration  {
 };
 
 struct Baseline  {
-	Vector position;
-	float width;
-	float lineY;
-	float lineHeight;
-	float lineAscent;
-	uint firstCharacter;
-	uint endCharacter;
+	Vector position{};
+	float width{};
+	float lineY{};
+	float lineHeight{};
+	float lineAscent{};
+	uint firstCharacter{};
+	uint endCharacter{};
+
+	const Vector& getPosition() const {
+		return position;
+	}
+	void setPosition(const Vector& v) {
+		position = v;
+	}
+	const float& getWidth() const {
+		return width;
+	}
+	void setWidth(const float& v) {
+		width = v;
+	}
+	const float& getLineY() const {
+		return lineY;
+	}
+	void setLineY(const float& v) {
+		lineY = v;
+	}
+	const float& getLineHeight() const {
+		return lineHeight;
+	}
+	void setLineHeight(const float& v) {
+		lineHeight = v;
+	}
+	const float& getLineAscent() const {
+		return lineAscent;
+	}
+	void setLineAscent(const float& v) {
+		lineAscent = v;
+	}
+	const uint& getFirstCharacter() const {
+		return firstCharacter;
+	}
+	void setFirstCharacter(const uint& v) {
+		firstCharacter = v;
+	}
+	const uint& getEndCharacter() const {
+		return endCharacter;
+	}
+	void setEndCharacter(const uint& v) {
+		endCharacter = v;
+	}
 
 	void applyChange(const message::Baseline& change) {
 		if (change.position() != nullptr) {
@@ -1008,12 +1464,49 @@ struct Baseline  {
 };
 
 struct TextData  {
-	string characters;
-	Buffer styleOverrideTable;
-	Vector layoutSize;
-	Array<Baseline> baselines;
-	Array<Glyph> glyphs;
-	Array<Decoration> decorations;
+	string characters{};
+	Buffer styleOverrideTable{};
+	Vector layoutSize{};
+	Array<Baseline> baselines{};
+	Array<Glyph> glyphs{};
+	Array<Decoration> decorations{};
+
+	const string& getCharacters() const {
+		return characters;
+	}
+	void setCharacters(const string& v) {
+		characters = v;
+	}
+	const Buffer& getStyleOverrideTable() const {
+		return styleOverrideTable;
+	}
+	void setStyleOverrideTable(const Buffer& v) {
+		styleOverrideTable = v;
+	}
+	const Vector& getLayoutSize() const {
+		return layoutSize;
+	}
+	void setLayoutSize(const Vector& v) {
+		layoutSize = v;
+	}
+	const Array<Baseline>& getBaselines() const {
+		return baselines;
+	}
+	void setBaselines(const Array<Baseline>& v) {
+		baselines = v;
+	}
+	const Array<Glyph>& getGlyphs() const {
+		return glyphs;
+	}
+	void setGlyphs(const Array<Glyph>& v) {
+		glyphs = v;
+	}
+	const Array<Decoration>& getDecorations() const {
+		return decorations;
+	}
+	void setDecorations(const Array<Decoration>& v) {
+		decorations = v;
+	}
 
 	void applyChange(const message::TextData& change) {
 		if (change.characters() != nullptr) {
@@ -1054,9 +1547,28 @@ struct TextData  {
 };
 
 struct SymbolData  {
-	GUID symbolID;
-	Buffer symbolOverrides;
-	float uniformScaleFactor;
+	GUID symbolID{};
+	Buffer symbolOverrides{};
+	float uniformScaleFactor{};
+
+	const GUID& getSymbolID() const {
+		return symbolID;
+	}
+	void setSymbolID(const GUID& v) {
+		symbolID = v;
+	}
+	const Buffer& getSymbolOverrides() const {
+		return symbolOverrides;
+	}
+	void setSymbolOverrides(const Buffer& v) {
+		symbolOverrides = v;
+	}
+	const float& getUniformScaleFactor() const {
+		return uniformScaleFactor;
+	}
+	void setUniformScaleFactor(const float& v) {
+		uniformScaleFactor = v;
+	}
 
 	void applyChange(const message::SymbolData& change) {
 		if (change.symbolID() != nullptr) {
@@ -1087,46 +1599,46 @@ struct SymbolData  {
 
 class BaseNodeMixin  {
 private:
-	GUID guid_;
-	ParentIndex parentIndex_;
-	string name_;
-	NodeType type_;
+	GUID guid_{};
+	ParentIndex parentIndex_{};
+	string name_{};
+	NodeType type_{};
 	BaseNodeMixinPointer nextSibling_{};
 
 public:
 
-	const GUID getGuid() const {
+	const GUID& getGuid() const {
 		return guid_;
 	}
-	void setGuid(const GUID& value) {
-		guid_ = value;
+	void setGuid(const GUID& v) {
+		guid_ = v;
 	}
-	const ParentIndex getParentIndex() const {
+	const ParentIndex& getParentIndex() const {
 		return parentIndex_;
 	}
-	void setParentIndex(const ParentIndex& value) {
-		parentIndex_ = value;
+	void setParentIndex(const ParentIndex& v) {
+		parentIndex_ = v;
 	}
-	const string getName() const {
+	const string& getName() const {
 		return name_;
 	}
-	void setName(const string& value) {
-		name_ = value;
+	void setName(const string& v) {
+		name_ = v;
 	}
-	const NodeType getType() const {
+	const NodeType& getType() const {
 		return type_;
 	}
-	void setType(const NodeType& value) {
-		type_ = value;
+	void setType(const NodeType& v) {
+		type_ = v;
 	}
-	const BaseNodeMixinPointer getNextSibling() const {
+	const BaseNodeMixinPointer& getNextSibling() const {
 		return nextSibling_;
 	}
-	void setNextSibling(const BaseNodeMixinPointer& value) {
-		nextSibling_ = value;
+	void setNextSibling(const BaseNodeMixinPointer& v) {
+		nextSibling_ = v;
 	}
 
-	virtual void applyChange(const message::NodeChange& change) {
+  virtual void applyChange(const message::NodeChange& change) {
 		if (change.guid() != nullptr) {
 			applyChangeImpl(guid_, *change.guid());
 		}
@@ -1141,7 +1653,7 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+	virtual void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_guid, guid_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_parentIndex, parentIndex_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_name, name_, pool);
@@ -1152,25 +1664,25 @@ public:
 
 class SceneNodeMixin  {
 private:
-	boolean visible_;
-	boolean locked_;
+	boolean visible_{};
+	boolean locked_{};
 
 public:
 
-	const boolean getVisible() const {
+	const boolean& getVisible() const {
 		return visible_;
 	}
-	void setVisible(const boolean& value) {
-		visible_ = value;
+	void setVisible(const boolean& v) {
+		visible_ = v;
 	}
-	const boolean getLocked() const {
+	const boolean& getLocked() const {
 		return locked_;
 	}
-	void setLocked(const boolean& value) {
-		locked_ = value;
+	void setLocked(const boolean& v) {
+		locked_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.visible() != nullptr) {
 			applyChangeImpl(visible_, *change.visible());
 		}
@@ -1188,25 +1700,25 @@ public:
 
 class CornerMixin  {
 private:
-	float cornerRadius_;
-	float cornerSmoothing_;
+	float cornerRadius_{};
+	float cornerSmoothing_{};
 
 public:
 
-	const float getCornerRadius() const {
+	const float& getCornerRadius() const {
 		return cornerRadius_;
 	}
-	void setCornerRadius(const float& value) {
-		cornerRadius_ = value;
+	void setCornerRadius(const float& v) {
+		cornerRadius_ = v;
 	}
-	const float getCornerSmoothing() const {
+	const float& getCornerSmoothing() const {
 		return cornerSmoothing_;
 	}
-	void setCornerSmoothing(const float& value) {
-		cornerSmoothing_ = value;
+	void setCornerSmoothing(const float& v) {
+		cornerSmoothing_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.cornerRadius() != nullptr) {
 			applyChangeImpl(cornerRadius_, *change.cornerRadius());
 		}
@@ -1224,39 +1736,39 @@ public:
 
 class RectangleCornerMixin  {
 private:
-	float rectangleTopLeftCornerRadius_;
-	float rectangleTopRightCornerRadius_;
-	float rectangleBottomLeftCornerRadius_;
-	float rectangleBottomRightCornerRadius_;
+	float rectangleTopLeftCornerRadius_{};
+	float rectangleTopRightCornerRadius_{};
+	float rectangleBottomLeftCornerRadius_{};
+	float rectangleBottomRightCornerRadius_{};
 
 public:
 
-	const float getRectangleTopLeftCornerRadius() const {
+	const float& getRectangleTopLeftCornerRadius() const {
 		return rectangleTopLeftCornerRadius_;
 	}
-	void setRectangleTopLeftCornerRadius(const float& value) {
-		rectangleTopLeftCornerRadius_ = value;
+	void setRectangleTopLeftCornerRadius(const float& v) {
+		rectangleTopLeftCornerRadius_ = v;
 	}
-	const float getRectangleTopRightCornerRadius() const {
+	const float& getRectangleTopRightCornerRadius() const {
 		return rectangleTopRightCornerRadius_;
 	}
-	void setRectangleTopRightCornerRadius(const float& value) {
-		rectangleTopRightCornerRadius_ = value;
+	void setRectangleTopRightCornerRadius(const float& v) {
+		rectangleTopRightCornerRadius_ = v;
 	}
-	const float getRectangleBottomLeftCornerRadius() const {
+	const float& getRectangleBottomLeftCornerRadius() const {
 		return rectangleBottomLeftCornerRadius_;
 	}
-	void setRectangleBottomLeftCornerRadius(const float& value) {
-		rectangleBottomLeftCornerRadius_ = value;
+	void setRectangleBottomLeftCornerRadius(const float& v) {
+		rectangleBottomLeftCornerRadius_ = v;
 	}
-	const float getRectangleBottomRightCornerRadius() const {
+	const float& getRectangleBottomRightCornerRadius() const {
 		return rectangleBottomRightCornerRadius_;
 	}
-	void setRectangleBottomRightCornerRadius(const float& value) {
-		rectangleBottomRightCornerRadius_ = value;
+	void setRectangleBottomRightCornerRadius(const float& v) {
+		rectangleBottomRightCornerRadius_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.rectangleTopLeftCornerRadius() != nullptr) {
 			applyChangeImpl(rectangleTopLeftCornerRadius_, *change.rectangleTopLeftCornerRadius());
 		}
@@ -1282,39 +1794,39 @@ public:
 
 class IndividualStrokesMixin  {
 private:
-	float borderTopWeight_;
-	float borderBottomWeight_;
-	float borderLeftWeight_;
-	float borderRightWeight_;
+	float borderTopWeight_{};
+	float borderBottomWeight_{};
+	float borderLeftWeight_{};
+	float borderRightWeight_{};
 
 public:
 
-	const float getBorderTopWeight() const {
+	const float& getBorderTopWeight() const {
 		return borderTopWeight_;
 	}
-	void setBorderTopWeight(const float& value) {
-		borderTopWeight_ = value;
+	void setBorderTopWeight(const float& v) {
+		borderTopWeight_ = v;
 	}
-	const float getBorderBottomWeight() const {
+	const float& getBorderBottomWeight() const {
 		return borderBottomWeight_;
 	}
-	void setBorderBottomWeight(const float& value) {
-		borderBottomWeight_ = value;
+	void setBorderBottomWeight(const float& v) {
+		borderBottomWeight_ = v;
 	}
-	const float getBorderLeftWeight() const {
+	const float& getBorderLeftWeight() const {
 		return borderLeftWeight_;
 	}
-	void setBorderLeftWeight(const float& value) {
-		borderLeftWeight_ = value;
+	void setBorderLeftWeight(const float& v) {
+		borderLeftWeight_ = v;
 	}
-	const float getBorderRightWeight() const {
+	const float& getBorderRightWeight() const {
 		return borderRightWeight_;
 	}
-	void setBorderRightWeight(const float& value) {
-		borderRightWeight_ = value;
+	void setBorderRightWeight(const float& v) {
+		borderRightWeight_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.borderTopWeight() != nullptr) {
 			applyChangeImpl(borderTopWeight_, *change.borderTopWeight());
 		}
@@ -1340,60 +1852,60 @@ public:
 
 class MinimalStrokesMixin  {
 private:
-	Array<PaintUnion> strokePaints_;
-	StyleId styleIdForStrokeFill_;
-	float strokeWeight_;
-	StrokeJoin strokeJoin_;
-	StrokeAlign strokeAlign_;
-	Array<float> dashPattern_;
-	Array<Path> strokeGeometry_;
+	Array<PaintUnion> strokePaints_{};
+	StyleId styleIdForStrokeFill_{};
+	float strokeWeight_{};
+	StrokeJoin strokeJoin_{};
+	StrokeAlign strokeAlign_{};
+	Array<float> dashPattern_{};
+	Array<Path> strokeGeometry_{};
 
 public:
 
-	const Array<PaintUnion> getStrokePaints() const {
+	const Array<PaintUnion>& getStrokePaints() const {
 		return strokePaints_;
 	}
-	void setStrokePaints(const Array<PaintUnion>& value) {
-		strokePaints_ = value;
+	void setStrokePaints(const Array<PaintUnion>& v) {
+		strokePaints_ = v;
 	}
-	const StyleId getStyleIdForStrokeFill() const {
+	const StyleId& getStyleIdForStrokeFill() const {
 		return styleIdForStrokeFill_;
 	}
-	void setStyleIdForStrokeFill(const StyleId& value) {
-		styleIdForStrokeFill_ = value;
+	void setStyleIdForStrokeFill(const StyleId& v) {
+		styleIdForStrokeFill_ = v;
 	}
-	const float getStrokeWeight() const {
+	const float& getStrokeWeight() const {
 		return strokeWeight_;
 	}
-	void setStrokeWeight(const float& value) {
-		strokeWeight_ = value;
+	void setStrokeWeight(const float& v) {
+		strokeWeight_ = v;
 	}
-	const StrokeJoin getStrokeJoin() const {
+	const StrokeJoin& getStrokeJoin() const {
 		return strokeJoin_;
 	}
-	void setStrokeJoin(const StrokeJoin& value) {
-		strokeJoin_ = value;
+	void setStrokeJoin(const StrokeJoin& v) {
+		strokeJoin_ = v;
 	}
-	const StrokeAlign getStrokeAlign() const {
+	const StrokeAlign& getStrokeAlign() const {
 		return strokeAlign_;
 	}
-	void setStrokeAlign(const StrokeAlign& value) {
-		strokeAlign_ = value;
+	void setStrokeAlign(const StrokeAlign& v) {
+		strokeAlign_ = v;
 	}
-	const Array<float> getDashPattern() const {
+	const Array<float>& getDashPattern() const {
 		return dashPattern_;
 	}
-	void setDashPattern(const Array<float>& value) {
-		dashPattern_ = value;
+	void setDashPattern(const Array<float>& v) {
+		dashPattern_ = v;
 	}
-	const Array<Path> getStrokeGeometry() const {
+	const Array<Path>& getStrokeGeometry() const {
 		return strokeGeometry_;
 	}
-	void setStrokeGeometry(const Array<Path>& value) {
-		strokeGeometry_ = value;
+	void setStrokeGeometry(const Array<Path>& v) {
+		strokeGeometry_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.strokePaints() != nullptr) {
 			applyChangeImpl(strokePaints_, *change.strokePaints());
 		}
@@ -1431,25 +1943,25 @@ public:
 
 class MinimalFillsMixin  {
 private:
-	Array<PaintUnion> fillPaints_;
-	StyleId styleIdForStrokeFill_;
+	Array<PaintUnion> fillPaints_{};
+	StyleId styleIdForStrokeFill_{};
 
 public:
 
-	const Array<PaintUnion> getFillPaints() const {
+	const Array<PaintUnion>& getFillPaints() const {
 		return fillPaints_;
 	}
-	void setFillPaints(const Array<PaintUnion>& value) {
-		fillPaints_ = value;
+	void setFillPaints(const Array<PaintUnion>& v) {
+		fillPaints_ = v;
 	}
-	const StyleId getStyleIdForStrokeFill() const {
+	const StyleId& getStyleIdForStrokeFill() const {
 		return styleIdForStrokeFill_;
 	}
-	void setStyleIdForStrokeFill(const StyleId& value) {
-		styleIdForStrokeFill_ = value;
+	void setStyleIdForStrokeFill(const StyleId& v) {
+		styleIdForStrokeFill_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.fillPaints() != nullptr) {
 			applyChangeImpl(fillPaints_, *change.fillPaints());
 		}
@@ -1467,25 +1979,25 @@ public:
 
 class DimensionAndPositionMixin  {
 private:
-	Vector size_;
-	Matrix transform_;
+	Vector size_{};
+	Matrix transform_{};
 
 public:
 
-	const Vector getSize() const {
+	const Vector& getSize() const {
 		return size_;
 	}
-	void setSize(const Vector& value) {
-		size_ = value;
+	void setSize(const Vector& v) {
+		size_ = v;
 	}
-	const Matrix getTransform() const {
+	const Matrix& getTransform() const {
 		return transform_;
 	}
-	void setTransform(const Matrix& value) {
-		transform_ = value;
+	void setTransform(const Matrix& v) {
+		transform_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.size() != nullptr) {
 			applyChangeImpl(size_, *change.size());
 		}
@@ -1503,25 +2015,25 @@ public:
 
 class ConstraintMixin  {
 private:
-	ConstraintType horizontalConstraint_;
-	ConstraintType verticalConstraint_;
+	ConstraintType horizontalConstraint_{};
+	ConstraintType verticalConstraint_{};
 
 public:
 
-	const ConstraintType getHorizontalConstraint() const {
+	const ConstraintType& getHorizontalConstraint() const {
 		return horizontalConstraint_;
 	}
-	void setHorizontalConstraint(const ConstraintType& value) {
-		horizontalConstraint_ = value;
+	void setHorizontalConstraint(const ConstraintType& v) {
+		horizontalConstraint_ = v;
 	}
-	const ConstraintType getVerticalConstraint() const {
+	const ConstraintType& getVerticalConstraint() const {
 		return verticalConstraint_;
 	}
-	void setVerticalConstraint(const ConstraintType& value) {
-		verticalConstraint_ = value;
+	void setVerticalConstraint(const ConstraintType& v) {
+		verticalConstraint_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.horizontalConstraint() != nullptr) {
 			applyChangeImpl(horizontalConstraint_, *change.horizontalConstraint());
 		}
@@ -1539,25 +2051,25 @@ public:
 
 class EffectMixin  {
 private:
-	Array<Effect> effects_;
-	StyleId styleIdForEffect_;
+	Array<Effect> effects_{};
+	StyleId styleIdForEffect_{};
 
 public:
 
-	const Array<Effect> getEffects() const {
+	const Array<Effect>& getEffects() const {
 		return effects_;
 	}
-	void setEffects(const Array<Effect>& value) {
-		effects_ = value;
+	void setEffects(const Array<Effect>& v) {
+		effects_ = v;
 	}
-	const StyleId getStyleIdForEffect() const {
+	const StyleId& getStyleIdForEffect() const {
 		return styleIdForEffect_;
 	}
-	void setStyleIdForEffect(const StyleId& value) {
-		styleIdForEffect_ = value;
+	void setStyleIdForEffect(const StyleId& v) {
+		styleIdForEffect_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.effects() != nullptr) {
 			applyChangeImpl(effects_, *change.effects());
 		}
@@ -1579,7 +2091,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 	}
 
 	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
@@ -1593,7 +2105,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 	}
 
 	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
@@ -1603,53 +2115,53 @@ public:
 
 class AutoLayoutMixin  {
 private:
-	StackMode stackMode_;
-	StackWrap stackWrap_;
-	float stackPaddingRight_;
-	float stackPaddingBottom_;
-	float stackHorizontalPadding_;
-	float stackVerticalPadding_;
+	StackMode stackMode_{};
+	StackWrap stackWrap_{};
+	float stackPaddingRight_{};
+	float stackPaddingBottom_{};
+	float stackHorizontalPadding_{};
+	float stackVerticalPadding_{};
 
 public:
 
-	const StackMode getStackMode() const {
+	const StackMode& getStackMode() const {
 		return stackMode_;
 	}
-	void setStackMode(const StackMode& value) {
-		stackMode_ = value;
+	void setStackMode(const StackMode& v) {
+		stackMode_ = v;
 	}
-	const StackWrap getStackWrap() const {
+	const StackWrap& getStackWrap() const {
 		return stackWrap_;
 	}
-	void setStackWrap(const StackWrap& value) {
-		stackWrap_ = value;
+	void setStackWrap(const StackWrap& v) {
+		stackWrap_ = v;
 	}
-	const float getStackPaddingRight() const {
+	const float& getStackPaddingRight() const {
 		return stackPaddingRight_;
 	}
-	void setStackPaddingRight(const float& value) {
-		stackPaddingRight_ = value;
+	void setStackPaddingRight(const float& v) {
+		stackPaddingRight_ = v;
 	}
-	const float getStackPaddingBottom() const {
+	const float& getStackPaddingBottom() const {
 		return stackPaddingBottom_;
 	}
-	void setStackPaddingBottom(const float& value) {
-		stackPaddingBottom_ = value;
+	void setStackPaddingBottom(const float& v) {
+		stackPaddingBottom_ = v;
 	}
-	const float getStackHorizontalPadding() const {
+	const float& getStackHorizontalPadding() const {
 		return stackHorizontalPadding_;
 	}
-	void setStackHorizontalPadding(const float& value) {
-		stackHorizontalPadding_ = value;
+	void setStackHorizontalPadding(const float& v) {
+		stackHorizontalPadding_ = v;
 	}
-	const float getStackVerticalPadding() const {
+	const float& getStackVerticalPadding() const {
 		return stackVerticalPadding_;
 	}
-	void setStackVerticalPadding(const float& value) {
-		stackVerticalPadding_ = value;
+	void setStackVerticalPadding(const float& v) {
+		stackVerticalPadding_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.stackMode() != nullptr) {
 			applyChangeImpl(stackMode_, *change.stackMode());
 		}
@@ -1683,32 +2195,32 @@ public:
 
 class GeometryMixin : public MinimalStrokesMixin, public MinimalFillsMixin {
 private:
-	StrokeCap strokeCap_;
-	float miterLimit_;
-	Array<Path> fillGeometry_;
+	StrokeCap strokeCap_{};
+	float miterLimit_{};
+	Array<Path> fillGeometry_{};
 
 public:
 
-	const StrokeCap getStrokeCap() const {
+	const StrokeCap& getStrokeCap() const {
 		return strokeCap_;
 	}
-	void setStrokeCap(const StrokeCap& value) {
-		strokeCap_ = value;
+	void setStrokeCap(const StrokeCap& v) {
+		strokeCap_ = v;
 	}
-	const float getMiterLimit() const {
+	const float& getMiterLimit() const {
 		return miterLimit_;
 	}
-	void setMiterLimit(const float& value) {
-		miterLimit_ = value;
+	void setMiterLimit(const float& v) {
+		miterLimit_ = v;
 	}
-	const Array<Path> getFillGeometry() const {
+	const Array<Path>& getFillGeometry() const {
 		return fillGeometry_;
 	}
-	void setFillGeometry(const Array<Path>& value) {
-		fillGeometry_ = value;
+	void setFillGeometry(const Array<Path>& v) {
+		fillGeometry_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.strokeCap() != nullptr) {
 			applyChangeImpl(strokeCap_, *change.strokeCap());
 		}
@@ -1738,7 +2250,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DimensionAndPositionMixin::applyChange(change);
 	}
 
@@ -1754,7 +2266,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		BaseNodeMixin::applyChange(change);
 		SceneNodeMixin::applyChange(change);
 		ExportMixin::applyChange(change);
@@ -1780,7 +2292,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DefaultShapeNode::applyChange(change);
 		CornerMixin::applyChange(change);
 		RectangleCornerMixin::applyChange(change);
@@ -1806,7 +2318,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		BaseFrameMixin::applyChange(change);
 	}
 
@@ -1818,32 +2330,32 @@ public:
 
 class SubTextMixin : public DefaultShapeNode {
 private:
-	uint styleID_;
-	Number letterSpacing_;
-	Number lineHeight_;
+	uint styleID_{};
+	Number letterSpacing_{};
+	Number lineHeight_{};
 
 public:
 
-	const uint getStyleID() const {
+	const uint& getStyleID() const {
 		return styleID_;
 	}
-	void setStyleID(const uint& value) {
-		styleID_ = value;
+	void setStyleID(const uint& v) {
+		styleID_ = v;
 	}
-	const Number getLetterSpacing() const {
+	const Number& getLetterSpacing() const {
 		return letterSpacing_;
 	}
-	void setLetterSpacing(const Number& value) {
-		letterSpacing_ = value;
+	void setLetterSpacing(const Number& v) {
+		letterSpacing_ = v;
 	}
-	const Number getLineHeight() const {
+	const Number& getLineHeight() const {
 		return lineHeight_;
 	}
-	void setLineHeight(const Number& value) {
-		lineHeight_ = value;
+	void setLineHeight(const Number& v) {
+		lineHeight_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.styleID() != nullptr) {
 			applyChangeImpl(styleID_, *change.styleID());
 		}
@@ -1871,7 +2383,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DefaultShapeNode::applyChange(change);
 	}
 
@@ -1887,7 +2399,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DefaultShapeNode::applyChange(change);
 		ConstraintMixin::applyChange(change);
 		CornerMixin::applyChange(change);
@@ -1911,7 +2423,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DefaultShapeNode::applyChange(change);
 		ConstraintMixin::applyChange(change);
 	}
@@ -1925,18 +2437,18 @@ public:
 
 class EllipseNodeBase : public DefaultShapeNode, public ConstraintMixin, public CornerMixin {
 private:
-	ArcData arcData_;
+	ArcData arcData_{};
 
 public:
 
-	const ArcData getArcData() const {
+	const ArcData& getArcData() const {
 		return arcData_;
 	}
-	void setArcData(const ArcData& value) {
-		arcData_ = value;
+	void setArcData(const ArcData& v) {
+		arcData_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.arcData() != nullptr) {
 			applyChangeImpl(arcData_, *change.arcData());
 		}
@@ -1956,18 +2468,18 @@ public:
 
 class PolygonNodeBase : public DefaultShapeNode, public ConstraintMixin, public CornerMixin {
 private:
-	uint count_;
+	uint count_{};
 
 public:
 
-	const uint getCount() const {
+	const uint& getCount() const {
 		return count_;
 	}
-	void setCount(const uint& value) {
-		count_ = value;
+	void setCount(const uint& v) {
+		count_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.count() != nullptr) {
 			applyChangeImpl(count_, *change.count());
 		}
@@ -1987,18 +2499,18 @@ public:
 
 class StarNodeBase : public DefaultShapeNode, public ConstraintMixin, public CornerMixin {
 private:
-	uint count_;
+	uint count_{};
 
 public:
 
-	const uint getCount() const {
+	const uint& getCount() const {
 		return count_;
 	}
-	void setCount(const uint& value) {
-		count_ = value;
+	void setCount(const uint& v) {
+		count_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.count() != nullptr) {
 			applyChangeImpl(count_, *change.count());
 		}
@@ -2018,18 +2530,18 @@ public:
 
 class VectorNodeBase : public DefaultShapeNode, public ConstraintMixin, public CornerMixin {
 private:
-	VectorData vectorData_;
+	VectorData vectorData_{};
 
 public:
 
-	const VectorData getVectorData() const {
+	const VectorData& getVectorData() const {
 		return vectorData_;
 	}
-	void setVectorData(const VectorData& value) {
-		vectorData_ = value;
+	void setVectorData(const VectorData& v) {
+		vectorData_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.vectorData() != nullptr) {
 			applyChangeImpl(vectorData_, *change.vectorData());
 		}
@@ -2053,7 +2565,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DefaultFrameMixin::applyChange(change);
 	}
 
@@ -2069,7 +2581,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		DefaultFrameMixin::applyChange(change);
 	}
 
@@ -2081,25 +2593,25 @@ public:
 
 class InstanceNodeBase : public DefaultFrameMixin {
 private:
-	SymbolData symbolData_;
-	Buffer derivedSymbolData_;
+	SymbolData symbolData_{};
+	Buffer derivedSymbolData_{};
 
 public:
 
-	const SymbolData getSymbolData() const {
+	const SymbolData& getSymbolData() const {
 		return symbolData_;
 	}
-	void setSymbolData(const SymbolData& value) {
-		symbolData_ = value;
+	void setSymbolData(const SymbolData& v) {
+		symbolData_ = v;
 	}
-	const Buffer getDerivedSymbolData() const {
+	const Buffer& getDerivedSymbolData() const {
 		return derivedSymbolData_;
 	}
-	void setDerivedSymbolData(const Buffer& value) {
-		derivedSymbolData_ = value;
+	void setDerivedSymbolData(const Buffer& v) {
+		derivedSymbolData_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.symbolData() != nullptr) {
 			applyChangeImpl(symbolData_, *change.symbolData());
 		}
@@ -2119,18 +2631,18 @@ public:
 
 class TextNodeBase : public TextNodeMixin {
 private:
-	TextData textData_;
+	TextData textData_{};
 
 public:
 
-	const TextData getTextData() const {
+	const TextData& getTextData() const {
 		return textData_;
 	}
-	void setTextData(const TextData& value) {
-		textData_ = value;
+	void setTextData(const TextData& v) {
+		textData_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.textData() != nullptr) {
 			applyChangeImpl(textData_, *change.textData());
 		}
@@ -2146,32 +2658,32 @@ public:
 
 class PageNodeBase : public BaseNodeMixin {
 private:
-	Color backgroundColor_;
-	float backgroundOpacity_;
-	bool backgroundEnabled_;
+	Color backgroundColor_{};
+	float backgroundOpacity_{};
+	bool backgroundEnabled_{};
 
 public:
 
-	const Color getBackgroundColor() const {
+	const Color& getBackgroundColor() const {
 		return backgroundColor_;
 	}
-	void setBackgroundColor(const Color& value) {
-		backgroundColor_ = value;
+	void setBackgroundColor(const Color& v) {
+		backgroundColor_ = v;
 	}
-	const float getBackgroundOpacity() const {
+	const float& getBackgroundOpacity() const {
 		return backgroundOpacity_;
 	}
-	void setBackgroundOpacity(const float& value) {
-		backgroundOpacity_ = value;
+	void setBackgroundOpacity(const float& v) {
+		backgroundOpacity_ = v;
 	}
-	const bool getBackgroundEnabled() const {
+	const bool& getBackgroundEnabled() const {
 		return backgroundEnabled_;
 	}
-	void setBackgroundEnabled(const bool& value) {
-		backgroundEnabled_ = value;
+	void setBackgroundEnabled(const bool& v) {
+		backgroundEnabled_ = v;
 	}
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		if (change.backgroundColor() != nullptr) {
 			applyChangeImpl(backgroundColor_, *change.backgroundColor());
 		}
@@ -2199,7 +2711,7 @@ private:
 public:
 
 
-	void applyChange(const message::NodeChange& change) {
+  void applyChange(const message::NodeChange& change) {
 		BaseNodeMixin::applyChange(change);
 	}
 

@@ -4,6 +4,7 @@
 #include "include/core/SkRect.h"
 #include "node/rectangle.h"
 #include "node/frame.h"
+#include "node/container.h"
 #include <array>
 
 namespace dea::interaction {
@@ -12,15 +13,21 @@ class Desaina;
 
 class NodeEditor {
 public:
+  NodeEditor(const SkMatrix& transform, const SkRect& bound) {
+    buildEditor();
+    update(transform, bound);
+  }
   NodeEditor() {
     buildEditor();
-  }
+  };
   virtual ~NodeEditor() = default;
 
   Frame* getContainer() { return &container_; }
-  virtual void update(const std::vector<node::Node*>& nodes);
+  virtual void update(const std::vector<node::Node*>& nodes) {};
   void update(const SkMatrix& transform, const SkRect& bound);
-  void appendChildToContainer(node::Node* node) { container_.appendChild(node); }
+  void appendChildToContainer(node::Node* node) {
+    appendChild(&container_, node);
+  }
 
 protected:
   Frame container_;

@@ -50,21 +50,9 @@ namespace dea::render {
     return true;
 	}
 
-	void Render::render() {
-		if (!checkViewPort()) {
-			updateViewPort();
-			if (!makeSurface()) {
-				return;
-			}
-		}
-
-    if (!canvas_) {
-      if (!makeSurface()) {
-        return;
-      }
-    }
-
+  void Render::renderDocument() {
     canvas_->resetMatrix();
+    SkAutoCanvasRestore acr(canvas_, true); 
 
     canvas_->setMatrix(viewport_.projectionMatrix());
 		document::Document::Iter iter{doc_.currentPage()};
@@ -78,7 +66,30 @@ namespace dea::render {
       context->flush();
       context->submit();
     }
-	}
+  }
+
+  void Render::renderInteraction() {
+    canvas_->resetMatrix();
+    SkAutoCanvasRestore acr(canvas_, true); 
+
+  }
+
+	void Render::render() {
+		if (!checkViewPort()) {
+			updateViewPort();
+			if (!makeSurface()) {
+				return;
+			}
+		}
+
+    if (!canvas_) {
+      if (!makeSurface()) {
+        return;
+      }
+    }
+    renderDocument();
+
+}
 
 	void Render::renderNode(node::Node* node) {
     auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);

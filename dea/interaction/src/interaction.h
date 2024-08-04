@@ -13,9 +13,19 @@ namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
-  explicit Interaction() {
+  Interaction() {
     page_.appendChild(&hover_);
   }
+
+  auto* root() {
+    return &page_;
+  }
+
+  class Iter : public utility::NodeIter {
+  public:
+    Iter(node::Node* node) :
+    NodeIter(node, [](node::Node* node) { return interaction::node_cast<InteractionNode*>(node)->getParent();}) {}
+  };
 
 private:
   node::PageNode page_;

@@ -26,7 +26,8 @@ export const baseMixins = [
 				"type": "BaseNodeMixinPointer",
 				"skipChange": true
 			},
-		]
+		],
+    "isChangeVirtual": true,
 	},
 	{
 		"name": "SceneNodeMixin",

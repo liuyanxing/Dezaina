@@ -15,6 +15,17 @@ namespace dea::utility {
 			0, 0, 1
 		);
 	}
+  inline node::Matrix toMatrix(const SkMatrix& matrix) {
+    return node::Matrix{
+      matrix.get(0),
+      matrix.get(1),
+      matrix.get(2),
+      matrix.get(3),
+      matrix.get(4),
+      matrix.get(5),
+    };
+  }
+
   inline SkColor toSkColor(const node::Color& color) {
     SkColor4f skColorf{
       color.r,
