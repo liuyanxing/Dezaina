@@ -2,6 +2,7 @@
 
 #include "common/object.h"
 #include "document/include/document.h"
+#include "event/src/event.h"
 #include "event/src/event_system.h"
 #include "resource/src/resource.h"
 #include "viewport/viewport.h"
@@ -56,6 +57,10 @@ public:
     eventSystem_.dispatchEvent(event);
   }
 
+  void dispatchKeyEvent(event::EventType type, event::KeyCode code, event::KeyMode mode) {
+    eventSystem_.dispatchEvent(event::KeyEvent::Make(type, code, mode));
+  }
+
 	void tick() {
     if (!doc_.loaded()) {
 			return;
@@ -75,7 +80,7 @@ public:
 
 private:
 	document::Document doc_;
-	ViewPort viewport_;
+	Viewport viewport_;
 	render::Render render_;
 	event::EventSystem eventSystem_;
 	interaction::Interaction interaction_;

@@ -12,7 +12,7 @@ namespace dea::render {
 
 class Render : public base::NonCopyable {
 public:
-	Render(const document::Document& document, const ViewPort& viewPort)
+	Render(const document::Document& document, const Viewport& viewPort)
 		: viewport_(viewPort), doc_(document) {};
 
 	void render();
@@ -23,7 +23,7 @@ private:
   void renderDocument();
   void renderInteraction();
 	void renderNode(node::Node* node);
-	const ViewPort& viewport_;
+	const Viewport& viewport_;
 	const document::Document& doc_;
 	float devicePixelRatio_ = 1.0f;
   uint32_t wWidth_ = 0;

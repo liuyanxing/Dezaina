@@ -5,13 +5,14 @@
 #include <cstdint>
 #include <cassert>
 #include <variant>
-#include "mouse_event.h"
+#include "mouse.h"
+#include "key.h"
 #include "listener.h"
 #include "common/array.h"
 
 namespace dea::event {
 
-using EventUnion = std::variant<MouseEvent>;
+using EventUnion = std::variant<MouseEvent, KeyEvent>;
 
 class EventSystem {
 public:
@@ -19,13 +20,24 @@ public:
     listeners_.push_back(listener);
 	}
 
-	void dispatchEvent(const Event& event) {
+	void dispatchEvent(Event event) {
 		if (isStop_) {
 			return;
 		}
 
-		if (isMouse(event) && !events_.full()) {
-      events_.push_back(static_cast<const MouseEvent&>(event));
+    if (isKey(event)) {
+      keyMode_ = event.keyMode;
+    }
+    event.keyMode = keyMode_;
+
+		if (!events_.full()) {
+      if (isMouse(event)) {
+        events_.push_back(static_cast<const MouseEvent&>(event));
+      } else if (isKey(event)) {
+        events_.push_back(static_cast<const KeyEvent&>(event));
+      } else {
+        assert(false);
+      }
 		}
 	}
 
@@ -66,6 +78,8 @@ private:
   bool isStop_ = false;
 	base::array<Listener*, 10> listeners_;
 	base::array<EventUnion, 10> events_;
+	base::array<uint8_t, 10> keys_;
+  KeyMode keyMode_{};
 };
 
 }

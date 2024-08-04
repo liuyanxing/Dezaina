@@ -3,15 +3,17 @@
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
 #include <cstdint>
+#include "event.h"
 
 namespace dea {
-class ViewPort {
+class Viewport : public event::EventEmitter<>{
 public:
-  ViewPort() {};
+  Viewport() {};
 
   void update(uint32_t width, uint32_t height, float devicePixelRatio);
 
   void translate(float dx, float dy);
+  void scale(float sx, float sy, float px = 0, float py = 0);
 
   const auto& VPMatrix() {
     return view_projection_matrix_;
@@ -35,6 +37,9 @@ public:
     view_projection_matrix_ = projection_matrix_ * view_matrix_ ;
     world_screen_matrix_ = view_projection_matrix_;
     world_screen_matrix_.postScale(1 / devicePixelRatio_, 1 / devicePixelRatio_);
+    auto e = event::Event{};
+    e.type = event::EventType::ViewportChange;
+    emit(e);
   }
 
   const auto& viewMatrix() {

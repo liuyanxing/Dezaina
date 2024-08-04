@@ -22,7 +22,7 @@ public:
   void emit(Event& event) {
     for (const auto& consumer : consumers_) {
       if (consumer.type == event.type || consumer.type == EventType::Any) {
-        consumer.func(&event);
+        consumer.func(event);
       }
     }
   }

@@ -7,7 +7,7 @@
 
 using namespace dea;
 
-inline void processMouseEvent(Dezaina& desaina, SDL_Event& sdlEvent) {
+inline void processEvent(Dezaina& desaina, SDL_Event& sdlEvent) {
   if (!desaina.getDocument().loaded()) {
     return;
   }
@@ -77,8 +77,17 @@ inline void processMouseEvent(Dezaina& desaina, SDL_Event& sdlEvent) {
       }
       break;
     }
+    case SDL_KEYDOWN: {
+      // std::cout << "key down" << std::endl;
+      desaina.dispatchKeyEvent(
+        event::EventType::KeyDown,
+        sdlEvent.key.keysym.sym,
+        sdlEvent.key.keysym.mod
+      );
+      break;
+    }
   }
-  
+
 }
 
 inline void bindEvents(Dezaina& desaina) {

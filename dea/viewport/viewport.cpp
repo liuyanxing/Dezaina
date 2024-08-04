@@ -2,7 +2,7 @@
 
 namespace dea {
 
-void ViewPort::update(uint32_t width, uint32_t height, float devicePixelRatio) {
+void Viewport::update(uint32_t width, uint32_t height, float devicePixelRatio) {
   width_ = width;
   height_ = height;
   devicePixelRatio_ = devicePixelRatio;
@@ -14,8 +14,13 @@ void ViewPort::update(uint32_t width, uint32_t height, float devicePixelRatio) {
 
 }
 
-void ViewPort::translate(float dx, float dy) {
+void Viewport::translate(float dx, float dy) {
   view_matrix_.preTranslate(-dx, dy);
+  updateVPMatrix();
+}
+
+void Viewport::scale(float sx, float sy, float px, float py) {
+  view_matrix_.preScale(sx, sy, px, py);
   updateVPMatrix();
 }
 

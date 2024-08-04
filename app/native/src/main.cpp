@@ -127,7 +127,7 @@ int main(int, char**)
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
             if (!io.WantCaptureMouse) {
-              processMouseEvent(dezaina, event);
+              processEvent(dezaina, event);
             }
 
         }

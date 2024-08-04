@@ -2,7 +2,6 @@
 
 #include "event.h"
 #include "event/src/listener.h"
-#include "event/src/mouse_event.h"
 
 namespace dea::interaction {
 
@@ -20,6 +19,9 @@ public:
 			case event::EventType::MouseUp:
 				onMouseUp(static_cast<event::MouseEvent&>(event));
 				break;
+      case event::EventType::MouseWheel:
+        onMouseWheel(static_cast<event::MouseEvent&>(event));
+        break;
       default:
         break;
 		}

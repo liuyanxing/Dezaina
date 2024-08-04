@@ -11,6 +11,7 @@ enum class EventType {
   KeyDown,
   KeyUp,
   KeyPress,
+  ViewportChange,
   BeforeTick,
   AfterTick,
   Any,

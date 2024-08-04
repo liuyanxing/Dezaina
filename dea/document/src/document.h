@@ -108,6 +108,12 @@ public:
   std::vector<node::Node*> getNodes(float x, float y);
   std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
 
+  void handleViewMatrixChange(const node::Matrix& matrix) {
+    if (currentPage_) {
+      currentPage_->setViewMatrix(matrix);
+    }
+  }
+
 	void flushEditor() {
 		if (editor_.empty()) {
 			return;
