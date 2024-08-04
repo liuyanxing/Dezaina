@@ -58,7 +58,8 @@ public:
   }
 
   void dispatchKeyEvent(event::EventType type, event::KeyCode code, event::KeyMode mode) {
-    eventSystem_.dispatchEvent(event::KeyEvent::Make(type, code, mode));
+    auto event = event::KeyEvent::Make(type, code, mode);
+    eventSystem_.dispatchEvent(event);
   }
 
 	void tick() {

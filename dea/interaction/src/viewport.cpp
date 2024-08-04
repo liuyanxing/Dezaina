@@ -6,10 +6,9 @@ namespace dea::interaction {
 using namespace event;
 
 void Interaction::onMouseWheel(MouseEvent& event) {
-  auto x = event.clientX;
-  auto y = event.clientY;
+  auto scale = 1 + event.clientY * 0.1;
   if (event.isPressed<Keymod::Ctrl>()) {
-    Dezaina::instance().getViewport().scale(1.1, 1.1);
+    Dezaina::instance().getViewport().scale(scale, scale);
   }
 }
 

@@ -9,6 +9,7 @@
 #include "key.h"
 #include "listener.h"
 #include "common/array.h"
+#include <iostream>
 
 namespace dea::event {
 
@@ -20,7 +21,7 @@ public:
     listeners_.push_back(listener);
 	}
 
-	void dispatchEvent(Event event) {
+	void dispatchEvent(Event& event) {
 		if (isStop_) {
 			return;
 		}
