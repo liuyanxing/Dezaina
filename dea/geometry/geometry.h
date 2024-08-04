@@ -3,6 +3,8 @@
 #include "include/core/SkPath.h"
 #include "node/include/node.h"
 #include "resource/include/resource.h"
+#include "resource.h"
+#include <optional>
 #include <utility>
 
 namespace dea::geometry {
@@ -16,10 +18,11 @@ namespace dea::geometry {
 	private:
 		GeometryType geometry_;
 	};
-	
-	GeometryType* getOrBuildFill(const node::Node* node);
-	GeometryType* getOrBuildStroke(const node::Node* node);
 
-	GeometryType buildGeometry(const node::Node* node);
-	GeometryType buildStroke(const node::Node* node);
+	GeometryType* getOrBuild(resource::ResourceId id);
+	GeometryType getOrBuildFill(const node::Node* node);
+	GeometryType getOrBuildStroke(const node::Node* node);
+
+	GeometryType buildFill(const node::Node* node);
+	GeometryType buildStroke(const node::Node* node, std::optional<float> strokeWidth = std::nullopt);
 }

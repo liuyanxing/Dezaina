@@ -90,6 +90,10 @@ public:
     return viewport_;
   }
 
+  auto& getInteraction() {
+    return interaction_;
+  }
+
 private:
 	document::Document doc_;
 	Viewport viewport_;

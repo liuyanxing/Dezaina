@@ -8,13 +8,14 @@
 #include "node_editor.h"
 #include "selection.h"
 #include "node/path.h"
+#include "node/page.h"
 
 namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
   Interaction() {
-    page_.appendChild(&hover_);
+    page_.setBackgroundColor({0, 0, 0, 0});
   }
 
   auto* root() {
@@ -28,7 +29,7 @@ public:
   };
 
 private:
-  node::PageNode page_;
+  Page page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
   Selection selection_;
   Creation creation_;

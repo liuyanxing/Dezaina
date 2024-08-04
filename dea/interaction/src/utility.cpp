@@ -27,8 +27,8 @@ void initSurface() {
 }
 
 SkColor readColorAtPointOfNode(float x, float y, Node* node, const std::vector<SkPaint>& paints) {
-  auto* geometry = geometry::getOrBuildFill(node);
-  if (geometry->isEmpty()) {
+  auto geometry = geometry::getOrBuildFill(node);
+  if (geometry.isEmpty()) {
     return SK_ColorTRANSPARENT;
   }
   auto matrix = Dezaina::instance().getDocument().getWorldMatrix(node);
@@ -45,7 +45,7 @@ SkColor readColorAtPointOfNode(float x, float y, Node* node, const std::vector<S
   canvas->concat(matrix);
   
   for (const auto& paint : paints) {
-    canvas->drawPath(*geometry, paint);
+    canvas->drawPath(geometry, paint);
   }
   return SkColorSetARGB(pixes[3], pixes[0], pixes[1], pixes[2]);
 }

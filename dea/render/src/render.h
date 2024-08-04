@@ -22,7 +22,9 @@ private:
 	void updateViewPort();
   void renderDocument();
   void renderInteraction();
-	void renderNode(node::Node* node);
+	void renderNode(node::Node* node, bool isInterNode = false);
+	void renderInterNode(node::Node* node);
+
 	const Viewport& viewport_;
 	const document::Document& doc_;
 	float devicePixelRatio_ = 1.0f;

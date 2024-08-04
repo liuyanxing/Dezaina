@@ -1,4 +1,5 @@
 #include "render.h"
+#include "dezaina.h"
 #include "document/include/document.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
@@ -70,8 +71,21 @@ namespace dea::render {
 
   void Render::renderInteraction() {
     canvas_->resetMatrix();
-    SkAutoCanvasRestore acr(canvas_, true); 
+    SkAutoCanvasRestore acr(canvas_, true);
 
+    canvas_->setMatrix(viewport_.projectionMatrix());
+    auto& interaction = Dezaina::instance().getInteraction();
+    interaction::Interaction::Iter iter{interaction.root()};
+		while (iter.isValid()) {
+			auto* node = iter.get();
+			renderNode(node, true);
+			++iter;
+		}
+    auto* context = canvas_->recordingContext()->asDirectContext();
+    if (context != nullptr) {
+      context->flush();
+      context->submit();
+    }
   }
 
 	void Render::render() {
@@ -88,15 +102,16 @@ namespace dea::render {
       }
     }
     renderDocument();
+    renderInteraction();
 
 }
 
-	void Render::renderNode(node::Node* node) {
+	void Render::renderNode(node::Node* node, bool isInterNode) {
     auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
     if (!shapeNode) {
       if (auto* page = node::node_cast<node::PageNode*>(node)) {
         auto color = utility::toSkColor(page->getBackgroundColor()); 
-        canvas_->clear(color);
+        canvas_->drawColor(color);
         canvas_->concat(utility::toSkMatrix(doc_.currentPage()->getTransform()));
         return;
       }
@@ -107,11 +122,11 @@ namespace dea::render {
 		RenderSaveLayerScope scope{node};
 		{
       SkAutoCanvasRestore acr(canvas_, true); 
-			auto* fill =	geometry::getOrBuildFill(node);
-			if (fill) {
+			auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
+			if (!fill.isEmpty()) {
         SkPaint paint;
         paint.setAntiAlias(true);
-        canvas_->clipPath(*fill, true);
+        canvas_->clipPath(fill, true);
 			}
 			auto& fillPaintDrawers = buildFillPaintDrawers(node);
 		  for (auto& drawer : fillPaintDrawers) {
@@ -121,17 +136,23 @@ namespace dea::render {
 			}
 		}
 		{
-			auto* stroke = geometry::getOrBuildStroke(node);
-			if (stroke) {
-				// render stroke
+			auto stroke = isInterNode ? geometry::buildStroke(node, 2) : geometry::getOrBuildStroke(node);
+			if (!stroke.isEmpty()) {
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        canvas_->clipPath(stroke, true);
 			}
 			auto& strokePaintDrawers = buildStrokePaintDrawers(node);
 			for (auto& drawer : strokePaintDrawers) {
-				// render stroke
-				// drawer->draw();
+        std::visit([&](auto&& drawer) {
+          drawer.draw(canvas_);
+        }, drawer);
 			}
 		}
 	}
+
+  void Render::renderInterNode(node::Node* node) {
+  }
 
 	bool Render::checkViewPort() {
 		return viewport_.width() == width_ && viewport_.height() == height_ && viewport_.devicePixelRatio() == devicePixelRatio_; 
