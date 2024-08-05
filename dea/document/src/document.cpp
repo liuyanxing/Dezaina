@@ -50,7 +50,7 @@ std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, floa
 SkMatrix Document::getWorldMatrix(node::Node* node) {
   SkMatrix matrix = SkMatrix::I();
   auto temp = node;
-  while(temp && !node::node_cast<const node::DocumentNode*>(temp)) {
+  while(temp && !node::node_cast<const node::PageNode*>(temp)) {
     matrix.preConcat(utility::getTransfromMatrix(temp));
     temp = getParent(temp);
   };

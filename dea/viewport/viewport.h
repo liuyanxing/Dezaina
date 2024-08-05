@@ -16,44 +16,49 @@ public:
   void scale(float sx, float sy, float px = 0, float py = 0);
 
   const auto& VPMatrix() {
-    return view_projection_matrix_;
+    return viewProjectionMatrix_;
   }
 
   const auto& projectionMatrix() const {
-    return projection_matrix_;
+    return projectionMatrix_;
+  }
+
+  const auto getScreenMatrix() const {
+    return worldScreenMatrix_;
   }
 
   void setProjectionMatrix(const SkMatrix& matrix) {
-    projection_matrix_ = matrix;
+    projectionMatrix_ = matrix;
     updateVPMatrix();
   }
 
   void setViewMatrix(const SkMatrix& matrix) {
-    view_matrix_ = matrix;
+    viewMatrix_ = matrix;
     updateVPMatrix();
   }
 
   void updateVPMatrix() {
-    view_projection_matrix_ = projection_matrix_ * view_matrix_ ;
-    world_screen_matrix_ = view_projection_matrix_;
-    world_screen_matrix_.postScale(1 / devicePixelRatio_, 1 / devicePixelRatio_);
+    viewProjectionMatrix_ = projectionMatrix_ * viewMatrix_ ;
+    auto noScaleViewMatrix = viewMatrix_;
+    noScaleViewMatrix.setScale(1, 1);
+    worldScreenMatrix_ = projectionMatrix_ * noScaleViewMatrix;
     auto e = event::Event{};
     e.type = event::EventType::ViewportChange;
     emit(e);
   }
 
   const auto& viewMatrix() {
-    return view_matrix_;
+    return viewMatrix_;
   }
 
   SkRect mapWorldToScreen(const SkRect& rect) {
-    return view_projection_matrix_.mapRect(rect);
+    return viewProjectionMatrix_.mapRect(rect);
   }
 
   SkPoint mapScreenToWorld(float x, float y) {
     SkPoint point;
     SkMatrix inverse;
-    if (world_screen_matrix_.invert(&inverse)) {
+    if (worldScreenMatrix_.invert(&inverse)) {
       inverse.mapXY(x, y, &point);
     }
     return point;
@@ -62,7 +67,7 @@ public:
   float mapScreenToWorld(float length) {
     SkRect rect = SkRect::MakeWH(length, 0);
     SkMatrix inverse;
-    if (world_screen_matrix_.invert(&inverse)) {
+    if (worldScreenMatrix_.invert(&inverse)) {
       return inverse.mapRect(rect).width();
     }
     return inverse.getMaxScale() * length;
@@ -73,10 +78,10 @@ public:
   auto devicePixelRatio()  const { return devicePixelRatio_; }
 
 private:
-	SkMatrix view_matrix_;
-	SkMatrix projection_matrix_;
-  SkMatrix view_projection_matrix_;
-  SkMatrix world_screen_matrix_;
+	SkMatrix viewMatrix_;
+	SkMatrix projectionMatrix_;
+  SkMatrix viewProjectionMatrix_;
+  SkMatrix worldScreenMatrix_;
   uint32_t width_ = 800;
   uint32_t height_ = 600;
   float devicePixelRatio_ = 1;

@@ -4,11 +4,9 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "node/include/node.h"
-#include "geometry/geometry.h"
 #include "node/src/node-base/node.generated.h"
 #include "node/src/node-base/type.generated.h"
 #include "node/src/page.h"
-#include "paint.h"
 
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkCanvas.h"
@@ -104,7 +102,7 @@ namespace dea::render {
     renderDocument();
     renderInteraction();
 
-}
+  }
 
 	void Render::renderNode(node::Node* node, bool isInterNode) {
     auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
@@ -120,38 +118,28 @@ namespace dea::render {
 
     canvas_->concat(utility::toSkMatrix(shapeNode->getTransform()));
 		RenderSaveLayerScope scope{node};
-		{
-      SkAutoCanvasRestore acr(canvas_, true); 
-			auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
-			if (!fill.isEmpty()) {
-        SkPaint paint;
-        paint.setAntiAlias(true);
-        canvas_->clipPath(fill, true);
-			}
-			auto& fillPaintDrawers = buildFillPaintDrawers(node);
-		  for (auto& drawer : fillPaintDrawers) {
-        std::visit([&](auto&& drawer) {
-          drawer.draw(canvas_);
-        }, drawer);
-			}
-		}
-		{
-			auto stroke = isInterNode ? geometry::buildStroke(node, 2) : geometry::getOrBuildStroke(node);
-			if (!stroke.isEmpty()) {
-        SkPaint paint;
-        paint.setAntiAlias(true);
-        canvas_->clipPath(stroke, true);
-			}
-			auto& strokePaintDrawers = buildStrokePaintDrawers(node);
-			for (auto& drawer : strokePaintDrawers) {
-        std::visit([&](auto&& drawer) {
-          drawer.draw(canvas_);
-        }, drawer);
-			}
-		}
+  
+    auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
+    if (!fill.isEmpty()) {
+      renderGeometry(fill, buildFillPaintDrawers(node));
+    };
+    auto stroke = isInterNode ? geometry::buildStroke(node) : geometry::getOrBuildStroke(node);
+    if (!stroke.isEmpty()) {
+      renderGeometry(stroke, buildStrokePaintDrawers(node));
+    }
+
 	}
 
-  void Render::renderInterNode(node::Node* node) {
+  void Render::renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers) {
+      SkAutoCanvasRestore acr(canvas_, true); 
+      SkPaint paint;
+      paint.setAntiAlias(true);
+      canvas_->clipPath(geometry, true);
+			for (auto& drawer : drawers) {
+        std::visit([this](auto&& d) {
+          d.draw(canvas_);
+        }, drawer);
+			}
   }
 
 	bool Render::checkViewPort() {

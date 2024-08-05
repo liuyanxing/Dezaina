@@ -11,7 +11,7 @@ using namespace node;
 
 RectangleEditor::RectangleEditor(node::RectangleNode* node) : node_(node), NodeEditor() {
     auto& doc = Dezaina::instance().getDocument();
-    NodeEditor::update(doc.getScreenMatrix(node), doc.getScreenBound(node));
+    NodeEditor::update(doc.getWorldMatrix(node), doc.getScreenBound(node));
     
     buildEditor();
 }
@@ -25,7 +25,7 @@ void RectangleEditor::buildEditor() {
     ctrl.addEventListener(event::EventType::MouseDrag, [this, i, moveAxises](event::Event &event) {
       handleDragResizeCornerCtrl(i, moveAxises[i], static_cast<event::MouseEvent&>(event));
     });
-    appendChildToContainer(&ctrl);
+    appendToContainer(&ctrl);
   }
 }
 

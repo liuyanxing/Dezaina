@@ -17,7 +17,7 @@ public:
 class SolidPaintDrawer : public PaintDrawer {
 public:
   SolidPaintDrawer(const node::SolidPaint& paint) : paint_{paint} {}
-  void draw(SkCanvas* canvas) {
+  void draw(SkCanvas* canvas) const {
     canvas->drawColor(utility::toSkColor(paint_.color));
   }
 private:
@@ -27,7 +27,7 @@ private:
 class GradientPaintDrawer : public PaintDrawer {
 public:
   GradientPaintDrawer(const node::GradientPaint& paint) : paint_{paint} {}
-  void draw(SkCanvas* canvas) {
+  void draw(SkCanvas* canvas) const {
   }
 private:
   node::GradientPaint paint_;
@@ -36,7 +36,7 @@ private:
 class ImagePaintDrawer : public PaintDrawer {
 public:
   ImagePaintDrawer(const node::ImagePaint& paint) : paint_{paint} {}
-  void draw(SkCanvas* canvas) {
+  void draw(SkCanvas* canvas) const {
   }
 private:
   node::ImagePaint paint_;

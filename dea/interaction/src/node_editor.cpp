@@ -1,4 +1,5 @@
 #include "node_editor.h"
+#include "config/size.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
@@ -6,7 +7,7 @@
 #include <array>
 #include "dezaina.h"
 #include "utility.h"
-// #include "config/interaction.h"
+#include "config/config.h"
 
 namespace dea::interaction {
 
@@ -47,33 +48,34 @@ void NodeEditor::handleDragResizeCtrlEdge(event::MouseEvent& event) {
 
 void NodeEditor::buildEditor() {
     SolidPaint strokePaint;
-    strokePaint.setColor({0, 0, 0, 255});
+    auto& [r, g, b, a] = config::color::Primary;
+    strokePaint.setColor({r, g, b, a});
     bound_ctrl_.setStrokePaints({strokePaint});
-    bound_ctrl_.setStrokeWeight(1.0);
+    bound_ctrl_.setStrokeWeight(config::size::Min);
     bound_ctrl_.addEventListener(EventType::MouseDrag, [this](Event& event) {
       handleDragResizeCtrlEdge(static_cast<MouseEvent&>(event));
     });
-    appendChildToContainer(&bound_ctrl_);
+    appendToContainer(&bound_ctrl_);
 
     int nodeIndex = 0;
-    for (auto& ctrl : node_resize_ctrls_) {
-      SolidPaint fillPaint;
-      fillPaint.setColor({255, 255, 255, 255});
+
+    SolidPaint fillPaint;
+    fillPaint.setColor({1, 1, 1, 1});
+    for (auto& ctrl : nodeResizeCtrls_) {
       ctrl.setFillPaints({fillPaint});
-      fillPaint.setColor({0, 0, 0, 255});
       ctrl.setStrokePaints({strokePaint});
-      ctrl.setStrokeWeight(1.0);
-      ctrl.setSize({20, 20});
+      ctrl.setStrokeWeight(config::size::Min);
+      ctrl.setSize({config::size::Small, config::size::Small});
       ctrl.addEventListener(EventType::MouseDrag, [this, nodeIndex](Event& event) {
         handleDragResizeCtrlNode(nodeIndex, static_cast<MouseEvent&>(event));        
       });
       nodeIndex++;
-      appendChildToContainer(&ctrl);
+      appendToContainer(&ctrl);
     }
 
     nodeIndex = 0;
-    for (auto& ctrl : node_rotate_ctrls_) {
-      ctrl.setSize({20, 20});
+    for (auto& ctrl : nodeRotateCtrls_) {
+      ctrl.setSize({config::size::Small, config::size::Small});
       ctrl.addEventListener(EventType::MouseDrag, [this, nodeIndex](Event& event) {
         // handleDragRotateCtrlNode(nodeIndex, static_cast<MouseEvent*>(event));
       });
@@ -85,8 +87,8 @@ void NodeEditor::update(const SkMatrix& transform, const SkRect& bound) {
   container_.setTransform(utility::toMatrix(transform));
   container_.setSize({bound.width(), bound.height()});
   bound_ctrl_.setSize({bound.width(), bound.height()});
-  layoutRectsToCornersOfRect(node_resize_ctrls_, bound.makeOutset(2, 2));
-  layoutRectsToCornersOfRect(node_rotate_ctrls_, bound.makeOutset(6, 6));
+  layoutRectsToCornersOfRect(nodeResizeCtrls_, bound.makeOutset(2, 2));
+  layoutRectsToCornersOfRect(nodeRotateCtrls_, bound.makeOutset(6, 6));
 }
 
 }
