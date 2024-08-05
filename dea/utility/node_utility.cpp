@@ -6,15 +6,7 @@ NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(nod
   world_ = getWorldMatrixImpl(root_);
 }
 
-SkMatrix NodeIter::getWorldMatrixImpl(node::Node* node) {
-  if (auto* page = node::node_cast<node::PageNode*>(node)) {
-    return utility::toSkMatrix(page->getTransform());
-  }
-  if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
-    return utility::toSkMatrix(shape->getTransform());
-  }
-  return SkMatrix::I();
-}
+
 
 bool NodeIter::setNode(node::Node* node, IterDirection direction) {
   if (!node) {
@@ -39,15 +31,13 @@ NodeIter::IterDirection NodeIter::operator++() {
 
 	auto* container = node::node_cast<node::Container*>(node_);
 	if (container) {
-    if (setNode(container->firstChild(), Forward)) {
-      return Forward;
-    }
+    node_ = container->firstChild();
 		return End;
 	}
 
 	auto* next = node_->getNextSibling();
 	if (next) {
-    setNode(next, Right);
+    node_ = next;
 		return Right;
 	}
 	auto* parent = getParent_(node_);
@@ -55,7 +45,7 @@ NodeIter::IterDirection NodeIter::operator++() {
 		node_ = nullptr;
 		return End;
 	}
-  setNode(parent->getNextSibling(), Backword);
+  node_ = parent->getNextSibling();
   return Backword;
 }
 
@@ -72,4 +62,40 @@ NodeIter::IterDirection NodeIter::operator--() {
   node_ = parent;
   return Backword;
 }
+
+NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node* node, const GetParentFunc& getParent) : NodeIter(node, getParent) {
+  word_ = getWorldMatrixImpl(node);
+  worldStack_.push_back(world_);
+}
+
+SkMatrix NodeIterWithWorldMarix::getWorldMatrixImpl(node::Node* node) {
+  if (auto* page = node::node_cast<node::PageNode*>(node)) {
+    return SkMartrix::I();
+  }
+  return SkMatrix::I();
+}
+
+NodeIter::IterDirection NodeIterWithWorldMarix::operator++() {
+  auto direction = NodeIter::++();
+  switch (direction) {
+    case Forward:
+      world_ = getTransfromMatrix(node_) * world_;
+      wordStack_.push_back(world_);
+      break;
+    case Backword:
+      wordStack_.pop_back();
+      wordStack_.pop_back();
+      word_ = getTransfromMatrix(node_) * wordStack_.top();
+      wordStack_.push_back(world_);
+      break;
+    case Right:
+      wordStack_.pop_back();
+      word_ = getTransfromMatrix(node_) * wordStack_.top();
+      wordStack_.push_back(world_);
+      break;
+    case End:
+      break;
+  }
+}
+
 }

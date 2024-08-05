@@ -136,6 +136,12 @@ public:
   static inline Document* doc_ = nullptr;
 };
 
+class IterWithWorldMatrix : public utility::NodeIterWithWorldMatrix {
+public:
+	Iter(node::Node* node) : utility::NodeIterWithWorldMatrix(node, [](node::Node* node) { return Iter::doc_->getParent(node); }) {
+  }
+};
+
 private:
 	NodeMap nodeMap_{100};
 	Change change_;

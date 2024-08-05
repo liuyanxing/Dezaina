@@ -30,7 +30,7 @@ std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, floa
     return nodes;
   }
 
-  Iter iter(currentPage_);
+  NodeIterWithWorldMatrix iter(currentPage_);
   while (iter.isValid()) {
     auto* node = iter.get();
     if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
@@ -50,7 +50,7 @@ std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, floa
 SkMatrix Document::getWorldMatrix(node::Node* node) {
   SkMatrix matrix = SkMatrix::I();
   auto temp = node;
-  while(temp && !node::node_cast<const node::DocumentNode*>(temp)) {
+  while(temp && !node::node_cast<const node::PageNode*>(temp)) {
     matrix.preConcat(utility::getTransfromMatrix(temp));
     temp = getParent(temp);
   };

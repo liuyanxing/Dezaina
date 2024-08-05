@@ -50,6 +50,17 @@ public:
     return view_projection_matrix_.mapRect(rect);
   }
 
+  SkSize mapWorldToScreen(const SkSize& size) {
+    SkRect rect = mapWorldToScreen(SkRect::MakeWH(size.width(), size.height()));
+    return {rect.width(), rect.height()};
+  }
+
+  float mapWorldToScreen(float length) {
+    SkRect rect = SkRect::MakeWH(length, 0);
+    SkRect mapped = view_projection_matrix_.mapRect(rect);
+    return mapped.width();
+  }
+
   SkPoint mapScreenToWorld(float x, float y) {
     SkPoint point;
     SkMatrix inverse;

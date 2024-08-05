@@ -62,6 +62,10 @@ public:
     return false;
   }
 
+  T& top() {
+    return this->at(size_);
+  }
+
 private:
   int size_ = -1;
 };

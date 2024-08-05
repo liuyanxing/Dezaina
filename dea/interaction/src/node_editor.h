@@ -13,9 +13,9 @@ class Desaina;
 
 class NodeEditor {
 public:
-  NodeEditor(const SkMatrix& transform, const SkRect& bound) {
+  NodeEditor(const SkMatrix& transform, const SkSize& size) {
     buildEditor();
-    update(transform, bound);
+    update(transform, size);
   }
   NodeEditor() {
     buildEditor();

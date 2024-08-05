@@ -81,10 +81,11 @@ void NodeEditor::buildEditor() {
     }
 }
 
-void NodeEditor::update(const SkMatrix& transform, const SkRect& bound) {
+void NodeEditor::update(const SkMatrix& transform, const SkSize& size) {
   container_.setTransform(utility::toMatrix(transform));
-  container_.setSize({bound.width(), bound.height()});
-  bound_ctrl_.setSize({bound.width(), bound.height()});
+  container_.setSize({size.width(), size.height()});
+  bound_ctrl_.setSize({size.width(),size.height()});
+  SkBound bound = SkBound::MakeXYWH(0, 0, bound.width(), bound.height());
   layoutRectsToCornersOfRect(node_resize_ctrls_, bound.makeOutset(2, 2));
   layoutRectsToCornersOfRect(node_rotate_ctrls_, bound.makeOutset(6, 6));
 }

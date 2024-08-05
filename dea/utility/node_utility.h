@@ -17,6 +17,24 @@ inline SkMatrix getTransfromMatrix(const node::Node* node) {
   return SkMatrix::I();
 }
 
+inline SkSize getScreenSize(const node::Node* node) {
+  if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
+    auto& size = shape->getSize();
+    return Dezaina::instance().viewport().mapWorldToScreen({size.x, size.y});
+  }
+  return {0, 0};
+}
+
+inline SkMatrix getWorldMatrix(const node::Node* node) {
+  document::Document::IterWithWorldMatrix iter{node};
+  return iter.getWorldMatrix();
+}
+
+inline SkMatrix getWorldMatrix(const interaction::InteractionNode* node) {
+  interaction::Interaction::IterWithWorldMatrix iter{node};
+  return iter.getWorldMatrix();
+}
+
 class NodeIter {
 friend class Document;
 public:
@@ -38,11 +56,17 @@ public:
 private:
 	node::Node* node_;
 	node::Node* root_;
+  GetParentFunc getParent_;
+};
+
+class NodeIterWithWorldMatrix : public NodeIter {
+public:
+  NodeIter(node::Node* node, const GetParentFunc& getParent);
+	IterDirection operator++();
+	IterDirection operator--();
+priate:
   SkMatrix world_;
   base::array<SkMatrix, 16> wordStack_;
-  GetParentFunc getParent_;
-  bool setNode(node::Node* node, IterDirection direction);
-  SkMatrix getWorldMatrixImpl(node::Node* node);
 };
 
 }
