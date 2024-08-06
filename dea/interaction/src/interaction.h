@@ -35,6 +35,10 @@ private:
   Creation creation_;
   InteractionPath hover_;
 
+  void appendToContainer(node::Node* child) {
+    appendChild(&page_, child);
+  }
+
   void updateSelection();
   void handleHover();
   void onEvent(event::Event& event) override;

@@ -5,6 +5,8 @@
 #include "node/src/node-base/node.h"
 #include "viewport/viewport.h"
 #include "include/core/SkSurface.h"
+#include "geometry/geometry.h"
+#include "paint.h"
 
 #include <cstdint>
 
@@ -23,7 +25,7 @@ private:
   void renderDocument();
   void renderInteraction();
 	void renderNode(node::Node* node, bool isInterNode = false);
-	void renderInterNode(node::Node* node);
+	void renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers);
 
 	const Viewport& viewport_;
 	const document::Document& doc_;

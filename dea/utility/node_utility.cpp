@@ -4,6 +4,7 @@ namespace dea::utility{
 
 NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(node), root_(node_), getParent_(getParent) {
   world_ = getWorldMatrixImpl(root_);
+  wordStack_.push_back(world_);
 }
 
 
@@ -16,7 +17,11 @@ bool NodeIter::setNode(node::Node* node, IterDirection direction) {
   if (direction == Forward) {
     world_ = getTransfromMatrix(node) * world_;
     wordStack_.push_back(world_);
-  } else {
+  } else if(direction == Right) {
+    world_ = wordStack_.pop_back();
+    world_ = getTransfromMatrix(node) * world_;
+    wordStack_.push_back(world_);
+  } else if (direction == Backword) {
     world_ = wordStack_.pop_back();
     world_ = getTransfromMatrix(node) * world_;
   }

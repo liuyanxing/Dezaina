@@ -5,7 +5,6 @@
 #include "interaction_node.h"
 #include "type.h"
 
-
 namespace dea::interaction {
 
 template<typename T>

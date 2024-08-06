@@ -25,7 +25,7 @@ void RectangleEditor::buildEditor() {
     ctrl.addEventListener(event::EventType::MouseDrag, [this, i, moveAxises](event::Event &event) {
       handleDragResizeCornerCtrl(i, moveAxises[i], static_cast<event::MouseEvent&>(event));
     });
-    appendChildToContainer(&ctrl);
+    appendToContainer(&ctrl);
   }
 }
 

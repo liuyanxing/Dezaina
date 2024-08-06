@@ -33,7 +33,7 @@ void Interaction::updateSelection() {
 
   auto* editorContainer = node_editor_->getContainer();
   if (!page_.findChild(editorContainer)) {
-    page_.appendChild(editorContainer);
+    appendToContainer(editorContainer);
   }
 }
 

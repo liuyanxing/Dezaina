@@ -25,15 +25,15 @@ public:
   Frame* getContainer() { return &container_; }
   virtual void update(const std::vector<node::Node*>& nodes) {};
   void update(const SkMatrix& transform, const SkRect& bound);
-  void appendChildToContainer(node::Node* node) {
+  void appendToContainer(node::Node* node) {
     appendChild(&container_, node);
   }
 
 protected:
   Frame container_;
   Rectangle bound_ctrl_;
-  std::array<Rectangle, 4> node_resize_ctrls_;
-  std::array<Rectangle, 4> node_rotate_ctrls_;
+  std::array<Rectangle, 4> nodeResizeCtrls_;
+  std::array<Rectangle, 4> nodeRotateCtrls_;
 
   void buildEditor();
   SkRect caculateSelectionBound();
