@@ -3,8 +3,6 @@
 #include "document/src/document.h"
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
-#include "node/src/node-base/node.generated.h"
-#include "node/src/node-base/type.generated.h"
 #include "utility/coords.h"
 #include "dezaina.h"
 

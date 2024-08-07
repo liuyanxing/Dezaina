@@ -5,7 +5,6 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPaint.h"
 #include "node/include/node.h"
-#include "node/src/node-base/node.generated.h"
 #include "utility/skia.h"
 
 namespace dea::render {

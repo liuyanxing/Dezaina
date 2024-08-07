@@ -4,9 +4,6 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "node/include/node.h"
-#include "node/src/node-base/node.generated.h"
-#include "node/src/node-base/type.generated.h"
-#include "node/src/page.h"
 
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkCanvas.h"

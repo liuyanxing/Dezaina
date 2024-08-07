@@ -2,9 +2,6 @@
 #include "common/buffer.h"
 #include "resource.h"
 #include "common/data.h"
-#include "node/src/node-base/node.generated.h"
-#include "node/src/node-base/type.generated.h"
-#include "node/src/rectangle.h"
 #include "resource.h"
 #include <cassert>
 #include <cstdint>

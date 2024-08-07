@@ -2,7 +2,6 @@
 #include "include/private/base/SkPoint_impl.h"
 #include "node/rectangle.h"
 #include "dezaina.h"
-#include "node/src/node-base/type.generated.h"
 #include <cassert>
 
 namespace dea::interaction {

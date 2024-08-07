@@ -5,8 +5,6 @@
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
 #include "node/include/node.h"
-#include "node/src/node-base/node.h"
-#include "node/src/page.h"
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
 #include <array>
@@ -104,7 +102,7 @@ public:
 
   void handleViewMatrixChange(const node::Matrix& matrix) {
     if (currentPage_) {
-      currentPage_->setViewMatrix(matrix);
+      currentPage_->setTransform(matrix);
     }
   }
 

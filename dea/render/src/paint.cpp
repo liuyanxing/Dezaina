@@ -1,6 +1,4 @@
 #include "paint.h"
-#include "node/src/node-base/node.generated.h"
-#include "node/src/node-base/type.h"
 #include <variant>
 
 namespace dea::render {

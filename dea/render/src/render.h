@@ -2,7 +2,6 @@
 
 #include "common/object.h"
 #include "document/include/document.h"
-#include "node/src/node-base/node.h"
 #include "viewport/viewport.h"
 #include "include/core/SkSurface.h"
 #include "geometry/geometry.h"
