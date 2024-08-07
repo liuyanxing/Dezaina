@@ -1,5 +1,6 @@
 #include "node_editor.h"
 #include "config/size.h"
+#include "document/src/document.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
@@ -85,8 +86,9 @@ void NodeEditor::buildEditor() {
 
 void NodeEditor::update(const SkMatrix& transform, const SkSize& size) {
   container_.setTransform(utility::toMatrix(transform));
-  container_.setSize({bound.width(), bound.height()});
-  bound_ctrl_.setSize({bound.width(), bound.height()});
+  container_.setSize({size.width(), size.height()});
+  bound_ctrl_.setSize({size.width(), size.height()});
+  SkRect bound = SkRect::MakeWH(size.width(), size.height()); 
   layoutRectsToCornersOfRect(nodeResizeCtrls_, bound.makeOutset(2, 2));
   layoutRectsToCornersOfRect(nodeRotateCtrls_, bound.makeOutset(6, 6));
 }

@@ -110,7 +110,9 @@ namespace dea::render {
       if (auto* page = node::node_cast<node::PageNode*>(node)) {
         auto color = utility::toSkColor(page->getBackgroundColor()); 
         canvas_->drawColor(color);
-        canvas_->concat(utility::toSkMatrix(doc_.currentPage()->getTransform()));
+        auto& viewport = Dezaina::instance().getViewport();
+        auto viewMatrix = isInterNode ? viewport.getHudViewMatrix() : viewport.getViewMatrix();
+        canvas_->concat(viewMatrix);
         return;
       }
       return;

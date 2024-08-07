@@ -30,7 +30,7 @@ std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, floa
     return nodes;
   }
 
-  NodeIterWithWorldMatrix iter(currentPage_);
+  IterWithWorldMatrix iter(currentPage_);
   while (iter.isValid()) {
     auto* node = iter.get();
     if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
@@ -45,41 +45,6 @@ std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, floa
     ++iter;
   }
   return nodes;
-}
-
-SkMatrix Document::getWorldMatrix(node::Node* node) {
-  SkMatrix matrix = SkMatrix::I();
-  auto temp = node;
-  while(temp && !node::node_cast<const node::PageNode*>(temp)) {
-    matrix.preConcat(utility::getTransfromMatrix(temp));
-    temp = getParent(temp);
-  };
-  return matrix;
-}
-
-SkBound Document::getLocalBound(node::Node* node) {
-  if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
-    return SkBound::MakeWH(shape->getSize().getX(), shape->getSize().getY());
-  }
-  return SkBound::MakeEmpty();
-}
-
-SkBound Document::getWorldBound(node::Node* node) {
-  auto matrix = getWorldMatrix(node);
-  return matrix.mapRect(getLocalBound(node));
-}
-
-SkBound Document::getScreenBound(node::Node* node) {
-  auto bound = getWorldBound(node);
-  auto& viewport = Dezaina::instance().getViewport();
-  return viewport.mapWorldToScreen(getLocalBound(node));
-}
-
-SkMatrix Document::getScreenMatrix(node::Node* node) {
-  auto matrix = getWorldMatrix(node);
-  auto& viewport = Dezaina::instance().getViewport();
-  matrix.preConcat(viewport.VPMatrix());
-  return matrix;
 }
 
 }

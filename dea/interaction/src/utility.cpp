@@ -31,7 +31,7 @@ SkColor readColorAtPointOfNode(float x, float y, Node* node, const std::vector<S
   if (geometry.isEmpty()) {
     return SK_ColorTRANSPARENT;
   }
-  auto matrix = Dezaina::instance().getDocument().getWorldMatrix(node);
+  auto matrix = utility::getWorldMatrix(node);
   if (!readColorSurface) {
     initSurface();
   }

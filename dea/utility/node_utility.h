@@ -7,33 +7,14 @@
 
 namespace dea::utility {
 
-inline SkMatrix getTransfromMatrix(const node::Node* node) {
-  if (auto* page = node::node_cast<const node::PageNode*>(node)) {
-    return utility::toSkMatrix(page->getTransform());
-  }
-  if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
-    return utility::toSkMatrix(shape->getTransform());
-  }
-  return SkMatrix::I();
+namespace interaction {
+class InteractionNode;
 }
 
-inline SkSize getScreenSize(const node::Node* node) {
-  if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
-    auto& size = shape->getSize();
-    return Dezaina::instance().viewport().mapWorldToScreen({size.x, size.y});
-  }
-  return {0, 0};
-}
-
-inline SkMatrix getWorldMatrix(const node::Node* node) {
-  document::Document::IterWithWorldMatrix iter{node};
-  return iter.getWorldMatrix();
-}
-
-inline SkMatrix getWorldMatrix(const interaction::InteractionNode* node) {
-  interaction::Interaction::IterWithWorldMatrix iter{node};
-  return iter.getWorldMatrix();
-}
+SkMatrix getTransfromMatrix(node::Node* node);
+SkSize getScreenSize(node::Node* node);
+SkMatrix getWorldMatrix(node::Node* node);
+SkMatrix getWorldMatrix(interaction::InteractionNode* node);
 
 class NodeIter {
 friend class Document;
@@ -52,8 +33,7 @@ public:
 	IterDirection operator--();
 	bool isValid() { return node_ != nullptr; }
 	auto* get() { return node_; }
-  auto& getWorldMatrix() { return world_; }
-private:
+protected:
 	node::Node* node_;
 	node::Node* root_;
   GetParentFunc getParent_;
@@ -61,12 +41,14 @@ private:
 
 class NodeIterWithWorldMatrix : public NodeIter {
 public:
-  NodeIter(node::Node* node, const GetParentFunc& getParent);
+  NodeIterWithWorldMatrix(node::Node* node, const GetParentFunc& getParent);
 	IterDirection operator++();
 	IterDirection operator--();
-priate:
+  const auto& getWorldMatrix() { return world_; }
+protected:
+  SkMatrix getWorldMatrixImpl(node::Node* node);
   SkMatrix world_;
-  base::array<SkMatrix, 16> wordStack_;
+  base::array<SkMatrix, 16> worldStack_;
 };
 
 }

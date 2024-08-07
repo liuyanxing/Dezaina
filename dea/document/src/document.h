@@ -99,12 +99,6 @@ public:
 		return iter->second;
 	}
 
-  SkMatrix getWorldMatrix(node::Node* node);
-  SkBound getWorldBound(node::Node* node);
-  SkBound getLocalBound(node::Node* node);
-  SkBound getScreenBound(node::Node* node);
-  SkMatrix getScreenMatrix(node::Node* node);
-
   std::vector<node::Node*> getNodes(float x, float y);
   std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
 
@@ -138,7 +132,7 @@ public:
 
 class IterWithWorldMatrix : public utility::NodeIterWithWorldMatrix {
 public:
-	Iter(node::Node* node) : utility::NodeIterWithWorldMatrix(node, [](node::Node* node) { return Iter::doc_->getParent(node); }) {
+	IterWithWorldMatrix(node::Node* node) : utility::NodeIterWithWorldMatrix(node, [](node::Node* node) { return Iter::doc_->getParent(node); }) {
   }
 };
 

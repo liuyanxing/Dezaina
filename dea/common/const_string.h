@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 
 namespace dea::base {
 
@@ -11,8 +12,24 @@ namespace dea::base {
 				data[i] = str[i];
 			}
 		}
+
 		char data[N];
 		static constexpr size_t length = N;
+
+    consteval uint32_t hash() const {
+      // FNV-1 hash
+      uint32_t hash = 2166136261;
+      for (size_t i = 0; i < N; ++i) {
+        hash = (hash * 16777619) ^ data[i];
+      }
+      return hash;
+    }
+
 	};
+
+  template<size_t N>
+  consteval uint32_t hash(const char (&str)[N]) {
+    return ConstString<N>{str}.hash();
+  }
 
 }

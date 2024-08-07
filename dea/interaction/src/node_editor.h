@@ -24,7 +24,7 @@ public:
 
   Frame* getContainer() { return &container_; }
   virtual void update(const std::vector<node::Node*>& nodes) {};
-  void update(const SkMatrix& transform, const SkRect& bound);
+  void update(const SkMatrix& transform, const SkSize& bound);
   void appendToContainer(node::Node* node) {
     appendChild(&container_, node);
   }

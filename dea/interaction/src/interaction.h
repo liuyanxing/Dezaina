@@ -28,6 +28,12 @@ public:
     NodeIter(node, [](node::Node* node) { return interaction::node_cast<InteractionNode*>(node)->getParent();}) {}
   };
 
+  class IterWithWorldMatrix : public utility::NodeIterWithWorldMatrix {
+  public:
+    IterWithWorldMatrix(node::Node* node) : utility::NodeIterWithWorldMatrix(node, [](node::Node* node) { return interaction::node_cast<InteractionNode*>(node)->getParent(); }) {
+    }
+  };
+
 private:
   Page page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;

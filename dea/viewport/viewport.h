@@ -23,10 +23,6 @@ public:
     return projectionMatrix_;
   }
 
-  const auto getScreenMatrix() const {
-    return worldScreenMatrix_;
-  }
-
   void setProjectionMatrix(const SkMatrix& matrix) {
     projectionMatrix_ = matrix;
     updateVPMatrix();
@@ -47,8 +43,14 @@ public:
     emit(e);
   }
 
-  const auto& viewMatrix() {
+  const auto& getViewMatrix() {
     return viewMatrix_;
+  }
+
+  const auto getHudViewMatrix() {
+    SkMatrix hubViewMatrix = viewMatrix_;
+    hubViewMatrix.postScale(1 / viewMatrix_.getScaleX(), 1 / viewMatrix_.getScaleY());
+    return hubViewMatrix;
   }
 
   SkRect mapWorldToScreen(const SkRect& rect) {
@@ -62,7 +64,7 @@ public:
 
   float mapWorldToScreen(float length) {
     SkRect rect = SkRect::MakeWH(length, 0);
-    SkRect mapped = view_projection_matrix_.mapRect(rect);
+    SkRect mapped = viewProjectionMatrix_.mapRect(rect);
     return mapped.width();
   }
 

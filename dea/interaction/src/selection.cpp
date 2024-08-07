@@ -30,7 +30,7 @@ void Selection::onMouseMove(MouseEvent& event) {
           std::cout << "hovering on node" << std::endl;
         }
         hoverNode_ = node;
-        auto matrix = doc.getWorldMatrix(node);
+        auto matrix = utility::getWorldMatrix(node);
         // auto point = utility::mapPointToLocal(matrix, {mouseEvent->x, mouseEvent->y});
         // mouseEvent->localX = point.x();
         // mouseEvent->localY = point.y();

@@ -1,33 +1,40 @@
 #include "node_utility.h"
+#include "document.h"
+#include "interaction.h"
+#include "dezaina.h"
+#include "node/src/node-base/node.h"
 
 namespace dea::utility{
 
-NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(node), root_(node_), getParent_(getParent) {
-  world_ = getWorldMatrixImpl(root_);
-  wordStack_.push_back(world_);
+SkMatrix getTransfromMatrix(node::Node* node) {
+  if (auto* page = node::node_cast<const node::PageNode*>(node)) {
+    return utility::toSkMatrix(page->getTransform());
+  }
+  if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
+    return utility::toSkMatrix(shape->getTransform());
+  }
+  return SkMatrix::I();
 }
 
-
-
-bool NodeIter::setNode(node::Node* node, IterDirection direction) {
-  if (!node) {
-    node_ = nullptr;
-    return false;
+SkSize getScreenSize(node::Node* node) {
+  if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
+    auto& size = shape->getSize();
+    return Dezaina::instance().getViewport().mapWorldToScreen(SkSize{size.x, size.y});
   }
-  if (direction == Forward) {
-    world_ = getTransfromMatrix(node) * world_;
-    wordStack_.push_back(world_);
-  } else if(direction == Right) {
-    world_ = wordStack_.pop_back();
-    world_ = getTransfromMatrix(node) * world_;
-    wordStack_.push_back(world_);
-  } else if (direction == Backword) {
-    world_ = wordStack_.pop_back();
-    world_ = getTransfromMatrix(node) * world_;
-  }
-  node_ = node;
-  return true;
+  return {0, 0};
 }
+
+SkMatrix getWorldMatrix(node::Node* node) {
+  document::Document::IterWithWorldMatrix iter{node};
+  return iter.getWorldMatrix();
+}
+
+SkMatrix getWorldMatrix(interaction::InteractionNode* node) {
+  dea::interaction::Interaction::IterWithWorldMatrix iter{static_cast<node::Node*>((void*)node)};
+  return iter.getWorldMatrix();
+}
+
+NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(node), root_(node_), getParent_(getParent) {}
 
 NodeIter::IterDirection NodeIter::operator++() {
 	if (!node_) {
@@ -69,38 +76,39 @@ NodeIter::IterDirection NodeIter::operator--() {
 }
 
 NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node* node, const GetParentFunc& getParent) : NodeIter(node, getParent) {
-  word_ = getWorldMatrixImpl(node);
+  world_ = getWorldMatrixImpl(node);
   worldStack_.push_back(world_);
 }
 
-SkMatrix NodeIterWithWorldMarix::getWorldMatrixImpl(node::Node* node) {
+SkMatrix NodeIterWithWorldMatrix::getWorldMatrixImpl(node::Node* node) {
   if (auto* page = node::node_cast<node::PageNode*>(node)) {
-    return SkMartrix::I();
+    return SkMatrix::I();
   }
   return SkMatrix::I();
 }
 
-NodeIter::IterDirection NodeIterWithWorldMarix::operator++() {
-  auto direction = NodeIter::++();
+NodeIter::IterDirection NodeIterWithWorldMatrix::operator++() {
+  auto direction = NodeIter::operator++();
   switch (direction) {
     case Forward:
       world_ = getTransfromMatrix(node_) * world_;
-      wordStack_.push_back(world_);
+      worldStack_.push_back(world_);
       break;
     case Backword:
-      wordStack_.pop_back();
-      wordStack_.pop_back();
-      word_ = getTransfromMatrix(node_) * wordStack_.top();
-      wordStack_.push_back(world_);
+      worldStack_.pop_back();
+      worldStack_.pop_back();
+      world_ = getTransfromMatrix(node_) * worldStack_.top();
+      worldStack_.push_back(world_);
       break;
     case Right:
-      wordStack_.pop_back();
-      word_ = getTransfromMatrix(node_) * wordStack_.top();
-      wordStack_.push_back(world_);
+      worldStack_.pop_back();
+      world_ = getTransfromMatrix(node_) * worldStack_.top();
+      worldStack_.push_back(world_);
       break;
     case End:
       break;
   }
+  return direction;
 }
 
 }
