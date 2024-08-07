@@ -24,6 +24,15 @@ function procExtends(o) {
 	o.inherits = null;
 }
 
+function procNodeExtends(o) {
+	o.nodedExtends = [o.name, ...(o.nodedExtends || [])];
+	if (o.nodedExtends) {
+		o.inherits = ': ' + o.nodedExtends.map(e => 'public ' + e).join(', ');
+		return;
+	}
+	o.inherits = null;
+}
+
 function procChangeType(o) {
 	if (!o.changeType) {
 		o.changeType = o.name;
@@ -40,11 +49,16 @@ function procClassGetterAndSetter(o) {
 data.structs.forEach(o => { procExtends(o); procChangeType(o); procClassGetterAndSetter(o); });
 data.classes.forEach(o => { procExtends(o); procClassGetterAndSetter(o); });
 
-let template = fs.readFileSync('./node.mustache').toString();
+let template = fs.readFileSync('./node_base.mustache').toString();
 let output = mustache.render(template, data);
-fs.writeFileSync('../node-base/node.generated.h', output);
+fs.writeFileSync('../node-base/node_base.generated.h', output);
 
+nodeBase.forEach(o => { procNodeExtends(o); });
 template = fs.readFileSync('./type.mustache').toString();
 output = mustache.render(template, { nodes: nodeBase });
 fs.writeFileSync('../node-base/type.generated.h', output);
+
+template = fs.readFileSync('./node.mustache').toString();
+output = mustache.render(template, { nodes: nodeBase });
+fs.writeFileSync('../node.generated.h', output);
 

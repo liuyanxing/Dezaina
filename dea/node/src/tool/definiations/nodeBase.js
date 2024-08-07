@@ -110,6 +110,7 @@ export const nodeBase = [
     "changeType": "NodeChange",
     "members": [],
     "node": "FrameNode",
+    "nodedExtends": ["Container"],
     "nodeType": "FRAME",
   },
   {
@@ -181,6 +182,7 @@ export const nodeBase = [
       }
     ],
     "node": "PageNode",
+    "nodedExtends": ["Container", "DimensionAndPositionMixin"],
     "nodeType": "CANVAS",
   },
   {
@@ -192,6 +194,7 @@ export const nodeBase = [
     "changeType": "NodeChange",
     "members": [],
     "node": "DocumentNode",
+    "nodedExtends": ["Container"],
     "nodeType": "DOCUMENT",
   }
 ]
