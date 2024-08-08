@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
 
 namespace dea::base {
 
@@ -30,6 +31,14 @@ namespace dea::base {
   template<size_t N>
   consteval uint32_t hash(const char (&str)[N]) {
     return ConstString<N>{str}.hash();
+  }
+
+  uint32_t hash(const std::string& str) {
+    uint32_t hash = 2166136261;
+    for (size_t i = 0; i < str.size(); ++i) {
+      hash = (hash * 16777619) ^ str[i];
+    }
+    return hash;
   }
 
 }

@@ -23,7 +23,8 @@ private:
 	void updateViewPort();
   void renderDocument();
   void renderInteraction();
-	void renderNode(node::Node* node, bool isInterNode = false);
+	void render(utility::NodeIterWithWorldMatrix& iter, bool isInterNode);
+	void renderNode(node::Node* node, bool isInterNode);
 	void renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers);
 
 	const Viewport& viewport_;

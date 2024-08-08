@@ -16,7 +16,6 @@
 #include "include/gpu/gl/GrGLInterface.h"
 #include "utility/skia.h"
 #include <GL/gl.h>
-#include <variant>
 
 namespace dea::render {
 
@@ -46,15 +45,13 @@ namespace dea::render {
     return true;
 	}
 
-  void Render::renderDocument() {
-    canvas_->resetMatrix();
-    SkAutoCanvasRestore acr(canvas_, true); 
-
-    canvas_->setMatrix(viewport_.projectionMatrix());
-		document::Document::Iter iter{doc_.currentPage()};
+  void Render::render(utility::NodeIterWithWorldMatrix& iter, bool isInterNode) {
 		while (iter.isValid()) {
+      SkAutoCanvasRestore acr(canvas_, true); 
+
 			auto* node = iter.get();
-			renderNode(node);
+      canvas_->concat(iter->getWorldMatrix());
+			renderNode(node, isInterNode);
 			++iter;
 		}
     auto* context = canvas_->recordingContext()->asDirectContext();
@@ -64,23 +61,26 @@ namespace dea::render {
     }
   }
 
+  void Render::renderDocument() {
+    canvas_->resetMatrix();
+    SkAutoCanvasRestore acr(canvas_, true); 
+
+    canvas_->setMatrix(viewport_.projectionMatrix());
+    canvas_->concat(Dezaina::instance().getViewport().getViewMatrix());
+		document::Document::IterWithWorldMatrix iter{doc_.currentPage()};
+    render(iter, false);
+  }
+
   void Render::renderInteraction() {
     canvas_->resetMatrix();
     SkAutoCanvasRestore acr(canvas_, true);
 
     canvas_->setMatrix(viewport_.projectionMatrix());
+    canvas_->concat(Dezaina::instance().getViewport().getHudViewMatrix());
+
     auto& interaction = Dezaina::instance().getInteraction();
-    interaction::Interaction::Iter iter{interaction.root()};
-		while (iter.isValid()) {
-			auto* node = iter.get();
-			renderNode(node, true);
-			++iter;
-		}
-    auto* context = canvas_->recordingContext()->asDirectContext();
-    if (context != nullptr) {
-      context->flush();
-      context->submit();
-    }
+    interaction::Interaction::IterWithWorldMatrix iter{interaction.root()};
+    render(iter, true);
   }
 
 	void Render::render() {
@@ -107,15 +107,10 @@ namespace dea::render {
       if (auto* page = node::node_cast<node::PageNode*>(node)) {
         auto color = utility::toSkColor(page->getBackgroundColor()); 
         canvas_->drawColor(color);
-        auto& viewport = Dezaina::instance().getViewport();
-        auto viewMatrix = isInterNode ? viewport.getHudViewMatrix() : viewport.getViewMatrix();
-        canvas_->concat(viewMatrix);
-        return;
       }
       return;
     }
 
-    canvas_->concat(utility::toSkMatrix(shapeNode->getTransform()));
 		RenderSaveLayerScope scope{node};
   
     auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
@@ -130,15 +125,15 @@ namespace dea::render {
 	}
 
   void Render::renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers) {
-      SkAutoCanvasRestore acr(canvas_, true); 
-      SkPaint paint;
-      paint.setAntiAlias(true);
-      canvas_->clipPath(geometry, true);
-			for (auto& drawer : drawers) {
-        std::visit([this](auto&& d) {
-          d.draw(canvas_);
-        }, drawer);
-			}
+    SkAutoCanvasRestore acr(canvas_, true); 
+    SkPaint paint;
+    paint.setAntiAlias(true);
+    canvas_->clipPath(geometry, true);
+    for (auto& drawer : drawers) {
+      std::visit([this](auto&& d) {
+        d.draw(canvas_);
+      }, drawer);
+    }
   }
 
 	bool Render::checkViewPort() {
