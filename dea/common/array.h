@@ -18,6 +18,10 @@ public:
     return this->at(size_--);
   }
 
+  T& emplace_back() {
+    return this->at(++size_);
+  }
+
   void clear() {
     size_ = -1;
   }

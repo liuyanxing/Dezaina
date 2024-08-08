@@ -50,7 +50,7 @@ namespace dea::render {
       SkAutoCanvasRestore acr(canvas_, true); 
 
 			auto* node = iter.get();
-      canvas_->concat(iter->getWorldMatrix());
+      canvas_->concat(iter.getWorldMatrix());
 			renderNode(node, isInterNode);
 			++iter;
 		}

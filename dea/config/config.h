@@ -19,7 +19,7 @@ struct ConfigItem {
 static inline base::array<ConfigItem, 1024> configs{};
 
 template<typename T>
-T& addConfig(uint32_t id, const char* name, const T& value) {
+auto& addConfig(uint32_t id, const char* name, const T& value) {
   auto& item = configs.emplace_back();
   item.id = id;
   item.value = value;
@@ -47,7 +47,5 @@ void setConfig(const std::string& name, const T& value) {
 #define x_(name, default_value) static inline auto& name = addConfig(base::hash(#name), #name, default_value);
   CONFIG_PROPERTIES
 #undef x_
-
-  }
 
 }
