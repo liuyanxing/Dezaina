@@ -47,6 +47,8 @@ public:
   Editor& setSize(float width, float height, const node::Vector& anchor);
   Editor& setSize(float width, float height);
   Editor& setTransform(const node::Matrix& transform);
+
+  const auto& getRecords() { return records_; }
   ~Editor() = default;
 
 private:
