@@ -9,6 +9,8 @@
 
 namespace dea::command {
 
+using CmdId = uint32_t;
+
 class Dezaina;
 
 class CmdBase {

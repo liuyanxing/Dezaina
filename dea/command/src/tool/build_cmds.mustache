@@ -1,0 +1,12 @@
+#include "cmds.generated.h"
+#include "command.h"
+
+namespace dea::command {
+
+void Command::buildDefaultCmd() {
+{{#cmds}}
+	addCmdToRepo<{{name}}>();
+{{/cmds}}
+}
+
+} // namespace dea::command

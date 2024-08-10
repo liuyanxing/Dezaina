@@ -1,0 +1,32 @@
+#pragma once
+
+#include "vendor/figma/kiwi.h"
+#include "common/const_string.h"
+#include "common/Data.h"
+#include "cmd.h"
+
+namespace dea::command {
+
+{{#cmds}}
+struct {{name}} {
+	struct Props {
+		const char* description = "{{description}}";
+	} props;
+
+	struct Args {
+		{{#args}}
+		{{type}} {{name}} = {{default}};
+		{{/args}}
+
+		void parse(const base::Data& args) {
+			{{#args}}
+			{{/args}}
+		}
+	} args;
+
+	static constexpr CmdId id = base::hash("{{name}}");
+	static constexpr auto condition = {{#condition}}DeaState::{{.}} | {{/condition}} 0;
+};
+{{/cmds}}
+
+} // namespace dea::command
