@@ -20,14 +20,14 @@ private:
 	Change& change_;
 	std::unique_ptr<Layout> layoutEngine_ = nullptr;
 
-	void chooseLayoutEngine(const node::Node* node);
-	void buildConstraintLayout(const node::Node* node);
-	void buildAutoLayout(const node::Node* node);
-	void diffNodes(const node::Node* node);
+	void chooseLayoutEngine(node::NodeConstPtr node);
+	void buildConstraintLayout(node::NodeConstPtr node);
+	void buildAutoLayout(node::NodeConstPtr node);
+	void diffNodes(node::NodeConstPtr node);
 
-	void rotate(const node::Node* node, float degrees);
-	void transform(const node::Node* node, const node::Matrix& matrix);
-	void resize(const node::Node* node, const node::ResizeValue& values);
+	void rotate(node::NodeConstPtr node, float degrees);
+	void transform(node::NodeConstPtr node, const node::Matrix& matrix);
+	void resize(node::NodeConstPtr node, const node::ResizeValue& values);
 };
 
 } // namespace dea::document

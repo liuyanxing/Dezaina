@@ -26,15 +26,15 @@ bool Executor::execute() {
 	return true;
 }
 
-void Executor::rotate(const node::Node* node, float degrees) {
+void Executor::rotate(node::NodeConstPtr node, float degrees) {
 	node->rotate(degrees);
 }
 
-void Executor::transform(const node::Node* node, const node::Matrix& matrix) {
+void Executor::transform(node::NodeConstPtr node, const node::Matrix& matrix) {
 	node->transform(matrix);
 }
 
-void Executor::resize(const node::Node* node, const node::ResizeValue& values) {
+void Executor::resize(node::NodeConstPtr node, const node::ResizeValue& values) {
 	node->resize(values[0], values[1]);
 }
 

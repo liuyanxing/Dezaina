@@ -9,7 +9,7 @@
 namespace dea::interaction {
 
 template <typename T>
-T node_cast(const node::Node* node) {
+T node_cast(node::NodeConstPtr node) {
 	using U = std::remove_cv_t<std::remove_pointer_t<T>>;
 
 	if (node->getType() == node::NodeType::CANVAS) {

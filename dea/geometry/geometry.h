@@ -20,9 +20,9 @@ namespace dea::geometry {
 	};
 
 	GeometryType* getOrBuild(resource::ResourceId id);
-	GeometryType getOrBuildFill(const node::Node* node);
-	GeometryType getOrBuildStroke(const node::Node* node);
+	GeometryType getOrBuildFill(node::NodeConstPtr node);
+	GeometryType getOrBuildStroke(node::NodeConstPtr node);
 
-	GeometryType buildFill(const node::Node* node);
-	GeometryType buildStroke(const node::Node* node, std::optional<float> strokeWidth = std::nullopt);
+	GeometryType buildFill(node::NodeConstPtr node);
+	GeometryType buildStroke(node::NodeConstPtr node, std::optional<float> strokeWidth = std::nullopt);
 }

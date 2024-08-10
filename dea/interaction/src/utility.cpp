@@ -5,7 +5,9 @@
 
 #include "node.h"
 #include "document.h"
+#include "node/interaction_node.h"
 #include "node/rectangle.h"
+#include "node/type.h"
 
 namespace dea::interaction {
 
@@ -26,8 +28,7 @@ void initSurface() {
   readColorSurface = SkSurfaces::WrapPixels(imageInfo, pixes, rowBytes, nullptr);
 }
 
-SkColor readColorAtPointOfNode(float x, float y, Node* node, const std::vector<SkPaint>& paints) {
-  auto geometry = geometry::getOrBuildFill(node);
+SkColor readColorAtPointOfNode(float x, float y, Node* node, const dea::GeometryType& geometry, const std::vector<SkPaint>& paints) {
   if (geometry.isEmpty()) {
     return SK_ColorTRANSPARENT;
   }
@@ -50,10 +51,10 @@ SkColor readColorAtPointOfNode(float x, float y, Node* node, const std::vector<S
   return SkColorSetARGB(pixes[3], pixes[0], pixes[1], pixes[2]);
 }
 
-bool isCursorOnNodePixel(float x, float y, Node* node) {
+bool isCursorOnNodePixel(float x, float y, Node* node, bool isInterNode) {
   SkPaint paint;
   paint.setColor(SK_ColorWHITE);
-  return readColorAtPointOfNode(x, y, node, {paint}) != SK_ColorTRANSPARENT;
+  return readColorAtPointOfNode(x, y, node, isInterNode ? geometry::buildFill(node) : geometry::getOrBuildFill(node), {paint}) != SK_ColorTRANSPARENT;
 }
 
 void layoutRectsToCornersOfRect(std::array<Rectangle, 4>& rects, const SkRect& frame) {

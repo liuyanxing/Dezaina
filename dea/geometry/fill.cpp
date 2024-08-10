@@ -78,7 +78,7 @@ namespace dea::geometry {
 		return GeometryType{};
 	}
 
-	GeometryType buildFill(const Node* node) {
+	GeometryType buildFill(NodeConstPtr node) {
 		if (node->getType() == NodeType::RECTANGLE) {
 			return buildFill(node_cast<const RectangleNode*>(node));
 		} else if (node->getType() == NodeType::ELLIPSE) {
@@ -106,7 +106,7 @@ namespace dea::geometry {
 		}
 	}
 
-	GeometryType getOrBuildFill(const node::Node* node) {
+	GeometryType getOrBuildFill(NodeConstPtr node) {
 		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
 		if (shapeNode) {
       if (auto& pathes = shapeNode->getFillGeometry(); !pathes.empty()) {

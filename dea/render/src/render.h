@@ -40,7 +40,7 @@ private:
 
 class RenderSaveLayerScope {
 public:
-  explicit RenderSaveLayerScope(const node::Node* node)
+  explicit RenderSaveLayerScope(node::NodeConstPtr node)
 		: node_(node) {
 			if (checkIfNeedSave()) {
 				save();
@@ -56,7 +56,7 @@ public:
 
 private:
 	bool needSave_ = false;
-	const node::Node* node_;
+	node::NodeConstPtr node_;
 	void save() {};
 	void restore() {};
 	bool checkIfNeedSave() { return true; };

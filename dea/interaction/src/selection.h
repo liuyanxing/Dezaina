@@ -16,7 +16,7 @@ public:
     return selection_;
   }
 
-  const node::Node* getHoverNode() const {
+  node::NodeConstPtr getHoverNode() const {
     return hoverNode_;
   }
 
