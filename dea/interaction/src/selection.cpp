@@ -24,7 +24,7 @@ void Selection::onMouseMove(MouseEvent& event) {
       hoverNode_ = nullptr;
     }
     for (auto& node : nodes) {
-      if (isCursorOnNodePixel(mouseEvent.worldX, mouseEvent.worldY, node)) {
+      if (isCursorOnNodePixel(mouseEvent.worldX, mouseEvent.worldY, node, false)) {
         if (node != hoverNode_) {
           // event->target = node;
           std::cout << "hovering on node" << std::endl;

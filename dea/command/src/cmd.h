@@ -15,8 +15,8 @@ class Dezaina;
 
 class CmdBase {
 public:
-	CmdBase(CmdType type, DeaStateFlags condition) : type{type}, condition{condition} {}
-	const CmdType type;
+	CmdBase(CmdId id, DeaStateFlags condition) : id{id}, condition{condition} {}
+	const CmdId id;
 	const DeaStateFlags condition;
 	size_t size() const {
 		return size_;
@@ -34,7 +34,7 @@ public:
 	}
 
 private:
-	Cmd(const CmdConfig &config) : CmdBase{CmdConfig::type, CmdConfig::condition} {
+	Cmd(const CmdConfig &config) : CmdBase{CmdConfig::id, CmdConfig::condition} {
 		memcpy(args_, &config.args, sizeof(Args));
 		memcpy(props_, &config.props, sizeof(Props));
 		size_ = sizeof(Cmd<CmdConfig>);
@@ -48,7 +48,6 @@ class CommandArray {
 public:
 	void addCmd(const CmdBase& cmd) {
 		auto size = cmd.size();
-		auto type = cmd.type;
 		assert(cursor_ + size < cmdsBuffer_ + N);
 		memcpy(cursor_, &cmd, size);
 		cursor_ += size;
@@ -63,6 +62,18 @@ public:
 		}
 	}
 
+	CmdBase* find(CmdId id) {
+		auto* cursor = cmdsBuffer_;
+		while (cursor < cursor_) {
+			auto* cmd = reinterpret_cast<CmdBase*>(cursor);
+      if (cmd->id == id) return cmd;
+			cursor += cmd->size();
+		}
+    return nullptr;
+	}
+
+
+
 	void clear() {
 		cursor_ = cmdsBuffer_;
 	}
@@ -73,6 +84,7 @@ public:
 protected:
 	char cmdsBuffer_[N];
 	char* cursor_ = cmdsBuffer_;
+  uint32_t index_ = 0;
 };
 
 } // namespace dea::command

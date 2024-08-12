@@ -28,7 +28,7 @@ void initSurface() {
   readColorSurface = SkSurfaces::WrapPixels(imageInfo, pixes, rowBytes, nullptr);
 }
 
-SkColor readColorAtPointOfNode(float x, float y, Node* node, const dea::GeometryType& geometry, const std::vector<SkPaint>& paints) {
+SkColor readColorAtPointOfNode(float x, float y, Node* node, const geometry::GeometryType& geometry, const std::vector<SkPaint>& paints) {
   if (geometry.isEmpty()) {
     return SK_ColorTRANSPARENT;
   }
@@ -58,23 +58,23 @@ bool isCursorOnNodePixel(float x, float y, Node* node, bool isInterNode) {
 }
 
 void layoutRectsToCornersOfRect(std::array<Rectangle, 4>& rects, const SkRect& frame) {
-  SkMatrix matrix;
-  matrix.setTranslate(frame.left(), frame.top());
-  auto const frameWidth = frame.width();
-  auto const frameHeight = frame.height();
-  const SkVector offsets[4] = {
-    { -rects[0].get_size().x / 2, -rects[0].get_size().y / 2 },
-    { frameWidth - rects[1].get_size().x / 2, -rects[1].get_size().y / 2 },
-    { frameWidth - rects[2].get_size().x / 2, frameHeight - rects[2].get_size().y / 2 },
-    { -rects[0].get_size().x / 2, frameHeight - rects[3].get_size().y / 2 }
-  };
+  // SkMatrix matrix;
+  // matrix.setTranslate(frame.left(), frame.top());
+  // auto const frameWidth = frame.width();
+  // auto const frameHeight = frame.height();
+  // const SkVector offsets[4] = {
+  //   { -rects[0].get_size().x / 2, -rects[0].get_size().y / 2 },
+  //   { frameWidth - rects[1].get_size().x / 2, -rects[1].get_size().y / 2 },
+  //   { frameWidth - rects[2].get_size().x / 2, frameHeight - rects[2].get_size().y / 2 },
+  //   { -rects[0].get_size().x / 2, frameHeight - rects[3].get_size().y / 2 }
+  // };
 
-  for (int i = 0; i < 4; i++) {
-    auto& offset = offsets[i];
-    auto& rect = rects[i];
-    matrix.setTranslate(offset.x(), offset.y());
-    rect.set_transform(util::toMatrix(matrix));
-  }
+  // for (int i = 0; i < 4; i++) {
+  //   auto& offset = offsets[i];
+  //   auto& rect = rects[i];
+  //   matrix.setTranslate(offset.x(), offset.y());
+  //   rect.set_transform(util::toMatrix(matrix));
+  // }
 }
 
 }

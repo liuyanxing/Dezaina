@@ -4,6 +4,7 @@
 #include "common/const_string.h"
 #include "common/Data.h"
 #include "cmd.h"
+#include "prims.h"
 
 namespace dea::command {
 
@@ -18,7 +19,7 @@ struct {{name}} {
 		{{type}} {{name}} = {{default}};
 		{{/args}}
 
-		void parse(const base::Data& args) {
+		void parse(const kiwi::ByteBuffer& args) {
 			{{#args}}
 			{{/args}}
 		}
