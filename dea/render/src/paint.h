@@ -43,7 +43,7 @@ private:
 
 using PaintDrawers = std::vector<std::variant<SolidPaintDrawer, GradientPaintDrawer, ImagePaintDrawer>>;
 
-PaintDrawers& buildFillPaintDrawers(const node::Node* node);
-PaintDrawers& buildStrokePaintDrawers(const node::Node* node);
+PaintDrawers& buildFillPaintDrawers(node::NodeConstPtr node);
+PaintDrawers& buildStrokePaintDrawers(node::NodeConstPtr node);
 
 } // namespace dea::render

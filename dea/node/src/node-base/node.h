@@ -4,4 +4,8 @@
 
 namespace dea::node {
 	using Node = BaseNodeMixin;
+	using NodeConstRef = const Node&;
+	using NodeRef = Node&;
+	using NodeConstPtr = const Node*;
+	using NodePtr = Node*;
 }

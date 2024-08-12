@@ -67,7 +67,7 @@ namespace dea::geometry {
 		return GeometryType{};
 	}
 
-	GeometryType buildStroke(const node::Node* node, std::optional<float> strokeWidth) {
+	GeometryType buildStroke(node::NodeConstPtr node, std::optional<float> strokeWidth) {
 		if (node->getType() == NodeType::RECTANGLE) {
 			return buildStroke(node_cast<const RectangleNode*>(node), strokeWidth);
 		} else if (node->getType() == NodeType::ELLIPSE) {
@@ -95,7 +95,7 @@ namespace dea::geometry {
 		}
 	}
 
-	GeometryType getOrBuildStroke(const node::Node* node) {
+	GeometryType getOrBuildStroke(node::NodeConstPtr node) {
 		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
 		if (shapeNode) {
       if (auto& pathes = shapeNode->getStrokeGeometry(); !pathes.empty()) {

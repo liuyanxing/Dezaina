@@ -10,8 +10,8 @@
 namespace dea::command {
 
 	template <base::ConstString str>
-	struct DescriptionProp {
-		DescriptionProp() {
+	struct CommandProp {
+		CommandProp() {
 			std::copy(str.data, str.data + descSize, description);
 		}
 		static constexpr size_t descSize = sizeof(str.data);
@@ -24,12 +24,13 @@ namespace dea::command {
 		Fit,
 		Reset,
 	};
-	template <ZoomType type_v, base::ConstString description> 
+	template <ZoomType type_v,base::ConstString idStr, base::ConstString description> 
 	struct ZoomCommand {
-		struct Props : DescriptionProp<description> {} props;
-		struct Args { ZoomType type = type_v; } args;
+		struct Props : CommandProp<description> { ZoomType type = type_v; } props;
+		struct Args { void parse(const kiwi::buffer& args) {} } args;
 		static constexpr auto type = CmdType::Zoom;
 		static constexpr auto condition = DeaState::Select | DeaState::Edite;
+		static constexpr auto id = idStr.hash(); 
 	};
 
 	using ZoomInCmd = ZoomCommand<ZoomType::In, "zoom in">;
@@ -37,10 +38,10 @@ namespace dea::command {
 	using ZoomFitCmd = ZoomCommand<ZoomType::Fit, "zoom fit">;
 	using ZoomResetCmd = ZoomCommand<ZoomType::Reset, "zoom reset">;
 
-template <AlignType type_v, base::ConstString description> 
+	template <AlignType type_v, base::ConstString description> 
 	struct AlignCommand {
-		struct Props : DescriptionProp<description> {} props;
-		struct Args { AlignType type = type_v; } args;
+		struct Props : CommandProp<description> { AlignType type = type_v; } props;
+		struct Args {  } args;
 		static constexpr CmdType type = CmdType::Align;
 	};
 
