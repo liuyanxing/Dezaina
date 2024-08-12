@@ -18,10 +18,6 @@ void Interaction::updateSelection() {
     return;
   }
 
-  if (node_editor_) {
-    return;
-  }
-
   if (selection_.getSelection().size() > 1) {
     node_editor_ = std::make_unique<NodeEditor>();
   } else {

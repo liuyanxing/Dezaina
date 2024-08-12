@@ -100,7 +100,7 @@ namespace dea::render {
       }
     }
     renderDocument();
-    // renderInteraction();
+    renderInteraction();
 
   }
 
