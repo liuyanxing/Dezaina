@@ -72,13 +72,16 @@ namespace dea::render {
   }
 
   void Render::renderInteraction() {
+    auto& interaction = Dezaina::instance().getInteraction();
+    if (interaction.root()->empty()) {
+      return;
+    }
     canvas_->resetMatrix();
     SkAutoCanvasRestore acr(canvas_, true);
 
     canvas_->setMatrix(viewport_.projectionMatrix());
     canvas_->concat(Dezaina::instance().getViewport().getHudViewMatrix());
 
-    auto& interaction = Dezaina::instance().getInteraction();
     interaction::Interaction::IterWithWorldMatrix iter{interaction.root()};
     render(iter, true);
   }
@@ -97,7 +100,7 @@ namespace dea::render {
       }
     }
     renderDocument();
-    renderInteraction();
+    // renderInteraction();
 
   }
 

@@ -43,7 +43,7 @@ NodeIter::IterDirection NodeIter::operator++() {
 	auto* container = node::node_cast<node::Container*>(node_);
 	if (container) {
     node_ = container->firstChild();
-		return End;
+		return node_ ? Forward : End;
 	}
 
 	auto* next = node_->getNextSibling();
@@ -57,7 +57,7 @@ NodeIter::IterDirection NodeIter::operator++() {
 		return End;
 	}
   node_ = parent->getNextSibling();
-  return Backword;
+  return node_ ? Backword : End;
 }
 
 NodeIter::IterDirection NodeIter::operator--() {
