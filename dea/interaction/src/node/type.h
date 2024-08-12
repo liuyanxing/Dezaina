@@ -36,6 +36,7 @@ T node_cast(const node::Node* node) {
 		}
 	}
   assert(false);
+	return static_cast<T>((Frame*)(node));
 }
 
 }

@@ -15,12 +15,12 @@
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
 #include "utility/skia.h"
-#include <GL/gl.h>
 
+#define GL_RGBA8                          0x8058
 namespace dea::render {
 
 	bool Render::makeSurface() {
-    sk_sp<const GrGLInterface> interface = GrGLInterfaces::MakeGLX();
+    sk_sp<const GrGLInterface> interface = GrGLMakeNativeInterface();
     sk_sp<GrDirectContext> context = GrDirectContexts::MakeGL(interface);
 
 		GrGLFramebufferInfo info;
