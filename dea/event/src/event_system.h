@@ -10,6 +10,7 @@
 #include "listener.h"
 #include "common/array.h"
 #include <iostream>
+#include <optional>
 
 namespace dea::event {
 

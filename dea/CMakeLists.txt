@@ -79,6 +79,7 @@ target_compile_definitions(${TARGET_NAME} PUBLIC
   SK_DEBUG
 	SK_GL
 	SK_GANESH
+  SK_TRIVIAL_ABI=[[clang::trivial_abi]]
 )
 
 target_link_directories(${TARGET_NAME} PUBLIC ${TARGET_LINK_DIRS})
