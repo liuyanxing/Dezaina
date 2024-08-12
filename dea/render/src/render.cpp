@@ -15,7 +15,6 @@
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
 #include "utility/skia.h"
-#include <GL/gl.h>
 
 namespace dea::render {
 
@@ -25,7 +24,8 @@ namespace dea::render {
 
 		GrGLFramebufferInfo info;
 		info.fFBOID = 0;
-    info.fFormat = GL_RGBA8;
+    #define GR_GL_RGBA8 0x8058
+    info.fFormat = GR_GL_RGBA8;
 		auto backendRT = GrBackendRenderTargets::MakeGL(width_,
 																											height_,
 																											0,
