@@ -36,6 +36,7 @@ T node_cast(node::NodeConstPtr node) {
 		}
 	}
   assert(false);
+	return nullptr;
 }
 
 }
