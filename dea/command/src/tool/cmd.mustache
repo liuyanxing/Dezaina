@@ -2,11 +2,14 @@
 
 #include "vendor/figma/kiwi.h"
 #include "common/const_string.h"
+#include "vendor/nlohmann/json.hpp"
 #include "common/Data.h"
 #include "cmd.h"
 #include "prims.h"
 
 namespace dea::command {
+
+using json = nlohmann::json;
 
 {{#cmds}}
 struct {{name}} {
@@ -19,8 +22,11 @@ struct {{name}} {
 		{{type}} {{name}} = {{default}};
 		{{/args}}
 
-		void parse(const kiwi::ByteBuffer& args) {
+		void parse(const json& args) {
 			{{#args}}
+				if (args.contains("{{name}}")) {
+					{{name}} = args["{{name}}"].get<{{type}}>();
+				}
 			{{/args}}
 		}
 	} args;

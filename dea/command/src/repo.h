@@ -14,14 +14,19 @@ namespace dea::command {
 		Repo() = default;
 		~Repo() = default;
 
-		template<typename CmdConfig>
-	  auto* getCmd() {
-			auto* cmd = find(CmdConfig::id);
+		CmdBase* getCmd(CmdId id) {
+			auto* cmd = find(id);
 			if (!cmd) {
 				assert(false);
 			}
-			return static_cast<Cmd<CmdConfig>>(cmd);
+			return cmd;
 		}
+
+		template<typename CmdConfig>
+	  auto* getCmd() {
+			return static_cast<Cmd<CmdConfig>>(getCmd(CmdConfig::id));
+		}
+
 
 	private:
 	};

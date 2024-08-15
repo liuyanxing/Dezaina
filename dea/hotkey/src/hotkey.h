@@ -2,12 +2,15 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 #include "base/data.h"
 #include "command.h"
+#include "vendor/nlohmann/json.hpp"
 
 namespace dea::hotkey {
 
 using HotkeyId = uint32_t;
+using json = nlohmann::json;
 
 struct HotkeyItem {
 	HotkeyId id;
@@ -24,11 +27,13 @@ public:
 	void init();
 	void setHotkey();
 	void unsetHotkey();
-  bool fire(const std::string& hotkey, const base::Data* args = nullptr);
+  bool fire(const std::string& hotkey);
+  bool fire(const std::string& hotkey, const json& args);
 	void config(const std::string& hotkey, command::CmdId, const base::Data* args = nullptr);
+	void configFromJson(const json& json);
 
 private:
-	base::array<HotkeyItem, 1024> hotkeys;
+	std::vector<HotkeyItem> hotkeys{1024};
 };
 
 }
