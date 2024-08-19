@@ -11,13 +11,13 @@ public:
 
 class SystemHookListener : public Listener {
 public:
-  virtual void onEvent(Event& event) override {
-    switch (event.type) {
+  virtual void onEvent(Event& e) override {
+    switch (e.type) {
       case EventType::BeforeTick:
-        onBeforeTick(event);
+        onBeforeTick(e);
         break;
       case EventType::AfterTick:
-        onAfterTick(event);
+        onAfterTick(e);
         break;
       default:
         break;

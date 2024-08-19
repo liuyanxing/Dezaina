@@ -4,11 +4,11 @@
 #include "primitives.h"
 #include "cmd.h"
 #include "repo.h"
-#include "vendor/nlohmann/json.hpp"
+// #include "include/nlohmann/json.hpp"
 
 namespace dea::command {
 
-using json = nlohmann::json;
+// using json = nlohmann::json;
 
 class Command {
 public:
@@ -40,21 +40,21 @@ public:
 	bool executeAll() {
 		bool result = true;
 		cmdBuffer_.forEach([this, &result] (const CmdBase& cmd) {
-			result = execute(cmd);
+			// result = execute(cmd);
 		});
 		cmdBuffer_.clear();
 		return result;
 	}
 
-	bool execute(CmdId id, const json& args) {
-		auto cmd = repo_.getCmd(id);
-		return execute(*cmd);
-	}
+	// bool execute(CmdId id, const json& args) {
+	// 	auto cmd = repo_.getCmd(id);
+	// 	return execute(*cmd);
+	// }
 
 private:
   Repo<2048> repo_;
 	CommandArray<1024> cmdBuffer_;
-	bool execute(const CmdBase& cmd, const json& args = nullptr);
+	// bool execute(const CmdBase& cmd, const json& args = nullptr);
 	void buildDefaultCmd();
 };
 

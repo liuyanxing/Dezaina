@@ -104,6 +104,7 @@ namespace dea::geometry {
 		} else {
 			assert(false);
 		}
+		return GeometryType{};
 	}
 
 	GeometryType getOrBuildFill(NodeConstPtr node) {

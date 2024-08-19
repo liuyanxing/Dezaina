@@ -27,9 +27,8 @@ enum class Keymod {
     Alt = LAlt | RAlt,
     GUI = LGui | RGui,
 
-    Reserved = Scroll // ç”¨äºä¸SDL 2.0.0ä¿æŒæºä»£ç å…¼å®¹æ€§
+    Reserved = Scroll // ÓÃÓÚÓëSDL 2.0.0±£³ÖÔ´´úÂë¼æÈİĞÔ
 };
-
 struct Event {
   EventType type;  
   KeyMode mode;

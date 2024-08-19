@@ -55,3 +55,4 @@ endif()
 
 set(SKIA_INCLUDE_DIR ${skia_SOURCE_DIR})
 set(JSON_INCLUDE_DIR ${json_SOURCE_DIR})
+message(${json_SOURCE_DIR})

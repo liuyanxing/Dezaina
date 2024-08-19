@@ -22,7 +22,7 @@ public:
 		return size_;
 	}
 protected:
-	size_t size_;
+	size_t size_{};
 };
 
 template <typename CmdConfig, typename Args = typename CmdConfig::Args, typename Props = typename CmdConfig::Props> 
