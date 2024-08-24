@@ -1,3 +1,6 @@
+#define IMPLEMENT_KIWI_H
+#define IMPLEMENT_SCHEMA_H
+
 #include "change.h"
 #include "common/data.h"
 #include "../include/document.h"

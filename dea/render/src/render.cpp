@@ -19,7 +19,7 @@
 namespace dea::render {
 
 	bool Render::makeSurface() {
-    sk_sp<const GrGLInterface> interface = GrGLInterfaces::MakeGLX();
+    sk_sp<const GrGLInterface> interface = GrGLMakeNativeInterface();
     sk_sp<GrDirectContext> context = GrDirectContexts::MakeGL(interface);
 
 		GrGLFramebufferInfo info;

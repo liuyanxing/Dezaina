@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "primitives.h"
 #include <cstdint>
@@ -27,7 +27,7 @@ enum class Keymod {
     Alt = LAlt | RAlt,
     GUI = LGui | RGui,
 
-    Reserved = Scroll // ÓÃÓÚÓëSDL 2.0.0±£³ÖÔ´´úÂë¼æÈİĞÔ
+    Reserved = Scroll // ç”¨äºä¸SDL 2.0.0ä¿æŒæºä»£ç å…¼å®¹æ€§
 };
 struct Event {
   EventType type;  

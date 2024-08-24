@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "base/data.h"
+#include "common/data.h"
 #include "command.h"
-#include "vendor/nlohmann/json.hpp"
+#include "nlohmann/json.hpp"
 
 namespace dea::hotkey {
 

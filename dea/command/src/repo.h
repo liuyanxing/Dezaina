@@ -15,11 +15,12 @@ namespace dea::command {
 		~Repo() = default;
 
 		CmdBase* getCmd(CmdId id) {
-			auto* cmd = find(id);
-			if (!cmd) {
-				assert(false);
-			}
-			return cmd;
+			// auto* cmd = find(id);
+			// if (!cmd) {
+			// 	assert(false);
+			// }
+			// return cmd;
+			return nullptr;
 		}
 
 		template<typename CmdConfig>

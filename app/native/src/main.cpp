@@ -1,3 +1,5 @@
+#define SDL_MAIN_HANDLED
+
 #include "dezaina.h"
 #include <iostream>
 #include "SDL.h"
