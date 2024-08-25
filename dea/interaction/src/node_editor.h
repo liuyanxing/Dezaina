@@ -5,6 +5,8 @@
 #include "node/rectangle.h"
 #include "node/frame.h"
 #include "node/container.h"
+#include "node/src/container.h"
+#include "node/src/node-base/type.generated.h"
 #include <array>
 
 namespace dea::interaction {
@@ -20,7 +22,11 @@ public:
   NodeEditor() {
     buildEditor();
   };
-  virtual ~NodeEditor() = default;
+  virtual ~NodeEditor() {
+    if (auto* parent = node::node_cast<node::Container*>(container_.getParent())) {
+      parent->removeChild(&container_);
+    }
+  };
 
   Frame* getContainer() { return &container_; }
   virtual void update(const std::vector<node::Node*>& nodes) {};

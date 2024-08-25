@@ -3,8 +3,9 @@
 
 #include "change.h"
 #include "common/data.h"
-#include "../include/document.h"
 #include "resource/include/resource.h"
+#include "node.h"
+#include "document.h"
 
 namespace dea::document
 {

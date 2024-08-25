@@ -1,4 +1,5 @@
 #include "render.h"
+#include "core/SkRect.h"
 #include "dezaina.h"
 #include "document/include/document.h"
 #include "include/core/SkColor.h"
@@ -115,22 +116,28 @@ namespace dea::render {
     }
 
 		RenderSaveLayerScope scope{node};
-  
-    auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
-    if (!fill.isEmpty()) {
-      renderGeometry(fill, buildFillPaintDrawers(node));
-    };
-    auto stroke = isInterNode ? geometry::buildStroke(node) : geometry::getOrBuildStroke(node);
-    if (!stroke.isEmpty()) {
-      renderGeometry(stroke, buildStrokePaintDrawers(node));
-    }
 
+    auto& fillPaints = buildFillPaintDrawers(node);
+    if (!fillPaints.empty()) {
+      auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
+      renderGeometry(fill, fillPaints);
+    };
+
+    auto& strokePaints = buildStrokePaintDrawers(node);
+    if (!strokePaints.empty()) {
+      auto stroke = isInterNode ? geometry::buildStroke(node) : geometry::getOrBuildStroke(node);
+      // renderGeometry(stroke, strokePaints);
+      // auto stroke = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
+      canvas_->resetMatrix();
+      SkPaint paint{};
+      paint.setColor(SK_ColorBLUE);
+      canvas_->drawPath(stroke, paint);
+      // canvas_->drawRect(SkRect::MakeIWH(200, 200), paint);
+    }
 	}
 
   void Render::renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers) {
     SkAutoCanvasRestore acr(canvas_, true); 
-    SkPaint paint;
-    paint.setAntiAlias(true);
     canvas_->clipPath(geometry, true);
     for (auto& drawer : drawers) {
       std::visit([this](auto&& d) {

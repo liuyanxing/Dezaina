@@ -24,5 +24,5 @@ namespace dea::geometry {
 	GeometryType getOrBuildStroke(node::NodeConstPtr node);
 
 	GeometryType buildFill(node::NodeConstPtr node);
-	GeometryType buildStroke(node::NodeConstPtr node, std::optional<float> strokeWidth = std::nullopt);
+	GeometryType buildStroke(node::NodeConstPtr node);
 }

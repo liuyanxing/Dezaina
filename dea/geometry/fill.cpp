@@ -3,6 +3,7 @@
 #include "resource.h"
 #include "common/data.h"
 #include "resource.h"
+#include "schema/message.h"
 #include <cassert>
 #include <cstdint>
 #include <iostream>
@@ -13,19 +14,12 @@ namespace dea::geometry {
 	using namespace dea::node;
 	using namespace dea::resource;
 
-	GeometryType buildFill(const RectangleNode* node) {
+	GeometryType buildRectangle(node::Vector size, float tl, float tr, float br, float bl) {
 		constexpr float raduisRatio = 0.447715521F;
 		GeometryType path{};
 
-    float tl = node->getRectangleTopLeftCornerRadius();
-    float tr = node->getRectangleTopRightCornerRadius(); 
-    float br = node->getRectangleBottomRightCornerRadius();
-    float bl = node->getRectangleBottomLeftCornerRadius();
-
-		auto size = node->getSize();
-		// beizer control point radius
 		const float cr = tl * raduisRatio;
-  
+
 		path.moveTo(0, tl);
 		path.cubicTo(0, tl - cr, tl - cr, 0, tl, 0);
 		path.lineTo(size.x - tr, 0);
@@ -37,6 +31,16 @@ namespace dea::geometry {
 		path.close();
 		return path;
 	}
+
+	GeometryType buildFill(const RectangleNode* node) {
+		return buildRectangle(
+			node->getSize(),
+		  node->getRectangleTopLeftCornerRadius(),
+			node->getRectangleTopRightCornerRadius(),
+			node->getRectangleBottomRightCornerRadius(),
+			node->getRectangleBottomLeftCornerRadius()
+			);
+}
 
 	GeometryType buildFill(const EllipseNode* node) {
 		return GeometryType{};
@@ -55,7 +59,13 @@ namespace dea::geometry {
 	}
 
 	GeometryType buildFill(const FrameNode* node) {
-		return GeometryType{};
+		return buildRectangle(
+			node->getSize(),
+		  node->getRectangleTopLeftCornerRadius(),
+			node->getRectangleTopRightCornerRadius(),
+			node->getRectangleBottomRightCornerRadius(),
+			node->getRectangleBottomLeftCornerRadius()
+			);
 	}
 
 	GeometryType buildFill(const SymbolNode* node) {
@@ -79,7 +89,7 @@ namespace dea::geometry {
 	}
 
 	GeometryType buildFill(NodeConstPtr node) {
-		if (node->getType() == NodeType::RECTANGLE) {
+		if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
 			return buildFill(node_cast<const RectangleNode*>(node));
 		} else if (node->getType() == NodeType::ELLIPSE) {
 			return buildFill(node_cast<const EllipseNode*>(node));

@@ -1,10 +1,9 @@
-#include "../include/document.h"
-#include "document/include/document.h"
 #include "document/src/document.h"
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
+#include "node/src/node-base/type.generated.h"
 #include "utility/coords.h"
-#include "dezaina.h"
+#include "spdlog/spdlog.h"
 
 namespace dea::document {
 
@@ -20,6 +19,15 @@ void Document::dump() {
 		auto* node = iter.get();
 		++iter;
 	}
+}
+
+void Document::dump(node::Node* node) const {
+  Iter iter(node);
+  while (iter.isValid()) {
+    auto* node = iter.get();
+    spdlog::info("{}", getNodeTypeString(node));
+    ++iter;
+  }
 }
 
 std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, float radius) {

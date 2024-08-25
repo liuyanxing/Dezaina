@@ -1,6 +1,7 @@
 #pragma once
 
 #include "node.h"
+#include <string>
 #include <type_traits>
 
 namespace dea::node
@@ -12,6 +13,10 @@ class {{node}};
 
 template<typename T>
 T node_cast(const Node* node) {
+	if (node == nullptr) {
+		return nullptr;
+	}
+
 	using U = std::remove_cv_t<std::remove_pointer_t<T>>;
 {{#nodes}}
 	if (node->getType() == NodeType::{{nodeType}}{{#alias}} || node->getType() == NodeType::{{.}}{{/alias}}) {
@@ -21,6 +26,19 @@ T node_cast(const Node* node) {
 	}
 {{/nodes}}
 	return nullptr;
+}
+
+inline std::string getNodeTypeString(const Node* node) {
+	if (node == nullptr) {
+		return std::string("Null");
+	}
+
+{{#nodes}}
+	if (node->getType() == NodeType::{{nodeType}}{{#alias}} || node->getType() == NodeType::{{.}}{{/alias}}) {
+		return std::string("{{nodeType}}");
+	}
+{{/nodes}}
+	return std::string("Unknown");
 }
 
 } // namespace dea::node

@@ -51,6 +51,8 @@ void NodeEditor::buildEditor() {
     SolidPaint strokePaint;
     auto& [r, g, b, a] = config::color::Primary;
     strokePaint.setColor({r, g, b, a});
+    container_.setStrokePaints({strokePaint});
+    container_.setStrokeWeight(config::size::Min);
     bound_ctrl_.setStrokePaints({strokePaint});
     bound_ctrl_.setStrokeWeight(config::size::Min);
     bound_ctrl_.addEventListener(EventType::MouseDrag, [this](Event& event) {
@@ -71,7 +73,7 @@ void NodeEditor::buildEditor() {
         handleDragResizeCtrlNode(nodeIndex, static_cast<MouseEvent&>(event));        
       });
       nodeIndex++;
-      appendToContainer(&ctrl);
+      // appendToContainer(&ctrl);
     }
 
     nodeIndex = 0;

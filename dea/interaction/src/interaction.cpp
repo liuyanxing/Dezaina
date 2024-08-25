@@ -1,11 +1,13 @@
 #include "interaction.h"
+#include "node/src/node-base/type.generated.h"
 #include "selection.h"
 #include "rectangle_editor.h"
-#include <iostream>
+#include "spdlog/spdlog.h"
 
 namespace dea::interaction {
 
 using namespace event;
+using namespace node;
 
 void Interaction::updateSelection() {
   if (selection_.empty()) {
@@ -22,15 +24,21 @@ void Interaction::updateSelection() {
     node_editor_ = std::make_unique<NodeEditor>();
   } else {
     auto* node = selection_.getSelection()[0];
-    if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node)) {
-      node_editor_ = std::make_unique<RectangleEditor>(rectangleNode);
+    if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node); !node_editor_) {
+      // node_editor_ = std::make_unique<RectangleEditor>(rectangleNode);
+      node_editor_ = std::make_unique<NodeEditor>();
     }
   }
 
+  if (node_editor_ == nullptr) {
+    return;
+  }
+  node_editor_->update(selection_.getSelectionTransform(), selection_.getSelectionBound());
   auto* editorContainer = node_editor_->getContainer();
   if (!page_.findChild(editorContainer)) {
     appendToContainer(editorContainer);
   }
+  // dump();
 }
 
 void Interaction::handleHover() {
@@ -51,6 +59,18 @@ void Interaction::onEvent(event::Event& event) {
 void Interaction::onAfterTick(Event& event) {
   updateSelection();
   handleHover();
+}
+
+void Interaction::dump() {
+  Iter iter(&page_);
+  spdlog::info("dumping page");
+  while (iter.isValid()) {
+    auto* node = iter.get();
+    auto* parent = iter.getParent();
+    spdlog::info("node: {}, parent: {}", getNodeTypeString(node), getNodeTypeString(parent));
+    ++iter;
+  }
+  spdlog::info("dump end");
 }
 
 }

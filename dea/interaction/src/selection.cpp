@@ -1,7 +1,9 @@
 #include "selection.h"
+#include "core/SkMatrix.h"
+#include "core/SkSize.h"
 #include "dezaina.h"
-#include "interaction.h"
 #include "utility.h"
+#include "utility/node_utility.h"
 #include <iostream>
 
 namespace dea::interaction {
@@ -59,4 +61,26 @@ void Selection::setSelection(const std::vector<GUID>& nodesIds) {
 
 }
 
+SkSize Selection::getSelectionBound() const {
+  if (selection_.empty()) {
+    return {0, 0};
+  }
+  if (selection_.size() == 1) {
+    return utility::getScreenSize(selection_[0]);
+  }
+
+  // todo: multiple selection
+  return {0, 0};
 }
+
+SkMatrix Selection::getSelectionTransform() const {
+  if (selection_.empty()) {
+    return SkMatrix::I();
+  }
+  if (selection_.size() == 1) {
+    return utility::getWorldMatrix(selection_[0]);
+  }
+  return SkMatrix::I();
+}
+
+} // namespace dea::interaction

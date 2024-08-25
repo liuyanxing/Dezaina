@@ -18,9 +18,9 @@ public:
     page_.setBackgroundColor({0, 0, 0, 0});
   }
 
-  auto* root() {
-    return &page_;
-  }
+  auto* root() { return &page_; }
+
+  void dump();
 
   class Iter : public utility::NodeIter {
   public:

@@ -5,7 +5,6 @@
 #include "resource.h"
 #include <cassert>
 #include <cstdint>
-#include <iostream>
 #include <memory>
 #include <utility>
 
@@ -16,7 +15,6 @@ namespace dea::geometry {
 	static GeometryType buildGeometry(const base::Data& data) {
 		GeometryType path{};
     base::Buffer buffer(data.data<uint8_t*>(), data.size());
-    size_t i = 0;
     buffer.seek(0);
     
     while (!buffer.isEnd()) {
@@ -27,25 +25,41 @@ namespace dea::geometry {
           break;
         }
         case 1: {
-          path.moveTo(buffer.readFloat(), buffer.readFloat());
+          float points[2]{
+            buffer.readFloat(), buffer.readFloat()
+          };
+          path.moveTo(points[1], points[0]);
           break;
         }
         case 2: {
-          path.lineTo(buffer.readFloat(), buffer.readFloat());
+          float points[2]{
+            buffer.readFloat(), buffer.readFloat()
+          };
+          path.lineTo(points[1], points[0]);
           break;
         }
         case 3: {
-          path.quadTo(
+          float points[4]{
             buffer.readFloat(), buffer.readFloat(),
             buffer.readFloat(), buffer.readFloat()
+          };
+          path.quadTo(
+            points[1], points[0],
+            points[3], points[2]
           );
           break;
         }
         case 4: {
-          path.cubicTo(
+          float points[6]{
             buffer.readFloat(), buffer.readFloat(),
             buffer.readFloat(), buffer.readFloat(),
             buffer.readFloat(), buffer.readFloat()
+          };
+
+          path.cubicTo(
+            points[1], points[0],
+            points[3], points[2],
+            points[5], points[4]
           );
           break;
         }

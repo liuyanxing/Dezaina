@@ -33,6 +33,7 @@ public:
 	IterDirection operator--();
 	bool isValid() { return node_ != nullptr; }
 	auto* get() { return node_; }
+  node::Node* getParent() { if (node_) return getParent_(node_); return nullptr; }
 protected:
 	node::Node* node_;
 	node::Node* root_;

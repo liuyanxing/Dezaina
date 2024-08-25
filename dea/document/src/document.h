@@ -120,6 +120,7 @@ public:
 	}
 
 	void dump();
+	void dump(node::Node* node) const;
 
 class Iter : public utility::NodeIter {
 public:

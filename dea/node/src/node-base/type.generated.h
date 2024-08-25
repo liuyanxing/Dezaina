@@ -1,6 +1,7 @@
 #pragma once
 
 #include "node.h"
+#include <string>
 #include <type_traits>
 
 namespace dea::node
@@ -20,7 +21,11 @@ class PageNode;
 class DocumentNode;
 
 template<typename T>
-T node_cast(NodeConstPtr node) {
+T node_cast(const Node* node) {
+	if (node == nullptr) {
+		return nullptr;
+	}
+
 	using U = std::remove_cv_t<std::remove_pointer_t<T>>;
 	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
 		if constexpr (std::is_convertible_v<RectangleNode, U>) {
@@ -83,6 +88,50 @@ T node_cast(NodeConstPtr node) {
 		}
 	}
 	return nullptr;
+}
+
+inline std::string getNodeTypeString(const Node* node) {
+	if (node == nullptr) {
+		return std::string("Null");
+	}
+
+	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
+		return std::string("RECTANGLE");
+	}
+	if (node->getType() == NodeType::LINE) {
+		return std::string("LINE");
+	}
+	if (node->getType() == NodeType::ELLIPSE) {
+		return std::string("ELLIPSE");
+	}
+	if (node->getType() == NodeType::REGULAR_POLYGON) {
+		return std::string("REGULAR_POLYGON");
+	}
+	if (node->getType() == NodeType::STAR) {
+		return std::string("STAR");
+	}
+	if (node->getType() == NodeType::VECTOR) {
+		return std::string("VECTOR");
+	}
+	if (node->getType() == NodeType::FRAME) {
+		return std::string("FRAME");
+	}
+	if (node->getType() == NodeType::SYMBOL) {
+		return std::string("SYMBOL");
+	}
+	if (node->getType() == NodeType::INSTANCE) {
+		return std::string("INSTANCE");
+	}
+	if (node->getType() == NodeType::TEXT) {
+		return std::string("TEXT");
+	}
+	if (node->getType() == NodeType::CANVAS) {
+		return std::string("CANVAS");
+	}
+	if (node->getType() == NodeType::DOCUMENT) {
+		return std::string("DOCUMENT");
+	}
+	return std::string("Unknown");
 }
 
 } // namespace dea::node

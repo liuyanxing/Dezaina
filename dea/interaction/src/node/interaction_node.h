@@ -8,7 +8,9 @@ class InteractionNode {
 public:
   bool isActiveByPixel() const { return is_active_by_pixel_; }
   void setActiveByPixel(bool active) { is_active_by_pixel_ = active; }
-  void setParent(node::Node* parent) { parent_ = parent; }
+  void setParent(node::Node* parent) {
+    parent_ = parent;
+  }
   node::Node* getParent() { return parent_; }
   
 private:

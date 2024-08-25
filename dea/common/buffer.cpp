@@ -80,7 +80,9 @@ uint8_t Buffer::readByte() const {
 
 float Buffer::readFloat() const {
   uint32_t value = readUint();
-  return reinterpret_cast<float&>(value);
+  float result = 0;
+  memcpy(&result, &value, sizeof(float));
+  return result;
 }
 
 uint32_t Buffer::readUint() const {
