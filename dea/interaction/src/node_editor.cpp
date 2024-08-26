@@ -1,12 +1,9 @@
 #include "node_editor.h"
 #include "config/size.h"
-#include "document/src/document.h"
+#include "event/src/primitives.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
-#include "include/private/base/SkPoint_impl.h"
 #include "node/rectangle.h"
-#include <array>
-#include "dezaina.h"
 #include "utility.h"
 #include "config/config.h"
 
@@ -53,6 +50,10 @@ void NodeEditor::buildEditor() {
     strokePaint.setColor({r, g, b, a});
     container_.setStrokePaints({strokePaint});
     container_.setStrokeWeight(config::size::Min);
+    container_.addEventListener(EventType::MouseDrag, [this](Event& event) {
+      // todo: handleDragMoveNode(static_cast<MouseEvent*>(event));
+    });
+
     bound_ctrl_.setStrokePaints({strokePaint});
     bound_ctrl_.setStrokeWeight(config::size::Min);
     bound_ctrl_.addEventListener(EventType::MouseDrag, [this](Event& event) {

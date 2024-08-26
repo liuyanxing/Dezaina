@@ -126,13 +126,7 @@ namespace dea::render {
     auto& strokePaints = buildStrokePaintDrawers(node);
     if (!strokePaints.empty()) {
       auto stroke = isInterNode ? geometry::buildStroke(node) : geometry::getOrBuildStroke(node);
-      // renderGeometry(stroke, strokePaints);
-      // auto stroke = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
-      canvas_->resetMatrix();
-      SkPaint paint{};
-      paint.setColor(SK_ColorBLUE);
-      canvas_->drawPath(stroke, paint);
-      // canvas_->drawRect(SkRect::MakeIWH(200, 200), paint);
+      renderGeometry(stroke, strokePaints);
     }
 	}
 

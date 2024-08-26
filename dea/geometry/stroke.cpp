@@ -18,7 +18,7 @@ namespace dea::geometry {
     paint.setStyle(SkPaint::kStroke_Style);
     paint.setStrokeWidth(strokeWidth);
     SkPath strokePath{};
-    skpathutils::FillPathWithPaint(strokePath, paint, &strokePath);
+    skpathutils::FillPathWithPaint(path, paint, &strokePath);
     return strokePath;
 	}
 
