@@ -6,7 +6,7 @@
 
 
 namespace dea::interaction {
-class Frame : public node::FrameNode, public InteractionNode,  public event::EventEmitter<> {
+class Frame : public node::FrameNode, public InteractionNode,  public event::EventEmitter {
   
 };
 

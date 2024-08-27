@@ -215,6 +215,9 @@ enum class NodeType {
 	TABLE_CELL,
 	VARIABLE_SET,
 	SLIDE,
+	INTER_FRAME,
+	INTER_RECTANGLE,
+	INTER_PATH,
 };
 
 enum class MessageType {

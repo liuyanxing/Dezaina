@@ -8,12 +8,13 @@
 #include "node/src/container.h"
 #include "node/src/node-base/type.generated.h"
 #include <array>
+#include <vector>
 
 namespace dea::interaction {
 
 class Desaina;
 
-class NodeEditor {
+class NodeEditor : public InteractionListener {
 public:
   NodeEditor(const SkMatrix& transform, const SkSize& size) {
     buildEditor();
@@ -40,12 +41,16 @@ protected:
   Rectangle bound_ctrl_;
   std::array<Rectangle, 4> nodeResizeCtrls_;
   std::array<Rectangle, 4> nodeRotateCtrls_;
-
+  std::vector<node::Node*> selectedNodes_;
+  std::vector<node::Node*> getNodesWithRadius;
   void buildEditor();
   SkRect caculateSelectionBound();
   void handleDragResizeCtrlNode(int index, event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);
+  void onMouseMove(event::MouseEvent& event) override;
+  void onMouseDown(event::MouseEvent& event) override;
+  void onMouseDrag(event::MouseEvent& event) override;
 };
 
 }

@@ -53,6 +53,10 @@ void Interaction::handleHover() {
 void Interaction::onEvent(event::Event& event) {
   selection_.onEvent(event);
   creation_.onEvent(event);
+  if (node_editor_ != nullptr) {
+    node_editor_->onEvent(event);
+  }
+
   InteractionListener::onEvent(event);
 }
 

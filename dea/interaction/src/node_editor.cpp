@@ -4,6 +4,7 @@
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "node/rectangle.h"
+#include "node/type.h"
 #include "utility.h"
 #include "config/config.h"
 
@@ -11,6 +12,46 @@ namespace dea::interaction {
 
 using namespace node;
 using namespace event;
+
+std::vector<node::Node*> NodeEditor::getNodesWithRadius(const SkPoint& point, float radius) {
+  std::vector<node::Node*> nodes;
+  IterWithWorldMatrix iter{container_};
+  while (iter.valid()) {
+    if (iter->getBounds().contains(point)) {
+      nodes.push_back(iter->getNode());
+    }
+    ++iter;
+  }
+  return nodes;
+}
+
+void NodeEditor::onMouseMove(MouseEvent& event) {
+  auto nodes = getNodesWithRadius({event.worldX, event.worldY}, 6);
+  if (nodes.empty()) {
+    hoverNode_ = nullptr;
+    return;
+  }
+  hoverNode_ = nodes.front();
+}
+
+
+void NodeEditor::onMouseDown(event::MouseEvent& event) {
+  selectedNodes_.clear();
+  if (hoverNode_) {
+    selectedNodes_.push_back(hoverNode_);
+  }
+}
+
+void NodeEditor::onMouseDrag(event::MouseEvent& event) {
+  if (selectedNodes_.empty()) {
+    return;
+  }
+  for (auto* node : selectedNodes_) {
+    if (auto* emitter = interaction::node_cast<EventEmitter*>(node)) {
+      emitter->emit(event);
+    }
+  }
+}
 
 void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
   // if (desaina_->document.getSelectedNodes().size() == 1) {

@@ -1,11 +1,10 @@
 #pragma once
 
-#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <vector>
 
-#include "common/array.h"
 #include "event.h"
 
 namespace dea::event {
@@ -16,7 +15,6 @@ struct EventListener {
   ListenerFunc func;
 };
 
-template <size_t Count = 3>
 class EventEmitter {
 public:
   void emit(Event& event) {
@@ -34,7 +32,7 @@ public:
   virtual ~EventEmitter() = default;
 
 private:
-  base::array<EventListener, Count> consumers_;
+  std::vector<EventListener> consumers_{1};
 };
 
 }

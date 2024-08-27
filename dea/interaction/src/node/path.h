@@ -7,7 +7,7 @@
 
 namespace dea::interaction {
 
-class InteractionPath : public node::VectorNode, public InteractionNode,  public event::EventEmitter<> {
+class InteractionPath : public node::VectorNode, public InteractionNode,  public event::EventEmitter {
 public:
   void setPath(const SkPath& path);
   void clearPath();
