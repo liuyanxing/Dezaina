@@ -1,4 +1,5 @@
 #include "node_utility.h"
+#include "core/SkMatrix.h"
 #include "document.h"
 #include "interaction.h"
 #include "dezaina.h"
@@ -7,7 +8,7 @@ namespace dea::utility{
 
 SkMatrix getTransfromMatrix(node::Node* node) {
   if (auto* page = node::node_cast<const node::PageNode*>(node)) {
-    return utility::toSkMatrix(page->getTransform());
+    return SkMatrix::I();
   }
   if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
     return utility::toSkMatrix(shape->getTransform());
@@ -83,7 +84,13 @@ SkMatrix NodeIterWithWorldMatrix::getWorldMatrixImpl(node::Node* node) {
   if (auto* page = node::node_cast<node::PageNode*>(node)) {
     return SkMatrix::I();
   }
-  return SkMatrix::I();
+  SkMatrix world = getTransfromMatrix(node);
+  auto* parent = getParent_(node);
+  while (parent && !node::node_cast<node::PageNode*>(parent)) {
+    world = getTransfromMatrix(parent) * world;
+    parent = getParent_(parent);
+  }
+  return world;
 }
 
 NodeIter::IterDirection NodeIterWithWorldMatrix::operator++() {

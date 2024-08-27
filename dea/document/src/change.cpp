@@ -126,4 +126,10 @@ bool Change::processNodeChanges(message::Message& message) {
 	return true;
 }
 
+void Change::applyChanges() {
+	for (auto& [node, change] : changeMap_) {
+		node->applyChange(*change);
+	}
+}
+
 } // namespace dea::change 

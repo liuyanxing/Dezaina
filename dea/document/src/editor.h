@@ -8,6 +8,7 @@
 namespace dea::document {
 
 enum class RecordType {
+  kTranslate,
   kRotate,
   kResize,
   kTransform,
@@ -29,7 +30,9 @@ struct EditRecordItem {
 
 class Editor {
 public:
-  Editor(bool editSelectedNodes = true) {};
+  Editor() = default;
+  Editor(const std::vector<node::Node*>& nodes) : nodes_(nodes) {};
+  void setNodes(std::vector<node::Node*> nodes) { nodes_ = nodes; }
 
   bool empty() const { return records_.empty(); }
 
@@ -48,12 +51,12 @@ public:
   Editor& setSize(float width, float height);
   Editor& setTransform(const node::Matrix& transform);
 
-  const auto& getRecords() { return records_; }
+  static const auto& getRecords() { return records_; }
   ~Editor() = default;
 
 private:
   std::vector<node::Node*> nodes_;
-  std::vector<EditRecordItem> records_;
+  inline static std::vector<EditRecordItem> records_;
 
   void editNodes(std::function<void(node::Node*)>);
   void addRecord(const EditRecordItem& item);

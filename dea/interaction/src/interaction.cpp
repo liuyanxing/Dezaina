@@ -26,7 +26,7 @@ void Interaction::updateSelection() {
     auto* node = selection_.getSelection()[0];
     if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node); !node_editor_) {
       // node_editor_ = std::make_unique<RectangleEditor>(rectangleNode);
-      node_editor_ = std::make_unique<NodeEditor>();
+      node_editor_ = std::make_unique<NodeEditor>(&selection_.getSelection());
     }
   }
 
@@ -51,11 +51,11 @@ void Interaction::handleHover() {
 }
 
 void Interaction::onEvent(event::Event& event) {
-  selection_.onEvent(event);
-  creation_.onEvent(event);
   if (node_editor_ != nullptr) {
     node_editor_->onEvent(event);
   }
+  selection_.onEvent(event);
+  creation_.onEvent(event);
 
   InteractionListener::onEvent(event);
 }

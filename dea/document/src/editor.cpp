@@ -34,7 +34,22 @@ Editor& Editor::setSize(float width, float height, const Vector& anchor) {
 
 Editor& Editor::setTranslate(float x, float y) {
   editNodes([x, y, this](Node* node) {
-    addRecord(node->getGuid(), RecordType::kResize, std::array<float, 2>{x, y});
+    if (auto* shape = node_cast<DefaultShapeNode*>(node)) {
+      auto m = shape->getTransform();
+      m.setM02(x); m.setM12(y);
+      addRecord(node->getGuid(), RecordType::kTransform, m);
+    }
+  });
+  return *this;
+}
+
+Editor& Editor::translate(float x, float y) {
+  editNodes([x, y, this](Node* node) mutable {
+    if (auto* shape = node_cast<DefaultShapeNode*>(node)) {
+      auto m = shape->getTransform();
+      m.setM02(m.getM02() + x); m.setM12(m.getM12() + y);
+      addRecord(node->getGuid(), RecordType::kTransform, m);
+    }
   });
   return *this;
 }

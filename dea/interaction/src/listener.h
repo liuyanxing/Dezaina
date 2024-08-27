@@ -8,6 +8,7 @@ namespace dea::interaction {
 class InteractionListener : public event::SystemHookListener {
 public:
 	void onEvent(event::Event& event) override {
+		if (event.isStop()) return;
     event::SystemHookListener::onEvent(event);
 		switch (event.type) {
 			case event::EventType::MouseDown:

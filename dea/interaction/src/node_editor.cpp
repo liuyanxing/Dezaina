@@ -1,12 +1,16 @@
 #include "node_editor.h"
 #include "config/size.h"
+#include "dezaina.h"
 #include "event/src/primitives.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "node/rectangle.h"
 #include "node/type.h"
+#include "spdlog/spdlog.h"
 #include "utility.h"
 #include "config/config.h"
+#include "interaction.h"
+#include "utility/coords.h"
 
 namespace dea::interaction {
 
@@ -15,10 +19,17 @@ using namespace event;
 
 std::vector<node::Node*> NodeEditor::getNodesWithRadius(const SkPoint& point, float radius) {
   std::vector<node::Node*> nodes;
-  IterWithWorldMatrix iter{container_};
-  while (iter.valid()) {
-    if (iter->getBounds().contains(point)) {
-      nodes.push_back(iter->getNode());
+  Interaction::IterWithWorldMatrix iter{&container_};
+  while (iter.isValid()) {
+    auto* node = iter.get();
+    if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
+      auto local = utility::mapPointToLocal(point, iter.getWorldMatrix());
+      auto localRect = SkRect::MakeXYWH(local.x() - radius / 2, local.y() - radius / 2, radius, radius);
+      auto size = shape->getSize();
+      auto bound = SkRect::MakeXYWH(0, 0, size.x, size.y);
+      if (bound.intersects(localRect)) {
+        nodes.push_back(node);
+      }
     }
     ++iter;
   }
@@ -32,6 +43,7 @@ void NodeEditor::onMouseMove(MouseEvent& event) {
     return;
   }
   hoverNode_ = nodes.front();
+  event.stop();
 }
 
 
@@ -39,6 +51,7 @@ void NodeEditor::onMouseDown(event::MouseEvent& event) {
   selectedNodes_.clear();
   if (hoverNode_) {
     selectedNodes_.push_back(hoverNode_);
+    event.stop();
   }
 }
 
@@ -51,6 +64,7 @@ void NodeEditor::onMouseDrag(event::MouseEvent& event) {
       emitter->emit(event);
     }
   }
+  event.stop();
 }
 
 void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
@@ -92,7 +106,7 @@ void NodeEditor::buildEditor() {
     container_.setStrokePaints({strokePaint});
     container_.setStrokeWeight(config::size::Min);
     container_.addEventListener(EventType::MouseDrag, [this](Event& event) {
-      // todo: handleDragMoveNode(static_cast<MouseEvent*>(event));
+      editor_.translate(1, 0);
     });
 
     bound_ctrl_.setStrokePaints({strokePaint});

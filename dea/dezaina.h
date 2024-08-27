@@ -2,6 +2,7 @@
 
 #include "common/object.h"
 #include "document/include/document.h"
+#include "document/src/editor.h"
 #include "event/src/event.h"
 #include "event/src/event_system.h"
 #include "resource/src/resource.h"
@@ -24,6 +25,10 @@ public:
 	static Dezaina& instance() {
 		static Dezaina instance;
 		return instance;
+	}
+
+	static document::Editor& editor() {
+		return instance().doc_.editor();
 	}
 
 	void init();
@@ -78,6 +83,7 @@ public:
 			return;
     }
 		eventSystem_.fireAllEvents();
+		doc_.flushEditor();
     render_.render();
     eventSystem_.afterTick();
 	}

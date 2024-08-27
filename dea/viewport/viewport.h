@@ -6,7 +6,7 @@
 #include "event.h"
 
 namespace dea {
-class Viewport : public event::EventEmitter<>{
+class Viewport : public event::EventEmitter {
 public:
   Viewport() {};
 
