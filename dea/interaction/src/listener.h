@@ -38,8 +38,6 @@ protected:
 	virtual void onMouseDrag(event::MouseEvent& event) {};
 	virtual void onMouseWheel(event::MouseEvent& event) {};
 	virtual void onWindowResize(event::Event& event) {};
-  virtual void onAfterTick(event::Event& event) override {};
-  virtual void onBeforeTick(event::Event& event) override {};
 };
 
 } // namespace interaction

@@ -6,6 +6,7 @@
 #include "event/src/event.h"
 #include "event/src/event_system.h"
 #include "resource/src/resource.h"
+#include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
 #include "render.h"
 #include "event.h"
@@ -55,8 +56,10 @@ public:
     if (event::isMouse(event)) {
       auto& mouseEvent = static_cast<event::MouseEvent&>(event);
       auto worldCoord = viewport_.mapScreenToWorld(mouseEvent.clientX, mouseEvent.clientY);
-      mouseEvent.worldX = worldCoord.x();
-      mouseEvent.worldY = worldCoord.y();
+      mouseEvent.worldX = worldCoord.x(); mouseEvent.worldY = worldCoord.y();
+			mouseEvent.dx = viewport_.mapScreenToWorld(mouseEvent.dx);
+			mouseEvent.dy = viewport_.mapScreenToWorld(mouseEvent.dy);
+			spdlog::info("dx: {}, dy: {}", mouseEvent.dx, mouseEvent.dy);
     }
     eventSystem_.dispatchEvent(event);
 	}
@@ -84,6 +87,7 @@ public:
     }
 		eventSystem_.fireAllEvents();
 		doc_.flushEditor();
+		eventSystem_.beforeRender();
     render_.render();
     eventSystem_.afterTick();
 	}

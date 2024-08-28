@@ -2,6 +2,7 @@
 
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPoint.h"
+#include <cmath>
 #include <cstdint>
 #include "event.h"
 
@@ -15,12 +16,20 @@ public:
   void translate(float dx, float dy);
   void scale(float sx, float sy, float px = 0, float py = 0);
 
-  const auto& VPMatrix() {
+  const auto& getVPMatrix() const {
     return viewProjectionMatrix_;
   }
 
-  const auto& projectionMatrix() const {
+  const auto& getViewMatrix() {
+    return viewMatrix_;
+  }
+
+  const auto& getProjectionMatrix() const {
     return projectionMatrix_;
+  }
+
+  const auto getViewScale()  const {
+    return viewMatrix_.getScaleX();
   }
 
   void setProjectionMatrix(const SkMatrix& matrix) {
@@ -43,14 +52,10 @@ public:
     emit(e);
   }
 
-  const auto& getViewMatrix() {
-    return viewMatrix_;
-  }
-
-  const auto getHudViewMatrix() {
-    SkMatrix hubViewMatrix = viewMatrix_;
-    hubViewMatrix.postScale(1 / viewMatrix_.getScaleX(), 1 / viewMatrix_.getScaleY());
-    return hubViewMatrix;
+  const auto getHudProjectionViewMatrix() {
+    SkMatrix hubMatrix = viewProjectionMatrix_;
+    hubMatrix.postScale(1 / viewMatrix_.getScaleX(), 1 / viewMatrix_.getScaleY());
+    return hubMatrix;
   }
 
   SkRect mapWorldToScreen(const SkRect& rect) {
@@ -80,8 +85,8 @@ public:
   float mapScreenToWorld(float length) {
     SkRect rect = SkRect::MakeWH(length, 0);
     SkMatrix inverse;
-    if (worldScreenMatrix_.invert(&inverse)) {
-      return inverse.mapRect(rect).width();
+    if (viewProjectionMatrix_.invert(&inverse)) {
+      return std::copysign(inverse.mapRect(rect).width(), length);
     }
     return inverse.getMaxScale() * length;
   }

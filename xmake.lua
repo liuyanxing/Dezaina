@@ -3,6 +3,8 @@ add_rules("mode.debug", "mode.release")
 -- project
 set_project("dezaina")
 
+add_cxflags("/utf-8")
+
 -- set xmake minimum version
 set_xmakever("2.8.2")
 

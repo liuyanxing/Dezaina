@@ -106,7 +106,8 @@ void NodeEditor::buildEditor() {
     container_.setStrokePaints({strokePaint});
     container_.setStrokeWeight(config::size::Min);
     container_.addEventListener(EventType::MouseDrag, [this](Event& event) {
-      editor_.translate(1, 0);
+      auto mouseEvent = static_cast<MouseEvent&>(event);
+      editor_.translate(mouseEvent.dx, mouseEvent.dy);
     });
 
     bound_ctrl_.setStrokePaints({strokePaint});

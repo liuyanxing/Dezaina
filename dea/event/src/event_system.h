@@ -9,7 +9,6 @@
 #include "key.h"
 #include "listener.h"
 #include "common/array.h"
-#include <iostream>
 #include <optional>
 
 namespace dea::event {
@@ -79,6 +78,12 @@ public:
     });
     events_.clear();
 	};
+
+  void beforeRender() {
+    Event event;
+    event.type = EventType::BeforeRender;
+    fireEvent(event);
+  }
 
   void afterTick() {
     Event event;

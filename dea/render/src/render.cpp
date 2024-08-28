@@ -47,11 +47,18 @@ namespace dea::render {
 	}
 
   void Render::render(utility::NodeIterWithWorldMatrix& iter, bool isInterNode) {
+    canvas_->resetMatrix();
+    SkAutoCanvasRestore acr(canvas_, true);
+    canvas_->setMatrix(viewport_.getVPMatrix());
+
 		while (iter.isValid()) {
       SkAutoCanvasRestore acr(canvas_, true); 
 
 			auto* node = iter.get();
       canvas_->concat(iter.getWorldMatrix());
+      if (isInterNode) {
+        canvas_->scale(1 / viewport_.getViewScale(), 1 / viewport_.getViewScale());
+      }
 			renderNode(node, isInterNode);
 			++iter;
 		}
@@ -63,12 +70,7 @@ namespace dea::render {
   }
 
   void Render::renderDocument() {
-    canvas_->resetMatrix();
-    SkAutoCanvasRestore acr(canvas_, true); 
-
-    canvas_->setMatrix(viewport_.projectionMatrix());
-    canvas_->concat(Dezaina::instance().getViewport().getViewMatrix());
-		document::Document::IterWithWorldMatrix iter{doc_.currentPage()};
+    document::Document::IterWithWorldMatrix iter{doc_.currentPage()};
     render(iter, false);
   }
 
@@ -77,11 +79,6 @@ namespace dea::render {
     if (interaction.root()->empty()) {
       return;
     }
-    canvas_->resetMatrix();
-    SkAutoCanvasRestore acr(canvas_, true);
-
-    canvas_->setMatrix(viewport_.projectionMatrix());
-    canvas_->concat(Dezaina::instance().getViewport().getHudViewMatrix());
 
     interaction::Interaction::IterWithWorldMatrix iter{interaction.root()};
     render(iter, true);
