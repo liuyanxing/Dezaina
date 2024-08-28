@@ -58,7 +58,7 @@ protected:
 
   void buildEditor();
   SkRect caculateSelectionBound();
-  void handleDragResizeCtrlNode(int index, event::MouseEvent &event);
+  void handleDragBoundCtrlNode(int index, event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);
   void onMouseMove(event::MouseEvent& event) override;

@@ -62,57 +62,70 @@ void NodeEditor::onMouseDrag(event::MouseEvent& event) {
   for (auto* node : selectedNodes_) {
     if (auto* emitter = interaction::node_cast<EventEmitter*>(node)) {
       emitter->emit(event);
+      if (event.isStopped()) {
+        break;
+      }
     }
   }
   event.stop();
 }
 
 void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
-  // if (desaina_->document.getSelectedNodes().size() == 1) {
-  //   const std::array<SkVector, 4> directions = {{ { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } } };
-  //   const std::array<SkPoint, 4> anchors = {{ { 1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 } } };
-  //   auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
-  //   desaina_->getEditor()->resize(dx, dy, anchors[index]);
-  // } else {
-  //   // todo 处理选中多个图层
-  // }
+  if (editedNodes_.size() == 1) {
+    const std::array<SkVector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
+    const std::array<SkPoint, 4> anchors = {{ { 1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 } } };
+    auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
+    editor_.resize(dx, dy, anchors[index]);
+  } else {
+    // todo 处理选中多个图层
+  }
 
 }
 
-void NodeEditor::handleDragResizeCtrlEdge(event::MouseEvent& event) {
-  // const auto& transform = bound_ctrl_.get_transform();
-  // const auto [x, y] = base::mapPointToLocal({event->clientX, event->clientY}, util::toSkMatrix(transform));
-  // const auto [width, height] = bound_ctrl_.get_size();
-  // int index = 0;
-  // auto pointerRadius = config::pointerRadius;
-  // if (x > width - pointerRadius) {
-  //   index = 1;
-  // } else if (y > height - pointerRadius) {
-  //   index = 2;
-  // } else if (x < pointerRadius) {
-  //   index = 3;
-  // }
+void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
+  const auto& transform = bound_ctrl_.get_transform();
+  const auto [x, y] = base::mapPointToLocal({event->clientX, event->clientY}, util::toSkMatrix(transform));
+  const auto [width, height] = bound_ctrl_.get_size();
+  int index = 0;
+  bool isDraggingBound = false;
+  auto pointerRadius = config::pointerRadius;
 
-  // if (desaina_->document.getSelectedNodes().size() == 1) {
-  // } else {
-  //   // todo 处理选中多个图层
-  // }
+  if (y < pointerRadius) {
+    index = 0;
+  } else if (x > width - pointerRadius) {
+    index = 1;
+  } else if (y > height - pointerRadius) {
+    index = 2;
+  } else if (x < pointerRadius) {
+    index = 3;
+  } else {
+    isDraggingBound = true;
+  }
+
+  if (isDraggingBound) {
+    editor_.translate({event.dx, event.dy});
+    return;
+  }
+
+  if (editedNodes_.size() == 1) {
+    const std::array<SkVector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
+    const std::array<SkPoint, 4> anchors = {{ { 0.5, 1 }, { 0, 0.5 }, { 0.5, 0 }, { 1, 0.5 } } };
+    auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
+    editor_.resize(dx, dy, anchors[index]);
+  } else {
+    // todo 处理选中多个图层
+  }
 }
 
 void NodeEditor::buildEditor() {
     SolidPaint strokePaint;
     auto& [r, g, b, a] = config::color::Primary;
     strokePaint.setColor({r, g, b, a});
-    container_.setStrokePaints({strokePaint});
-    container_.setStrokeWeight(config::size::Min);
-    container_.addEventListener(EventType::MouseDrag, [this](Event& event) {
-      editor_.translate(1, 0);
-    });
 
     bound_ctrl_.setStrokePaints({strokePaint});
     bound_ctrl_.setStrokeWeight(config::size::Min);
     bound_ctrl_.addEventListener(EventType::MouseDrag, [this](Event& event) {
-      handleDragResizeCtrlEdge(static_cast<MouseEvent&>(event));
+      handleDragBoundCtrlNode(static_cast<MouseEvent&>(event));
     });
     appendToContainer(&bound_ctrl_);
 
