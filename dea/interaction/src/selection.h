@@ -4,27 +4,33 @@
 #include "core/SkSize.h"
 #include "listener.h"
 #include "node.h"
+#include "node/src/node-base/node.h"
 #include <functional>
+#include "node/src/node-base/node_base.generated.h"
+#include "utility/node_utility.h"
+#include "core/SkSize.h"
 
 namespace dea::interaction {
 
-using GetIntersectBound = std::function<SkRect<SkRect>>;
+using GetIntersectBound = std::function<SkSize(node::Vector)>;
+
 class Interaction;
 class Selection : public InteractionListener {
 public:
-  Selection(const GetIntersectBound& getIntersectBound, const utility::NodeInterWithWorldMatrix& iter, bool shouldStopEvent) : getIntersectBound_(getIntersectBound), iter_(iter), shouldStopEvent_(shouldStopEvent) {}
+  Selection(const GetIntersectBound& getIntersectBound, const utility::NodeIterWithWorldMatrix& iter, bool shouldStopEvent) : getIntersectBound_(getIntersectBound), iter_(iter), shouldStopEvent_(shouldStopEvent) {}
   bool empty() const { return selection_.empty(); }
-  const NodeArrayRef getSelection() const { return selection_; }
+  node::NodeAraryConstRef getSelection() const { return selection_; }
   SkSize getSelectionBound() const;
   SkMatrix getSelectionTransform() const;
   node::NodeConstPtr getHoverNode() const { return hoverNode_; }
+  void setIter(const utility::NodeIterWithWorldMatrix& iter) { iter_ = iter; }
 
 private:
   Interaction* interaction_;
   std::vector<node::Node*> selection_;
   node::Node* hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
-  utility::NodeInterWithWorldMatrix iter_;
+  utility::NodeIterWithWorldMatrix iter_;
   bool shouldStopEvent_;
 
 	void setSelection(const std::vector<node::Node*>& nodes);

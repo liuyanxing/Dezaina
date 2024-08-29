@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdint>
 #include "event.h"
+#include "private/base/SkPoint_impl.h"
 
 namespace dea {
 class Viewport : public event::EventEmitter {
@@ -60,6 +61,10 @@ public:
 
   SkRect mapWorldToScreen(const SkRect& rect) {
     return viewProjectionMatrix_.mapRect(rect);
+  }
+
+  SkPoint mapWorldToScreen(const SkPoint& point) {
+    return viewProjectionMatrix_.mapPoint(point);
   }
 
   SkSize mapWorldToScreen(const SkSize& size) {

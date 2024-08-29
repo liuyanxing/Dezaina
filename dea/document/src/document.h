@@ -1,4 +1,5 @@
 #pragma once
+#include "event/src/primitives.h"
 #include "executor.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkMatrix.h"
@@ -12,13 +13,14 @@
 #include <unordered_map>
 #include "common/array.h"
 #include "utility/node_utility.h"
+#include "event.h"
 
 namespace dea::document {
 
 using NodeMap = std::unordered_map<node::GUID, node::Node*>;
 using SkBound = SkRect;
 
-class Document {
+class Document : public event::EventEmitter{
 public:
 	Document(uint32_t sessionId);
 
@@ -78,7 +80,11 @@ public:
 
   void setCurrentPage(node::PageNode* page) {
     currentPage_ = page;
+		event::Event event;
+		event.type = event::EventType::PageChange;
+		emit(event);
   }
+
   auto* currentPage() const { return currentPage_; }
 
 	node::DocumentNode* getRoot() {

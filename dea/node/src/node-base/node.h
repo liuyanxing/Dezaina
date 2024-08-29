@@ -9,4 +9,6 @@ namespace dea::node {
 	using NodeConstPtr = const Node*;
 	using NodePtr = Node*;
 	using NodeArary = std::vector<Node*>;
+	using NodeAraryRef = std::vector<Node*>&;
+	using NodeAraryConstRef = const std::vector<Node*>&;
 }

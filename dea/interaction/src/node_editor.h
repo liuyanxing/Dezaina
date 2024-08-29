@@ -10,9 +10,11 @@
 #include "node.h"
 #include "listener.h"
 #include "node/src/node-base/node.h"
-#include "selection.h"
+#include "mouse_interaction.h"
 #include <array>
 #include <vector>
+#include "node/src/node-base/node_base.generated.h"
+#include "utility.h"
 
 namespace dea::interaction {
 
@@ -20,7 +22,7 @@ class Desaina;
 
 class NodeEditor : public InteractionListener {
 public:
-  NodeEditor(const node::NodeArary* nodes) : editNodes_(nodes), editor_(*nodes) {
+  NodeEditor(const node::NodeArary* nodes) : editNodes_(*nodes), editor_(*nodes) {
     buildEditor();
   };
 
@@ -42,16 +44,15 @@ protected:
   Rectangle bound_ctrl_;
   std::array<Rectangle, 4> nodeResizeCtrls_;
   std::array<Rectangle, 4> nodeRotateCtrls_;
-  std::vector<node::Node*> selectedNodes_;
-  std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
+  node::NodeArary selectedNodes_;
   node::Node* hoverNode_ = nullptr;
   document::Editor editor_;
-  const node::NodeArary* editNodes_;
-  Selection selection_{[](SkRect rect) { return rect; }, IterWithWorldMatrix{&container_}};
+  const node::NodeArary& editNodes_;
+  MouseInteraction mouseInteraction_{[](node::Vector size) { return SkSize{size.x, size.y}; }, IterWithWorldMatrix{&container_}, true};
 
   void buildEditor();
   SkRect caculateSelectionBound();
-  void handleDragBoundCtrlNode(int index, event::MouseEvent &event);
+  void handleDragBoundCtrlNode(event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);
   void onMouseDrag(event::MouseEvent& event) override;

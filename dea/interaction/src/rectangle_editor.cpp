@@ -8,7 +8,7 @@ namespace dea::interaction {
 
 using namespace node;
 
-RectangleEditor::RectangleEditor(node::RectangleNode* node) : node_(node), NodeEditor() {
+RectangleEditor::RectangleEditor(node::RectangleNode* node) : node_(node), NodeEditor({}) {
     auto& doc = Dezaina::instance().getDocument();
     NodeEditor::update(utility::getTransfromMatrix(node), utility::getScreenSize(node));
     

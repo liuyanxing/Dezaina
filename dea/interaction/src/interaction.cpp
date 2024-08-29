@@ -1,4 +1,7 @@
 #include "interaction.h"
+#include "dezaina.h"
+#include "document/src/document.h"
+#include "event/src/primitives.h"
 #include "node/src/node-base/type.generated.h"
 #include "selection.h"
 #include "rectangle_editor.h"
@@ -8,6 +11,15 @@ namespace dea::interaction {
 
 using namespace event;
 using namespace node;
+using namespace document;
+
+Interaction::Interaction() {
+  page_.setBackgroundColor({0, 0, 0, 0});
+}
+
+SkSize Interaction::GetItersectBound(node::Vector size) {
+  return  Dezaina::instance().getViewport().mapWorldToScreen(SkSize{size.x, size.y});
+}
 
 void Interaction::updateSelection() {
   if (selection_.empty()) {
@@ -21,7 +33,7 @@ void Interaction::updateSelection() {
   }
 
   if (selection_.getSelection().size() > 1) {
-    node_editor_ = std::make_unique<NodeEditor>();
+    // node_editor_ = std::make_unique<NodeEditor>();
   } else {
     auto* node = selection_.getSelection()[0];
     if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node); !node_editor_) {
@@ -65,6 +77,13 @@ void Interaction::onBeforeRender(event::Event& event)  {
 };
 
 void Interaction::onAfterTick(Event& event) {
+  static bool first = true;
+  if (first) {
+    first = false;
+    Dezaina::instance().getDocument().addEventListener(EventType::PageChange, [this](Event& event) {
+      selection_.setIter(Document::IterWithWorldMatrix{Dezaina::instance().getDocument().currentPage()});
+    });
+  }
   handleHover();
 }
 

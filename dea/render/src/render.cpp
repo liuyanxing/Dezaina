@@ -80,7 +80,7 @@ namespace dea::render {
       return;
     }
 
-    interaction::Interaction::IterWithWorldMatrix iter{interaction.root()};
+    interaction::IterWithWorldMatrix iter{interaction.root()};
     render(iter, true);
   }
 

@@ -1,5 +1,6 @@
 #include "node_editor.h"
 #include "config/size.h"
+#include "core/SkSize.h"
 #include "dezaina.h"
 #include "event/src/primitives.h"
 #include "include/core/SkMatrix.h"
@@ -18,40 +19,30 @@ using namespace node;
 using namespace event;
 
 void NodeEditor::onMouseDrag(event::MouseEvent& event) {
-  if (selection_.empty()) {
-    return;
-  }
-
-  for (auto* node : selection_.getSelection()) {
-    if (auto* emitter = interaction::node_cast<EventEmitter*>(node)) {
-      emitter->emit(event);
-      if (event.isStopped()) {
-        break;
-      }
-    }
-  }
-  event.stop();
 }
 
-void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
-  if (editedNodes_.size() == 1) {
-    const std::array<SkVector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
-    const std::array<SkPoint, 4> anchors = {{ { 1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 } } };
-    auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
-    editor_.resize(dx, dy, anchors[index]);
-  } else {
-    // todo 处理选中多个图层
-  }
+// void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
+//   if (editedNodes_.size() == 1) {
+//     const std::array<SkVector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
+//     const std::array<SkPoint, 4> anchors = {{ { 1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 } } };
+//     auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
+//     editor_.resize(dx, dy, anchors[index]);
+//   } else {
+//     // todo 处理选中多个图层
+//   }
 
-}
+// }
 
 void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
-  const auto& transform = bound_ctrl_.get_transform();
-  const auto [x, y] = base::mapPointToLocal({event->clientX, event->clientY}, util::toSkMatrix(transform));
-  const auto [width, height] = bound_ctrl_.get_size();
+  auto x = event.screenLocalX;
+  auto y = event.screenLocalY;
+  auto& viewport = Dezaina::instance().getViewport();
+  auto size = bound_ctrl_.getSize();
+  const auto [width, height] = viewport.mapWorldToScreen(SkSize{size.x, size.y});
   int index = 0;
   bool isDraggingBound = false;
-  auto pointerRadius = config::pointerRadius;
+  // auto pointerRadius = config::pointerRadius;
+  auto pointerRadius = 6;
 
   if (y < pointerRadius) {
     index = 0;
@@ -66,15 +57,15 @@ void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
   }
 
   if (isDraggingBound) {
-    editor_.translate({event.dx, event.dy});
+    editor_.translate(event.dx, event.dy);
     return;
   }
 
-  if (editedNodes_.size() == 1) {
+  if (editNodes_.size() == 1) {
     const std::array<SkVector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
     const std::array<SkPoint, 4> anchors = {{ { 0.5, 1 }, { 0, 0.5 }, { 0.5, 0 }, { 1, 0.5 } } };
-    auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
-    editor_.resize(dx, dy, anchors[index]);
+    // auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
+    // editor_.resize(dx, dy, anchors[index]);
   } else {
     // todo 处理选中多个图层
   }
@@ -102,7 +93,7 @@ void NodeEditor::buildEditor() {
       ctrl.setStrokeWeight(config::size::Min);
       ctrl.setSize({config::size::Small, config::size::Small});
       ctrl.addEventListener(EventType::MouseDrag, [this, nodeIndex](Event& event) {
-        handleDragResizeCtrlNode(nodeIndex, static_cast<MouseEvent&>(event));        
+        // handleDragResizeCtrlNode(nodeIndex, static_cast<MouseEvent&>(event));        
       });
       nodeIndex++;
       // appendToContainer(&ctrl);

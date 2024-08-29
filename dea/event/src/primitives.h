@@ -12,8 +12,10 @@ enum class EventType {
   KeyUp,
   KeyPress,
   ViewportChange,
+  PageChange,
   BeforeTick,
   AfterTick,
+  NextTick,
   BeforeRender,
   Any,
 };

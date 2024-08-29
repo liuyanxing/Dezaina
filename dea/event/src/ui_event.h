@@ -13,6 +13,8 @@ struct UIEvent : public Event {
   float dy = 0;
   float dragDx = 0;
   float dragDy = 0;
+  float screenLocalX;
+  float screenLocalY;
 };
 
 } // namespace event

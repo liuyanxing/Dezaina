@@ -3,8 +3,10 @@
 #include "common/object.h"
 #include "document/include/document.h"
 #include "document/src/editor.h"
+#include "event/src/emitter.h"
 #include "event/src/event.h"
 #include "event/src/event_system.h"
+#include "event/src/primitives.h"
 #include "resource/src/resource.h"
 #include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
@@ -14,7 +16,7 @@
 
 namespace dea {
 
-class Dezaina : public base::NonCopyable {
+class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
 	Dezaina() : doc_(0), viewport_(), render_(doc_, viewport_) {
     resource::Resource::Init();
@@ -30,6 +32,14 @@ public:
 
 	static document::Editor& editor() {
 		return instance().doc_.editor();
+	}
+
+	static document::Document& document() {
+		return instance().doc_;
+	}
+
+	static Viewport& viewport() {
+		return instance().viewport_;
 	}
 
 	void init();
@@ -81,10 +91,17 @@ public:
     return eventSystem_.isKeyPressed(code);
   }
 
+	void nextTick(const event::ListenerFunc& listener) {
+		addEventListener(event::EventType::NextTick, listener, true);
+	}
+
 	void tick() {
     if (!doc_.loaded()) {
 			return;
     }
+		event::Event event{event::EventType::NextTick};
+		emit(event);
+
 		eventSystem_.fireAllEvents();
 		doc_.flushEditor();
 		eventSystem_.beforeRender();

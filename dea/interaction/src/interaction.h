@@ -5,6 +5,7 @@
 #include "event.h"
 #include "event/src/listener.h"
 #include "interaction/src/listener.h"
+#include "node/src/node-base/node_base.generated.h"
 #include "node_editor.h"
 #include "selection.h"
 #include "node/path.h"
@@ -14,30 +15,18 @@ namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
-  Interaction() {
-    page_.setBackgroundColor({0, 0, 0, 0});
-  }
+  Interaction();
 
   auto* root() { return &page_; }
 
   void dump();
 
-  class Iter : public utility::NodeIter {
-  public:
-    Iter(node::Node* node) :
-    NodeIter(node, [](node::Node* node) { return interaction::node_cast<InteractionNode*>(node)->getParent();}) {}
-  };
-
-  class IterWithWorldMatrix : public utility::NodeIterWithWorldMatrix {
-  public:
-    IterWithWorldMatrix(node::Node* node) : utility::NodeIterWithWorldMatrix(node, [](node::Node* node) { return interaction::node_cast<InteractionNode*>(node)->getParent(); }) {
-    }
-  };
+  static SkSize GetItersectBound(node::Vector size);
 
 private:
   Page page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
-  Selection selection_;
+  Selection selection_{GetItersectBound, IterWithWorldMatrix{nullptr}, true};
   Creation creation_;
   InteractionPath hover_;
 

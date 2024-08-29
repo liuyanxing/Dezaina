@@ -30,7 +30,7 @@ SkMatrix getWorldMatrix(node::Node* node) {
 }
 
 SkMatrix getWorldMatrix(interaction::InteractionNode* node) {
-  dea::interaction::Interaction::IterWithWorldMatrix iter{static_cast<node::Node*>((void*)node)};
+  dea::interaction::IterWithWorldMatrix iter{static_cast<node::Node*>((void*)node)};
   return iter.getWorldMatrix();
 }
 
@@ -76,6 +76,9 @@ NodeIter::IterDirection NodeIter::operator--() {
 }
 
 NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node* node, const GetParentFunc& getParent) : NodeIter(node, getParent) {
+  if (!node_) {
+    return;
+  }
   world_ = getWorldMatrixImpl(node);
   worldStack_.push_back(world_);
 }
