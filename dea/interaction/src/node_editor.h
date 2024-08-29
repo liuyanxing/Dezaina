@@ -10,6 +10,7 @@
 #include "node.h"
 #include "listener.h"
 #include "node/src/node-base/node.h"
+#include "selection.h"
 #include <array>
 #include <vector>
 
@@ -19,15 +20,6 @@ class Desaina;
 
 class NodeEditor : public InteractionListener {
 public:
-  NodeEditor(const SkMatrix& transform, const SkSize& size) {
-    buildEditor();
-    update(transform, size);
-  }
-
-  NodeEditor() {
-    buildEditor();
-  };
-
   NodeEditor(const node::NodeArary* nodes) : editNodes_(nodes), editor_(*nodes) {
     buildEditor();
   };
@@ -55,14 +47,13 @@ protected:
   node::Node* hoverNode_ = nullptr;
   document::Editor editor_;
   const node::NodeArary* editNodes_;
+  Selection selection_{[](SkRect rect) { return rect; }, IterWithWorldMatrix{&container_}};
 
   void buildEditor();
   SkRect caculateSelectionBound();
   void handleDragBoundCtrlNode(int index, event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);
-  void onMouseMove(event::MouseEvent& event) override;
-  void onMouseDown(event::MouseEvent& event) override;
   void onMouseDrag(event::MouseEvent& event) override;
 };
 

@@ -17,49 +17,12 @@ namespace dea::interaction {
 using namespace node;
 using namespace event;
 
-std::vector<node::Node*> NodeEditor::getNodesWithRadius(const SkPoint& point, float radius) {
-  std::vector<node::Node*> nodes;
-  Interaction::IterWithWorldMatrix iter{&container_};
-  while (iter.isValid()) {
-    auto* node = iter.get();
-    if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
-      auto local = utility::mapPointToLocal(point, iter.getWorldMatrix());
-      auto localRect = SkRect::MakeXYWH(local.x() - radius / 2, local.y() - radius / 2, radius, radius);
-      auto size = shape->getSize();
-      auto bound = SkRect::MakeXYWH(0, 0, size.x, size.y);
-      if (bound.intersects(localRect)) {
-        nodes.push_back(node);
-      }
-    }
-    ++iter;
-  }
-  return nodes;
-}
-
-void NodeEditor::onMouseMove(MouseEvent& event) {
-  auto nodes = getNodesWithRadius({event.worldX, event.worldY}, 6);
-  if (nodes.empty()) {
-    hoverNode_ = nullptr;
-    return;
-  }
-  hoverNode_ = nodes.front();
-  event.stop();
-}
-
-
-void NodeEditor::onMouseDown(event::MouseEvent& event) {
-  selectedNodes_.clear();
-  if (hoverNode_) {
-    selectedNodes_.push_back(hoverNode_);
-    event.stop();
-  }
-}
-
 void NodeEditor::onMouseDrag(event::MouseEvent& event) {
-  if (selectedNodes_.empty()) {
+  if (selection_.empty()) {
     return;
   }
-  for (auto* node : selectedNodes_) {
+
+  for (auto* node : selection_.getSelection()) {
     if (auto* emitter = interaction::node_cast<EventEmitter*>(node)) {
       emitter->emit(event);
       if (event.isStopped()) {

@@ -21,30 +21,27 @@ void Selection::onMouseMove(MouseEvent& event) {
   if (auto* curPage = doc.currentPage()) {
     auto nodes = doc.getNodesWithRadius({event.worldX, event.worldY}, viewport.mapScreenToWorld(6));
     if (nodes.empty()) {
-      // mouseEvent->localX = mouseEvent->x;
-      // mouseEvent->localY = mouseEvent->y;
       hoverNode_ = nullptr;
     }
     for (auto& node : nodes) {
       if (isCursorOnNodePixel(mouseEvent.worldX, mouseEvent.worldY, node, false)) {
-        if (node != hoverNode_) {
-          // event->target = node;
-          std::cout << "hovering on node" << std::endl;
-        }
         hoverNode_ = node;
-        auto matrix = utility::getWorldMatrix(node);
-        // auto point = utility::mapPointToLocal(matrix, {mouseEvent->x, mouseEvent->y});
-        // mouseEvent->localX = point.x();
-        // mouseEvent->localY = point.y();
+        if (shouldStopEvent_) {
+          event.stop();
+        }
         break;
       }
     }
   }
+
 }
 
 void Selection::onMouseDown(MouseEvent& event) {
   if (hoverNode_ != nullptr) {
     setSelection({hoverNode_});
+    if (shouldStopEvent_) {
+      event.stop();
+    }
   } else {
     setSelection(std::vector<Node*>{});
   }
