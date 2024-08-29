@@ -60,8 +60,11 @@ void Interaction::onEvent(event::Event& event) {
   InteractionListener::onEvent(event);
 }
 
-void Interaction::onAfterTick(Event& event) {
+void Interaction::onBeforeRender(event::Event& event)  {
   updateSelection();
+};
+
+void Interaction::onAfterTick(Event& event) {
   handleHover();
 }
 

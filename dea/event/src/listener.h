@@ -13,6 +13,9 @@ class SystemHookListener : public Listener {
 public:
   virtual void onEvent(Event& e) override {
     switch (e.type) {
+      case EventType::BeforeRender:
+        onBeforeRender(e);
+        break;
       case EventType::BeforeTick:
         onBeforeTick(e);
         break;
@@ -26,6 +29,7 @@ public:
 private:
   virtual void onBeforeTick(Event& event) {};
   virtual void onAfterTick(Event& event) {};
+  virtual void onBeforeRender(Event& event) {};
 };
 
 }

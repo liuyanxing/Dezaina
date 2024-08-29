@@ -14,6 +14,7 @@ enum class EventType {
   ViewportChange,
   BeforeTick,
   AfterTick,
+  BeforeRender,
   Any,
 };
 
