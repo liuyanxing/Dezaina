@@ -3,6 +3,7 @@
 namespace dea::event {
 
 enum class EventType {
+  Initialized,
   MouseMove,
   MouseDown,
   MouseUp,

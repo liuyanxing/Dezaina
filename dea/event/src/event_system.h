@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cassert>
 #include <variant>
+#include "event/src/primitives.h"
 #include "mouse.h"
 #include "key.h"
 #include "listener.h"
@@ -80,14 +81,17 @@ public:
 	};
 
   void beforeRender() {
-    Event event;
-    event.type = EventType::BeforeRender;
+    Event event{EventType::BeforeRender};
     fireEvent(event);
   }
 
   void afterTick() {
-    Event event;
-    event.type = EventType::AfterTick;
+    Event event{EventType::AfterTick};
+    fireEvent(event);
+  }
+
+  void initialized() {
+    Event event{EventType::Initialized};
     fireEvent(event);
   }
 

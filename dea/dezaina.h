@@ -7,6 +7,7 @@
 #include "event/src/event.h"
 #include "event/src/event_system.h"
 #include "event/src/primitives.h"
+#include "interaction/src/interaction.h"
 #include "resource/src/resource.h"
 #include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
@@ -18,9 +19,10 @@ namespace dea {
 
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
-	Dezaina() : doc_(0), viewport_(), render_(doc_, viewport_) {
+	Dezaina() : doc_(0), viewport_(), render_(doc_, viewport_), eventSystem_(), interaction_() {
     resource::Resource::Init();
 		init();
+		eventSystem_.initialized();
 	}
 
 	~Dezaina() {}

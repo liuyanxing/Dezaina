@@ -79,14 +79,13 @@ void Interaction::onBeforeRender(event::Event& event)  {
   updateSelection();
 };
 
+void Interaction::onInitialized(event::Event& event) {
+  Dezaina::instance().getDocument().addEventListener(EventType::PageChange, [this](Event& event) {
+    selection_.setIter(Document::IterWithWorldMatrix{Dezaina::instance().getDocument().currentPage()});
+  });
+} 
+
 void Interaction::onAfterTick(Event& event) {
-  static bool first = true;
-  if (first) {
-    first = false;
-    Dezaina::instance().getDocument().addEventListener(EventType::PageChange, [this](Event& event) {
-      selection_.setIter(Document::IterWithWorldMatrix{Dezaina::instance().getDocument().currentPage()});
-    });
-  }
   handleHover();
 }
 
@@ -101,5 +100,6 @@ void Interaction::dump() {
   }
   spdlog::info("dump end");
 }
+
 
 }
