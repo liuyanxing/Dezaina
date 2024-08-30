@@ -20,7 +20,7 @@ namespace dea::interaction {
 
 class Desaina;
 
-class NodeEditor : public InteractionListener {
+class NodeEditor {
 public:
   NodeEditor(const node::NodeArary* nodes) : editNodes_(*nodes), editor_(*nodes) {
     buildEditor();
@@ -39,6 +39,13 @@ public:
     appendChild(&container_, node);
   }
 
+  void onEvent(event::Event& event) {
+    mouseInteraction_.onEvent(event);
+    if (event.target) {
+      event.stop();
+    }
+  }
+
 protected:
   Frame container_;
   Rectangle bound_ctrl_;
@@ -48,7 +55,7 @@ protected:
   node::Node* hoverNode_ = nullptr;
   document::Editor editor_;
   const node::NodeArary& editNodes_;
-  MouseInteraction mouseInteraction_{[](node::Vector size) { return SkSize{size.x, size.y}; }, IterWithWorldMatrix{&container_}, true};
+  MouseInteraction mouseInteraction_{[](node::Vector size) { return SkSize{size.x, size.y}; }, IterWithWorldMatrix{&container_}};
 
   void buildEditor();
   SkRect caculateSelectionBound();

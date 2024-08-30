@@ -17,7 +17,7 @@ using GetIntersectBound = std::function<SkSize(node::Vector)>;
 class Interaction;
 class Selection : public InteractionListener {
 public:
-  Selection(const GetIntersectBound& getIntersectBound, const utility::NodeIterWithWorldMatrix& iter, bool shouldStopEvent) : getIntersectBound_(getIntersectBound), iter_(iter), shouldStopEvent_(shouldStopEvent) {}
+  Selection(const GetIntersectBound& getIntersectBound, const utility::NodeIterWithWorldMatrix& iter) : getIntersectBound_(getIntersectBound), iter_(iter) {}
   bool empty() const { return selection_.empty(); }
   node::NodeAraryConstRef getSelection() const { return selection_; }
   SkSize getSelectionBound() const;
@@ -27,7 +27,6 @@ public:
 
 private:
   Interaction* interaction_;
-  std::vector<node::Node*> selection_;
   node::Node* hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
   utility::NodeIterWithWorldMatrix iter_;

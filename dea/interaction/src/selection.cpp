@@ -21,14 +21,12 @@ void Selection::onMouseMove(MouseEvent& event) {
   while (iter_.isValid()) {
     auto* node = iter_.get();
     if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
-      auto local = utility::mapPointToLocal({event.worldX, event.worldY}, iter_.getWorldMatrix());
-      local = viewport.mapWorldToScreen(local);
-      event.screenLocalX = local.x(); event.screenLocalY = local.y();
-      auto localRect = SkRect::MakeXYWH(local.x() - radius / 2, local.y() - radius / 2, radius, radius);
-      auto size = shape->getSize();
+      auto& matrix = viewport.getVPMatrix() * iter_.getWorldMatrix();
+      auto local = utility::mapPointToLocal({event.screenX, event.screenY}, matrix);
+      auto cursorRect = SkRect::MakeXYWH(local.x - radius, local.y - radius, 2 * radius, 2 * radius);
       auto [width, height] = getIntersectBound_(shape->getSize());
       auto bound = SkRect::MakeXYWH(0, 0, width, height);
-      if (bound.intersects(localRect)) {
+      if (bound.intersects(cursorRect)) {
         nodes.push_back(node);
       }
     }
@@ -39,10 +37,10 @@ void Selection::onMouseMove(MouseEvent& event) {
 
 void Selection::onMouseDown(MouseEvent& event) {
   if (hoverNode_ != nullptr) {
-    setSelection({hoverNode_});
-    if (shouldStopEvent_) {
-      event.stop();
+    if (selections_.find(hoverNode_) != selections_.end()) {
+      return;
     }
+    setSelection({hoverNode_});
   } else {
     setSelection(std::vector<Node*>{});
   }

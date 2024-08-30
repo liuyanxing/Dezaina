@@ -13,8 +13,11 @@ using namespace event;
 using namespace node;
 using namespace document;
 
-Interaction::Interaction() {
+Interaction::Interaction(Document& doc) : doc_(doc) {
   page_.setBackgroundColor({0, 0, 0, 0});
+  doc_.addEventListener(EventType::PageChange, [this](Event& event) {
+    selection_.setIter(Document::IterWithWorldMatrix{doc_.currentPage()});
+  });
 }
 
 SkSize Interaction::GetItersectBound(node::Vector size) {

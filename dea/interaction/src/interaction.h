@@ -10,12 +10,13 @@
 #include "selection.h"
 #include "node/path.h"
 #include "node/page.h"
+#include "document.h"
 
 namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
-  Interaction();
+  Interaction(document::Document& doc);
 
   auto* root() { return &page_; }
 
@@ -28,7 +29,7 @@ private:
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
   Selection selection_{GetItersectBound, IterWithWorldMatrix{nullptr}, true};
   Creation creation_;
-  InteractionPath hover_;
+  document::Document& doc_;
 
   void appendToContainer(node::Node* child) {
     appendChild(&page_, child);

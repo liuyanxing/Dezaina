@@ -18,9 +18,6 @@ namespace dea::interaction {
 using namespace node;
 using namespace event;
 
-void NodeEditor::onMouseDrag(event::MouseEvent& event) {
-}
-
 // void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
 //   if (editedNodes_.size() == 1) {
 //     const std::array<SkVector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
