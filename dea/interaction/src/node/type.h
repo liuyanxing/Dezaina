@@ -14,7 +14,7 @@ T node_cast(node::NodeConstPtr node) {
 
 	if (node->getType() == node::NodeType::CANVAS) {
 		if constexpr (std::is_convertible_v<Page, U>) {
-			return static_cast<T>((InteractionPath*)(node));
+			return static_cast<T>((Page*)(node));
 		}
 	}
 

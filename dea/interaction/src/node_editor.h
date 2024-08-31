@@ -62,7 +62,6 @@ protected:
   void handleDragBoundCtrlNode(event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);
-  void onMouseDrag(event::MouseEvent& event) override;
 };
 
 }

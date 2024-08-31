@@ -27,7 +27,7 @@ public:
 private:
   Page page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
-  Selection selection_{GetItersectBound, IterWithWorldMatrix{nullptr}, true};
+  Selection selection_{GetItersectBound, IterWithWorldMatrix{nullptr}};
   Creation creation_;
   document::Document& doc_;
 
@@ -42,7 +42,6 @@ private:
   void onMouseWheel(event::MouseEvent& event) override;
   void onMouseDrag(event::MouseEvent& event) override;
   void onWindowResize(event::Event& event) override;
-  void onInitialized(event::Event& event) override;
   void onBeforeRender(event::Event& event) override;
   void onAfterTick(event::Event& event) override;
 };

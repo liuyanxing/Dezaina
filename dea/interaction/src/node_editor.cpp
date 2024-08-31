@@ -31,8 +31,8 @@ using namespace event;
 // }
 
 void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
-  auto x = event.screenLocalX;
-  auto y = event.screenLocalY;
+  auto x = event.localX;
+  auto y = event.localY;
   auto& viewport = Dezaina::instance().getViewport();
   auto size = bound_ctrl_.getSize();
   const auto [width, height] = viewport.mapWorldToScreen(SkSize{size.x, size.y});
@@ -54,7 +54,7 @@ void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
   }
 
   if (isDraggingBound) {
-    editor_.translate(event.dx, event.dy);
+    editor_.translate(event.worldDx, event.dy);
     return;
   }
 

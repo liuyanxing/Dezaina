@@ -11,8 +11,8 @@ namespace dea::event {
         int buttons;
         static auto Make(float x, float y, EventType type, int button, int buttons) {
             MouseEvent event;
-            event.clientX = x;
-            event.clientY = y;
+            event.x = x;
+            event.y = y;
             event.type = type;
             event.button = button;
             event.buttons = buttons;

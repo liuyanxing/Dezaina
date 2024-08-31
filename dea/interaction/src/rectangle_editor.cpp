@@ -29,7 +29,7 @@ void RectangleEditor::buildEditor() {
 }
 
 void RectangleEditor::handleDragResizeCornerCtrl(int index, const SkVector& moveAxis, event::MouseEvent &event) {
-  auto delta = moveAxis.cross({event.dx, event.dy});
+  auto delta = moveAxis.cross({event.worldDx, event.dy});
   // auto* editor = desaina_->getEditor();
   // editor->resizeCornerRadius(delta);
 }

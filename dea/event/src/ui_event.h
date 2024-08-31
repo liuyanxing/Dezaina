@@ -5,16 +5,18 @@
 namespace dea::event {
 
 struct UIEvent : public Event {
-  float clientX;
-  float clientY;
+  float x;
+  float y;
+  float dx;
+  float dy;
+  float localX;
+  float localY;
   float worldX;
   float worldY;
-  float dx = 0;
-  float dy = 0;
-  float dragDx = 0;
-  float dragDy = 0;
-  float screenLocalX;
-  float screenLocalY;
+  float worldDx;
+  float worldDy;
+  float dragDx;
+  float dragDy;
 };
 
 } // namespace event

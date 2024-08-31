@@ -2,6 +2,8 @@
 
 #include "primitives.h"
 #include <cstdint>
+#include "node.h"
+
 
 namespace dea::event {
 
@@ -30,15 +32,13 @@ enum class Keymod {
     Reserved = Scroll // 用于与SDL 2.0.0保持源代码兼容性
 };
 
-namespace node {
-  class Node;
-}
+
 struct Event {
   Event() = default;
   Event(EventType type) : type(type) {}
   EventType type;  
   KeyMode mode;
-  node::Node* target = nullptr;
+  dea::node::Node* target = nullptr;
   void stop() {
     isStop_ = true;
   }

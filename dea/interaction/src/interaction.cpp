@@ -3,6 +3,7 @@
 #include "document/src/document.h"
 #include "event/src/primitives.h"
 #include "node/src/node-base/type.generated.h"
+#include "node.h"
 #include "selection.h"
 #include "rectangle_editor.h"
 #include "spdlog/spdlog.h"
@@ -78,12 +79,6 @@ void Interaction::onEvent(event::Event& event) {
 void Interaction::onBeforeRender(event::Event& event)  {
   updateSelection();
 };
-
-void Interaction::onInitialized(event::Event& event) {
-  Dezaina::instance().getDocument().addEventListener(EventType::PageChange, [this](Event& event) {
-    selection_.setIter(Document::IterWithWorldMatrix{Dezaina::instance().getDocument().currentPage()});
-  });
-} 
 
 void Interaction::onAfterTick(Event& event) {
   handleHover();

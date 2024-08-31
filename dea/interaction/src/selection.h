@@ -26,11 +26,10 @@ public:
   void setIter(const utility::NodeIterWithWorldMatrix& iter) { iter_ = iter; }
 
 private:
-  Interaction* interaction_;
+  node::NodeArary selection_;
   node::Node* hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
   utility::NodeIterWithWorldMatrix iter_;
-  bool shouldStopEvent_;
 
 	void setSelection(const std::vector<node::Node*>& nodes);
   void setSelection(const std::vector<node::GUID>& nodesIds);

@@ -15,7 +15,7 @@ void Interaction::onMouseWheel(MouseEvent& event) {
 void Interaction::onMouseDrag(MouseEvent& event) {
   auto& dezaina = Dezaina::instance();
   if (dezaina.isKeyPressed(event::Key::Space)) {
-    dezaina.getViewport().translate(-event.dx, event.dy);
+    dezaina.getViewport().translate(-event.worldDx, event.dy);
   }
 }
 
