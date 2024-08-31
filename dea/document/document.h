@@ -1,17 +1,13 @@
 #pragma once
 #include "event/src/primitives.h"
-#include "executor.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "include/private/base/SkPoint_impl.h"
-#include "node/include/node.h"
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
-#include <array>
 #include <cstdint>
 #include <unordered_map>
-#include "common/array.h"
 #include "utility/node_utility.h"
 #include "event.h"
 
@@ -33,9 +29,7 @@ public:
 	};
 
 	template<typename T>
-	T* createNode() {
-		return createNode<T>(node::GUID{sessionId_, localId_++});
-	};
+	T* createNode() { return createNode<T>(node::GUID{sessionId_, localId_++}); };
 
 	bool load(char* data, size_t size) {
 		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data), size);
@@ -46,84 +40,35 @@ public:
     return res;
 	}
 
-	void unload() {
-	}
+	void unload() {}
 
-	void append(node::Node* child) {
-		auto* root = node::node_cast<node::DocumentNode*>(child);
-		if (root) {
-			root_ = root;
-			return;
-		}
+	void append(node::Node* child);
+	void append(node::Node* parent, node::Node* child);
+	void updateNode(message::NodeChange* change);
+	void remove(node::Node* node) { }
 
-		append(getParent(child), child);
-	}
-
-	void append(node::Node* parent, node::Node* child) {
-		if (!parent) {
-			return;
-		}
-		node::Container::append(parent, child);
-	}
-
-	void remove(node::Node* node) {
-	}
-
-	void setRoot(node::DocumentNode* root) {
-		root_ = root;
-	}
+	void setRoot(node::DocumentNode* root) { root_ = root; }
 	auto* root() const { return root_; }
-
-  bool loaded() const {
-    return root_ != nullptr;
-  }
-
-  void setCurrentPage(node::PageNode* page) {
-    currentPage_ = page;
-		event::Event event;
-		event.type = event::EventType::PageChange;
-		emit(event);
-  }
+  bool loaded() const { return root_ != nullptr; }
 
   auto* currentPage() const { return currentPage_; }
-
-	node::DocumentNode* getRoot() {
-		return root_;
-	}
-
-	node::Node* getParent(node::Node* node) {
-		return getNodeById(node->getParentIndex().guid);
-	}
-
-	node::Node* getNodeById(const node::GUID& id) const {
-		auto iter = nodeMap_.find(id);
-		if (iter == nodeMap_.end()) {
-			return nullptr;
-		}
-		return iter->second;
-	}
+	node::DocumentNode* getRoot() { return root_; }
+	node::Node* getParent(node::Node* node) { return getNodeById(node->getParentIndex().guid); }
 
   std::vector<node::Node*> getNodes(float x, float y);
   std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
 
-  void handleViewMatrixChange(const node::Matrix& matrix) {
-    if (currentPage_) {
-      currentPage_->setTransform(matrix);
-    }
-  }
+  void setCurrentPage(node::PageNode* page);
+	node::Node* getNodeById(const node::GUID& id) const;
+  void handleViewMatrixChange(const node::Matrix& matrix);
+	void flushEditor();
 
-	void flushEditor() {
-		if (editor_.empty()) {
-			return;
-		}
+	auto& editor() { return editor_; }
 
-		Executor executor(*this, editor_, change_);
-		executor.execute();
-	}
-
-	auto& editor() {
-		return editor_;
-	}
+	bool applyMessage(kiwi::ByteBuffer& buffer);
+	bool processMessage(message::Message& message);
+	bool processBlobMessage(kiwi::Array<message::Blob>& blobs);
+	bool processNodeChanges(message::Message& message);
 
 	void dump();
 	void dump(node::Node* node) const;
@@ -143,12 +88,12 @@ public:
 
 private:
 	NodeMap nodeMap_{100};
-	Change change_;
   node::DocumentNode* root_;
   node::PageNode* currentPage_;
 	Editor editor_;
 	uint32_t sessionId_;
 	uint32_t localId_{0};
+	std::unordered_map<uint32_t, uint32_t> blobIdMap_{};
 };
 
 } // namespace dea::document

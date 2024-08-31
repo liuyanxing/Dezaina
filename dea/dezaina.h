@@ -14,6 +14,7 @@
 #include "render.h"
 #include "event.h"
 #include "interaction.h"
+#include "change/change.h"
 
 namespace dea {
 
@@ -110,17 +111,11 @@ public:
     eventSystem_.afterTick();
 	}
 
-  auto& getDocument() {
-    return doc_;
-  }
-
-  auto& getViewport() {
-    return viewport_;
-  }
-
-  auto& getInteraction() {
-    return interaction_;
-  }
+  auto& getDocument() { return doc_; }
+  auto& getViewport() { return viewport_; }
+  auto& getInteraction() { return interaction_; }
+  auto& getEventSystem() { return eventSystem_; }
+	auto& getChange() { return change_; }
 
 private:
 	document::Document doc_;
@@ -128,6 +123,7 @@ private:
 	render::Render render_;
 	event::EventSystem eventSystem_;
 	interaction::Interaction interaction_;
+	change::Change change_;
 };
 
 }
