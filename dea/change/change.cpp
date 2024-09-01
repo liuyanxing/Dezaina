@@ -1,3 +1,6 @@
+#define IMPLEMENT_KIWI_H
+#define IMPLEMENT_SCHEMA_H
+
 #include "change.h"
 #include "dezaina.h"
 
@@ -11,7 +14,7 @@ void Change::flush() {
 
 		switch (item.type) {
 			case ChangeType::Select:
-				dezaina.setSelection(std::get<node::NodeArary>(item.value));
+				// dezaina.setSelection(std::get<node::NodeArary>(item.value));
 				break;
 			case ChangeType::NodeChange:
 				doc.updateNode(std::get<message::NodeChange*>(item.value));

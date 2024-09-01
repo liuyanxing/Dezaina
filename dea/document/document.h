@@ -1,15 +1,12 @@
 #pragma once
-#include "event/src/primitives.h"
-#include "include/core/SkCanvas.h"
-#include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
-#include "include/private/base/SkPoint_impl.h"
+#include "include/core/SkPoint.h"
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
 #include <cstdint>
-#include <unordered_map>
 #include "utility/node_utility.h"
 #include "event.h"
+#include "node.h"
 
 namespace dea::document {
 
@@ -33,7 +30,7 @@ public:
 
 	bool load(char* data, size_t size) {
 		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data), size);
-	  auto res = change_.applyMessage(buffer);
+	  auto res = applyMessage(buffer);
     if (!root_->empty()) {
       setCurrentPage(static_cast<node::PageNode*>(root_->firstChild()));
     }

@@ -1,6 +1,5 @@
 #include "geometry.h"
 #include "include/core/SkPaint.h"
-#include "node/src/node-base/node_base.generated.h"
 #include "resource.h"
 #include "resource.h"
 #include <cassert>

@@ -1,0 +1,131 @@
+#pragma once
+
+#include <string>
+#include <variant>
+
+#include "base/buffer.h"
+#include "schema/message.h"
+#include "type.h"
+
+namespace dea::node
+{
+
+using  uint = uint32_t;
+using string = std::string;
+using Buffer = base::Buffer;
+using boolean = bool;
+
+{{#classes}}
+class {{name}};
+{{/classes}}
+
+{{#structs}}
+struct {{name}};
+{{/structs}}
+
+{{#customType}}
+{{&.}}
+{{/customType}}
+
+{{#enums}}
+enum class {{name}} {
+{{#values}}
+	{{.}},
+{{/values}}
+};
+
+{{/enums}}
+
+{{#structs}}
+struct {{name}} {{#inherits}}{{.}}{{/inherits}} {
+{{#members}}
+	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^defaultValue}}{}{{/defaultValue}};
+{{/members}}
+
+{{#members}}
+	const {{&type}}& {{getterName}}() const {
+		return {{name}};
+	}
+	void {{setterName}}(const {{&type}}& v) {
+		{{name}} = v;
+	}
+{{/members}}
+
+	void applyChange(const message::{{changeType}}& change) {
+{{#members}}
+{{^skipChange}}
+		if (change.{{name}}() != nullptr) {
+			applyChangeImpl({{name}}, *change.{{name}}());
+		}
+{{/skipChange}}
+{{/members}}
+	}
+
+	void toChange(message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
+{{#members}}
+{{^skipChange}}
+		toChangeImpl(&change, &message::{{changeType}}::set_{{name}}, {{name}}, pool);
+{{/skipChange}}
+{{/members}}
+	}
+
+	auto* toChange(kiwi::MemoryPool& pool) const {
+		auto* change = pool.allocate<message::{{changeType}}>();
+		toChange(*change, pool);
+		return change;
+	}
+
+};
+
+{{/structs}}
+
+{{#classes}}
+class {{name}} {{#inherits}}{{.}}{{/inherits}} {
+private:
+{{#members}}
+	{{&type}} {{name}}_{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^defaultValue}}{}{{/defaultValue}};
+{{/members}}
+
+public:
+{{#methods}}
+	
+{{/methods}}
+
+{{#members}}
+	const {{&type}}& {{getterName}}() const {
+		return {{name}}_;
+	}
+	void {{setterName}}(const {{&type}}& v) {
+		{{name}}_ = v;
+	}
+{{/members}}
+
+  {{#isChangeVirtual}}virtual {{/isChangeVirtual}}void applyChange(const message::{{changeType}}& change) {
+{{#members}}
+{{^skipChange}}
+		if (change.{{name}}() != nullptr) {
+			applyChangeImpl({{name}}_, *change.{{name}}());
+		}
+{{/skipChange}}
+{{/members}}
+{{#extends}}
+		{{.}}::applyChange(change);
+{{/extends}}
+	}
+
+	{{#isChangeVirtual}}virtual {{/isChangeVirtual}}void toChange(message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
+{{#members}}
+{{^skipChange}}
+		toChangeImpl(&change, &message::{{changeType}}::set_{{name}}, {{name}}_, pool);
+{{/skipChange}}
+{{/members}}
+{{#extends}}
+		{{.}}::toChange(change, pool);
+{{/extends}}
+	}
+
+};
+
+{{/classes}}
+
+}

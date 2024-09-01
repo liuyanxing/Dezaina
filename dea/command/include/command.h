@@ -1,1 +1,1 @@
-#include "../src/command.h"
+#include "../command.h"

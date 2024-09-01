@@ -1,0 +1,23 @@
+#pragma once
+
+#include "node.h"
+#include "type.generated.h"
+#include "container.h"
+#include "guid.h"
+#include "selection.h"
+
+namespace dea::node
+{
+
+{{#nodes}}
+class {{node}} {{#inherits}}{{.}}{{/inherits}} {
+public:
+  static constexpr NodeType Type = NodeType::{{nodeType}};
+	{{node}}() {
+	  setType(Type);
+	}
+};
+
+{{/nodes}}
+
+} // namespace dea::node

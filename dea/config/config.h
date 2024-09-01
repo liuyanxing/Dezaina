@@ -2,11 +2,11 @@
 
 #include "size.h"
 #include "color.h"
-#include "common/array.h"
+#include "base/array.h"
 #include <cstddef>
 #include <cstdint>
 #include <variant>
-#include "common/const_string.h"
+#include "base/const_string.h"
 
 namespace dea::config {
 

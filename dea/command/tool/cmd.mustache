@@ -1,0 +1,39 @@
+#pragma once
+
+#include "vendor/figma/kiwi.h"
+#include "base/const_string.h"
+#include "vendor/nlohmann/json.hpp"
+#include "base/Data.h"
+#include "cmd.h"
+#include "prims.h"
+
+namespace dea::command {
+
+using json = nlohmann::json;
+
+{{#cmds}}
+struct {{name}} {
+	struct Props {
+		const char* description = "{{description}}";
+	} props;
+
+	struct Args {
+		{{#args}}
+		{{type}} {{name}} = {{default}};
+		{{/args}}
+
+		void parse(const json& args) {
+			{{#args}}
+				if (args.contains("{{name}}")) {
+					{{name}} = args["{{name}}"].get<{{type}}>();
+				}
+			{{/args}}
+		}
+	} args;
+
+	static constexpr CmdId id = base::hash("{{name}}");
+	static constexpr auto condition = {{#condition}}DeaState::{{.}} | {{/condition}} 0;
+};
+{{/cmds}}
+
+} // namespace dea::command

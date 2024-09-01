@@ -1,7 +1,6 @@
 #include "node_utility.h"
 #include "core/SkMatrix.h"
 #include "document.h"
-#include "interaction.h"
 #include "dezaina.h"
 
 namespace dea::utility{
@@ -29,10 +28,6 @@ SkMatrix getWorldMatrix(node::Node* node) {
   return iter.getWorldMatrix();
 }
 
-SkMatrix getWorldMatrix(interaction::InteractionNode* node) {
-  dea::interaction::IterWithWorldMatrix iter{static_cast<node::Node*>((void*)node)};
-  return iter.getWorldMatrix();
-}
 
 NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(node), root_(node_), getParent_(getParent) {}
 

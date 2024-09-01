@@ -1,7 +1,7 @@
 #include "geometry.h"
-#include "common/buffer.h"
+#include "base/buffer.h"
 #include "resource.h"
-#include "common/data.h"
+#include "base/data.h"
 #include "resource.h"
 #include <cassert>
 #include <cstdint>

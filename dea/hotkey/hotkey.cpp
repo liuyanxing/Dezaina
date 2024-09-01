@@ -1,5 +1,5 @@
 #include "hotkey.h"
-#include "common/const_string.h"
+#include "base/const_string.h"
 #include <algorithm>
 
 namespace dea::hotkey {

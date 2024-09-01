@@ -1,4 +1,4 @@
-#include "common/array.h"
+#include "base/array.h"
 
 namespace dea::change {
 
@@ -8,7 +8,7 @@ public:
   UndoRedo() {
   }
 
-  void recordChange(const ChangeItem& change);
+  void recordChange(const ChangeItem& change) {}
 
   void undo() {
     if (current_ == -1) {

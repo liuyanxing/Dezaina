@@ -1,7 +1,9 @@
-#include "document/src/document.h"
+#include "document.h"
 #include "include/core/SkRect.h"
-#include "include/private/base/SkPoint_impl.h"
-#include "node/src/node-base/type.generated.h"
+#include "include/core/SkPoint.h"
+#include "node.h"
+#include "base/data.h"
+#include "resource.h"
 #include "utility/coords.h"
 #include "spdlog/spdlog.h"
 
@@ -9,7 +11,7 @@ namespace dea::document {
 
 using namespace node;
 
-Document::Document(uint32_t sessionId) : sessionId_(sessionId), change_(*this) {
+Document::Document(uint32_t sessionId) : sessionId_(sessionId) {
 	Iter::doc_ = this;
 }
 
@@ -189,11 +191,11 @@ void Document::append(node::Node* parent, node::Node* child) {
 
 void Document::updateNode(message::NodeChange* change) {
   auto* guid = change->guid();
-  auto* node = getNodeById();
+  auto* node = getNodeById({*guid->sessionID(), *guid->localID()});
   if (!node) {
     return;
   }
-  node->update(change);
+  // node->update(change);
 }
 
 void Document::setCurrentPage(node::PageNode* page) {
@@ -216,15 +218,6 @@ void Document::handleViewMatrixChange(const node::Matrix& matrix) {
   if (currentPage_) {
     currentPage_->setTransform(matrix);
   }
-}
-
-void Document::flushEditor() {
-  if (editor_.empty()) {
-    return;
-  }
-
-  Executor executor(*this, editor_);
-  executor.execute();
 }
 
 }

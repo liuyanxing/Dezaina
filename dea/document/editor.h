@@ -51,6 +51,9 @@ public:
   Editor& setSize(float width, float height);
   Editor& setTransform(const node::Matrix& transform);
 
+
+  Editor& setSelectoin();
+
   static const auto& getRecords() { return records_; }
   ~Editor() = default;
 

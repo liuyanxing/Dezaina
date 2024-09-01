@@ -1,1 +1,1 @@
-#include "../src/interaction.h"
+#include "../interaction.h"

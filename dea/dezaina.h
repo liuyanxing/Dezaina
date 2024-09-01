@@ -1,14 +1,8 @@
 #pragma once
 
-#include "common/object.h"
-#include "document/include/document.h"
-#include "document/src/editor.h"
-#include "event/src/emitter.h"
-#include "event/src/event.h"
-#include "event/src/event_system.h"
-#include "event/src/primitives.h"
-#include "interaction/src/interaction.h"
-#include "resource/src/resource.h"
+#include "base/object.h"
+#include "event.h"
+#include "resource.h"
 #include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
 #include "render.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/object.h"
+#include "base/object.h"
 #include "node.h"
 #include "schema/message.h"
 #include <variant>

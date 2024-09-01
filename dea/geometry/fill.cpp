@@ -1,14 +1,8 @@
 #include "geometry.h"
-#include "common/buffer.h"
 #include "resource.h"
-#include "common/data.h"
 #include "resource.h"
-#include "schema/message.h"
 #include <cassert>
-#include <cstdint>
-#include <iostream>
-#include <memory>
-#include <utility>
+#include "node.h"
 
 namespace dea::geometry {
 	using namespace dea::node;

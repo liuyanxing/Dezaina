@@ -1,3 +1,3 @@
-#pragma once
-
-#include "../src/node.generated.h"
+#include "../node.h"
+#include "../type.generated.h"
+#include "../node.generated.h"
