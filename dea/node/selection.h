@@ -1,6 +1,13 @@
 #include <vector>
+#include "node.h"
 
+namespace dea::node {
 class Selection {
-protected:
-	std::vector<int> selection;
+public:
+	auto& getSelection() { return selection; }
+	void setSelection(std::vector<node::GUID>&& nodes) { selection = std::move(nodes) ; }
+private:
+	std::vector<node::GUID> selection;
 };
+
+}

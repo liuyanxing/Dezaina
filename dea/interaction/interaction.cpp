@@ -2,6 +2,7 @@
 #include "dezaina.h"
 #include "document.h"
 #include "node.h"
+#include "node/node.h"
 #include "selection.h"
 #include "spdlog/spdlog.h"
 
@@ -23,7 +24,8 @@ SkSize Interaction::GetItersectBound(node::Vector size) {
 }
 
 void Interaction::updateSelection() {
-  if (selection_.empty()) {
+  auto& selection = doc_.getSelection();
+  if (selection.empty()) {
     if (node_editor_ != nullptr) {
       auto* editorContainer = node_editor_->getContainer();
       page_.removeChild(editorContainer); 
@@ -33,20 +35,18 @@ void Interaction::updateSelection() {
     return;
   }
 
-  if (selection_.getSelection().size() > 1) {
-    // node_editor_ = std::make_unique<NodeEditor>();
+  if (selection.size() > 1) {
   } else {
-    auto* node = selection_.getSelection()[0];
+    auto* node = doc_.getNodeById(selection[0]);
     if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node); !node_editor_) {
-      // node_editor_ = std::make_unique<RectangleEditor>(rectangleNode);
-      node_editor_ = std::make_unique<NodeEditor>(&selection_.getSelection());
+      node_editor_ = std::make_unique<NodeEditor>(node::NodeArary{node});
     }
   }
 
   if (node_editor_ == nullptr) {
     return;
   }
-  node_editor_->update(selection_.getSelectionTransform(), selection_.getSelectionBound());
+  node_editor_->update();
   auto* editorContainer = node_editor_->getContainer();
   if (!page_.findChild(editorContainer)) {
     appendToContainer(editorContainer);
@@ -67,7 +67,20 @@ void Interaction::onEvent(event::Event& event) {
   if (node_editor_ != nullptr) {
     node_editor_->onEvent(event);
   }
+
   selection_.onEvent(event);
+  if (!selection_.empty()) {
+    auto& selection = selection_.getSelection();
+    node::NodeIdArray ids{selection.size()};
+    for (auto* node : selection) {
+      ids.push_back(node->getGuid());
+    }
+    doc_.editor().setSelectoin(ids);
+    selection_.clear();
+  } else {
+    doc_.editor().setSelectoin({});
+  }
+
   creation_.onEvent(event);
 
   InteractionListener::onEvent(event);
@@ -92,6 +105,5 @@ void Interaction::dump() {
   }
   spdlog::info("dump end");
 }
-
 
 }

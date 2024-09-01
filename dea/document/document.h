@@ -67,6 +67,9 @@ public:
 	bool processBlobMessage(kiwi::Array<message::Blob>& blobs);
 	bool processNodeChanges(message::Message& message);
 
+	auto& getSelection() { return currentPage_->getSelection(); }
+	void setSelection(std::vector<node::GUID>&& ids) { currentPage_->setSelection(std::move(ids)); }
+
 	void dump();
 	void dump(node::Node* node) const;
 

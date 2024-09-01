@@ -14,13 +14,14 @@ void Change::flush() {
 
 		switch (item.type) {
 			case ChangeType::Select:
-				// dezaina.setSelection(std::get<node::NodeArary>(item.value));
+				doc.setSelection(std::move(std::get<node::NodeIdArray>(item.value)));
 				break;
 			case ChangeType::NodeChange:
 				doc.updateNode(std::get<message::NodeChange*>(item.value));
 				break;
 		}
 	}
+	clear();
 }
 
 } // namespace dea

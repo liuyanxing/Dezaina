@@ -1,9 +1,7 @@
 #include "selection.h"
 #include "core/SkMatrix.h"
-#include "core/SkSize.h"
 #include "dezaina.h"
 #include "spdlog/spdlog.h"
-#include "utility.h"
 #include "utility/node_utility.h"
 #include "utility/coords.h"
 #include <algorithm>
@@ -29,7 +27,7 @@ void Selection::onMouseMove(MouseEvent& event) {
       auto cursorRect = SkRect::MakeXYWH(local.x() - radius, local.y() - radius, 2 * radius, 2 * radius);
       auto [width, height] = getIntersectBound_(shape->getSize());
       auto bound = SkRect::MakeXYWH(0, 0, width, height);
-      spdlog::info("local: x: {}, y: {}", local.x(), local.y());
+      // spdlog::info("local: x: {}, y: {}", local.x(), local.y());
       if (bound.intersects(cursorRect)) {
         nodes.push_back(node);
       }
@@ -62,32 +60,6 @@ void Selection::setSelection(const std::vector<Node*>& nodes) {
     hoverNode_ = nullptr;
   } 
   selection_ = nodes;
-}
-
-void Selection::setSelection(const std::vector<GUID>& nodesIds) {
-
-}
-
-SkSize Selection::getSelectionBound() const {
-  if (selection_.empty()) {
-    return {0, 0};
-  }
-  if (selection_.size() == 1) {
-    return utility::getScreenSize(selection_[0]);
-  }
-
-  // todo: multiple selection
-  return {0, 0};
-}
-
-SkMatrix Selection::getSelectionTransform() const {
-  if (selection_.empty()) {
-    return SkMatrix::I();
-  }
-  if (selection_.size() == 1) {
-    return utility::getWorldMatrix(selection_[0]);
-  }
-  return SkMatrix::I();
 }
 
 } // namespace dea::interaction

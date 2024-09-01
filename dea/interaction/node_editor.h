@@ -18,7 +18,7 @@ class Desaina;
 
 class NodeEditor {
 public:
-  NodeEditor(const node::NodeArary* nodes) : editNodes_(*nodes), editor_(*nodes) {
+  NodeEditor(const node::NodeArary& nodes) : editNodes_(nodes), editor_(nodes) {
     buildEditor();
   };
 
@@ -30,7 +30,7 @@ public:
 
   Frame* getContainer() { return &container_; }
   virtual void update(const std::vector<node::Node*>& nodes) {};
-  void update(const SkMatrix& transform, const SkSize& bound);
+  void update();
   void appendToContainer(node::Node* node) {
     appendChild(&container_, node);
   }

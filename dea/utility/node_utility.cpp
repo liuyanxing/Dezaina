@@ -28,7 +28,6 @@ SkMatrix getWorldMatrix(node::Node* node) {
   return iter.getWorldMatrix();
 }
 
-
 NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(node), root_(node_), getParent_(getParent) {}
 
 NodeIter::IterDirection NodeIter::operator++() {

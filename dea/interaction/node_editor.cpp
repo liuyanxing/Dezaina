@@ -10,6 +10,7 @@
 #include "utility.h"
 #include "config/config.h"
 #include "utility/coords.h"
+#include "utility/node_utility.h"
 
 namespace dea::interaction {
 
@@ -104,7 +105,19 @@ void NodeEditor::buildEditor() {
     }
 }
 
-void NodeEditor::update(const SkMatrix& transform, const SkSize& size) {
+void NodeEditor::update() {
+  SkMatrix transform;
+  SkSize size;
+  if (editNodes_.empty()) {
+    return;
+  } else if (editNodes_.size() == 1) {
+    auto* node = editNodes_[0];
+    transform = utility::getWorldMatrix(node);
+    size = utility::getScreenSize(node);
+  } else {
+    assert(false);
+  }
+
   container_.setTransform(utility::toMatrix(transform));
   container_.setSize({size.width(), size.height()});
   bound_ctrl_.setSize({size.width(), size.height()});

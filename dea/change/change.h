@@ -14,7 +14,7 @@ enum class ChangeType {
 	NodeChange,
 };
 
-using ChangeValue = std::variant<message::NodeChange*, node::NodeArary>;
+using ChangeValue = std::variant<message::NodeChange*, node::NodeIdArray>;
 
 struct ChangeItem {
 	ChangeType type;
@@ -32,7 +32,7 @@ public:
 
 	void addChange(ChangeType type, ChangeValue&& value) { items_.emplace_back(type, std::move(value)); }
 	auto& getPool() { return pool_; }
-	void clear() { items_.clear(); }
+	void clear() { items_.clear(); pool_.clear(); changeMap_.clear(); }
 	void flush();
 
 private:

@@ -100,6 +100,7 @@ public:
 
 		eventSystem_.fireAllEvents();
 		doc_.flushEditor();
+		change_.flush();
 		eventSystem_.beforeRender();
     render_.render();
     eventSystem_.afterTick();

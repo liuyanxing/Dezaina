@@ -1,6 +1,7 @@
 #pragma once
 
 #include "node.h"
+#include "node/node.h"
 #include <array>
 #include <functional>
 #include <variant>
@@ -8,6 +9,7 @@
 namespace dea::document {
 
 enum class RecordType {
+  kSelection,
   kTranslate,
   kRotate,
   kResize,
@@ -15,15 +17,18 @@ enum class RecordType {
 };
 
 using ResizeValue = std::array<node::Vector, 2>; 
-using RecordValue = std::variant<float, node::Matrix, std::array<float, 2>, std::array<float, 4>, ResizeValue>;
+using RecordValue = std::variant<float, node::Matrix, std::array<float, 2>, std::array<float, 4>, ResizeValue, node::NodeIdArray>;
 
 struct EditRecordItem {
-  EditRecordItem(const node::GUID& layerId, const RecordType& type, const RecordValue& value) : nodeId(layerId), type(type), value(value) {}
   node::GUID nodeId;
   RecordType type;
   RecordValue value;
   static EditRecordItem Make(const node::GUID& layerId, const RecordType& type, const RecordValue& value) {
     EditRecordItem item{layerId, type, value};
+    return item;
+  }
+  static EditRecordItem Make(const RecordType& type, const RecordValue& value) {
+    EditRecordItem item{{}, type, value};
     return item;
   }
 };
@@ -51,8 +56,10 @@ public:
   Editor& setSize(float width, float height);
   Editor& setTransform(const node::Matrix& transform);
 
-
-  Editor& setSelectoin();
+  Editor& setSelectoin(const node::NodeIdArray& selection) {
+    addRecord(EditRecordItem::Make(RecordType::kSelection, selection));
+    return *this;
+  }
 
   static const auto& getRecords() { return records_; }
   ~Editor() = default;

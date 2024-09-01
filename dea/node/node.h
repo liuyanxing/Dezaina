@@ -11,4 +11,5 @@ namespace dea::node {
 	using NodeArary = std::vector<Node*>;
 	using NodeAraryRef = std::vector<Node*>&;
 	using NodeAraryConstRef = const std::vector<Node*>&;
+	using NodeIdArray = std::vector<GUID>;
 }

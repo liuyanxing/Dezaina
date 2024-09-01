@@ -20,6 +20,11 @@ void Document::flushEditor() {
 		auto* nodeChange = change.addNodeChange(node);
 
 		switch (record.type) {
+		case RecordType::kSelection:
+		{
+			change.addChange(change::ChangeType::Select, std::get<node::NodeIdArray>(record.value));			
+			continue;;
+		}
 		case RecordType::kTransform:
 		{
 			auto matrix = pool.allocate<message::Matrix>();

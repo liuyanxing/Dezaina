@@ -18,8 +18,7 @@ public:
   Selection(const GetIntersectBound& getIntersectBound, const utility::NodeIterWithWorldMatrix& iter) : getIntersectBound_(getIntersectBound), iter_(iter) {}
   bool empty() const { return selection_.empty(); }
   node::NodeAraryConstRef getSelection() const { return selection_; }
-  SkSize getSelectionBound() const;
-  SkMatrix getSelectionTransform() const;
+  void clear() { selection_.clear(); hoverNode_ = nullptr; }
   node::NodeConstPtr getHoverNode() const { return hoverNode_; }
   void setIter(const utility::NodeIterWithWorldMatrix& iter) { iter_ = iter; }
 
