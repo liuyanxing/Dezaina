@@ -1,9 +1,15 @@
+includes("xmake/option.lua")
 includes("xmake/package.lua")
 
 set_languages("cxx20")
 
 target("dea")
-		add_packages("skia", "nlohmann_json", "spdlog", {public = true})
+		add_packages("nlohmann_json", "spdlog", {public = true})
+    local enableRender = not has_config("test")
+    if (enableRendert) then
+        add_packages("skia", {public = true})
+        add_defines("DEA_ENABLE_RENDER")
+    end
 
     -- make as a static/shared library
     set_kind("static")
@@ -13,12 +19,19 @@ target("dea")
     add_files("*.cpp")
 
     -- add sub directories
-    for _, name in ipairs({"base", "change", "config", "geometry", "hotkey", "primitives", "schema", "utility", "viewport"}) do
-			add_files("./"..name.."/*.cpp")
+    local subdirs = {"base", "change", "config", "hotkey", "primitives", "schema", "utility", "viewport"}
+    local modules = {"command", "document", "event", "interaction", "layout", "node", "resource"}
+
+    if (enableRender) then
+        table.insert(modules, "render")
+        table.inherit(subdirs, {"render"})
     end
 
+    for _, name in ipairs(subdirs) do
+			add_files("./"..name.."/*.cpp")
+    end
 		-- add sub modules
-    for _, name in ipairs({"command", "document", "event", "interaction", "layout", "node", "render", "resource"}) do
+    for _, name in ipairs(modules) do
         -- add_files("./$(name)/src/*.cpp")
         add_files("./" .. name .. "/*.cpp")
         add_includedirs("./" .. name .. "/include", {public = true})

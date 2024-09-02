@@ -5,12 +5,16 @@
 #include "resource.h"
 #include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
-#include "render.h"
 #include "event.h"
 #include "interaction.h"
 #include "change/change.h"
+#include <memory>
 
 namespace dea {
+
+namespace render {
+	class Render;
+}
 
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
@@ -91,20 +95,7 @@ public:
 		addEventListener(event::EventType::NextTick, listener, true);
 	}
 
-	void tick() {
-    if (!doc_.loaded()) {
-			return;
-    }
-		event::Event event{event::EventType::NextTick};
-		emit(event);
-
-		eventSystem_.fireAllEvents();
-		doc_.flushEditor();
-		change_.flush();
-		eventSystem_.beforeRender();
-    render_.render();
-    eventSystem_.afterTick();
-	}
+	void tick();
 
   auto& getDocument() { return doc_; }
   auto& getViewport() { return viewport_; }
@@ -115,7 +106,7 @@ public:
 private:
 	document::Document doc_;
 	Viewport viewport_;
-	render::Render render_;
+	std::unique_ptr<render::Render> render_;
 	event::EventSystem eventSystem_;
 	interaction::Interaction interaction_;
 	change::Change change_;

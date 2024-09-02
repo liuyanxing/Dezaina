@@ -12,5 +12,14 @@ set_xmakever("2.8.2")
 -- set_warnings("all", "error")
 set_languages("cxxlatest")
 
+option("test")
+		set_default(false)
+		set_showmenu(true)
+		set_description("Build test")
+
 includes("dea")
-includes("app/native")
+includes("test")
+
+if not has_config("test") then
+	includes("app/native")
+end
