@@ -1,11 +1,9 @@
 #pragma once
 
-#include "include/core/SkMatrix.h"
-#include "include/core/SkPoint.h"
 #include <cmath>
 #include <cstdint>
 #include "event.h"
-#include "private/base/SkPoint_impl.h"
+#include "node/node_base.generated.h"
 
 namespace dea {
 class Viewport : public event::EventEmitter {
@@ -45,46 +43,24 @@ public:
 
   void updateVPMatrix() {
     viewProjectionMatrix_ = projectionMatrix_ * viewMatrix_ ;
-    auto noScaleViewMatrix = viewMatrix_;
-    noScaleViewMatrix.setScale(1, 1);
-    worldScreenMatrix_ = projectionMatrix_ * noScaleViewMatrix;
     auto e = event::Event{};
     e.type = event::EventType::ViewportChange;
     emit(e);
   }
 
-  const auto getHudProjectionViewMatrix() {
-    SkMatrix hubMatrix = viewProjectionMatrix_;
-    hubMatrix.postScale(1 / viewMatrix_.getScaleX(), 1 / viewMatrix_.getScaleY());
-    return hubMatrix;
-  }
-
-  SkRect mapWorldToScreen(const SkRect& rect) {
+  auto mapWorldToScreen(const node::Rect& rect) {
     return viewProjectionMatrix_.mapRect(rect);
   }
 
-  SkPoint mapWorldToScreen(const SkPoint& point) {
+  auto mapWorldToScreen(const node::Vector& point) {
     return viewProjectionMatrix_.mapPoint(point);
   }
 
-  SkSize mapWorldToScreen(const SkSize& size) {
-    SkRect rect = mapWorldToScreen(SkRect::MakeWH(size.width(), size.height()));
-    return {rect.width(), rect.height()};
-  }
-
   float mapWorldToScreen(float length) {
-    SkRect rect = SkRect::MakeWH(length, 0);
-    SkRect mapped = viewProjectionMatrix_.mapRect(rect);
-    return mapped.width();
   }
 
-  SkPoint mapScreenToWorld(float x, float y) {
-    SkPoint point;
-    SkMatrix inverse;
-    if (worldScreenMatrix_.invert(&inverse)) {
-      inverse.mapXY(x, y, &point);
-    }
-    return point;
+  node::Vector mapScreenToWorld(float x, float y) {
+    
   }
 
   float mapScreenToWorld(float length) {
@@ -101,10 +77,9 @@ public:
   auto devicePixelRatio()  const { return devicePixelRatio_; }
 
 private:
-	SkMatrix viewMatrix_;
-	SkMatrix projectionMatrix_;
-  SkMatrix viewProjectionMatrix_;
-  SkMatrix worldScreenMatrix_;
+	node::Matrix viewMatrix_;
+	node::Matrix projectionMatrix_;
+  node::Matrix viewProjectionMatrix_;
   uint32_t width_ = 800;
   uint32_t height_ = 600;
   float devicePixelRatio_ = 1;

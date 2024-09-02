@@ -87,7 +87,11 @@ export const structs = [
 				"type": "float",
 				"default": 0
 			}
-		]
+		],
+		"methods": [
+			"Matrix operator*(const Matrix& rhs);",
+			"void translate(float x, float y);",
+		] 
 	},
 	{
 		"name": "Number",
