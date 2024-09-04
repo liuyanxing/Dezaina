@@ -1,16 +1,14 @@
 #include "node_editor.h"
 #include "config/size.h"
-#include "core/SkSize.h"
 #include "dezaina.h"
-#include "include/core/SkMatrix.h"
-#include "include/core/SkRect.h"
+#include "document.h"
 #include "node/rectangle.h"
 #include "node/type.h"
 #include "spdlog/spdlog.h"
 #include "utility.h"
 #include "config/config.h"
 #include "utility/coords.h"
-#include "utility/node_utility.h"
+#include "viewport/viewport.h"
 
 namespace dea::interaction {
 
@@ -19,9 +17,9 @@ using namespace event;
 
 // void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
 //   if (editedNodes_.size() == 1) {
-//     const std::array<SkVector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
+//     const std::array<node::Vector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
 //     const std::array<SkPoint, 4> anchors = {{ { 1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 } } };
-//     auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
+//     auto [dx, dy] = node::Vector{event->deltaX, event->deltaY} * directions[index];
 //     editor_.resize(dx, dy, anchors[index]);
 //   } else {
 //     // todo 处理选中多个图层
@@ -34,7 +32,7 @@ void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
   auto y = event.localY;
   auto& viewport = Dezaina::instance().getViewport();
   auto size = bound_ctrl_.getSize();
-  const auto [width, height] = viewport.mapWorldToScreen(SkSize{size.x, size.y});
+  const auto [width, height] = viewport.mapWorldToScreen(node::Size{size.x, size.y});
   int index = 0;
   bool isDraggingBound = false;
   // auto pointerRadius = config::pointerRadius;
@@ -58,9 +56,9 @@ void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
   }
 
   if (editNodes_.size() == 1) {
-    const std::array<SkVector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
-    const std::array<SkPoint, 4> anchors = {{ { 0.5, 1 }, { 0, 0.5 }, { 0.5, 0 }, { 1, 0.5 } } };
-    // auto [dx, dy] = SkVector{event->deltaX, event->deltaY} * directions[index];
+    const std::array<node::Vector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
+    const std::array<node::Vector, 4> anchors = {{ { 0.5, 1 }, { 0, 0.5 }, { 0.5, 0 }, { 1, 0.5 } } };
+    // auto [dx, dy] = node::Vector{event->deltaX, event->deltaY} * directions[index];
     // editor_.resize(dx, dy, anchors[index]);
   } else {
     // todo 处理选中多个图层
@@ -106,22 +104,23 @@ void NodeEditor::buildEditor() {
 }
 
 void NodeEditor::update() {
-  SkMatrix transform;
-  SkSize size;
+  node::Matrix transform;
+  node::Size size;
   if (editNodes_.empty()) {
     return;
   } else if (editNodes_.size() == 1) {
+    auto& viewport = Dezaina::viewport();
     auto* node = editNodes_[0];
-    transform = utility::getWorldMatrix(node);
-    size = utility::getScreenSize(node);
+    transform = document::getWorldMatrix(node);
+    size = viewport.getScreenSize(node);
   } else {
     assert(false);
   }
 
-  container_.setTransform(utility::toMatrix(transform));
-  container_.setSize({size.width(), size.height()});
-  bound_ctrl_.setSize({size.width(), size.height()});
-  SkRect bound = SkRect::MakeWH(size.width(), size.height()); 
+  container_.setTransform(transform);
+  container_.setSize({size.width, size.height});
+  bound_ctrl_.setSize({size.width, size.height});
+  auto bound = Rect(0, 0, size.width, size.height); 
   layoutRectsToCornersOfRect(nodeResizeCtrls_, bound.makeOutset(2, 2));
   layoutRectsToCornersOfRect(nodeRotateCtrls_, bound.makeOutset(6, 6));
 }

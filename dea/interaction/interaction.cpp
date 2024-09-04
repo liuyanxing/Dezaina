@@ -19,8 +19,8 @@ Interaction::Interaction(Document& doc) : doc_(doc) {
   });
 }
 
-SkSize Interaction::GetItersectBound(node::Vector size) {
-  return  Dezaina::instance().getViewport().mapWorldToScreen(SkSize{size.x, size.y});
+node::Size Interaction::GetItersectBound(node::Vector size) {
+  return  Dezaina::instance().getViewport().mapWorldToScreen(node::Size{size.x, size.y});
 }
 
 void Interaction::updateSelection() {

@@ -1,17 +1,13 @@
 #pragma once
-#include "include/core/SkRect.h"
-#include "include/core/SkPoint.h"
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
 #include <cstdint>
-#include "utility/node_utility.h"
 #include "event.h"
 #include "node.h"
 
 namespace dea::document {
 
 using NodeMap = std::unordered_map<node::GUID, node::Node*>;
-using SkBound = SkRect;
 
 class Document : public event::EventEmitter{
 public:
@@ -53,7 +49,6 @@ public:
 	node::Node* getParent(node::Node* node) { return getNodeById(node->getParentIndex().guid); }
 
   std::vector<node::Node*> getNodes(float x, float y);
-  std::vector<node::Node*> getNodesWithRadius(const SkPoint& point, float radius);
 
   void setCurrentPage(node::PageNode* page);
 	node::Node* getNodeById(const node::GUID& id) const;
@@ -73,16 +68,16 @@ public:
 	void dump();
 	void dump(node::Node* node) const;
 
-class Iter : public utility::NodeIter {
+class Iter : public node::NodeIter {
 public:
-	Iter(node::Node* node) : utility::NodeIter(node, [this](node::Node* node) { return doc_->getParent(node); }) {
+	Iter(node::Node* node) : node::NodeIter(node, [this](node::Node* node) { return doc_->getParent(node); }) {
   }
   static inline Document* doc_ = nullptr;
 };
 
-class IterWithWorldMatrix : public utility::NodeIterWithWorldMatrix {
+class IterWithWorldMatrix : public node::NodeIterWithWorldMatrix {
 public:
-	IterWithWorldMatrix(node::Node* node) : utility::NodeIterWithWorldMatrix(node, [](node::Node* node) { return Iter::doc_->getParent(node); }) {
+	IterWithWorldMatrix(node::Node* node) : node::NodeIterWithWorldMatrix(node, [](node::Node* node) { return Iter::doc_->getParent(node); }) {
   }
 };
 

@@ -12,13 +12,9 @@
 
 namespace dea {
 
-namespace render {
-	class Render;
-}
-
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
-	Dezaina() : doc_(0), viewport_(), render_(doc_, viewport_), eventSystem_(), interaction_(doc_) {
+	Dezaina() : doc_(0), viewport_(), eventSystem_(), interaction_(doc_) {
     resource::Resource::Init();
 		init();
 		eventSystem_.initialized();
@@ -67,7 +63,7 @@ public:
     if (event::isMouse(event)) {
       auto& mouseEvent = static_cast<event::MouseEvent&>(event);
       auto worldCoord = viewport_.mapScreenToWorld(mouseEvent.x, mouseEvent.y);
-      mouseEvent.worldX = worldCoord.x(); mouseEvent.worldY = worldCoord.y();
+      mouseEvent.worldX = worldCoord.x; mouseEvent.worldY = worldCoord.y;
 			mouseEvent.worldDx = viewport_.mapScreenToWorld(mouseEvent.dx);
 			mouseEvent.worldDy = viewport_.mapScreenToWorld(mouseEvent.dy);
     }
@@ -77,8 +73,8 @@ public:
   void dispatchMouseEvent(float x, float y, event::EventType type, int button, int buttons) {
     auto event = event::MouseEvent::Make(x, y, type, button, buttons);
     auto worldCoord = viewport_.mapScreenToWorld(event.x, event.y);
-    event.worldX = worldCoord.x();
-    event.worldY = worldCoord.y();
+    event.worldX = worldCoord.x;
+    event.worldY = worldCoord.y;
     eventSystem_.dispatchEvent(event);
   }
 
@@ -106,7 +102,6 @@ public:
 private:
 	document::Document doc_;
 	Viewport viewport_;
-	std::unique_ptr<render::Render> render_;
 	event::EventSystem eventSystem_;
 	interaction::Interaction interaction_;
 	change::Change change_;

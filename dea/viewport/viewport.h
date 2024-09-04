@@ -3,7 +3,10 @@
 #include <cmath>
 #include <cstdint>
 #include "event.h"
-#include "node/node_base.generated.h"
+#include "node.h"
+#include "node/node.h"
+#include "node/utility.h"
+#include <optional>
 
 namespace dea {
 class Viewport : public event::EventEmitter {
@@ -31,12 +34,12 @@ public:
     return viewMatrix_.getScaleX();
   }
 
-  void setProjectionMatrix(const SkMatrix& matrix) {
+  void setProjectionMatrix(const node::Matrix& matrix) {
     projectionMatrix_ = matrix;
     updateVPMatrix();
   }
 
-  void setViewMatrix(const SkMatrix& matrix) {
+  void setViewMatrix(const node::Matrix& matrix) {
     viewMatrix_ = matrix;
     updateVPMatrix();
   }
@@ -56,6 +59,11 @@ public:
     return viewProjectionMatrix_.mapPoint(point);
   }
 
+  auto mapWorldToScreen(const node::Size& size) {
+    auto [width, height] = viewProjectionMatrix_.mapPoint({size.width, size.height});
+    return node::Size{std::abs(width), std::abs(height)};
+  }
+
   float mapWorldToScreen(float length) {
   }
 
@@ -64,12 +72,13 @@ public:
   }
 
   float mapScreenToWorld(float length) {
-    SkRect rect = SkRect::MakeWH(length, 0);
-    SkMatrix inverse;
-    if (viewProjectionMatrix_.invert(&inverse)) {
-      return std::copysign(inverse.mapRect(rect).width(), length);
-    }
-    return inverse.getMaxScale() * length;
+    auto rect = node::Rect{};
+    auto im = viewProjectionMatrix_.getInverse();
+    return im.value().getScaleX() * length;
+  }
+
+  auto getScreenSize(node::NodeConstPtr node) {
+    return mapWorldToScreen(node::getSize(node));
   }
 
   auto width() const { return width_; }

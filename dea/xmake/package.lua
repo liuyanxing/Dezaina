@@ -85,4 +85,7 @@ add_requires("fmt", {configs = {header_only = true}})
 add_requires("spdlog", {configs = {header_only = true, fmt_external = true}})
 add_requireconfs("spdlog.fmt", {override = true, configs = {header_only = true}})
 add_requires("nlohmann_json")
-add_requires("skia")
+local enableRender = not has_config("test")
+if (enableRendert) then
+    add_requires("skia")
+end

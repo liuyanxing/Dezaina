@@ -1,4 +1,5 @@
 #include "node.generated.h"
+#include <optional>
 
 namespace dea::node {
 	
@@ -14,11 +15,11 @@ namespace dea::node {
 				return result;
 		}
 
-		Matrix Matrix::getInverse() const {
+	  std::optional<Matrix> Matrix::getInverse() const {
 				Matrix result;
 				float det = m00 * m11 - m01 * m10;
 				if (det == 0) {
-						return result;
+						return std::nullopt;
 				}
 				float invDet = 1.0f / det;
 				result.m00 = m11 * invDet;
@@ -30,7 +31,7 @@ namespace dea::node {
 				return result;
 		}
 
-		void Matrix::translation(float x, float y) {
+		void Matrix::translate(float x, float y) {
 			  m02 += x;
 				m12 += y;
 		}

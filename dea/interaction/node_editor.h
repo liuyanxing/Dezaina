@@ -1,7 +1,5 @@
 #pragma once
 
-#include "include/core/SkMatrix.h"
-#include "include/core/SkRect.h"
 #include "node/rectangle.h"
 #include "node/frame.h"
 #include "node/container.h"
@@ -51,10 +49,9 @@ protected:
   node::Node* hoverNode_ = nullptr;
   document::Editor editor_;
   const node::NodeArary& editNodes_;
-  MouseInteraction mouseInteraction_{[](node::Vector size) { return SkSize{size.x, size.y}; }, IterWithWorldMatrix{&container_}};
+  MouseInteraction mouseInteraction_{Selection{[](node::Vector size) { return node::Size{size.x, size.y}; }, IterWithWorldMatrix{&container_}}};
 
   void buildEditor();
-  SkRect caculateSelectionBound();
   void handleDragBoundCtrlNode(event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);

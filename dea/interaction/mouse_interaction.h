@@ -1,7 +1,6 @@
 #pragma once
 
 #include "selection.h"
-#include "utility/node_utility.h"
 #include "node/type.h"
 #include "event.h"
 
@@ -9,8 +8,8 @@ namespace dea::interaction {
 
 class MouseInteraction : public InteractionListener {
 public:
-	MouseInteraction(const GetIntersectBound& getIntersectBound, const utility::NodeIterWithWorldMatrix& iter) :
-		selection_(getIntersectBound, iter) {}
+	MouseInteraction(const Selection& selection) :
+		selection_(selection) {}
 private:
 	Selection selection_;
 	void onMouseDrag(event::MouseEvent& event) override {

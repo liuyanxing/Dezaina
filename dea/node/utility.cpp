@@ -1,31 +1,27 @@
-#include "node_utility.h"
-#include "core/SkMatrix.h"
-#include "document.h"
-#include "dezaina.h"
+#include "utility.h"
+#include "node/node.h"
+#include "type.generated.h"
+#include "node.generated.h"
+#include "container.h"
 
-namespace dea::utility{
+namespace dea::node{
 
-SkMatrix getTransfromMatrix(node::Node* node) {
+node::Matrix getTransfromMatrix(node::Node* node) {
   if (auto* page = node::node_cast<const node::PageNode*>(node)) {
-    return SkMatrix::I();
+    return node::Matrix();
   }
   if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
-    return utility::toSkMatrix(shape->getTransform());
+    return shape->getTransform();
   }
-  return SkMatrix::I();
+  return node::Matrix();
 }
 
-SkSize getScreenSize(node::Node* node) {
+node::Size getSize(node::NodeConstPtr node) {
   if (auto* shape = node::node_cast<const node::DefaultShapeNode*>(node)) {
     auto& size = shape->getSize();
-    return Dezaina::instance().getViewport().mapWorldToScreen(SkSize{size.x, size.y});
+    return {size.x, size.y};
   }
-  return {0, 0};
-}
-
-SkMatrix getWorldMatrix(node::Node* node) {
-  document::Document::IterWithWorldMatrix iter{node};
-  return iter.getWorldMatrix();
+  return node::Size();
 }
 
 NodeIter::NodeIter(node::Node* node, const GetParentFunc& getParent) : node_(node), root_(node_), getParent_(getParent) {}
@@ -77,11 +73,11 @@ NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node* node, const GetPare
   worldStack_.push_back(world_);
 }
 
-SkMatrix NodeIterWithWorldMatrix::getWorldMatrixImpl(node::Node* node) {
+node::Matrix NodeIterWithWorldMatrix::getWorldMatrixImpl(node::Node* node) {
   if (auto* page = node::node_cast<node::PageNode*>(node)) {
-    return SkMatrix::I();
+    return node::Matrix();
   }
-  SkMatrix world = getTransfromMatrix(node);
+  node::Matrix world = getTransfromMatrix(node);
   auto* parent = getParent_(node);
   while (parent && !node::node_cast<node::PageNode*>(parent)) {
     world = getTransfromMatrix(parent) * world;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "include/private/base/SkPoint_impl.h"
 #include "node_editor.h"
 
 namespace dea::interaction {
@@ -14,7 +13,7 @@ class RectangleEditor : public NodeEditor {
 
 private:
   std::array<Rectangle, 4> cornerSizeCtrls_;
-  void handleDragResizeCornerCtrl(int index, const SkVector& moveAxis, event::MouseEvent &event);
+  void handleDragResizeCornerCtrl(int index, const node::Vector& moveAxis, event::MouseEvent &event);
   node::RectangleNode* node_;
 };
 

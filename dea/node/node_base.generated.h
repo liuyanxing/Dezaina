@@ -267,8 +267,8 @@ enum class WindingRule {
 
 
 struct GUID  {
-	uint sessionID{};
-	uint localID{};
+	uint sessionID{ 0 };
+	uint localID{ 0 };
 
 	const uint& getSessionID() const {
 		return sessionID;
@@ -306,8 +306,8 @@ struct GUID  {
 };
 
 struct Vector  {
-	float x{};
-	float y{};
+	float x{ 0 };
+	float y{ 0 };
 
 	const float& getX() const {
 		return x;
@@ -345,10 +345,10 @@ struct Vector  {
 };
 
 struct Rect  {
-	float x{};
-	float y{};
-	float w{};
-	float h{};
+	float x{  };
+	float y{  };
+	float w{  };
+	float h{  };
 
 	const float& getX() const {
 		return x;
@@ -374,6 +374,13 @@ struct Rect  {
 	void setH(const float& v) {
 		h = v;
 	}
+	static Rect MakeXYWH(float x, float y, float w, float h);
+	static Rect MakeWH(float width, float height);
+	bool contains(const Vector& point) const;
+	bool intersects(const Rect& rect) const;
+	Rect intersection(const Rect& rect) const;
+	Rect unite(const Rect& rect) const;
+	Rect makeOutset(float dx, float dy);
 
 	void applyChange(const message::Rect& change) {
 		if (change.x() != nullptr) {
@@ -406,12 +413,12 @@ struct Rect  {
 };
 
 struct Matrix  {
-	float m00{};
-	float m01{};
-	float m02{};
-	float m10{};
-	float m11{};
-	float m12{};
+	float m00{ 1 };
+	float m01{ 0 };
+	float m02{ 0 };
+	float m10{ 0 };
+	float m11{ 1 };
+	float m12{ 0 };
 
 	const float& getM00() const {
 		return m00;
@@ -449,6 +456,19 @@ struct Matrix  {
 	void setM12(const float& v) {
 		m12 = v;
 	}
+	Matrix operator*(const Matrix& rhs) const;
+	Vector operator*(const Vector& rhs) const;
+	void translate(float x, float y);
+	std::optional<Matrix> getInverse() const;
+	float getScaleX() const { return m00; }
+	Rect mapRect(const Rect& rect) const;
+	Vector mapPoint(const Vector& point) const;
+	Vector mapVector(const Vector& vector) const;
+	void reset() { *this = Matrix(); }
+	void setTranslate(float x, float y) { m02 = x; m12 = y; }
+	void preTranslate(float x, float y);
+	void preScale(float x, float y);
+	void preScale(float x, float y, float cx, float cy);
 
 	void applyChange(const message::Matrix& change) {
 		if (change.m00() != nullptr) {
@@ -489,8 +509,8 @@ struct Matrix  {
 };
 
 struct Number  {
-	float value{};
-	NumberUnits units{};
+	float value{  };
+	NumberUnits units{  };
 
 	const float& getValue() const {
 		return value;
@@ -528,10 +548,10 @@ struct Number  {
 };
 
 struct Color  {
-	float r{};
-	float g{};
-	float b{};
-	float a{};
+	float r{ 0 };
+	float g{ 0 };
+	float b{ 0 };
+	float a{ 1 };
 
 	const float& getR() const {
 		return r;
@@ -589,7 +609,7 @@ struct Color  {
 };
 
 struct Effect  {
-	EffectType type{};
+	EffectType type{  };
 
 	const EffectType& getType() const {
 		return type;
@@ -617,13 +637,13 @@ struct Effect  {
 };
 
 struct DropShadowEffect  {
-	Color color{};
-	Vector offset{};
-	float radius{};
-	float spread{};
-	bool visible{};
-	BlendMode blendMode{};
-	bool showShadowBehindNode{};
+	Color color{  };
+	Vector offset{  };
+	float radius{ 0 };
+	float spread{ 0 };
+	bool visible{ true };
+	BlendMode blendMode{  };
+	bool showShadowBehindNode{ false };
 
 	const Color& getColor() const {
 		return color;
@@ -711,12 +731,12 @@ struct DropShadowEffect  {
 };
 
 struct InnerShadowEffect  {
-	Color color{};
-	Vector offset{};
-	float radius{};
-	float spread{};
-	bool visible{};
-	BlendMode blendMode{};
+	Color color{  };
+	Vector offset{  };
+	float radius{ 10 };
+	float spread{ 0 };
+	bool visible{ true };
+	BlendMode blendMode{  };
 
 	const Color& getColor() const {
 		return color;
@@ -794,8 +814,8 @@ struct InnerShadowEffect  {
 };
 
 struct BlurEffect  {
-	float radius{};
-	bool visible{};
+	float radius{ 10 };
+	bool visible{ true };
 
 	const float& getRadius() const {
 		return radius;
@@ -833,8 +853,8 @@ struct BlurEffect  {
 };
 
 struct ColorStop  {
-	float position{};
-	Color color{};
+	float position{ 0 };
+	Color color{  };
 
 	const float& getPosition() const {
 		return position;
@@ -872,10 +892,10 @@ struct ColorStop  {
 };
 
 struct Paint  {
-	PaintType type{};
-	bool visible{};
-	float opacity{};
-	BlendMode blendMode{};
+	PaintType type{  };
+	bool visible{ true };
+	float opacity{ 1 };
+	BlendMode blendMode{  };
 
 	const PaintType& getType() const {
 		return type;
@@ -933,7 +953,7 @@ struct Paint  {
 };
 
 struct SolidPaint : public Paint {
-	Color color{};
+	Color color{  };
 
 	const Color& getColor() const {
 		return color;
@@ -961,8 +981,8 @@ struct SolidPaint : public Paint {
 };
 
 struct GradientPaint : public Paint {
-	Matrix transform{};
-	Array<ColorStop> stops{};
+	Matrix transform{  };
+	Array<ColorStop> stops{  };
 
 	const Matrix& getTransform() const {
 		return transform;
@@ -1000,8 +1020,8 @@ struct GradientPaint : public Paint {
 };
 
 struct ImagePaint : public Paint {
-	ImageScaleMode imageScaleMode{};
-	Matrix transform{};
+	ImageScaleMode imageScaleMode{  };
+	Matrix transform{  };
 
 	const ImageScaleMode& getImageScaleMode() const {
 		return imageScaleMode;
@@ -1039,8 +1059,8 @@ struct ImagePaint : public Paint {
 };
 
 struct Path  {
-	WindingRule windingRule{};
-	uint commandsBlob{};
+	WindingRule windingRule{  };
+	uint commandsBlob{  };
 
 	const WindingRule& getWindingRule() const {
 		return windingRule;
@@ -1078,8 +1098,8 @@ struct Path  {
 };
 
 struct ParentIndex  {
-	GUID guid{};
-	string position{};
+	GUID guid{  };
+	string position{  };
 
 	const GUID& getGuid() const {
 		return guid;
@@ -1117,8 +1137,8 @@ struct ParentIndex  {
 };
 
 struct AssetRef  {
-	string key{};
-	string version{};
+	string key{  };
+	string version{  };
 
 	const string& getKey() const {
 		return key;
@@ -1156,8 +1176,8 @@ struct AssetRef  {
 };
 
 struct StyleId  {
-	GUID guid{};
-	AssetRef assetRef{};
+	GUID guid{  };
+	AssetRef assetRef{  };
 
 	const GUID& getGuid() const {
 		return guid;
@@ -1195,9 +1215,9 @@ struct StyleId  {
 };
 
 struct ArcData  {
-	float startingAngle{};
-	float endingAngle{};
-	float innerRadius{};
+	float startingAngle{ 0 };
+	float endingAngle{ 6.2831854820251465 };
+	float innerRadius{ 0 };
 
 	const float& getStartingAngle() const {
 		return startingAngle;
@@ -1245,7 +1265,7 @@ struct ArcData  {
 };
 
 struct VectorData  {
-	uint vectorNetworkBlob{};
+	uint vectorNetworkBlob{  };
 
 	const uint& getVectorNetworkBlob() const {
 		return vectorNetworkBlob;
@@ -1273,11 +1293,11 @@ struct VectorData  {
 };
 
 struct Glyph  {
-	uint styleID{};
-	uint commandsBlob{};
-	Vector position{};
-	float fontSize{};
-	float advance{};
+	uint styleID{  };
+	uint commandsBlob{  };
+	Vector position{  };
+	float fontSize{  };
+	float advance{  };
 
 	const uint& getStyleID() const {
 		return styleID;
@@ -1345,7 +1365,7 @@ struct Glyph  {
 };
 
 struct Decoration  {
-	Array<Rect> rects{};
+	Array<Rect> rects{  };
 
 	const Array<Rect>& getRects() const {
 		return rects;
@@ -1373,13 +1393,13 @@ struct Decoration  {
 };
 
 struct Baseline  {
-	Vector position{};
-	float width{};
-	float lineY{};
-	float lineHeight{};
-	float lineAscent{};
-	uint firstCharacter{};
-	uint endCharacter{};
+	Vector position{  };
+	float width{  };
+	float lineY{  };
+	float lineHeight{  };
+	float lineAscent{  };
+	uint firstCharacter{  };
+	uint endCharacter{  };
 
 	const Vector& getPosition() const {
 		return position;
@@ -1467,12 +1487,12 @@ struct Baseline  {
 };
 
 struct TextData  {
-	string characters{};
-	Buffer styleOverrideTable{};
-	Vector layoutSize{};
-	Array<Baseline> baselines{};
-	Array<Glyph> glyphs{};
-	Array<Decoration> decorations{};
+	string characters{  };
+	Buffer styleOverrideTable{  };
+	Vector layoutSize{  };
+	Array<Baseline> baselines{  };
+	Array<Glyph> glyphs{  };
+	Array<Decoration> decorations{  };
 
 	const string& getCharacters() const {
 		return characters;
@@ -1550,9 +1570,9 @@ struct TextData  {
 };
 
 struct SymbolData  {
-	GUID symbolID{};
-	Buffer symbolOverrides{};
-	float uniformScaleFactor{};
+	GUID symbolID{  };
+	Buffer symbolOverrides{  };
+	float uniformScaleFactor{  };
 
 	const GUID& getSymbolID() const {
 		return symbolID;

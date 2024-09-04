@@ -21,7 +21,7 @@ public:
 
   void dump();
 
-  static SkSize GetItersectBound(node::Vector size);
+  static node::Size GetItersectBound(node::Vector size);
 
 private:
   Page page_;
