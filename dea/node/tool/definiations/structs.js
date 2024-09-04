@@ -29,6 +29,23 @@ export const structs = [
 				"type": "float",
 				"default": 0
 			}
+		],
+		"methods": [
+			"float length() const;",
+			"void normalize();",
+			"Vector operator+(const Vector& rhs) const;",
+			"Vector operator-(const Vector& rhs) const;",
+			"Vector operator*(float rhs) const;",
+			"Vector operator/(float rhs) const;",
+			"Vector operator-() const;",
+			"Vector& operator+=(const Vector& rhs);",
+			"Vector& operator-=(const Vector& rhs);",
+			"Vector& operator*=(float rhs);",
+			"Vector& operator/=(float rhs);",
+			"bool operator==(const Vector& rhs) const;",
+			"bool operator!=(const Vector& rhs) const;",
+			"float dot(const Vector& rhs) const;",
+			"float cross(const Vector& rhs) const;",
 		]
 	},
 	{

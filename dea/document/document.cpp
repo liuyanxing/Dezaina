@@ -90,41 +90,41 @@ bool Document::processNodeChanges(message::Message& message) {
 			using message::NodeType;
 			switch (type) {
 				case NodeType::DOCUMENT:
-					node = createNode<DocumentNode>();
+					node = buildNode<DocumentNode>();
 					break;
 				case NodeType::CANVAS:
-					node = createNode<PageNode>(id);
+					node = buildNode<PageNode>(id);
 					break;
 				case NodeType::FRAME:
-					node = createNode<FrameNode>(id);
+					node = buildNode<FrameNode>(id);
 					break;
 				case NodeType::RECTANGLE:
 				case NodeType::ROUNDED_RECTANGLE:
-					node = createNode<RectangleNode>(id);
+					node = buildNode<RectangleNode>(id);
 					break;
 				case NodeType::VECTOR:
-					node = createNode<VectorNode>(id);
+					node = buildNode<VectorNode>(id);
 					break;
 				case NodeType::STAR:
-					node = createNode<StarNode>(id);
+					node = buildNode<StarNode>(id);
 					break;
 				case NodeType::LINE:
-					node = createNode<LineNode>(id);
+					node = buildNode<LineNode>(id);
 					break;
 				case NodeType::ELLIPSE:
-					node = createNode<EllipseNode>(id);
+					node = buildNode<EllipseNode>(id);
 					break;
 				case NodeType::REGULAR_POLYGON:
-					node = createNode<PolygonNode>(id);
+					node = buildNode<PolygonNode>(id);
 					break;
 				case NodeType::TEXT:
-					node = createNode<TextNode>(id);
+					node = buildNode<TextNode>(id);
 					break;
 				case NodeType::SYMBOL:
-					node = createNode<SymbolNode>(id);
+					node = buildNode<SymbolNode>(id);
 					break;
 				case NodeType::INSTANCE:
-					node = createNode<InstanceNode>(id);
+					node = buildNode<InstanceNode>(id);
 					break;
 				default:
 					assert(false);
@@ -154,14 +154,22 @@ void Document::append(node::Node* child) {
     return;
   }
 
-  append(getParent(child), child);
+  append(child, getParent(child));
 }
 
-void Document::append(node::Node* parent, node::Node* child) {
+void Document::append(node::Node* child, node::Node* parent) {
   if (!parent) {
     return;
   }
-  node::Container::append(parent, child);
+
+	if (child->getParentIndex().guid != parent->getGuid()) {
+		auto parentIndex = child->getParentIndex();
+		parentIndex.guid = parent->getGuid();	
+		child->setParentIndex(parentIndex);
+		editor_.setParent(child);
+	}
+
+	node::Container::append(child, parent);
 }
 
 void Document::updateNode(message::NodeChange* change) {

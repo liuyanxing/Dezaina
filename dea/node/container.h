@@ -60,15 +60,7 @@ public:
     return !firstChild_;
   };
 	
-  static void append(Node* parent, Node* child) {
-    if (!parent) {
-      return;
-    }
-    auto container = node_cast<Container*>(parent);
-    if (container) {
-      container->appendChild(child);
-    }
-  };
+  static void append(Node* child, Node* parent);
 protected:
   Node* firstChild_ = nullptr;
   Node* lastChild_ = nullptr;

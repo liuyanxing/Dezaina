@@ -4,6 +4,12 @@
 namespace dea::document {
 using namespace dea::node;
 
+
+Editor& Editor::create(node::Node* node) {
+  addRecord(EditRecordItem::Make(RecordType::kCreate, node));
+  return *this;
+}
+
 void Editor::editNodes(std::function<void(Node*)> cb) {
   for (auto* node : nodes_) {
     cb(node);

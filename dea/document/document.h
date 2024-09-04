@@ -1,4 +1,5 @@
 #pragma once
+
 #include "vendor/figma/kiwi.h"
 #include "editor.h"
 #include <cstdint>
@@ -14,7 +15,7 @@ public:
 	Document(uint32_t sessionId);
 
 	template<typename T>
-	T* createNode(const node::GUID& id) {
+	T* buildNode(const node::GUID& id) {
 		auto* node = new T();
 		node->setGuid(id);
 		nodeMap_[id] = node;
@@ -22,7 +23,17 @@ public:
 	};
 
 	template<typename T>
-	T* createNode() { return createNode<T>(node::GUID{sessionId_, localId_++}); };
+	T* buildNode() { return buildNode<T>(node::GUID{sessionId_, localId_++}); };
+
+	template<typename T>
+	T* createNode(const node::GUID& id) {
+		auto* node = buildNode<T>(id);
+		editor_.create(node);
+		return node;
+	};
+
+	template<typename T>
+	T* createNode() { return buildNode<T>(node::GUID{sessionId_, localId_++}); };
 
 	bool load(char* data, size_t size) {
 		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data), size);

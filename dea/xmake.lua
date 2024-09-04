@@ -28,7 +28,6 @@ target("dea")
 
     if (enableRender) then
         table.insert(modules, "render")
-        table.inherit(subdirs, {"render"})
     end
 
     for _, name in ipairs(subdirs) do
