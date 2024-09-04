@@ -2,6 +2,7 @@
 
 #include "base/object.h"
 #include "event.h"
+#include "interaction/interaction.h"
 #include "resource.h"
 #include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
@@ -39,7 +40,10 @@ public:
 		return instance().viewport_;
 	}
 
-	void init();
+	static interaction::Interaction& interaction() {
+		return instance().interaction_;
+	}
+
 
 	bool loadDocument(char* data, size_t size) {
 		auto res = doc_.load(data, size);
@@ -64,8 +68,8 @@ public:
       auto& mouseEvent = static_cast<event::MouseEvent&>(event);
       auto worldCoord = viewport_.mapScreenToWorld(mouseEvent.x, mouseEvent.y);
       mouseEvent.worldX = worldCoord.x; mouseEvent.worldY = worldCoord.y;
-			mouseEvent.worldDx = viewport_.mapScreenToWorld(mouseEvent.dx);
-			mouseEvent.worldDy = viewport_.mapScreenToWorld(mouseEvent.dy);
+			mouseEvent.worldDx = viewport_.getWorldSize(mouseEvent.dx);
+			mouseEvent.worldDy = viewport_.getWorldSize(mouseEvent.dy);
     }
     eventSystem_.dispatchEvent(event);
 	}
@@ -105,6 +109,7 @@ private:
 	event::EventSystem eventSystem_;
 	interaction::Interaction interaction_;
 	change::Change change_;
+	void init();
 };
 
 }

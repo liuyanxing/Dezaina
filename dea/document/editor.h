@@ -4,11 +4,14 @@
 #include "node/node.h"
 #include <array>
 #include <functional>
+#include <tuple>
 #include <variant>
 
 namespace dea::document {
 
 enum class RecordType {
+  kCreate,
+  kSetParent,
   kSelection,
   kTranslate,
   kRotate,
@@ -17,7 +20,8 @@ enum class RecordType {
 };
 
 using ResizeValue = std::array<node::Vector, 2>; 
-using RecordValue = std::variant<float, node::Matrix, std::array<float, 2>, std::array<float, 4>, ResizeValue, node::NodeIdArray>;
+using CreateNodeValue = std::tuple<node::NodeType, node::Node*>;
+using RecordValue = std::variant<float, node::Matrix, node::Node*, std::array<float, 2>, std::array<float, 4>, ResizeValue, node::NodeIdArray, CreateNodeValue>;
 
 struct EditRecordItem {
   node::GUID nodeId;
@@ -42,6 +46,8 @@ public:
   bool empty() const { return records_.empty(); }
 
   bool editSelectedNodes();
+  Editor& create(node::Node* node);
+  Editor& setParent(node::Node* node) { addRecord(EditRecordItem::Make(RecordType::kSetParent, node)); return *this; }
   Editor& createAndSelect(node::NodeType type, node::Node* parent);
   Editor& setEditNodes(std::vector<node::Node*> nodes);
   Editor& rotate(float degrees);

@@ -5,6 +5,7 @@
 #include "event.h"
 #include "node.h"
 #include "node/node.h"
+#include "node/node_base.generated.h"
 #include "node/utility.h"
 #include <optional>
 
@@ -51,30 +52,27 @@ public:
     emit(e);
   }
 
-  auto mapWorldToScreen(const node::Rect& rect) {
-    return viewProjectionMatrix_.mapRect(rect);
-  }
-
   auto mapWorldToScreen(const node::Vector& point) {
-    return viewProjectionMatrix_.mapPoint(point);
+    return viewProjectionMatrix_ * point;
   }
 
   auto mapWorldToScreen(const node::Size& size) {
-    auto [width, height] = viewProjectionMatrix_.mapPoint({size.width, size.height});
+    auto [width, height] = viewProjectionMatrix_ * node::Vector{size.width, size.height};
     return node::Size{std::abs(width), std::abs(height)};
   }
 
-  float mapWorldToScreen(float length) {
+  auto mapScreenToWorld(float x, float y) {
+    auto inv = viewProjectionMatrix_.getInverse().value_or(node::Matrix{});
+    return inv.mapVector(node::Vector{x, y});
   }
 
-  node::Vector mapScreenToWorld(float x, float y) {
-    
+  auto getWorldSize(float length) {
+    return mapScreenToWorld(length, 0).x;
   }
 
-  float mapScreenToWorld(float length) {
-    auto rect = node::Rect{};
-    auto im = viewProjectionMatrix_.getInverse();
-    return im.value().getScaleX() * length;
+  // get the size of a world unit in screen space
+  auto getScreenSize(float length) {
+    return mapWorldToScreen(node::Vector{1, 0}).length() * length;
   }
 
   auto getScreenSize(node::NodeConstPtr node) {

@@ -18,6 +18,7 @@ public:
   Interaction(document::Document& doc);
 
   auto* root() { return &page_; }
+  auto& getNodeEditor() { return node_editor_; }
 
   void dump();
 

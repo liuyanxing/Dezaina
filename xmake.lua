@@ -18,8 +18,9 @@ option("test")
 		set_description("Build test")
 
 includes("dea")
-includes("test")
 
-if not has_config("test") then
+if has_config("test") then
+	includes("test")
+else
 	includes("app/native")
 end

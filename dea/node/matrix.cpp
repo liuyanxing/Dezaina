@@ -35,4 +35,34 @@ namespace dea::node {
 			  m02 += x;
 				m12 += y;
 		}
+
+		Vector Matrix::operator*(const Vector& rhs) const {
+				return Vector(m00 * rhs.x + m01 * rhs.y + m02, m10 * rhs.x + m11 * rhs.y + m12);
+		}
+		
+		Vector Matrix::mapPoint(const Vector& point) const {
+				return *this * point;
+		}
+
+		Vector Matrix::mapVector(const Vector& vector) const {
+				return Vector(m00 * vector.x + m01 * vector.y, m10 * vector.x + m11 * vector.y);
+		}
+
+		void Matrix::preTranslate(float x, float y) {
+				m02 += x * m00 + y * m01;
+				m12 += x * m10 + y * m11;
+		}
+
+		void Matrix::preScale(float x, float y) {
+				m00 *= x;
+				m01 *= y;
+				m10 *= x;
+				m11 *= y;
+		}
+
+		void Matrix::preScale(float x, float y, float cx, float cy) {
+				preTranslate(cx, cy);
+				preScale(x, y);
+				preTranslate(-cx, -cy);
+		}
 }
