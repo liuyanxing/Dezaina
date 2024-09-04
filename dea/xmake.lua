@@ -1,15 +1,19 @@
 includes("xmake/option.lua")
 includes("xmake/package.lua")
+includes("node")
 
 set_languages("cxx20")
 
 target("dea")
 		add_packages("nlohmann_json", "spdlog", {public = true})
+
     local enableRender = not has_config("test")
     if (enableRendert) then
         add_packages("skia", {public = true})
         add_defines("DEA_ENABLE_RENDER")
     end
+
+    add_deps("genNode")
 
     -- make as a static/shared library
     set_kind("static")

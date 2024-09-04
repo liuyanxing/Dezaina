@@ -1,5 +1,4 @@
 #include "rectangle_editor.h"
-#include "include/private/base/SkPoint_impl.h"
 #include "node/rectangle.h"
 #include "dezaina.h"
 #include <cassert>
@@ -15,9 +14,9 @@ RectangleEditor::RectangleEditor(node::RectangleNode* node) : node_(node), NodeE
 }
 
 void RectangleEditor::buildEditor() {
-  SkVector moveAxises[4] = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
+  node::Vector moveAxises[4] = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
   for (int i = 0; i < 4; i++) {
-    SkVector::Normalize(&moveAxises[i]);
+    // node::Vector::Normalize(&moveAxises[i]);
     auto& ctrl = cornerSizeCtrls_[i];
     ctrl.setSize({20, 20});
     ctrl.addEventListener(event::EventType::MouseDrag, [this, i, moveAxises](event::Event &event) {
@@ -27,8 +26,7 @@ void RectangleEditor::buildEditor() {
   }
 }
 
-void RectangleEditor::handleDragResizeCornerCtrl(int index, const SkVector& moveAxis, event::MouseEvent &event) {
-  auto delta = moveAxis.cross({event.worldDx, event.dy});
+void RectangleEditor::handleDragResizeCornerCtrl(int index, const node::Vector& moveAxis, event::MouseEvent &event) {
   // auto* editor = desaina_->getEditor();
   // editor->resizeCornerRadius(delta);
 }

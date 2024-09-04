@@ -51,6 +51,15 @@ export const structs = [
 				"name": "h",
 				"type": "float"
 			}
+		],
+		methods: [
+			"static Rect MakeXYWH(float x, float y, float w, float h);",
+			"static Rect MakeWH(float width, float height);",
+			"bool contains(const Vector& point) const;",
+			"bool intersects(const Rect& rect) const;",
+			"Rect intersection(const Rect& rect) const;",
+			"Rect unite(const Rect& rect) const;",
+			"Rect makeOutset(float dx, float dy);",
 		]
 	},
 	{
@@ -89,8 +98,19 @@ export const structs = [
 			}
 		],
 		"methods": [
-			"Matrix operator*(const Matrix& rhs);",
+			"Matrix operator*(const Matrix& rhs) const;",
+			"Vector operator*(const Vector& rhs) const;",
 			"void translate(float x, float y);",
+			"std::optional<Matrix> getInverse() const;",
+			"float getScaleX() const { return m00; }",
+			"Rect mapRect(const Rect& rect) const;",
+			"Vector mapPoint(const Vector& point) const;",
+			"Vector mapVector(const Vector& vector) const;",
+			"void reset() { *this = Matrix(); }",
+			"void setTranslate(float x, float y) { m02 = x; m12 = y; }",
+			"void preTranslate(float x, float y);",
+			"void preScale(float x, float y);",
+			"void preScale(float x, float y, float cx, float cy);",
 		] 
 	},
 	{

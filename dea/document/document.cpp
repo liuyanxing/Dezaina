@@ -1,6 +1,4 @@
 #include "document.h"
-#include "include/core/SkRect.h"
-#include "include/core/SkPoint.h"
 #include "node.h"
 #include "base/data.h"
 #include "resource.h"
@@ -30,29 +28,6 @@ void Document::dump(node::Node* node) const {
     spdlog::info("{}", getNodeTypeString(node));
     ++iter;
   }
-}
-
-std::vector<node::Node*> Document::getNodesWithRadius(const SkPoint& point, float radius) {
-  std::vector<node::Node*> nodes;
-  if (!currentPage_) {
-    return nodes;
-  }
-
-  IterWithWorldMatrix iter(currentPage_);
-  while (iter.isValid()) {
-    auto* node = iter.get();
-    if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
-      auto local = utility::mapPointToLocal(point, iter.getWorldMatrix());
-      auto localRect = SkRect::MakeXYWH(local.x() - radius / 2, local.y() - radius / 2, radius, radius);
-      auto size = shape->getSize();
-      auto bound = SkRect::MakeXYWH(0, 0, size.x, size.y);
-      if (bound.intersects(localRect)) {
-        nodes.push_back(node);
-      }
-    }
-    ++iter;
-  }
-  return nodes;
 }
 
 bool Document::applyMessage(kiwi::ByteBuffer& buffer) {

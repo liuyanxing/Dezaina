@@ -1,8 +1,6 @@
 #include "selection.h"
-#include "core/SkMatrix.h"
 #include "dezaina.h"
 #include "spdlog/spdlog.h"
-#include "utility/node_utility.h"
 #include "utility/coords.h"
 #include <algorithm>
 
@@ -23,10 +21,10 @@ void Selection::onMouseMove(MouseEvent& event) {
     if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
       auto matrix = viewport.getVPMatrix() * iter.getWorldMatrix();
       auto local = utility::mapPointToLocal({event.x, event.y}, matrix);
-      event.localX = local.x(); event.localY = local.y();
-      auto cursorRect = SkRect::MakeXYWH(local.x() - radius, local.y() - radius, 2 * radius, 2 * radius);
+      event.localX = local.x; event.localY = local.y;
+      auto cursorRect = Rect{local.x - radius, local.y - radius, 2 * radius, 2 * radius};
       auto [width, height] = getIntersectBound_(shape->getSize());
-      auto bound = SkRect::MakeXYWH(0, 0, width, height);
+      auto bound = Rect{0, 0, width, height};
       // spdlog::info("local: x: {}, y: {}", local.x(), local.y());
       if (bound.intersects(cursorRect)) {
         nodes.push_back(node);

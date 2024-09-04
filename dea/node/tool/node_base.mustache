@@ -39,7 +39,7 @@ enum class {{name}} {
 {{#structs}}
 struct {{name}} {{#inherits}}{{.}}{{/inherits}} {
 {{#members}}
-	{{&type}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^defaultValue}}{}{{/defaultValue}};
+	{{&type}} {{name}}{ {{{default}}} };
 {{/members}}
 
 {{#members}}
@@ -50,6 +50,9 @@ struct {{name}} {{#inherits}}{{.}}{{/inherits}} {
 		{{name}} = v;
 	}
 {{/members}}
+{{#methods}}
+	{{&.}}
+{{/methods}}
 
 	void applyChange(const message::{{changeType}}& change) {
 {{#members}}

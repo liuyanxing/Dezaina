@@ -1,23 +1,14 @@
 #pragma once
 
 #include "node.h"
-#include <include/core/SkMatrix.h>
 #include "base/array.h"
-#include "skia.h"
 
-namespace dea::utility {
+namespace dea::node {
 
-namespace interaction {
-class InteractionNode;
-}
-
-SkMatrix getTransfromMatrix(node::Node* node);
-SkSize getScreenSize(node::Node* node);
-SkMatrix getWorldMatrix(node::Node* node);
-SkMatrix getWorldMatrix(interaction::InteractionNode* node);
+node::Matrix getTransfromMatrix(node::Node* node);
+node::Size getSize(node::NodeConstPtr node);
 
 class NodeIter {
-friend class Document;
 public:
   enum IterDirection {
     Forward,
@@ -47,9 +38,9 @@ public:
 	IterDirection operator--();
   const auto& getWorldMatrix() { return world_; }
 protected:
-  SkMatrix getWorldMatrixImpl(node::Node* node);
-  SkMatrix world_;
-  base::array<SkMatrix, 16> worldStack_;
+  node::Matrix getWorldMatrixImpl(node::Node* node);
+  node::Matrix world_;
+  base::array<node::Matrix, 16> worldStack_;
 };
 
 }
