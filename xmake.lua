@@ -13,7 +13,7 @@ set_xmakever("2.8.2")
 set_languages("cxxlatest")
 
 option("test")
-		set_default(false)
+		set_default(true)
 		set_showmenu(true)
 		set_description("Build test")
 

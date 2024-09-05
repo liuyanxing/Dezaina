@@ -1,4 +1,7 @@
 import fs, { promises as fsPromise } from 'fs'
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url';
+import mustache from './mustache/mustache.js'
 import {
 	enums,
 	structs,
@@ -7,9 +10,21 @@ import {
 	nodeBase,
 	customType,
 } from './definiations/index.js'
-import mustache from './mustache/mustache.js'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+function buildFilePath(p) {
+	return path.join(__dirname, p);	
+}
+
+function readFileSync(path) {
+	path = buildFilePath(path);
+	return fs.readFileSync(path).toString();	
+}
 
 async function writeFileSync(path, data) {
+	path = buildFilePath(path);
   let fileHandle;
 
   try {
@@ -64,16 +79,15 @@ function procClassGetterAndSetter(o) {
 data.structs.forEach(o => { procExtends(o); procChangeType(o); procClassGetterAndSetter(o); });
 data.classes.forEach(o => { procExtends(o); procClassGetterAndSetter(o); });
 
-let template = fs.readFileSync('./node_base.mustache').toString();
+let template = readFileSync('./node_base.mustache');
 let output = mustache.render(template, data);
 await writeFileSync('../node_base.generated.h', output);
 
 nodeBase.forEach(o => { procNodeExtends(o); });
-template = fs.readFileSync('./type.mustache').toString();
+template = readFileSync('./type.mustache');
 output = mustache.render(template, { nodes: nodeBase });
 await writeFileSync('../type.generated.h', output);
 
-template = fs.readFileSync('./node.mustache').toString();
+template = readFileSync('./node.mustache');
 output = mustache.render(template, { nodes: nodeBase });
 await writeFileSync('../node.generated.h', output);
-
