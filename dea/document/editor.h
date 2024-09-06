@@ -62,10 +62,12 @@ public:
   Editor& setSize(float width, float height);
   Editor& setTransform(const node::Matrix& transform);
 
-  Editor& setSelectoin(const node::NodeIdArray& selection) {
+  Editor& select(const node::NodeIdArray& selection) {
     addRecord(EditRecordItem::Make(RecordType::kSelection, selection));
     return *this;
   }
+
+  void setImmediate(bool immediate) { immediate_ = immediate; }
 
   static const auto& getRecords() { return records_; }
   ~Editor() = default;
@@ -73,6 +75,7 @@ public:
 private:
   std::vector<node::Node*> nodes_;
   inline static std::vector<EditRecordItem> records_;
+  inline static bool immediate_ = false;
 
   void editNodes(std::function<void(node::Node*)>);
   void addRecord(const EditRecordItem& item);

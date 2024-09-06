@@ -75,10 +75,10 @@ void Interaction::onEvent(event::Event& event) {
     for (auto* node : selection) {
       ids.push_back(node->getGuid());
     }
-    doc_.editor().setSelectoin(ids);
+    doc_.editor().select(ids);
     selection_.clear();
   } else {
-    doc_.editor().setSelectoin({});
+    doc_.editor().select({});
   }
 
   creation_.onEvent(event);

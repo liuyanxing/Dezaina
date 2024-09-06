@@ -1,4 +1,5 @@
 #include "editor.h"
+#include "dezaina.h"
 #include <array>
 
 namespace dea::document {
@@ -18,10 +19,16 @@ void Editor::editNodes(std::function<void(Node*)> cb) {
 
 void Editor::addRecord(const EditRecordItem& record) {
   records_.push_back(record);
+  if (immediate_) {
+    Dezaina::instance().flush();
+  }
 }
 
 void Editor::addRecord(const GUID& layerId, const RecordType& type, const RecordValue& value) {
   records_.emplace_back(layerId, type, value);
+  if (immediate_) {
+    Dezaina::instance().flush();
+  }
 }
 
 Editor& Editor::resize(float width, float height, const Vector& anchor) {

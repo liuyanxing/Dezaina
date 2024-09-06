@@ -44,6 +44,7 @@ public:
 		return instance().interaction_;
 	}
 
+	void flush();
 
 	bool loadDocument(char* data, size_t size) {
 		auto res = doc_.load(data, size);

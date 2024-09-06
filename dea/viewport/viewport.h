@@ -28,18 +28,10 @@ public:
     return viewMatrix_;
   }
 
-  const auto& getProjectionMatrix() const {
-    return projectionMatrix_;
-  }
-
   const auto getViewScale()  const {
     return viewMatrix_.getScaleX();
   }
 
-  void setProjectionMatrix(const node::Matrix& matrix) {
-    projectionMatrix_ = matrix;
-    updateVPMatrix();
-  }
 
   void setViewMatrix(const node::Matrix& matrix) {
     viewMatrix_ = matrix;

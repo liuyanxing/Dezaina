@@ -2,6 +2,7 @@
 
 #include <string>
 #include <variant>
+#include <optional>
 
 #include "base/buffer.h"
 #include "schema/message.h"

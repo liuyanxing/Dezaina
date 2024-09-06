@@ -22,9 +22,8 @@ void Dezaina::tick() {
   event::Event event{event::EventType::NextTick};
   emit(event);
 
-  eventSystem_.fireAllEvents();
-  doc_.flushEditor();
-  change_.flush();
+  flush();
+
   eventSystem_.beforeRender();
 
 #ifdef DEA_ENABLE_RENDER
@@ -32,6 +31,12 @@ void Dezaina::tick() {
 #endif
 
   eventSystem_.afterTick();
+}
+
+void Dezaina::flush() {
+  eventSystem_.fireAllEvents();
+  doc_.flushEditor();
+  change_.flush();
 }
 
 }
