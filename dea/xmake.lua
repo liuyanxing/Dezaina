@@ -21,11 +21,11 @@ target("dea")
 
     if (has_config("render")) then
         table.insert(modules, "render")
+        add_defines("DEA_ENABLE_RENDER")
     end
 
     for _, name in ipairs(subdirs) do
       add_packages("skia", {public = true})
-      add_defines("DEA_ENABLE_RENDER")
 			add_files("./"..name.."/*.cpp")
     end
 		-- add sub modules

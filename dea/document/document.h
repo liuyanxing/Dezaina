@@ -33,7 +33,14 @@ public:
 	};
 
 	template<typename T>
-	T* createNode() { return buildNode<T>(node::GUID{sessionId_, localId_++}); };
+	T* createNode() { return createNode<T>(node::GUID{sessionId_, localId_++}); };
+
+	template<typename T>
+	T* createNode(node::NodePtr parent) {
+		auto* node = createNode<T>();
+		append(node, parent);
+		return node;
+	};
 
 	bool load(char* data, size_t size) {
 		kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t*>(data), size);
@@ -44,10 +51,12 @@ public:
     return res;
 	}
 
+	void loadEmpty();
+
 	void unload() {}
 
 	void append(node::Node* child);
-	void append(node::Node* parent, node::Node* child);
+	void append(node::Node* child, node::Node* parent);
 	void updateNode(message::NodeChange* change);
 	void remove(node::Node* node) { }
 

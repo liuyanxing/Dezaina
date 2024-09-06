@@ -17,7 +17,7 @@ const uint32_t width = 1280;
 const uint32_t height = 720;
 
 void init() {
-    deza.initViewport(width, height, 1);
+    deza.setViewport(width, height, 1);
     auto* page = doc.createNode<PageNode>();
     doc.setCurrentPage(page);
     auto* rect = doc.createNode<RectangleNode>();

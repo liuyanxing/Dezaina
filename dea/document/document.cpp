@@ -141,6 +141,9 @@ bool Document::processNodeChanges(message::Message& message) {
 		node->applyChange(node_change);
 		if (isNewNode) {
 			append(node);
+			if (node->getType() == NodeType::DOCUMENT) {
+				root_ = static_cast<DocumentNode*>(node);
+			}
 		}
 	}
 	return true;
@@ -148,13 +151,9 @@ bool Document::processNodeChanges(message::Message& message) {
 }
 
 void Document::append(node::Node* child) {
-  auto* root = node::node_cast<node::DocumentNode*>(child);
-  if (root) {
-    root_ = root;
-    return;
-  }
-
-  append(child, getParent(child));
+	auto* parent = getParent(child);
+	assert(parent);
+  append(child, parent);
 }
 
 void Document::append(node::Node* child, node::Node* parent) {
@@ -201,6 +200,14 @@ void Document::handleViewMatrixChange(const node::Matrix& matrix) {
   if (currentPage_) {
     currentPage_->setTransform(matrix);
   }
+}
+
+void Document::loadEmpty() {
+	assert(!root_);
+	root_ = createNode<DocumentNode>(node::GUID{0, 0});
+
+	auto* page = createNode<PageNode>(root_);
+	setCurrentPage(page);
 }
 
 }

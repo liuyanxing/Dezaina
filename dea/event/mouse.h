@@ -7,6 +7,12 @@
 namespace dea::event {
 
     struct MouseEvent : public UIEvent {
+        MouseEvent() = default;
+        MouseEvent(float x, float y) {
+            type = EventType::MouseMove;
+            this->x = x;
+            this->y = y;
+        }
         int button;
         int buttons;
         static auto Make(float x, float y, EventType type, int button, int buttons) {

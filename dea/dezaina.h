@@ -55,7 +55,11 @@ public:
 		return res;
 	}
 
-	void initViewport(uint32_t width, uint32_t height, float devicePixelRatio) {
+	void loadEmptyDocument() {
+		doc_.loadEmpty();
+	}
+
+	void setViewport(uint32_t width, uint32_t height, float devicePixelRatio) {
 		viewport_.update(width, height, devicePixelRatio);
 	}
 

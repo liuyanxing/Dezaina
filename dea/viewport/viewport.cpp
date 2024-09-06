@@ -2,6 +2,10 @@
 
 namespace dea {
 
+void Viewport::reset() {
+  update(width_, height_, devicePixelRatio_);
+}
+
 void Viewport::update(uint32_t width, uint32_t height, float devicePixelRatio) {
   width_ = width;
   height_ = height;

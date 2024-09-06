@@ -18,6 +18,7 @@ public:
 
   void translate(float dx, float dy);
   void scale(float sx, float sy, float px = 0, float py = 0);
+  void reset();
 
   const auto& getVPMatrix() const {
     return viewProjectionMatrix_;
