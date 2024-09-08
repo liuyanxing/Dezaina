@@ -41,7 +41,7 @@ public:
   virtual ~EventEmitter() = default;
 
 private:
-  std::vector<EventListener> consumers_{1};
+  std::vector<EventListener> consumers_;
 };
 
 } // namespace dea::event

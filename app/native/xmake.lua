@@ -6,4 +6,5 @@ target("app")
 	add_files("src/*.cpp")
 	add_deps("dea")
 	add_packages("libsdl", "imgui")
+	set_rundir("$(projectdir)")
   

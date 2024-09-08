@@ -23,10 +23,7 @@ void Dezaina::tick() {
   flush();
 
   eventSystem_.beforeRender();
-
-#ifdef DEA_ENABLE_RENDER
   render_.render();
-#endif
 
   eventSystem_.afterTick();
 }
@@ -34,7 +31,6 @@ void Dezaina::tick() {
 void Dezaina::flush() {
   eventSystem_.fireAllEvents();
   doc_.flushEditor();
-  change_.flush();
 }
 
 } // namespace dea

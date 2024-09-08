@@ -10,17 +10,13 @@
 #include "viewport/viewport.h"
 #include <memory>
 
-#ifdef DEA_ENABLE_RENDER
 #include "render.h"
-#endif
 
 namespace dea {
 
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
-  Dezaina()
-      : doc_(0), viewport_(), eventSystem_(), event::EventEmitter(),
-        interaction_(doc_) {
+  Dezaina() : doc_(0), viewport_(), eventSystem_(), interaction_(doc_), render_(doc_, viewport_) {
     resource::Resource::Init();
     init();
     eventSystem_.initialized();
@@ -49,7 +45,6 @@ public:
     auto res = doc_.load(data, size);
     doc_.dump();
     if (res) {
-      // render_.init();
       eventSystem_.start();
     }
     return res;
@@ -102,17 +97,13 @@ public:
   auto &getViewport() { return viewport_; }
   auto &getInteraction() { return interaction_; }
   auto &getEventSystem() { return eventSystem_; }
-  auto &getChange() { return change_; }
 
 private:
   document::Document doc_;
-#ifdef DEA_ENABLE_RENDER
-  render::Render render_{doc_, viewport_};
-#endif
   Viewport viewport_;
   event::EventSystem eventSystem_;
+  render::Render render_;
   interaction::Interaction interaction_;
-  change::Change change_;
   void init();
 };
 

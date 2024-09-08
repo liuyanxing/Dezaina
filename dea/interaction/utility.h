@@ -1,10 +1,8 @@
 #pragma once
 
-#ifdef DEA_ENABLE_RENDER
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkSurface.h"
-#endif
 
 #include "node.h"
 #include "node/rectangle.h"

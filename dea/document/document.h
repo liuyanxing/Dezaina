@@ -66,7 +66,12 @@ public:
 
   auto* currentPage() const { return currentPage_; }
 	node::DocumentNode* getRoot() { return root_; }
-	node::Node* getParent(node::Node* node) { return getNodeById(node->getParentIndex().guid); }
+	node::Node* getParent(node::Node* node) {
+		if (node::node_cast<node::DocumentNode*>(node)) {
+			return nullptr;
+		}
+		return getNodeById(node->getParentIndex().guid);
+	}
 
   std::vector<node::Node*> getNodes(float x, float y);
 
@@ -103,10 +108,10 @@ public:
 
 private:
 	NodeMap nodeMap_{100};
-  node::DocumentNode* root_;
-  node::PageNode* currentPage_;
+  node::DocumentNode* root_{};
+  node::PageNode* currentPage_{};
 	Editor editor_;
-	uint32_t sessionId_;
+	uint32_t sessionId_{};
 	uint32_t localId_{0};
 	std::unordered_map<uint32_t, uint32_t> blobIdMap_{};
 };

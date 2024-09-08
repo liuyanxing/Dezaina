@@ -1,6 +1,6 @@
 includes("xmake/option.lua")
 includes("xmake/package.lua")
-includes("node")
+--  includes("node")
 
 set_languages("cxx20")
 

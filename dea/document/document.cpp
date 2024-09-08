@@ -141,9 +141,6 @@ bool Document::processNodeChanges(message::Message& message) {
 		node->applyChange(node_change);
 		if (isNewNode) {
 			append(node);
-			if (node->getType() == NodeType::DOCUMENT) {
-				root_ = static_cast<DocumentNode*>(node);
-			}
 		}
 	}
 	return true;
@@ -151,8 +148,12 @@ bool Document::processNodeChanges(message::Message& message) {
 }
 
 void Document::append(node::Node* child) {
+	if (auto* documentNode = node_cast<DocumentNode*>(child)) {
+		root_ = documentNode;
+		return;
+	}
+
 	auto* parent = getParent(child);
-	assert(parent);
   append(child, parent);
 }
 

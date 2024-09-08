@@ -12,8 +12,6 @@
 namespace dea {
 class Viewport : public event::EventEmitter {
 public:
-  Viewport() {};
-
   void update(uint32_t width, uint32_t height, float devicePixelRatio);
 
   void translate(float dx, float dy);

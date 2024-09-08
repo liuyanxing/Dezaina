@@ -30,7 +30,8 @@ inline void CreateFilePanel(dea::Dezaina& desaina) {
 		std::fstream file;
 		file.open(fig_dir / "round-rect", std::ios::in | std::ios::binary);
 		if (!file.is_open()) {
-			assert(false);
+			std::cout << fig_dir << std::endl;
+			return;
 		}
 		file.seekg(0, std::ios::end);
 		auto size = file.tellg();
