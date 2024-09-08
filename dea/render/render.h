@@ -1,10 +1,10 @@
 #pragma once
 
 #include "base/object.h"
-#include "document/include/document.h"
+#include "document.h"
 #include "viewport/viewport.h"
 #include "include/core/SkSurface.h"
-#include "geometry/geometry.h"
+#include "geometry.h"
 #include "paint.h"
 
 #include <cstdint>
@@ -23,7 +23,7 @@ private:
 	void updateViewPort();
   void renderDocument();
   void renderInteraction();
-	void render(utility::NodeIterWithWorldMatrix& iter, bool isInterNode);
+	void render(node::NodeIterWithWorldMatrix& iter, bool isInterNode);
 	void renderNode(node::Node* node, bool isInterNode);
 	void renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers);
 

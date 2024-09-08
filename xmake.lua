@@ -13,14 +13,24 @@ set_xmakever("2.8.2")
 set_languages("cxxlatest")
 
 option("test")
-		set_default(true)
+		set_default(false)
 		set_showmenu(true)
 		set_description("Build test")
+option_end()
+
+option("app")
+		add_deps("render")
+		set_default(false)
+		set_showmenu(true)
+		set_description("Build app")
+option_end()
 
 includes("dea")
 
 if has_config("test") then
 	includes("test")
-else
+end
+
+if has_config("app") then
 	includes("app/native")
 end

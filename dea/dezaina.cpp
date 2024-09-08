@@ -1,18 +1,16 @@
 #include "dezaina.h"
-#ifdef DEA_ENABLE_RENDER
-#include "render.h"
-#endif
 
 namespace dea {
 
 using namespace event;
 
 void Dezaina::init() {
-	eventSystem_.addListener(&interaction_);
-  viewport_.addEventListener(EventType::ViewportChange, [this](event::Event& event) {
-    auto matrix = viewport_.getViewMatrix();
-    doc_.handleViewMatrixChange(matrix);
-  });
+  eventSystem_.addListener(&interaction_);
+  viewport_.addEventListener(EventType::ViewportChange,
+                             [this](event::Event &event) {
+                               auto matrix = viewport_.getViewMatrix();
+                               doc_.handleViewMatrixChange(matrix);
+                             });
 }
 
 void Dezaina::tick() {
@@ -39,4 +37,4 @@ void Dezaina::flush() {
   change_.flush();
 }
 
-}
+} // namespace dea

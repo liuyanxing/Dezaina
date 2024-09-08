@@ -1,85 +1,82 @@
 #pragma once
 
 #include "base/object.h"
+#include "change/change.h"
 #include "event.h"
+#include "interaction.h"
 #include "interaction/interaction.h"
 #include "resource.h"
 #include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
-#include "event.h"
-#include "interaction.h"
-#include "change/change.h"
 #include <memory>
+
+#ifdef DEA_ENABLE_RENDER
+#include "render.h"
+#endif
 
 namespace dea {
 
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
-	Dezaina() : doc_(0), viewport_(), eventSystem_(), interaction_(doc_) {
+  Dezaina()
+      : doc_(0), viewport_(), eventSystem_(), event::EventEmitter(),
+        interaction_(doc_) {
     resource::Resource::Init();
-		init();
-		eventSystem_.initialized();
-	}
+    init();
+    eventSystem_.initialized();
+  }
 
-	~Dezaina() {}
+  ~Dezaina() {}
 
-	static Dezaina& instance() {
-		static Dezaina instance;
-		return instance;
-	}
+  static Dezaina &instance() {
+    static Dezaina instance;
+    return instance;
+  }
 
-	static document::Editor& editor() {
-		return instance().doc_.editor();
-	}
+  static document::Editor &editor() { return instance().doc_.editor(); }
 
-	static document::Document& document() {
-		return instance().doc_;
-	}
+  static document::Document &document() { return instance().doc_; }
 
-	static Viewport& viewport() {
-		return instance().viewport_;
-	}
+  static Viewport &viewport() { return instance().viewport_; }
 
-	static interaction::Interaction& interaction() {
-		return instance().interaction_;
-	}
+  static interaction::Interaction &interaction() {
+    return instance().interaction_;
+  }
 
-	void flush();
+  void flush();
 
-	bool loadDocument(char* data, size_t size) {
-		auto res = doc_.load(data, size);
-		doc_.dump();
-		if (res) {
-			// render_.init();
-			eventSystem_.start();
-		}
-		return res;
-	}
+  bool loadDocument(char *data, size_t size) {
+    auto res = doc_.load(data, size);
+    doc_.dump();
+    if (res) {
+      // render_.init();
+      eventSystem_.start();
+    }
+    return res;
+  }
 
-	void loadEmptyDocument() {
-		doc_.loadEmpty();
-	}
+  void loadEmptyDocument() { doc_.loadEmpty(); }
 
-	void setViewport(uint32_t width, uint32_t height, float devicePixelRatio) {
-		viewport_.update(width, height, devicePixelRatio);
-	}
+  void setViewport(uint32_t width, uint32_t height, float devicePixelRatio) {
+    viewport_.update(width, height, devicePixelRatio);
+  }
 
-	void dumpDocument() {
-		doc_.dump();
-	}
+  void dumpDocument() { doc_.dump(); }
 
-	void dispatchEvent(event::Event& event) {
+  void dispatchEvent(event::Event &event) {
     if (event::isMouse(event)) {
-      auto& mouseEvent = static_cast<event::MouseEvent&>(event);
+      auto &mouseEvent = static_cast<event::MouseEvent &>(event);
       auto worldCoord = viewport_.mapScreenToWorld(mouseEvent.x, mouseEvent.y);
-      mouseEvent.worldX = worldCoord.x; mouseEvent.worldY = worldCoord.y;
-			mouseEvent.worldDx = viewport_.getWorldSize(mouseEvent.dx);
-			mouseEvent.worldDy = viewport_.getWorldSize(mouseEvent.dy);
+      mouseEvent.worldX = worldCoord.x;
+      mouseEvent.worldY = worldCoord.y;
+      mouseEvent.worldDx = viewport_.getWorldSize(mouseEvent.dx);
+      mouseEvent.worldDy = viewport_.getWorldSize(mouseEvent.dy);
     }
     eventSystem_.dispatchEvent(event);
-	}
+  }
 
-  void dispatchMouseEvent(float x, float y, event::EventType type, int button, int buttons) {
+  void dispatchMouseEvent(float x, float y, event::EventType type, int button,
+                          int buttons) {
     auto event = event::MouseEvent::Make(x, y, type, button, buttons);
     auto worldCoord = viewport_.mapScreenToWorld(event.x, event.y);
     event.worldX = worldCoord.x;
@@ -87,34 +84,36 @@ public:
     eventSystem_.dispatchEvent(event);
   }
 
-  void dispatchKeyEvent(event::EventType type, event::KeyCode code, event::KeyMode mode) {
+  void dispatchKeyEvent(event::EventType type, event::KeyCode code,
+                        event::KeyMode mode) {
     auto event = event::KeyEvent::Make(type, code, mode);
     eventSystem_.dispatchEvent(event);
   }
 
-  bool isKeyPressed(event::Key code) {
-    return eventSystem_.isKeyPressed(code);
+  bool isKeyPressed(event::Key code) { return eventSystem_.isKeyPressed(code); }
+
+  void nextTick(const event::ListenerFunc &listener) {
+    addEventListener(event::EventType::NextTick, listener, true);
   }
 
-	void nextTick(const event::ListenerFunc& listener) {
-		addEventListener(event::EventType::NextTick, listener, true);
-	}
+  void tick();
 
-	void tick();
-
-  auto& getDocument() { return doc_; }
-  auto& getViewport() { return viewport_; }
-  auto& getInteraction() { return interaction_; }
-  auto& getEventSystem() { return eventSystem_; }
-	auto& getChange() { return change_; }
+  auto &getDocument() { return doc_; }
+  auto &getViewport() { return viewport_; }
+  auto &getInteraction() { return interaction_; }
+  auto &getEventSystem() { return eventSystem_; }
+  auto &getChange() { return change_; }
 
 private:
-	document::Document doc_;
-	Viewport viewport_;
-	event::EventSystem eventSystem_;
-	interaction::Interaction interaction_;
-	change::Change change_;
-	void init();
+  document::Document doc_;
+#ifdef DEA_ENABLE_RENDER
+  render::Render render_{doc_, viewport_};
+#endif
+  Viewport viewport_;
+  event::EventSystem eventSystem_;
+  interaction::Interaction interaction_;
+  change::Change change_;
+  void init();
 };
 
-}
+} // namespace dea

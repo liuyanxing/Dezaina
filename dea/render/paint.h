@@ -5,7 +5,7 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPaint.h"
 #include "node/include/node.h"
-#include "utility/skia.h"
+#include "utility.h"
 
 namespace dea::render {
 
@@ -17,7 +17,7 @@ class SolidPaintDrawer : public PaintDrawer {
 public:
   SolidPaintDrawer(const node::SolidPaint& paint) : paint_{paint} {}
   void draw(SkCanvas* canvas) const {
-    canvas->drawColor(utility::toSkColor(paint_.color));
+    canvas->drawColor(toSkColor(paint_.color));
   }
 private:
   node::SolidPaint paint_;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "include/core/SkPath.h"
+#include "core/SkPath.h"
 #include "node/include/node.h"
 #include "resource/include/resource.h"
 #include "resource.h"

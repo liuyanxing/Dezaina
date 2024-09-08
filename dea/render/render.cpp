@@ -15,7 +15,7 @@
 #include "include/gpu/ganesh/gl/glx/GrGLMakeGLXInterface.h"
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
-#include "utility/skia.h"
+#include "utility.h"
 
 namespace dea::render {
 
@@ -46,16 +46,16 @@ namespace dea::render {
     return true;
 	}
 
-  void Render::render(utility::NodeIterWithWorldMatrix& iter, bool isInterNode) {
+  void Render::render(node::NodeIterWithWorldMatrix& iter, bool isInterNode) {
     canvas_->resetMatrix();
     SkAutoCanvasRestore acr(canvas_, true);
-    canvas_->setMatrix(viewport_.getVPMatrix());
+    canvas_->setMatrix(toSkMatrix(viewport_.getVPMatrix()));
 
 		while (iter.isValid()) {
       SkAutoCanvasRestore acr(canvas_, true); 
 
 			auto* node = iter.get();
-      canvas_->concat(iter.getWorldMatrix());
+      canvas_->concat(toSkMatrix(iter.getWorldMatrix()));
       if (isInterNode) {
         canvas_->scale(1 / viewport_.getViewScale(), 1 / viewport_.getViewScale());
       }
@@ -106,7 +106,7 @@ namespace dea::render {
     auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
     if (!shapeNode) {
       if (auto* page = node::node_cast<node::PageNode*>(node)) {
-        auto color = utility::toSkColor(page->getBackgroundColor()); 
+        auto color = toSkColor(page->getBackgroundColor()); 
         canvas_->drawColor(color);
       }
       return;

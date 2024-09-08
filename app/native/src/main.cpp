@@ -111,7 +111,7 @@ int main(int, char**)
     EMSCRIPTEN_MAINLOOP_BEGIN
 #else
     auto& dezaina = dea::Dezaina::instance();
-    dezaina.initViewport(1280, 720, 1);
+    dezaina.setViewport(1280, 720, 1);
     while (!done)
 #endif
     {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
 #include <functional>
 #include <vector>
 
@@ -9,7 +7,7 @@
 
 namespace dea::event {
 
-using ListenerFunc = std::function<void(Event& event)>;
+using ListenerFunc = std::function<void(Event &event)>;
 struct EventListener {
   EventType type;
   ListenerFunc func;
@@ -19,8 +17,8 @@ struct EventListener {
 
 class EventEmitter {
 public:
-  void emit(Event& event) {
-    for (auto& consumer : consumers_) {
+  void emit(Event &event) {
+    for (auto &consumer : consumers_) {
       if (consumer.type == event.type || consumer.type == EventType::Any) {
         consumer.func(event);
         if (consumer.once) {
@@ -28,12 +26,15 @@ public:
         }
       }
     }
-    consumers_.erase(std::remove_if(consumers_.begin(), consumers_.end(), [](const EventListener& listener) {
-      return listener.shouldRemove;
-    }), consumers_.end());
+    consumers_.erase(std::remove_if(consumers_.begin(), consumers_.end(),
+                                    [](const EventListener &listener) {
+                                      return listener.shouldRemove;
+                                    }),
+                     consumers_.end());
   }
 
-  void addEventListener(const EventType& type, const ListenerFunc& func, bool once = false) {
+  void addEventListener(const EventType &type, const ListenerFunc &func,
+                        bool once = false) {
     consumers_.push_back({type, func, once});
   }
 
@@ -43,4 +44,4 @@ private:
   std::vector<EventListener> consumers_{1};
 };
 
-}
+} // namespace dea::event

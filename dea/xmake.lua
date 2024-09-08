@@ -6,7 +6,7 @@ set_languages("cxx20")
 
 target("dea")
 		add_packages("nlohmann_json", "spdlog", {public = true})
-    add_deps("genNode")
+    -- add_deps("genNode")
 
     -- make as a static/shared library
     set_kind("static")
@@ -20,12 +20,12 @@ target("dea")
     local modules = {"command", "document", "event", "interaction", "layout", "node", "resource"}
 
     if (has_config("render")) then
+        add_packages("skia", {public = true})
         table.insert(modules, "render")
         add_defines("DEA_ENABLE_RENDER")
     end
 
     for _, name in ipairs(subdirs) do
-      add_packages("skia", {public = true})
 			add_files("./"..name.."/*.cpp")
     end
 		-- add sub modules
