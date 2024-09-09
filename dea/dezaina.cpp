@@ -31,6 +31,7 @@ void Dezaina::tick() {
 void Dezaina::flush() {
   eventSystem_.fireAllEvents();
   doc_.flushEditor();
+  change_.flush();
 }
 
 } // namespace dea

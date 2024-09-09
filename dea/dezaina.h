@@ -6,7 +6,6 @@
 #include "interaction.h"
 #include "interaction/interaction.h"
 #include "resource.h"
-#include "spdlog/spdlog.h"
 #include "viewport/viewport.h"
 #include <memory>
 
@@ -16,7 +15,7 @@ namespace dea {
 
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
-  Dezaina() : doc_(0), viewport_(), eventSystem_(), interaction_(doc_), render_(doc_, viewport_) {
+  Dezaina() : doc_(0), viewport_(), eventSystem_(), interaction_(doc_), render_(doc_, viewport_), change_() {
     resource::Resource::Init();
     init();
     eventSystem_.initialized();
@@ -97,6 +96,7 @@ public:
   auto &getViewport() { return viewport_; }
   auto &getInteraction() { return interaction_; }
   auto &getEventSystem() { return eventSystem_; }
+  auto& getChange() { return change_; }
 
 private:
   document::Document doc_;
@@ -104,6 +104,7 @@ private:
   event::EventSystem eventSystem_;
   render::Render render_;
   interaction::Interaction interaction_;
+  change::Change change_;
   void init();
 };
 

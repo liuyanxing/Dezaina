@@ -7,6 +7,9 @@
 namespace dea::change {
 
 void Change::flush() {
+	if (items_.empty()) {
+		return;
+	}
 	auto& dezaina = Dezaina::instance();
 	auto& doc = dezaina.getDocument();
 	for (auto& item : items_) {
