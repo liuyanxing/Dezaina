@@ -35,7 +35,7 @@ void Document::flushEditor() {
 			break;
 		}
 		default:
-			break;
+			continue;
 		}
 		change.addChange(change::ChangeType::NodeChange, nodeChange);
 	}

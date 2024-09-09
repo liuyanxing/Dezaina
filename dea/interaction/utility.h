@@ -1,9 +1,5 @@
 #pragma once
 
-#include "include/core/SkColor.h"
-#include "include/core/SkPaint.h"
-#include "include/core/SkSurface.h"
-
 #include "node.h"
 #include "node/rectangle.h"
 #include "node/type.h"

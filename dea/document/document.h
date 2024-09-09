@@ -88,7 +88,9 @@ public:
 	bool processNodeChanges(message::Message& message);
 
 	auto& getSelection() { return currentPage_->getSelection(); }
-	void setSelection(std::vector<node::GUID>&& ids) { currentPage_->setSelection(std::move(ids)); }
+	void setSelection(std::vector<node::GUID>&& ids) {
+		currentPage_->setSelection(std::move(ids));
+	}
 
 	void dump();
 	void dump(node::Node* node) const;
@@ -112,7 +114,7 @@ private:
   node::PageNode* currentPage_{};
 	Editor editor_;
 	uint32_t sessionId_{};
-	uint32_t localId_{0};
+	uint32_t localId_{1};
 	std::unordered_map<uint32_t, uint32_t> blobIdMap_{};
 };
 

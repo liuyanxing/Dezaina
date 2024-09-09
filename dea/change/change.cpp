@@ -6,6 +6,10 @@
 
 namespace dea::change {
 
+void Change::addChange(ChangeType type, ChangeValue&& value) {
+	items_.emplace_back(type, std::move(value));
+}
+
 void Change::flush() {
 	if (items_.empty()) {
 		return;

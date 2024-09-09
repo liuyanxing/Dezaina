@@ -48,6 +48,7 @@ void Selection::onMouseDown(MouseEvent& event) {
     }
     event.target = hoverNode_;
     setSelection({hoverNode_});
+    onSelectionChangeCb_(selection_);
   } else {
     setSelection(std::vector<Node*>{});
   }

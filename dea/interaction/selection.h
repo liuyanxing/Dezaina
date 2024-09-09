@@ -8,6 +8,7 @@
 namespace dea::interaction {
 
 using GetIntersectBound = std::function<node::Size(node::Vector)>;
+using OnSelectionChangeCb = std::function<void(const node::NodeArary&)>;
 
 class Interaction;
 class Selection : public InteractionListener {
@@ -18,12 +19,14 @@ public:
   void clear() { selection_.clear(); hoverNode_ = nullptr; }
   node::NodeConstPtr getHoverNode() const { return hoverNode_; }
   void setIter(const node::NodeIterWithWorldMatrix& iter) { iter_ = iter; }
+  void onSelectionChange(const OnSelectionChangeCb& callback) { onSelectionChangeCb_ = callback; }
 
 private:
   node::NodeArary selection_;
   node::Node* hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
   node::NodeIterWithWorldMatrix iter_;
+  OnSelectionChangeCb onSelectionChangeCb_;
 
 	void setSelection(const std::vector<node::Node*>& nodes);
   void setSelection(const std::vector<node::GUID>& nodesIds);

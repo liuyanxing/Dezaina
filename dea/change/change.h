@@ -30,7 +30,7 @@ public:
 		return changeMap_[node];
 	}
 
-	void addChange(ChangeType type, ChangeValue&& value) { items_.emplace_back(type, std::move(value)); }
+	void addChange(ChangeType type, ChangeValue&& value);
 	auto& getPool() { return pool_; }
 	void clear() { items_.clear(); pool_.clear(); changeMap_.clear(); }
 	void flush();

@@ -17,13 +17,30 @@ Interaction::Interaction(Document& doc) : doc_(doc) {
   doc_.addEventListener(EventType::PageChange, [this](Event& event) {
     selection_.setIter(Document::IterWithWorldMatrix{doc_.currentPage()});
   });
+
+  selection_.onSelectionChange([this](const NodeArary& nodes) {
+    handleSelectionChange(nodes);
+  });
+}
+
+
+void Interaction::handleSelectionChange(const node::NodeArary& nodes) {
+  if (nodes.empty()) {
+    return;
+  }
+  auto& selection = nodes;
+  node::NodeIdArray ids;
+  for (auto* node : selection) {
+    ids.push_back(node->getGuid());
+  }
+  doc_.editor().select(ids);
 }
 
 node::Size Interaction::GetItersectBound(node::Vector size) {
   return  Dezaina::instance().getViewport().mapWorldToScreen(node::Size{size.x, size.y});
 }
 
-void Interaction::updateSelection() {
+void Interaction::updateNodeEditor() {
   auto& selection = doc_.getSelection();
   if (selection.empty()) {
     if (node_editor_ != nullptr) {
@@ -64,30 +81,22 @@ void Interaction::handleHover() {
 }
 
 void Interaction::onEvent(event::Event& event) {
+  if (!doc_.loaded()) {
+    return;
+  }
+
   if (node_editor_ != nullptr) {
     node_editor_->onEvent(event);
   }
 
   selection_.onEvent(event);
-  if (!selection_.empty()) {
-    auto& selection = selection_.getSelection();
-    node::NodeIdArray ids{selection.size()};
-    for (auto* node : selection) {
-      ids.push_back(node->getGuid());
-    }
-    doc_.editor().select(ids);
-    selection_.clear();
-  } else {
-    doc_.editor().select({});
-  }
-
   creation_.onEvent(event);
 
   InteractionListener::onEvent(event);
 }
 
 void Interaction::onBeforeRender(event::Event& event)  {
-  updateSelection();
+  updateNodeEditor();
 };
 
 void Interaction::onAfterTick(Event& event) {

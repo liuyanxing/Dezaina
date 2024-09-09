@@ -35,7 +35,8 @@ private:
     appendChild(&page_, child);
   }
 
-  void updateSelection();
+  void handleSelectionChange(const node::NodeArary& nodes);
+  void updateNodeEditor();
   void handleHover();
   void onEvent(event::Event& event) override;
   // void onBeforeTick(event::Event* event) override;

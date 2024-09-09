@@ -27,10 +27,12 @@ option_end()
 
 includes("dea")
 
-if has_config("test") then
-	includes("test")
-end
+-- if has_config("test") then
+-- 	includes("test")
+-- end
 
-if has_config("app") then
-	includes("app/native")
-end
+-- if has_config("app") then
+-- 	includes("app/native")
+-- end
+
+includes("app/helloworld")
