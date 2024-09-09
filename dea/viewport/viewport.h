@@ -30,7 +30,6 @@ public:
     return viewMatrix_.getScaleX();
   }
 
-
   void setViewMatrix(const node::Matrix& matrix) {
     viewMatrix_ = matrix;
     updateVPMatrix();
@@ -47,9 +46,12 @@ public:
     return viewProjectionMatrix_ * point;
   }
 
+  auto mapWorldToScreen(float x) {
+    return getWorldToScreenScale() * x;
+  }
+
   auto mapWorldToScreen(const node::Size& size) {
-    auto [width, height] = viewProjectionMatrix_ * node::Vector{size.width, size.height};
-    return node::Size{std::abs(width), std::abs(height)};
+    return node::Size{ mapWorldToScreen(size.width), mapWorldToScreen(size.height) };
   }
 
   auto mapScreenToWorld(float x, float y) {
@@ -75,11 +77,16 @@ public:
   auto devicePixelRatio()  const { return devicePixelRatio_; }
 
 private:
-	node::Matrix viewMatrix_;
-	node::Matrix projectionMatrix_;
+  node::Matrix viewMatrix_;
+  node::Matrix projectionMatrix_;
   node::Matrix viewProjectionMatrix_;
   uint32_t width_ = 800;
   uint32_t height_ = 600;
   float devicePixelRatio_ = 1;
+
+  float getWorldToScreenScale() const {
+    return viewMatrix_.getScaleX() / devicePixelRatio_;
+  }
 };
-}
+
+} // namespace dea

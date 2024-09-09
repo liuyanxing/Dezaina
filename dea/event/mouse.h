@@ -13,6 +13,11 @@ namespace dea::event {
             this->x = x;
             this->y = y;
         }
+        MouseEvent(float x, float y, EventType type) {
+            this->x = x;
+            this->y = y;
+            this->type = type;
+        }
         int button;
         int buttons;
         static auto Make(float x, float y, EventType type, int button, int buttons) {

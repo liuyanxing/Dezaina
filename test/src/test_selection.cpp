@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "dezaina.h"
+#include "event/mouse.h"
 
 // The purpose of these tests are just to  make sure that gtest was properly installed.
 
@@ -9,6 +10,7 @@ using namespace dea::event;
 
 auto& deza = dea::Dezaina::instance();
 auto& viewport = deza.viewport();
+auto& doc = deza.document();
 
 const uint32_t width = 1280;
 const uint32_t height = 720;
@@ -16,57 +18,21 @@ const uint32_t height = 720;
 void init() {
 	deza.setViewport(width, height, 1);
 	deza.loadEmptyDocument();
+	auto* rect = doc.createNode<RectangleNode>(doc.currentPage());
+	rect->setSize({100, 100});
 }
 
-TEST(Viewport, WorldCoordinates1xScreen) {
+TEST(Selection, SelectByMouseDown) {
 	viewport.reset();
-	MouseEvent e(width / 2, height / 2);
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 0);
-	EXPECT_TRUE(e.worldY == 0);
-	e.x += 100; e.y += 100;
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 100);
-	EXPECT_TRUE(e.worldY == 100);
-}
-
-
-TEST(Viewport, ScaleCenter1xScreen) {
-	viewport.reset();
-	viewport.scale(2, 2, 0, 0);
-	MouseEvent e(width / 2, height / 2);
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 0);
-	EXPECT_TRUE(e.worldY == 0);
-	e.x += 100; e.y += 100;
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 50);
-	EXPECT_TRUE(e.worldY == 50);
-}
-
-TEST(Viewport, WorldCoordinates2xScreen) {
-	deza.setViewport(width, height, 2);
-	MouseEvent e(width / 2, height / 2);
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 0);
-	EXPECT_TRUE(e.worldY == 0);
-	e.x += 100; e.y += 100;
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 200);
-	EXPECT_TRUE(e.worldY == 200);
-}
-
-TEST(Viewport, ScaleCenter2xScreen) {
-	viewport.reset();
-	viewport.scale(2, 2, 0, 0);
-	MouseEvent e(width / 2, height / 2);
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 0);
-	EXPECT_TRUE(e.worldY == 0);
-	e.x += 100; e.y += 100;
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 100);
-	EXPECT_TRUE(e.worldY == 100);
+	auto mx = width / 2 + 1;
+	auto my = height / 2 + 1;
+	MouseEvent em(mx, my, EventType::MouseMove);
+	MouseEvent ed(mx, my, EventType::MouseDown);
+	deza.dispatchEvent(em);
+	deza.dispatchEvent(ed);
+	deza.tick();
+	auto& selection = doc.getSelection();
+	EXPECT_TRUE(selection.size() == 1);
 }
 
 // The main entry point for running the tests

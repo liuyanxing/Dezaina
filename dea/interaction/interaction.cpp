@@ -24,11 +24,11 @@ Interaction::Interaction(Document& doc) : doc_(doc) {
 }
 
 
-void Interaction::handleSelectionChange(const node::NodeArary& nodes) {
-  if (nodes.empty()) {
+void Interaction::handleSelectionChange(const node::NodeArary& selection) {
+  if (selection.empty()) {
     return;
   }
-  auto& selection = nodes;
+
   node::NodeIdArray ids;
   for (auto* node : selection) {
     ids.push_back(node->getGuid());

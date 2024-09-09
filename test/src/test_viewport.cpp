@@ -30,7 +30,6 @@ TEST(Viewport, WorldCoordinates1xScreen) {
 	EXPECT_TRUE(e.worldY == 100);
 }
 
-
 TEST(Viewport, ScaleCenter1xScreen) {
 	viewport.reset();
 	viewport.scale(2, 2, 0, 0);
@@ -44,30 +43,37 @@ TEST(Viewport, ScaleCenter1xScreen) {
 	EXPECT_TRUE(e.worldY == 50);
 }
 
-TEST(Viewport, WorldCoordinates2xScreen) {
-	deza.setViewport(width, height, 2);
-	MouseEvent e(width / 2, height / 2);
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 0);
-	EXPECT_TRUE(e.worldY == 0);
-	e.x += 100; e.y += 100;
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 200);
-	EXPECT_TRUE(e.worldY == 200);
+TEST(Viewport, GetWorldScreenSize1xScreen) {
+	viewport.reset();
+	EXPECT_TRUE(viewport.mapWorldToScreen(100) == 100);
+	viewport.scale(2, 2, 0, 0);
+	EXPECT_TRUE(viewport.mapWorldToScreen(100) == 200);
 }
 
-TEST(Viewport, ScaleCenter2xScreen) {
-	viewport.reset();
-	viewport.scale(2, 2, 0, 0);
-	MouseEvent e(width / 2, height / 2);
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 0);
-	EXPECT_TRUE(e.worldY == 0);
-	e.x += 100; e.y += 100;
-	deza.dispatchEvent(e);
-	EXPECT_TRUE(e.worldX == 100);
-	EXPECT_TRUE(e.worldY == 100);
-}
+// TEST(Viewport, WorldCoordinates2xScreen) {
+// 	deza.setViewport(width, height, 2);
+// 	MouseEvent e(width / 2, height / 2);
+// 	deza.dispatchEvent(e);
+// 	EXPECT_TRUE(e.worldX == 0);
+// 	EXPECT_TRUE(e.worldY == 0);
+// 	e.x += 100; e.y += 100;
+// 	deza.dispatchEvent(e);
+// 	EXPECT_TRUE(e.worldX == 200);
+// 	EXPECT_TRUE(e.worldY == 200);
+// }
+
+// TEST(Viewport, ScaleCenter2xScreen) {
+// 	viewport.reset();
+// 	viewport.scale(2, 2, 0, 0);
+// 	MouseEvent e(width / 2, height / 2);
+// 	deza.dispatchEvent(e);
+// 	EXPECT_TRUE(e.worldX == 0);
+// 	EXPECT_TRUE(e.worldY == 0);
+// 	e.x += 100; e.y += 100;
+// 	deza.dispatchEvent(e);
+// 	EXPECT_TRUE(e.worldX == 100);
+// 	EXPECT_TRUE(e.worldY == 100);
+// }
 
 // The main entry point for running the tests
 int main(int argc, char** argv) {

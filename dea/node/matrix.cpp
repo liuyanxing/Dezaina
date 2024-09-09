@@ -45,7 +45,7 @@ namespace dea::node {
 		}
 
 		Vector Matrix::mapVector(const Vector& vector) const {
-				return Vector(m00 * vector.x + m01 * vector.y, m10 * vector.x + m11 * vector.y);
+			  return operator*(vector);
 		}
 
 		void Matrix::preTranslate(float x, float y) {
