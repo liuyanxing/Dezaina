@@ -31,6 +31,20 @@ TEST(NodeEditor, BuildWhenCursorDownOnNode) {
     EXPECT_TRUE(editor);
 }
 
+TEST(NodeEditor, DragEditorToMoveNode) {
+    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseUp, 0, 0);
+    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseMove, 0, 0);
+    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseDown, 0, 0);
+    deza.dispatchMouseEvent(width / 2 + 100, height / 2 + 100, EventType::MouseMove, 0, 0);
+    deza.tick();
+    auto& editor = interaction.getNodeEditor();
+    auto& editeNode = editor->getEditNodes()[0];
+    auto* rect = node_cast<RectangleNode*>(editeNode);
+    EXPECT_TRUE(rect);
+    auto transform = rect->getTransform();
+    EXPECT_TRUE(transform.m01 == 50 && transform.m02 == 50);
+}
+
 
 // The main entry point for running the tests
 int main(int argc, char** argv) {

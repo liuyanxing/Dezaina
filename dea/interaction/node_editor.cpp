@@ -28,11 +28,8 @@ using namespace event;
 // }
 
 void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
-  auto x = event.localX;
-  auto y = event.localY;
-  auto& viewport = Dezaina::instance().getViewport();
-  auto size = bound_ctrl_.getSize();
-  const auto [width, height] = viewport.mapWorldToScreen(node::Size{size.x, size.y});
+
+  const auto [width, height] = bound_ctrl_.getSize();
   int index = 0;
   bool isDraggingBound = false;
   // auto pointerRadius = config::pointerRadius;

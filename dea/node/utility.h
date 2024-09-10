@@ -36,7 +36,7 @@ public:
   NodeIterWithWorldMatrix(node::Node* node, const GetParentFunc& getParent);
 	IterDirection operator++();
 	IterDirection operator--();
-  const auto& getWorldMatrix() { return world_; }
+  const auto& getWorldMatrix() const { return world_; }
 protected:
   node::Matrix getWorldMatrixImpl(node::Node* node);
   node::Matrix world_;

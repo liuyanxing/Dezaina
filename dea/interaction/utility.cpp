@@ -1,7 +1,9 @@
+#include "dezaina.h"
+#include "event/ui_event.h"
 #include "node.h"
 #include "document.h"
 #include "node/rectangle.h"
-#include "node/type.h"
+#include "event.h"
 
 namespace dea::interaction {
 
@@ -25,6 +27,14 @@ void layoutRectsToCornersOfRect(std::array<Rectangle, 4>& rects, const Rect& fra
   //   matrix.setTranslate(offset.x(), offset.y());
   //   rect.set_transform(util::toMatrix(matrix));
   // }
+}
+
+
+node::Vector getEventLocalPosition(const event::UIEvent& event, const node::NodeIterWithWorldMatrix& iter) {
+  auto& viewport = Dezaina::instance().getViewport();
+  auto matrix = viewport.getVPMatrix() * iter.getWorldMatrix();
+  auto worldLocal = matrix.getInverse().value_or(Matrix{}).mapPoint({event.x, event.y});
+  return {viewport.mapWorldToScreen(worldLocal.x), viewport.mapWorldToScreen(worldLocal.y)};
 }
 
 }

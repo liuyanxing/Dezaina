@@ -40,15 +40,16 @@ public:
     }
   }
 
+  auto& getEditNodes() { return editNodes_; }
+
 protected:
   Frame container_;
   Rectangle bound_ctrl_;
   std::array<Rectangle, 4> nodeResizeCtrls_;
   std::array<Rectangle, 4> nodeRotateCtrls_;
-  node::NodeArary selectedNodes_;
   node::Node* hoverNode_ = nullptr;
   document::Editor editor_;
-  const node::NodeArary& editNodes_;
+  const node::NodeArary editNodes_;
   MouseInteraction mouseInteraction_{Selection{[](node::Vector size) { return node::Size{size.x, size.y}; }, IterWithWorldMatrix{&container_}}};
 
   void buildEditor();

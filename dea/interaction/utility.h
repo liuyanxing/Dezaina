@@ -20,4 +20,6 @@ public:
 	}
 };
 
+node::Vector getEventLocalPosition(const event::Event& event, const node::NodeIterWithWorldMatrix& iter);
+
 }

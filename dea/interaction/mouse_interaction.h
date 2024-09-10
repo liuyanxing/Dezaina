@@ -10,6 +10,10 @@ class MouseInteraction : public InteractionListener {
 public:
 	MouseInteraction(const Selection& selection) :
 		selection_(selection) {}
+	void onEvent(event::Event& e) override {
+		selection_.onEvent(e);
+		InteractionListener::onEvent(e);
+	}
 private:
 	Selection selection_;
 	void onMouseDrag(event::MouseEvent& event) override {
