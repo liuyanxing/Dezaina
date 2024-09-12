@@ -55,8 +55,7 @@ public:
   }
 
   auto mapScreenToWorld(float x, float y) {
-    auto inv = viewProjectionMatrix_.getInverse().value_or(node::Matrix{});
-    return inv.mapVector(node::Vector{x, y});
+    return viewProjectionMatrix_.getInverse().mapVector(node::Vector{x, y});
   }
 
   auto getWorldSize(float length) {

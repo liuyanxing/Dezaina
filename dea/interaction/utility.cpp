@@ -30,11 +30,14 @@ void layoutRectsToCornersOfRect(std::array<Rectangle, 4>& rects, const Rect& fra
 }
 
 
-node::Vector getEventLocalPosition(const event::UIEvent& event, const node::NodeIterWithWorldMatrix& iter) {
+void setEventLocalPosition(event::UIEvent& event, const node::NodeIterWithWorldMatrix& iter) {
   auto& viewport = Dezaina::instance().getViewport();
   auto matrix = viewport.getVPMatrix() * iter.getWorldMatrix();
-  auto worldLocal = matrix.getInverse().value_or(Matrix{}).mapPoint({event.x, event.y});
-  return {viewport.mapWorldToScreen(worldLocal.x), viewport.mapWorldToScreen(worldLocal.y)};
+  auto worldLocal = matrix.getInverse().mapPoint({event.x, event.y});
+  event.localWorldX = worldLocal.x;
+  event.localWorldY = worldLocal.y;
+  event.localX = viewport.mapWorldToScreen(worldLocal.x);
+  event.localY = viewport.mapWorldToScreen(worldLocal.y);
 }
 
 }

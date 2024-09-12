@@ -11,6 +11,8 @@ struct UIEvent : public Event {
   float dy;
   float localX;
   float localY;
+  float localWorldX;
+  float localWorldY;
   float worldX;
   float worldY;
   float worldDx;

@@ -44,15 +44,17 @@ public:
 
 protected:
   Frame container_;
-  Rectangle bound_ctrl_;
-  std::array<Rectangle, 4> nodeResizeCtrls_;
-  std::array<Rectangle, 4> nodeRotateCtrls_;
+  Rectangle translateCtrl_;
+  std::array<Rectangle, 4> resizeNodeCtrls_;
+  std::array<Rectangle, 4> resizeEdgeCtrls_;
+  std::array<Rectangle, 4> rotateCtrls_;
   node::Node* hoverNode_ = nullptr;
   document::Editor editor_;
   const node::NodeArary editNodes_;
   MouseInteraction mouseInteraction_{Selection{[](node::Vector size) { return node::Size{size.x, size.y}; }, IterWithWorldMatrix{&container_}}};
 
   void buildEditor();
+  void layoutResizeEdgeCtrls();
   void handleDragBoundCtrlNode(event::MouseEvent &event);
   void handleDragRotateCtrlNode(int index, event::MouseEvent &event);
   void handleDragResizeCtrlEdge(event::MouseEvent &event);

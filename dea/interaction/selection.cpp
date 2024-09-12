@@ -20,10 +20,8 @@ void Selection::onMouseMove(MouseEvent& event) {
     auto* node = iter.get();
     if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
       auto matrix = viewport.getVPMatrix() * iter.getWorldMatrix();
-      auto local = getEventLocalPosition(event, iter);
-      event.localX = local.x;
-      event.localY = local.y;
-      auto cursorRect = Rect{local.x - radius, local.y - radius, 2 * radius, 2 * radius};
+      setEventLocalPosition(event, iter);
+      auto cursorRect = Rect{event.localX - radius, event.localY - radius, 2 * radius, 2 * radius};
       auto [width, height] = getIntersectBound_(shape->getSize());
       auto bound = Rect{0, 0, width, height};
       // spdlog::info("local: x: {}, y: {}", local.x(), local.y());

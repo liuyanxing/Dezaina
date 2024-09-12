@@ -26,6 +26,10 @@ public:
       if (event.type == EventType::MouseMove &&
           (lastEvent.type == EventType::MouseDown || lastEvent.type == EventType::MouseDrag)) {
         event.type = EventType::MouseDrag;
+        event.dx = event.x - lastEvent.x;
+        event.dy = event.y - lastEvent.y;
+        event.worldDx = event.worldX - lastEvent.worldX;
+        event.worldDy = event.worldY - lastEvent.worldY;
       }
     }
     lastMouseEvent_ = event;

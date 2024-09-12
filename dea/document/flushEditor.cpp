@@ -23,15 +23,11 @@ void Document::flushEditor() {
 		case RecordType::kSelection:
 		{
 			change.addChange(change::ChangeType::Select, std::get<node::NodeIdArray>(record.value));			
-			continue;;
+			continue;
 		}
 		case RecordType::kTransform:
 		{
-			auto matrix = pool.allocate<message::Matrix>();
-			auto m = std::get<node::Matrix>(record.value);
-			matrix->set_m00(m.getM00()); matrix->set_m01(m.getM01()); matrix->set_m02(m.getM02());
-			matrix->set_m10(m.getM10()); matrix->set_m11(m.getM11()); matrix->set_m12(m.getM12());
-			nodeChange->set_transform(matrix);
+			nodeChange->set_transform(std::get<node::Matrix>(record.value).toChange(pool));
 			break;
 		}
 		default:

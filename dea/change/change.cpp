@@ -24,7 +24,7 @@ void Change::flush() {
 				doc.setSelection(std::move(std::get<node::NodeIdArray>(item.value)));
 				break;
 			case ChangeType::NodeChange:
-				doc.updateNode(std::get<message::NodeChange*>(item.value));
+				doc.applyNodeChange(std::get<message::NodeChange*>(item.value));
 				break;
 		}
 	}

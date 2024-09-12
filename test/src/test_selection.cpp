@@ -30,6 +30,11 @@ TEST(Selection, MouseLocal) {
 	MouseEvent em(mx, my, EventType::MouseMove);
 	interaction.onEvent(em);
 	EXPECT_TRUE(em.localX == 1 && em.localY == 1);
+	EXPECT_TRUE(em.localWorldX == 1 && em.localWorldY == 1);
+	viewport.scale(2, 2);
+	interaction.onEvent(em);
+	EXPECT_TRUE(em.localX == 1 && em.localY == 1);
+	EXPECT_TRUE(em.localWorldX == 0.5 && em.localWorldY == 0.5);
 }
 
 TEST(Selection, SelectByMouseDown) {

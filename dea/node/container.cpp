@@ -2,15 +2,16 @@
 
 namespace dea::node {
 
-void Container::append(Node* child, Node* parent) {
+bool Container::append(Node* child, Node* parent) {
 	if (!parent || !child) {
-		return;
+		return false;
 	}
 
 	auto container = node_cast<Container*>(parent);
 	if (container) {
 		container->appendChild(child);
 	}
+	return true;
 
 };
 

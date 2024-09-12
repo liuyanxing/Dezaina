@@ -118,7 +118,7 @@ export const structs = [
 			"Matrix operator*(const Matrix& rhs) const;",
 			"Vector operator*(const Vector& rhs) const;",
 			"void translate(float x, float y);",
-			"std::optional<Matrix> getInverse() const;",
+			"Matrix getInverse(const Matrix& defaultValue = Matrix()) const;",
 			"float getScaleX() const { return m00; }",
 			"Rect mapRect(const Rect& rect) const;",
 			"Vector mapPoint(const Vector& point) const;",

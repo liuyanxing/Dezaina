@@ -15,11 +15,11 @@ namespace dea::node {
 				return result;
 		}
 
-	  std::optional<Matrix> Matrix::getInverse() const {
+	  Matrix Matrix::getInverse(const Matrix& defaultValue) const {
 				Matrix result;
 				float det = m00 * m11 - m01 * m10;
 				if (det == 0) {
-						return std::nullopt;
+						return defaultValue;
 				}
 				float invDet = 1.0f / det;
 				result.m00 = m11 * invDet;

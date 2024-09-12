@@ -25,7 +25,9 @@ class Change : public base::NonCopyable {
 public:
 	message::NodeChange* addNodeChange(node::Node* node) {
 		if (changeMap_.find(node) == changeMap_.end()) {
-			changeMap_[node] = pool_.allocate<message::NodeChange>();
+			auto* nodeChange = pool_.allocate<message::NodeChange>();
+			nodeChange->set_guid(node->getGuid().toChange(pool_));
+			changeMap_[node] = nodeChange;
 		}
 		return changeMap_[node];
 	}
@@ -36,7 +38,7 @@ public:
 	void flush();
 
 private:
-  std::vector<ChangeItem> items_;
+	std::vector<ChangeItem> items_;
 	UndoRedo<ChangeItem> undoRedo_;
 	kiwi::MemoryPool pool_;
 	std::unordered_map<node::Node*, message::NodeChange*> changeMap_{};

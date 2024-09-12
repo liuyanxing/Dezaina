@@ -87,4 +87,14 @@ protected:
   uint32_t index_ = 0;
 };
 
+struct CmdHeader {
+	CmdId id;
+	uint32_t size;
+	uint32_t argsSize;
+	const char* name;
+	const char* description;
+	const char* args;
+	const char* condition;
+};
+
 } // namespace dea::command

@@ -19,6 +19,7 @@ public:
 
   auto* root() { return &page_; }
   auto& getNodeEditor() { return node_editor_; }
+  void onEvent(event::Event& event) override;
 
   void dump();
 
@@ -38,7 +39,6 @@ private:
   void handleSelectionChange(const node::NodeArary& nodes);
   void updateNodeEditor();
   void handleHover();
-  void onEvent(event::Event& event) override;
   // void onBeforeTick(event::Event* event) override;
   void onMouseWheel(event::MouseEvent& event) override;
   void onMouseDrag(event::MouseEvent& event) override;

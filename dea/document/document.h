@@ -57,7 +57,7 @@ public:
 
 	void append(node::Node* child);
 	void append(node::Node* child, node::Node* parent);
-	void updateNode(message::NodeChange* change);
+	void applyNodeChange(message::NodeChange* change);
 	void remove(node::Node* node) { }
 
 	void setRoot(node::DocumentNode* root) { root_ = root; }

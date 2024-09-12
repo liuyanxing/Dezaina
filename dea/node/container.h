@@ -60,7 +60,7 @@ public:
     return !firstChild_;
   };
 	
-  static void append(Node* child, Node* parent);
+  static bool append(Node* child, Node* parent);
 protected:
   Node* firstChild_ = nullptr;
   Node* lastChild_ = nullptr;

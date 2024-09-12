@@ -2,7 +2,6 @@
 #include "node.h"
 #include "base/data.h"
 #include "resource.h"
-#include "utility/coords.h"
 #include "spdlog/spdlog.h"
 
 namespace dea::document {
@@ -154,13 +153,14 @@ void Document::append(node::Node* child) {
 	}
 
 	auto* parent = getParent(child);
+	assert(parent);
   append(child, parent);
 }
 
 void Document::append(node::Node* child, node::Node* parent) {
-  if (!parent) {
-    return;
-  }
+	 if (!node::Container::append(child, parent)) {
+		return;
+	 }
 
 	if (child->getParentIndex().guid != parent->getGuid()) {
 		auto parentIndex = child->getParentIndex();
@@ -169,16 +169,15 @@ void Document::append(node::Node* child, node::Node* parent) {
 		editor_.setParent(child);
 	}
 
-	node::Container::append(child, parent);
 }
 
-void Document::updateNode(message::NodeChange* change) {
+void Document::applyNodeChange(message::NodeChange* change) {
   auto* guid = change->guid();
   auto* node = getNodeById({*guid->sessionID(), *guid->localID()});
   if (!node) {
     return;
   }
-  // node->update(change);
+  node->applyChange(*change);
 }
 
 void Document::setCurrentPage(node::PageNode* page) {

@@ -42,7 +42,7 @@ TEST(NodeEditor, DragEditorToMoveNode) {
     auto* rect = node_cast<RectangleNode*>(editeNode);
     EXPECT_TRUE(rect);
     auto transform = rect->getTransform();
-    EXPECT_TRUE(transform.m01 == 50 && transform.m02 == 50);
+    EXPECT_TRUE(transform.m02 == 50 && transform.m12 == 50);
 }
 
 
