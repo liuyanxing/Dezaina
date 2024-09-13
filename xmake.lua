@@ -25,6 +25,7 @@ option("app")
 		set_description("Build app")
 option_end()
 
+includes("xmake/task.lua")
 includes("dea")
 
 includes("test")
