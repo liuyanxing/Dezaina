@@ -27,6 +27,9 @@ public:
   };
 
   Frame* getContainer() { return &container_; }
+  auto getFirstNode() { return editNodes_[0]; }
+
+
   virtual void update(const std::vector<node::Node*>& nodes) {};
   void update();
   void appendToContainer(node::Node* node) {

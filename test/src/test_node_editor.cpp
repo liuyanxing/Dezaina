@@ -21,6 +21,7 @@ void init() {
     deza.loadEmptyDocument();
     auto* rect = doc.createNode<RectangleNode>(doc.currentPage());
     rect->setSize({100, 100});
+    doc.editor().setImmediate(true);
 }
 
 TEST(NodeEditor, BuildWhenCursorDownOnNode) {
@@ -29,20 +30,39 @@ TEST(NodeEditor, BuildWhenCursorDownOnNode) {
     deza.tick();
     auto& editor = interaction.getNodeEditor();
     EXPECT_TRUE(editor);
+    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseUp, 0, 0);
 }
 
 TEST(NodeEditor, DragEditorToMoveNode) {
-    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseUp, 0, 0);
-    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseMove, 0, 0);
-    deza.dispatchMouseEvent(width / 2 + 50, height / 2 + 50, EventType::MouseDown, 0, 0);
-    deza.dispatchMouseEvent(width / 2 + 100, height / 2 + 100, EventType::MouseMove, 0, 0);
-    deza.tick();
-    auto& editor = interaction.getNodeEditor();
-    auto& editeNode = editor->getEditNodes()[0];
-    auto* rect = node_cast<RectangleNode*>(editeNode);
-    EXPECT_TRUE(rect);
-    auto transform = rect->getTransform();
-    EXPECT_TRUE(transform.m02 == 50 && transform.m12 == 50);
+    auto* node = interaction.getNodeEditor()->getFirstNode();
+    auto* rect = node_cast<RectangleNode*>(node);
+
+    deza.dragInterNode("bt", 50, 50);
+    EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 50, 0, 1, 50));
+
+    deza.dragInterNode("bt", -50, -50);
+    EXPECT_TRUE(rect->getTransform() == Matrix());
+}
+
+TEST(NodeEditor, DragEditorResizeEdge) {
+    auto* node = interaction.getNodeEditor()->getFirstNode();
+    auto* rect = node_cast<RectangleNode*>(node);
+
+    deza.dragInterNode("be0", 0, -50);
+    EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 0, 0, 1, -50));
+    EXPECT_TRUE(rect->getSize() == Vector(100, 150));
+
+    deza.dragInterNode("be1", 50, 0);
+    EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 0, 0, 1, -50));
+    EXPECT_TRUE(rect->getSize() == Vector(150, 150));
+
+    deza.dragInterNode("be2", 0, 50);
+    EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 0, 0, 1, -50));
+    EXPECT_TRUE(rect->getSize() == Vector(150, 200));
+
+    deza.dragInterNode("be3", -50, 0);
+    EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, -50, 0, 1, -50));
+    EXPECT_TRUE(rect->getSize() == Vector(200, 200));
 }
 
 

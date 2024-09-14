@@ -15,6 +15,10 @@ namespace dea::node {
 				return result;
 		}
 
+		bool Matrix::operator==(const Matrix& other) const {
+				return m00 == other.m00 && m01 == other.m01 && m02 == other.m02 && m10 == other.m10 && m11 == other.m11 && m12 == other.m12;
+		}
+
 	  Matrix Matrix::getInverse(const Matrix& defaultValue) const {
 				Matrix result;
 				float det = m00 * m11 - m01 * m10;

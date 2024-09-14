@@ -322,21 +322,21 @@ struct Vector  {
 	void setY(const float& v) {
 		y = v;
 	}
-	float length() const;
-	void normalize();
-	Vector operator+(const Vector& rhs) const;
-	Vector operator-(const Vector& rhs) const;
-	Vector operator*(float rhs) const;
-	Vector operator/(float rhs) const;
-	Vector operator-() const;
-	Vector& operator+=(const Vector& rhs);
-	Vector& operator-=(const Vector& rhs);
-	Vector& operator*=(float rhs);
-	Vector& operator/=(float rhs);
-	bool operator==(const Vector& rhs) const;
-	bool operator!=(const Vector& rhs) const;
-	float dot(const Vector& rhs) const;
-	float cross(const Vector& rhs) const;
+	float length() const { return sqrt(x * x + y * y); }
+	void normalize() { float l = length(); if (l != 0) { x /= l; y /= l; } }
+	Vector operator+(const Vector& rhs) const { return Vector(x + rhs.x, y + rhs.y); }
+	Vector operator-(const Vector& rhs) const { return Vector(x - rhs.x, y - rhs.y); }
+	Vector operator*(float rhs) const { return Vector(x * rhs, y * rhs); }
+	Vector operator/(float rhs) const { return Vector(x / rhs, y / rhs); }
+	Vector operator-() const { return Vector(-x, -y); }
+	Vector& operator+=(const Vector& rhs) { x += rhs.x; y += rhs.y; return *this; }
+	Vector& operator-=(const Vector& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
+	Vector& operator*=(float rhs) { x *= rhs; y *= rhs; return *this; }
+	Vector& operator/=(float rhs) { x /= rhs; y /= rhs; return *this; }
+	bool operator==(const Vector& rhs) const { return x == rhs.x && y == rhs.y; }
+	bool operator!=(const Vector& rhs) const { return x != rhs.x || y != rhs.y; }
+	float dot(const Vector& rhs) const { return x * rhs.x + y * rhs.y; }
+	float cross(const Vector& rhs) const { return x * rhs.y - y * rhs.x; }
 
 	void applyChange(const message::Vector& change) {
 		if (change.x() != nullptr) {
@@ -474,6 +474,7 @@ struct Matrix  {
 	}
 	Matrix operator*(const Matrix& rhs) const;
 	Vector operator*(const Vector& rhs) const;
+	bool operator==(const Matrix& rhs) const;
 	void translate(float x, float y);
 	Matrix getInverse(const Matrix& defaultValue = Matrix()) const;
 	float getScaleX() const { return m00; }

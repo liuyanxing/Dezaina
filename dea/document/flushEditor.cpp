@@ -1,6 +1,7 @@
 #include "dezaina.h"
 #include "document.h"
 #include "change/change.h"
+#include "layout.h"
 
 namespace dea::document {
 
@@ -8,6 +9,8 @@ void Document::flushEditor() {
 	if (editor_.empty()) {
 		return;
 	}
+
+	layout::ContraintLayout cLayout{};
 
 	auto& change = Dezaina::instance().getChange();
 	auto& pool = change.getPool();
@@ -17,6 +20,10 @@ void Document::flushEditor() {
 		if (node == nullptr) {
 			continue;
 		}
+		if (record.type >= RecordType::kLayoutRelation) {
+			cLayout.add(&record);
+			continue;
+		}
 		auto* nodeChange = change.addNodeChange(node);
 
 		switch (record.type) {
@@ -24,11 +31,6 @@ void Document::flushEditor() {
 		{
 			change.addChange(change::ChangeType::Select, std::get<node::NodeIdArray>(record.value));			
 			continue;
-		}
-		case RecordType::kTransform:
-		{
-			nodeChange->set_transform(std::get<node::Matrix>(record.value).toChange(pool));
-			break;
 		}
 		default:
 			continue;
