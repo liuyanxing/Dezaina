@@ -24,25 +24,16 @@ void Editor::addRecord(const GUID &layerId, const RecordType &type,
   }
 }
 
-void Editor::addRecord(const RecordType &type, const RecordValue &value) {
-  addRecord({}, type, value);
-}
-
-Editor &Editor::resize(float width, float height, const Vector &direction) {
-  editNodes([width, height, &direction, this](Node *node) {
-    if (auto *shape = node_cast<DefaultShapeNode *>(node)) {
-      auto newSize = shape->getSize() + Vector{width, height};
-      addRecord(node->getGuid(), RecordType::kSetSize,
-                SetSizeValue{newSize, direction});
-    }
+Editor& Editor::resize(float width, float height, const Vector& direction) {
+  editNodes([width, height, &direction, this](Node* node) {
+    addRecord(node->getGuid(), RecordType::kSetSize, std::array<Vector, 2>{Vector{width, height}, direction});
   });
   return *this;
 }
 
-Editor &Editor::setSize(float width, float height, const Vector &direction) {
-  editNodes([width, height, &direction, this](Node *node) {
-    addRecord(node->getGuid(), RecordType::kSetSize,
-              SetSizeValue{Vector{width, height}, direction});
+Editor& Editor::setSize(float width, float height, const Vector& direction) {
+  editNodes([width, height, &direction, this](Node* node) {
+    addRecord(node->getGuid(), RecordType::kSetSize, std::array<Vector, 2>{Vector{width, height}, direction});
   });
   return *this;
 }

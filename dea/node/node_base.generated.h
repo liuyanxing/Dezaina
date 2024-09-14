@@ -328,7 +328,6 @@ struct Vector  {
 	Vector operator-(const Vector& rhs) const { return Vector(x - rhs.x, y - rhs.y); }
 	Vector operator*(float rhs) const { return Vector(x * rhs, y * rhs); }
 	Vector operator/(float rhs) const { return Vector(x / rhs, y / rhs); }
-	Vector operator*(const Vector &rhs) const { return Vector(x * rhs.x, y * rhs.y); }
 	Vector operator-() const { return Vector(-x, -y); }
 	Vector& operator+=(const Vector& rhs) { x += rhs.x; y += rhs.y; return *this; }
 	Vector& operator-=(const Vector& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
@@ -338,7 +337,6 @@ struct Vector  {
 	bool operator!=(const Vector& rhs) const { return x != rhs.x || y != rhs.y; }
 	float dot(const Vector& rhs) const { return x * rhs.x + y * rhs.y; }
 	float cross(const Vector& rhs) const { return x * rhs.y - y * rhs.x; }
-	float angle(const Vector& rhs) const { return atan2(cross(rhs), dot(rhs)); }
 
 	void applyChange(const message::Vector& change) {
 		if (change.x() != nullptr) {

@@ -98,6 +98,10 @@ public:
                                       newWorldY);
   }
 
+  bool dragInterNode(const std::string& query, float dx, float dy) {
+    return interaction_.dragInterNode(query, dx, dy);
+  }
+
 private:
   document::Document doc_;
   Viewport viewport_;

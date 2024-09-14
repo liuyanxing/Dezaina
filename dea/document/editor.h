@@ -14,6 +14,9 @@ enum class RecordType {
   kSelection,
   kLayoutRelation,
   kSetParent = kLayoutRelation,
+  kTranslate,
+  kRotate,
+  kSetSize,
   kTransform,
   kSetSize,
 };
@@ -43,20 +46,21 @@ public:
   void clear() { records_.clear(); }
 
   bool editSelectedNodes();
-  Editor &create(node::Node *node);
-  Editor &setParent(node::Node *node) {
-    addRecord(RecordType::kSetParent, node);
-    return *this;
-  }
-  Editor &createAndSelect(node::NodeType type, node::Node *parent);
-  void setEditNodes(node::NodeArary &&nodes) { nodes_ = move(nodes); };
-  Editor &rotate(float degrees);
-  Editor &translate(float x, float y);
-  Editor &resize(float width, float height, const node::Vector &direction);
-  Editor &setTranslate(float x, float y);
-  Editor &setSize(float width, float height,
-                  const node::Vector &direction = {1, 1});
-  Editor &setTransform(const node::Matrix &transform);
+  Editor& create(node::Node* node);
+  Editor& setParent(node::Node* node) { addRecord(EditRecordItem::Make(RecordType::kSetParent, node)); return *this; }
+  Editor& createAndSelect(node::NodeType type, node::Node* parent);
+  Editor& setEditNodes(std::vector<node::Node*> nodes);
+  Editor& rotate(float degrees);
+  Editor& translate(float x, float y);
+  Editor& resize(float width, float height, const node::Vector& direction);
+  Editor& resize(float width, float height);
+  Editor& setRotatation(float degrees);
+  Editor& setTranslate(float x, float y);
+  Editor& setTranslateX(float x);
+  Editor& setTranslateY(float y);
+  Editor& setSize(float width, float height, const node::Vector& direction);
+  Editor& setSize(float width, float height);
+  Editor& setTransform(const node::Matrix& transform);
 
   Editor &select(const node::NodeIdArray &selection) {
     addRecord(RecordType::kSelection, selection);
