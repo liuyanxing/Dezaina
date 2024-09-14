@@ -22,6 +22,7 @@ public:
   void onEvent(event::Event& event) override;
 
   void dump();
+  bool dragInterNode(const std::string& query, float dx, float dy);
 
   static node::Size GetItersectBound(node::Vector size);
 

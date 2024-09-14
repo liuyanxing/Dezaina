@@ -11,11 +11,12 @@ namespace dea::document {
 
 enum class RecordType {
   kCreate,
-  kSetParent,
   kSelection,
+  kLayoutRelation,
+  kSetParent = kLayoutRelation,
   kTranslate,
   kRotate,
-  kResize,
+  kSetSize,
   kTransform,
 };
 
@@ -52,13 +53,13 @@ public:
   Editor& setEditNodes(std::vector<node::Node*> nodes);
   Editor& rotate(float degrees);
   Editor& translate(float x, float y);
-  Editor& resize(float width, float height, const node::Vector& anchor);
+  Editor& resize(float width, float height, const node::Vector& direction);
   Editor& resize(float width, float height);
   Editor& setRotatation(float degrees);
   Editor& setTranslate(float x, float y);
   Editor& setTranslateX(float x);
   Editor& setTranslateY(float y);
-  Editor& setSize(float width, float height, const node::Vector& anchor);
+  Editor& setSize(float width, float height, const node::Vector& direction);
   Editor& setSize(float width, float height);
   Editor& setTransform(const node::Matrix& transform);
 

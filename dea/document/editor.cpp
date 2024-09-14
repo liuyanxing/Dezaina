@@ -31,16 +31,16 @@ void Editor::addRecord(const GUID& layerId, const RecordType& type, const Record
   }
 }
 
-Editor& Editor::resize(float width, float height, const Vector& anchor) {
-  editNodes([width, height, &anchor, this](Node* node) {
-    addRecord(node->getGuid(), RecordType::kResize, std::array<Vector, 2>{Vector{width, height}, anchor});
+Editor& Editor::resize(float width, float height, const Vector& direction) {
+  editNodes([width, height, &direction, this](Node* node) {
+    addRecord(node->getGuid(), RecordType::kSetSize, std::array<Vector, 2>{Vector{width, height}, direction});
   });
   return *this;
 }
 
-Editor& Editor::setSize(float width, float height, const Vector& anchor) {
-  editNodes([width, height, &anchor, this](Node* node) {
-    addRecord(node->getGuid(), RecordType::kResize, std::array<Vector, 2>{Vector{width, height}, anchor});
+Editor& Editor::setSize(float width, float height, const Vector& direction) {
+  editNodes([width, height, &direction, this](Node* node) {
+    addRecord(node->getGuid(), RecordType::kSetSize, std::array<Vector, 2>{Vector{width, height}, direction});
   });
   return *this;
 }
