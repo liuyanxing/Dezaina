@@ -1,4 +1,5 @@
 #include "node_editor.h"
+#include "config/config.h"
 #include "config/size.h"
 #include "dezaina.h"
 #include "document.h"
@@ -6,7 +7,6 @@
 #include "node/type.h"
 #include "spdlog/spdlog.h"
 #include "utility.h"
-#include "config/config.h"
 #include "utility/coords.h"
 #include "viewport/viewport.h"
 
@@ -15,11 +15,13 @@ namespace dea::interaction {
 using namespace node;
 using namespace event;
 
-// void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent& event) {
+// void NodeEditor::handleDragResizeCtrlNode(int index, event::MouseEvent&
+// event) {
 //   if (editedNodes_.size() == 1) {
-//     const std::array<node::Vector, 4> directions = {{ { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } } };
-//     const std::array<SkPoint, 4> anchors = {{ { 1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 } } };
-//     auto [dx, dy] = node::Vector{event->deltaX, event->deltaY} * directions[index];
+//     const std::array<node::Vector, 4> directions = {{ { -1, -1 }, { 1, -1 },
+//     { 1, 1 }, { -1, 1 } } }; const std::array<SkPoint, 4> anchors = {{ { 1, 1
+//     }, { 0, 1 }, { 0, 0 }, { 1, 0 } } }; auto [dx, dy] =
+//     node::Vector{event->deltaX, event->deltaY} * directions[index];
 //     editor_.resize(dx, dy, anchors[index]);
 //   } else {
 //     // todo 处理选中多个图层
@@ -27,7 +29,7 @@ using namespace event;
 
 // }
 
-void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
+void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent &event) {
 
   // const auto [width, height] = translateCtrl_.getSize();
   // int index = 0;
@@ -53,9 +55,11 @@ void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
   // }
 
   // if (editNodes_.size() == 1) {
-  //   const std::array<node::Vector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
-  //   const std::array<node::Vector, 4> anchors = {{ { 0.5, 1 }, { 0, 0.5 }, { 0.5, 0 }, { 1, 0.5 } } };
-  //   // auto [dx, dy] = node::Vector{event->deltaX, event->deltaY} * directions[index];
+  //   const std::array<node::Vector, 4> directions = {{ { 0, -1 }, { 1, 0 }, {
+  //   0, 1 }, { -1, 0 } } }; const std::array<node::Vector, 4> anchors = {{ {
+  //   0.5, 1 }, { 0, 0.5 }, { 0.5, 0 }, { 1, 0.5 } } };
+  //   // auto [dx, dy] = node::Vector{event->deltaX, event->deltaY} *
+  //   directions[index];
   //   // editor_.resize(dx, dy, anchors[index]);
   // } else {
   //   // todo 处理选中多个图层
@@ -63,61 +67,67 @@ void NodeEditor::handleDragBoundCtrlNode(event::MouseEvent& event) {
 }
 
 void NodeEditor::buildEditor() {
-    SolidPaint strokePaint;
-    auto& [r, g, b, a] = config::color::Primary;
-    strokePaint.setColor({r, g, b, a});
+  SolidPaint strokePaint;
+  auto &[r, g, b, a] = config::color::Primary;
+  strokePaint.setColor({r, g, b, a});
 
-    translateCtrl_.setName("bt");
-    translateCtrl_.setStrokePaints({strokePaint});
-    translateCtrl_.setStrokeWeight(config::size::Min);
-    translateCtrl_.addEventListener(EventType::MouseDrag, [this](Event& e) {
-      auto& event = static_cast<MouseEvent&>(e);
-      editor_.translate(event.localWorldDx, event.localWorldDy);
+  translateCtrl_.setName("bt");
+  translateCtrl_.setStrokePaints({strokePaint});
+  translateCtrl_.setStrokeWeight(config::size::Min);
+  translateCtrl_.addEventListener(EventType::MouseDrag, [this](Event &e) {
+    auto &event = static_cast<MouseEvent &>(e);
+    editor_.translate(event.localWorldDx, event.localWorldDy);
+  });
+  appendToContainer(&translateCtrl_);
+
+  SolidPaint fillPaint;
+  fillPaint.setColor({1, 1, 1, 1});
+  for (int i = 0; i < 4; i++) {
+    auto &ctrl = resizeNodeCtrls_[i];
+    ctrl.setName("bs" + std::to_string(i));
+    ctrl.setFillPaints({fillPaint});
+    ctrl.setStrokePaints({strokePaint});
+    ctrl.setStrokeWeight(config::size::Min);
+    ctrl.setSize({config::size::Small, config::size::Small});
+    ctrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
+      const std::array<node::Vector, 4> directions = {
+          {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}}};
+      auto &event = static_cast<MouseEvent &>(e);
+      auto direction = directions[i];
+      auto d = direction * node::Vector{event.localWorldDx, event.localWorldDy};
+      editor_.resize(d.x, d.y, directions[i]);
     });
-    appendToContainer(&translateCtrl_);
+    appendToContainer(&ctrl);
+  }
 
-    int nodeIndex = 0;
+  for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
+    auto &ctrl = resizeEdgeCtrls_[i];
+    ctrl.setName("be" + std::to_string(i));
+    ctrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
+      const std::array<node::Vector, 4> directions = {
+          {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}};
+      auto &event = static_cast<MouseEvent &>(e);
+      auto direction = directions[i];
+      auto d = direction * node::Vector{event.localWorldDx, event.localWorldDy};
+      editor_.resize(d.x, d.y, directions[i]);
+    });
+    appendToContainer(&ctrl);
+  }
 
-    SolidPaint fillPaint;
-    fillPaint.setColor({1, 1, 1, 1});
-    for (auto& ctrl : resizeNodeCtrls_) {
-      ctrl.setName("bs" + std::to_string(nodeIndex));
-      ctrl.setFillPaints({fillPaint});
-      ctrl.setStrokePaints({strokePaint});
-      ctrl.setStrokeWeight(config::size::Min);
-      ctrl.setSize({config::size::Small, config::size::Small});
-      ctrl.addEventListener(EventType::MouseDrag, [this, nodeIndex](Event& e) {
-        const std::array<node::Vector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
-        auto& event = static_cast<MouseEvent&>(e);
-        auto direction = directions[nodeIndex];
-        auto d = direction * node::Vector{event.localWorldDx, event.localWorldDy}.cross(direction);
-        editor_.resize(d.x, d.y, directions[nodeIndex]);
-      });
-      nodeIndex++;
-      // appendToContainer(&ctrl);
-    }
-    
-    for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
-      auto& ctrl = resizeEdgeCtrls_[i];
-      ctrl.setName("be" + std::to_string(i));
-      ctrl.addEventListener(EventType::MouseDrag, [this, i](Event& e) {
-        const std::array<node::Vector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
-        auto& event = static_cast<MouseEvent&>(e);
-        auto direction = directions[i];
-        auto d = node::Vector{event.localWorldDx, event.localWorldDy} * direction;
-        editor_.resize(d.x, d.y, directions[i]);
-      });
-      appendToContainer(&ctrl);
-    }
-
-    for (int i = 0; i < rotateCtrls_.size(); i++) {
-      auto& ctrl = rotateCtrls_[i];
-      ctrl.setName("br" + std::to_string(i));
-      ctrl.setSize({config::size::Small, config::size::Small});
-      ctrl.addEventListener(EventType::MouseDrag, [this, nodeIndex](Event& event) {
-        // handleDragRotateCtrlNode(nodeIndex, static_cast<MouseEvent*>(event));
-      });
-    }
+  for (int i = 0; i < rotateCtrls_.size(); i++) {
+    auto &ctrl = rotateCtrls_[i];
+    ctrl.setName("br" + std::to_string(i));
+    ctrl.setSize({config::size::Small, config::size::Small});
+    ctrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
+      auto &event = static_cast<MouseEvent &>(e);
+      auto oldVector = Vector{event.localWorldX - event.localWorldDx,
+                              event.localWorldY - event.localWorldDy};
+      auto angle =
+         Vector{ event.localWorldX, event.localWorldY }.angle(oldVector);
+      editor_.rotate(angle);
+    });
+    appendToContainer(&ctrl);
+  }
 }
 
 void NodeEditor::update() {
@@ -126,8 +136,8 @@ void NodeEditor::update() {
   if (editNodes_.empty()) {
     return;
   } else if (editNodes_.size() == 1) {
-    auto& viewport = Dezaina::viewport();
-    auto* node = editNodes_[0];
+    auto &viewport = Dezaina::viewport();
+    auto *node = editNodes_[0];
     transform = document::getWorldMatrix(node);
     size = viewport.getScreenSize(node);
   } else {
@@ -137,7 +147,7 @@ void NodeEditor::update() {
   container_.setTransform(transform);
   container_.setSize({size.width, size.height});
   translateCtrl_.setSize({size.width, size.height});
-  auto bound = Rect(0, 0, size.width, size.height); 
+  auto bound = Rect(0, 0, size.width, size.height);
 
   // todo use constraint to layout
   layoutRectsToCornersOfRect(resizeNodeCtrls_, bound.makeOutset(2, 2));
@@ -164,4 +174,4 @@ void NodeEditor::layoutResizeEdgeCtrls() {
   resizeEdgeCtrls_[3].setTransform(matrix);
 }
 
-}  // namespace dea::interaction
+} // namespace dea::interaction

@@ -17,15 +17,12 @@ namespace dea {
 
 class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
-  Dezaina() :
-    doc_(0),
-    viewport_(),
-    eventSystem_(),
-    interaction_(doc_),
+  Dezaina()
+      : doc_(0), viewport_(), eventSystem_(), interaction_(doc_),
 #ifdef DEA_EANBLE_RENDER
-    render_(doc_, viewport_),
+        render_(doc_, viewport_),
 #endif
-    change_() {
+        change_() {
     resource::Resource::Init();
     init();
     // eventSystem_.initialized();
@@ -106,10 +103,15 @@ public:
   auto &getViewport() { return viewport_; }
   auto &getInteraction() { return interaction_; }
   auto &getEventSystem() { return eventSystem_; }
-  auto& getChange() { return change_; }
+  auto &getChange() { return change_; }
 
-  bool dragInterNode(const std::string& query, float dx, float dy) {
+  bool dragInterNode(const std::string &query, float dx, float dy) {
     return interaction_.dragInterNode(query, dx, dy);
+  }
+
+  bool dragInterNode(const std::string &query, float worldX, float worldY,
+                     float newWorldX, float newWorldY) {
+    return interaction_.dragInterNode(query, worldX, worldY, newWorldX, newWorldY);
   }
 
 private:
