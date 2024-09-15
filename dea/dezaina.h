@@ -16,7 +16,10 @@ class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
   Dezaina()
       : doc_(0), viewport_(), eventSystem_(), interaction_(doc_),
-        render_(doc_, viewport_), change_() {
+#ifdef DEA_EANBLE_RENDER
+        render_(doc_, viewport_),
+#endif
+        change_() {
     resource::Resource::Init();
     init();
     // eventSystem_.initialized();
@@ -94,12 +97,7 @@ public:
 
   bool dragInterNode(const std::string &query, float worldX, float worldY,
                      float newWorldX, float newWorldY) {
-    return interaction_.dragInterNode(query, worldX, worldY, newWorldX,
-                                      newWorldY);
-  }
-
-  bool dragInterNode(const std::string& query, float dx, float dy) {
-    return interaction_.dragInterNode(query, dx, dy);
+    return interaction_.dragInterNode(query, worldX, worldY, newWorldX, newWorldY);
   }
 
 private:

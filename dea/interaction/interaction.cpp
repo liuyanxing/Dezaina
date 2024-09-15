@@ -143,40 +143,6 @@ bool Interaction::dragInterNode(const std::string &query, float worldX,
   return dragInterNode(query, event);
 }
 
-/*
-query: the query string to find the node
-rules:
-  1. "be[index]" to find bound edge by index
-  2. "bs[index]" to find bound resize node by index
-  3. "br[index]" to find rotate node by index
-*/
-
-bool Interaction::dragInterNode(const std::string& query, float dx, float dy) {
-  if (!node_editor_) {
-    return false;
-  }
-
-  bool found = false;
-  interaction::Iter iter(&page_);
-  while (iter.isValid())
-  {
-    auto* node = iter.get();
-    if (query == node->getName()) {
-      found = true;
-      MouseEvent event; 
-      event.type = EventType::MouseDrag;
-      event.localWorldDx = dx;
-      event.localWorldDy = dy;
-      
-      auto* emitter = interaction::node_cast<event::EventEmitter*>(node);
-      emitter->emit(event);
-    }
-    ++iter;
-  }
-
-  return found;
-}
-
 void Interaction::dump() {
   Iter iter(&page_);
   spdlog::info("dumping page");
