@@ -28,7 +28,9 @@ public:
 	template<typename T>
 	T* createNode(const node::GUID& id) {
 		auto* node = buildNode<T>(id);
-		editor_.create(node);
+		if (!node::node_cast<node::DocumentNode*>(node)) {
+			editor_.create(node);
+		}
 		return node;
 	};
 
@@ -110,8 +112,8 @@ public:
 
 private:
 	NodeMap nodeMap_{100};
-  node::DocumentNode* root_{};
-  node::PageNode* currentPage_{};
+	node::DocumentNode* root_{};
+	node::PageNode* currentPage_{};
 	Editor editor_;
 	uint32_t sessionId_{};
 	uint32_t localId_{1};
