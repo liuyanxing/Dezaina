@@ -70,6 +70,17 @@ Editor &Editor::translate(float x, float y) {
   return *this;
 }
 
+Editor &Editor::rotate(float angle) {
+  editNodes([angle, this](Node *node) {
+    if (auto *shape = node_cast<DefaultShapeNode *>(node)) {
+      auto m = shape->getTransform();
+      m.rotate(angle);
+      addRecord(node->getGuid(), RecordType::kTransform, m);
+    }
+  });
+  return *this;
+}
+
 Editor &Editor::setTransform(const Matrix &matrix) {
   editNodes([&matrix, this](Node *node) {
     addRecord(node->getGuid(), RecordType::kTransform, matrix);

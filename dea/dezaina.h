@@ -101,10 +101,15 @@ public:
   auto &getViewport() { return viewport_; }
   auto &getInteraction() { return interaction_; }
   auto &getEventSystem() { return eventSystem_; }
-  auto& getChange() { return change_; }
+  auto &getChange() { return change_; }
 
-  bool dragInterNode(const std::string& query, float dx, float dy) {
+  bool dragInterNode(const std::string &query, float dx, float dy) {
     return interaction_.dragInterNode(query, dx, dy);
+  }
+
+  bool dragInterNode(const std::string &query, float worldX, float worldY,
+                     float newWorldX, float newWorldY) {
+    return interaction_.dragInterNode(query, worldX, worldY, newWorldX, newWorldY);
   }
 
 private:

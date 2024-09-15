@@ -1,5 +1,6 @@
 #include "node.generated.h"
 #include <optional>
+#include <cmath>
 
 namespace dea::node {
 	
@@ -38,6 +39,18 @@ namespace dea::node {
 		void Matrix::translate(float x, float y) {
 			  m02 += x;
 				m12 += y;
+		}
+
+		void Matrix::rotate(float angle) {
+				float cos = std::cos(angle);
+				float sin = std::sin(angle);
+				Matrix rotationMatrix{ cos, sin, 0, -sin, cos, 0 };
+				
+				*this = operator*(rotationMatrix);
+		}
+
+		float Matrix::getRotation() const {
+				return std::atan2(m01, m00);
 		}
 
 		Vector Matrix::operator*(const Vector& rhs) const {

@@ -1,28 +1,31 @@
 #pragma once
 
-#include <memory>
 #include "creation.h"
+#include "document.h"
 #include "event.h"
 #include "listener.h"
 #include "node.h"
+#include "node/page.h"
+#include "node/path.h"
 #include "node_editor.h"
 #include "selection.h"
-#include "node/path.h"
-#include "node/page.h"
-#include "document.h"
+#include <memory>
 
 namespace dea::interaction {
 
 class Interaction : public InteractionListener {
 public:
-  Interaction(document::Document& doc);
+  Interaction(document::Document &doc);
 
-  auto* root() { return &page_; }
-  auto& getNodeEditor() { return node_editor_; }
-  void onEvent(event::Event& event) override;
+  auto *root() { return &page_; }
+  auto &getNodeEditor() { return node_editor_; }
+  void onEvent(event::Event &event) override;
 
   void dump();
-  bool dragInterNode(const std::string& query, float dx, float dy);
+  bool dragInterNode(const std::string &query, float dx, float dy);
+  bool dragInterNode(const std::string &query, float worldX, float worldY,
+                     float newWorldX, float newWorldY);
+  bool dragInterNode(const std::string &query, event::MouseEvent &event);
 
   static node::Size GetItersectBound(node::Vector size);
 
@@ -31,21 +34,19 @@ private:
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
   Selection selection_{GetItersectBound, IterWithWorldMatrix{nullptr}};
   Creation creation_;
-  document::Document& doc_;
+  document::Document &doc_;
 
-  void appendToContainer(node::Node* child) {
-    appendChild(&page_, child);
-  }
+  void appendToContainer(node::Node *child) { appendChild(&page_, child); }
 
-  void handleSelectionChange(const node::NodeArary& nodes);
+  void handleSelectionChange(const node::NodeArary &nodes);
   void updateNodeEditor();
   void handleHover();
   // void onBeforeTick(event::Event* event) override;
-  void onMouseWheel(event::MouseEvent& event) override;
-  void onMouseDrag(event::MouseEvent& event) override;
-  void onWindowResize(event::Event& event) override;
-  void onBeforeRender(event::Event& event) override;
-  void onAfterTick(event::Event& event) override;
+  void onMouseWheel(event::MouseEvent &event) override;
+  void onMouseDrag(event::MouseEvent &event) override;
+  void onWindowResize(event::Event &event) override;
+  void onBeforeRender(event::Event &event) override;
+  void onAfterTick(event::Event &event) override;
 };
 
-} // namespace interaction
+} // namespace dea::interaction

@@ -1,6 +1,7 @@
 #include "interaction.h"
 #include "dezaina.h"
 #include "document.h"
+#include "interaction/interaction.h"
 #include "node.h"
 #include "node/node.h"
 #include "selection.h"
@@ -12,40 +13,39 @@ using namespace event;
 using namespace node;
 using namespace document;
 
-Interaction::Interaction(Document& doc) : doc_(doc) {
+Interaction::Interaction(Document &doc) : doc_(doc) {
   page_.setBackgroundColor({0, 0, 0, 0});
-  doc_.addEventListener(EventType::PageChange, [this](Event& event) {
+  doc_.addEventListener(EventType::PageChange, [this](Event &event) {
     selection_.setIter(Document::IterWithWorldMatrix{doc_.currentPage()});
   });
 
-  selection_.onSelectionChange([this](const NodeArary& nodes) {
-    handleSelectionChange(nodes);
-  });
+  selection_.onSelectionChange(
+      [this](const NodeArary &nodes) { handleSelectionChange(nodes); });
 }
 
-
-void Interaction::handleSelectionChange(const node::NodeArary& selection) {
+void Interaction::handleSelectionChange(const node::NodeArary &selection) {
   if (selection.empty()) {
     return;
   }
 
   node::NodeIdArray ids;
-  for (auto* node : selection) {
+  for (auto *node : selection) {
     ids.push_back(node->getGuid());
   }
   doc_.editor().select(ids);
 }
 
 node::Size Interaction::GetItersectBound(node::Vector size) {
-  return  Dezaina::instance().getViewport().mapWorldToScreen(node::Size{size.x, size.y});
+  return Dezaina::instance().getViewport().mapWorldToScreen(
+      node::Size{size.x, size.y});
 }
 
 void Interaction::updateNodeEditor() {
-  auto& selection = doc_.getSelection();
+  auto &selection = doc_.getSelection();
   if (selection.empty()) {
     if (node_editor_ != nullptr) {
-      auto* editorContainer = node_editor_->getContainer();
-      page_.removeChild(editorContainer); 
+      auto *editorContainer = node_editor_->getContainer();
+      page_.removeChild(editorContainer);
       node_editor_ = nullptr;
       return;
     }
@@ -54,8 +54,9 @@ void Interaction::updateNodeEditor() {
 
   if (selection.size() > 1) {
   } else {
-    auto* node = doc_.getNodeById(selection[0]);
-    if (auto* rectangleNode = node::node_cast<node::RectangleNode*>(node); !node_editor_) {
+    auto *node = doc_.getNodeById(selection[0]);
+    if (auto *rectangleNode = node::node_cast<node::RectangleNode *>(node);
+        !node_editor_) {
       node_editor_ = std::make_unique<NodeEditor>(node::NodeArary{node});
     }
   }
@@ -64,7 +65,7 @@ void Interaction::updateNodeEditor() {
     return;
   }
   node_editor_->update();
-  auto* editorContainer = node_editor_->getContainer();
+  auto *editorContainer = node_editor_->getContainer();
   if (!page_.findChild(editorContainer)) {
     appendToContainer(editorContainer);
   }
@@ -72,7 +73,7 @@ void Interaction::updateNodeEditor() {
 }
 
 void Interaction::handleHover() {
-  auto* hoverNode = selection_.getHoverNode();
+  auto *hoverNode = selection_.getHoverNode();
   if (hoverNode == nullptr) {
     // hover_.clearPath();
     return;
@@ -80,7 +81,7 @@ void Interaction::handleHover() {
   // hover_.setPath(SkPath());
 }
 
-void Interaction::onEvent(event::Event& event) {
+void Interaction::onEvent(event::Event &event) {
   if (!doc_.loaded()) {
     return;
   }
@@ -95,40 +96,23 @@ void Interaction::onEvent(event::Event& event) {
   InteractionListener::onEvent(event);
 }
 
-void Interaction::onBeforeRender(event::Event& event)  {
-  updateNodeEditor();
-};
+void Interaction::onBeforeRender(event::Event &event) { updateNodeEditor(); };
 
-void Interaction::onAfterTick(Event& event) {
-  handleHover();
-}
+void Interaction::onAfterTick(Event &event) { handleHover(); }
 
-/*
-query: the query string to find the node
-rules:
-  1. "be[index]" to find bound edge by index
-  2. "bs[index]" to find bound resize node by index
-  3. "br[index]" to find rotate node by index
-*/
-
-bool Interaction::dragInterNode(const std::string& query, float dx, float dy) {
+bool Interaction::dragInterNode(const std::string &query,
+                                event::MouseEvent &event) {
   if (!node_editor_) {
     return false;
   }
 
   bool found = false;
   interaction::Iter iter(&page_);
-  while (iter.isValid())
-  {
-    auto* node = iter.get();
+  while (iter.isValid()) {
+    auto *node = iter.get();
     if (query == node->getName()) {
       found = true;
-      MouseEvent event; 
-      event.type = EventType::MouseDrag;
-      event.localWorldDx = dx;
-      event.localWorldDy = dy;
-      
-      auto* emitter = interaction::node_cast<event::EventEmitter*>(node);
+      auto *emitter = interaction::node_cast<event::EventEmitter *>(node);
       emitter->emit(event);
     }
     ++iter;
@@ -137,16 +121,39 @@ bool Interaction::dragInterNode(const std::string& query, float dx, float dy) {
   return found;
 }
 
+bool Interaction::dragInterNode(const std::string &query, float dx, float dy) {
+  MouseEvent event;
+  event.type = EventType::MouseDrag;
+  event.localWorldDx = dx;
+  event.localWorldDy = dy;
+
+  return dragInterNode(query, event);
+}
+
+bool Interaction::dragInterNode(const std::string &query, float worldX,
+                                float worldY, float newWorldX,
+                                float newWorldY) {
+  MouseEvent event;
+  event.type = EventType::MouseDrag;
+  event.localWorldX = newWorldX;
+  event.localWorldY = newWorldY;
+  event.localWorldDx = newWorldX - worldX;
+  event.localWorldDy = newWorldY - worldY;
+
+  return dragInterNode(query, event);
+}
+
 void Interaction::dump() {
   Iter iter(&page_);
   spdlog::info("dumping page");
   while (iter.isValid()) {
-    auto* node = iter.get();
-    auto* parent = iter.getParent();
-    spdlog::info("node: {}, parent: {}", getNodeTypeString(node), getNodeTypeString(parent));
+    auto *node = iter.get();
+    auto *parent = iter.getParent();
+    spdlog::info("node: {}, parent: {}", getNodeTypeString(node),
+                 getNodeTypeString(parent));
     ++iter;
   }
   spdlog::info("dump end");
 }
 
-}
+} // namespace dea::interaction

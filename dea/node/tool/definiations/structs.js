@@ -37,7 +37,7 @@ export const structs = [
 			"Vector operator-(const Vector& rhs) const { return Vector(x - rhs.x, y - rhs.y); }",
 			"Vector operator*(float rhs) const { return Vector(x * rhs, y * rhs); }",
 			"Vector operator/(float rhs) const { return Vector(x / rhs, y / rhs); }",
-  		"Vector operator*(const Vector &rhs) const { return Vector(x * rhs.x, y * rhs.y); }"
+  		"Vector operator*(const Vector &rhs) const { return Vector(x * rhs.x, y * rhs.y); }",
 			"Vector operator-() const { return Vector(-x, -y); }",
 			"Vector& operator+=(const Vector& rhs) { x += rhs.x; y += rhs.y; return *this; }",
 			"Vector& operator-=(const Vector& rhs) { x -= rhs.x; y -= rhs.y; return *this; }",
@@ -47,6 +47,7 @@ export const structs = [
 			"bool operator!=(const Vector& rhs) const { return x != rhs.x || y != rhs.y; }",
 			"float dot(const Vector& rhs) const { return x * rhs.x + y * rhs.y; }",
 			"float cross(const Vector& rhs) const { return x * rhs.y - y * rhs.x; }",
+			"float angle(const Vector& rhs) const { return atan2(cross(rhs), dot(rhs)); }",
 		]
 	},
 	{
@@ -120,8 +121,10 @@ export const structs = [
 			"Vector operator*(const Vector& rhs) const;",
 			"bool operator==(const Matrix& rhs) const;",
 			"void translate(float x, float y);",
+			"void rotate(float angle);",
 			"Matrix getInverse(const Matrix& defaultValue = Matrix()) const;",
 			"float getScaleX() const { return m00; }",
+			"float getRotation() const;",
 			"Rect mapRect(const Rect& rect) const;",
 			"Vector mapPoint(const Vector& point) const;",
 			"Vector mapVector(const Vector& vector) const;",
