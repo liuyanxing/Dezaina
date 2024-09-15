@@ -20,17 +20,12 @@ option_end()
 
 option("app")
 		add_deps("render")
-		set_default(false)
+		set_default(true)
 		set_showmenu(true)
 		set_description("Build app")
 option_end()
 
 includes("dea")
-
 includes("test")
-
--- if has_config("app") then
--- 	includes("app/native")
--- end
-
+includes("app/native")
 includes("app/helloworld")

@@ -114,7 +114,7 @@ private:
   node::PageNode* currentPage_{};
 	Editor editor_;
 	uint32_t sessionId_{};
-	uint32_t localId_{1};
+	uint32_t localId_{0};
 	std::unordered_map<uint32_t, uint32_t> blobIdMap_{};
 };
 

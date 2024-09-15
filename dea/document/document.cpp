@@ -154,7 +154,7 @@ void Document::append(node::Node* child) {
 
 	auto* parent = getParent(child);
 	assert(parent);
-  append(child, parent);
+	append(child, parent);
 }
 
 void Document::append(node::Node* child, node::Node* parent) {

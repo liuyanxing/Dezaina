@@ -23,10 +23,7 @@ void Dezaina::tick() {
   flush();
 
   eventSystem_.beforeRender();
-#ifdef DEA_EANBLE_RENDER
   render_.render();
-#endif
-
   eventSystem_.afterTick();
 }
 
