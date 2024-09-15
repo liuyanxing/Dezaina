@@ -121,7 +121,7 @@ void NodeEditor::buildEditor() {
         const std::array<node::Vector, 4> directions = {{ { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } } };
         auto& event = static_cast<MouseEvent&>(e);
         auto direction = directions[i];
-        auto d = direction * node::Vector{event.localWorldDx, event.localWorldDy}.cross(direction);
+        auto d = node::Vector{event.localWorldDx, event.localWorldDy} * direction;
         editor_.resize(d.x, d.y, directions[i]);
       });
       appendToContainer(&ctrl);
