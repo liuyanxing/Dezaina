@@ -2,15 +2,17 @@
 
 #include "layout.h"
 
-namespace dea::layout
-{
+namespace dea::layout {
 
-class ContraintLayout : public Layout
-{
+class ContraintLayout : public Layout {
 public:
-	void layout() override;
-	void add(const document::EditRecordItem* record);
+  void layout(change::Change &change) override;
+  void add(const document::EditRecordItem *record) override;
+  static void layoutCild(node::Node *node, node::Vector oldSize,
+                         change::Change *nodeChange = nullptr);
+
 private:
-};	
+  std::vector<const document::EditRecordItem *> items_;
+};
 
 } // namespace dea::layout

@@ -11,11 +11,14 @@ void Change::addChange(ChangeType type, ChangeValue&& value) {
 }
 
 void Change::flush() {
-	if (items_.empty()) {
+	if (items_.empty() && changeMap_.empty()) {
 		return;
 	}
 	auto& dezaina = Dezaina::instance();
 	auto& doc = dezaina.getDocument();
+	for (auto& [_, nodeChange] : changeMap_) {
+		doc.applyNodeChange(nodeChange);
+	}
 	for (auto& item : items_) {
 		undoRedo_.recordChange(item);
 
@@ -23,8 +26,8 @@ void Change::flush() {
 			case ChangeType::Select:
 				doc.setSelection(std::move(std::get<node::NodeIdArray>(item.value)));
 				break;
-			case ChangeType::NodeChange:
-				doc.applyNodeChange(std::get<message::NodeChange*>(item.value));
+			default:
+				assert(false);
 				break;
 		}
 	}
