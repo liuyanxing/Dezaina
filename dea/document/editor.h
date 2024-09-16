@@ -38,7 +38,6 @@ class Editor {
 public:
   Editor() = default;
   Editor(const std::vector<node::Node *> &nodes) : nodes_(nodes){};
-  void setNodes(std::vector<node::Node *> nodes) { nodes_ = nodes; }
 
   bool empty() const { return records_.empty(); }
   void clear() { records_.clear(); }
@@ -50,17 +49,12 @@ public:
     return *this;
   }
   Editor &createAndSelect(node::NodeType type, node::Node *parent);
-  Editor &setEditNodes(std::vector<node::Node *> nodes);
+  void setEditNodes(node::NodeArary&& nodes) { nodes_ = move(nodes); };
   Editor &rotate(float degrees);
   Editor &translate(float x, float y);
   Editor &resize(float width, float height, const node::Vector &direction);
-  Editor &resize(float width, float height);
-  Editor &setRotatation(float degrees);
   Editor &setTranslate(float x, float y);
-  Editor &setTranslateX(float x);
-  Editor &setTranslateY(float y);
   Editor &setSize(float width, float height, const node::Vector &direction);
-  Editor &setSize(float width, float height);
   Editor &setTransform(const node::Matrix &transform);
 
   Editor &select(const node::NodeIdArray &selection) {

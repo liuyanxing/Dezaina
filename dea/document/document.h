@@ -91,7 +91,16 @@ public:
 
 	auto& getSelection() { return currentPage_->getSelection(); }
 	void setSelection(std::vector<node::GUID>&& ids) {
+		node::NodeArary nodes;
+		nodes.reserve(ids.size());
+
 		currentPage_->setSelection(std::move(ids));
+		for (auto id : currentPage_->getSelection()) {
+			if (auto* node = getNodeById(id)) {
+				nodes.push_back(node);
+			}
+		}
+		editor_.setEditNodes(move(nodes));
 	}
 
 	void dump();
