@@ -76,7 +76,7 @@ TEST(NodeEditor, DragEditorRotateEdge) {
 TEST(NodeEditor, DragEditorResizeEdge) {
   auto *node = interaction.getNodeEditor()->getFirstNode();
   auto *rect = node_cast<RectangleNode *>(node);
- 
+
   doc.editor().select({rect->getGuid()});
   doc.editor().setTransform(Matrix());
 
@@ -95,6 +95,36 @@ TEST(NodeEditor, DragEditorResizeEdge) {
   deza.dragInterNode("be3", -50, 0);
   EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, -50, 0, 1, -50));
   EXPECT_TRUE(rect->getSize() == Vector(200, 200));
+}
+
+TEST(NodeEditor, DragEditorResizeNode) {
+  auto *node = interaction.getNodeEditor()->getFirstNode();
+  auto *rect = node_cast<RectangleNode *>(node);
+
+  doc.editor().select({rect->getGuid()});
+  doc.editor().setSize(100, 100);
+  doc.editor().setTransform(Matrix());
+  doc.editor().translate(-50, -50);
+
+  deza.dragInterNode("bs1", -50, 50);
+  EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, -50, 0, 1, 0));
+  EXPECT_TRUE(rect->getSize() == Vector(50, 50));
+  deza.dragInterNode("bs1", 50, -50);
+
+  deza.dragInterNode("bs2", -50, -50);
+  EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, -50, 0, 1, -50));
+  EXPECT_TRUE(rect->getSize() == Vector(50, 50));
+  deza.dragInterNode("bs2", 50, 50);
+
+  deza.dragInterNode("bs3", 50, -50);
+  EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 0, 0, 1, -50));
+  EXPECT_TRUE(rect->getSize() == Vector(50, 50));
+  deza.dragInterNode("bs3", -50, 50);
+
+  deza.dragInterNode("bs0", 50, 50);
+  EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 0, 0, 1, 0));
+  EXPECT_TRUE(rect->getSize() == Vector(50, 50));
+  deza.dragInterNode("bs0", -50, -50);
 }
 
 // The main entry point for running the tests

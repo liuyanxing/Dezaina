@@ -49,12 +49,13 @@ public:
     return *this;
   }
   Editor &createAndSelect(node::NodeType type, node::Node *parent);
-  void setEditNodes(node::NodeArary&& nodes) { nodes_ = move(nodes); };
+  void setEditNodes(node::NodeArary &&nodes) { nodes_ = move(nodes); };
   Editor &rotate(float degrees);
   Editor &translate(float x, float y);
   Editor &resize(float width, float height, const node::Vector &direction);
   Editor &setTranslate(float x, float y);
-  Editor &setSize(float width, float height, const node::Vector &direction);
+  Editor &setSize(float width, float height,
+                  const node::Vector &direction = {1, 1});
   Editor &setTransform(const node::Matrix &transform);
 
   Editor &select(const node::NodeIdArray &selection) {
