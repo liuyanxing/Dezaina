@@ -3,6 +3,7 @@
 #include "selection.h"
 #include "node/type.h"
 #include "event.h"
+#include "utility.h"
 
 namespace dea::interaction {
 
@@ -17,9 +18,10 @@ public:
 private:
 	Selection selection_;
 	void onMouseDrag(event::MouseEvent& event) override {
-		if (selection_.empty()) {
+		if (selection_.empty() || event.target) {
 			return;
 		}
+		setEventLocalPosition(event, IterWithWorldMatrix(event.target));
 		for (auto* node : selection_.getSelection()) {
 			auto* emitter = interaction::node_cast<event::EventEmitter*>(node);
 			emitter->emit(event);
