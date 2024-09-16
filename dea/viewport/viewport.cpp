@@ -12,6 +12,7 @@ void Viewport::update(uint32_t width, uint32_t height, float devicePixelRatio) {
   devicePixelRatio_ = devicePixelRatio;
   float center_x = width_ * devicePixelRatio_ / 2.;
   float center_y = height_ * devicePixelRatio_ / 2.;
+  viewMatrix_.reset();
   projectionMatrix_.reset();
   projectionMatrix_.setTranslate(center_x, center_y);
   updateVPMatrix();

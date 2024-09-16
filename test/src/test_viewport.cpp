@@ -44,6 +44,7 @@ TEST(Viewport, ScaleCenter1xScreen) {
 }
 
 TEST(Viewport, GetWorldScreenSize1xScreen) {
+	deza.setViewport(width, height, 1);
 	viewport.reset();
 	EXPECT_TRUE(viewport.mapWorldToScreen(100) == 100);
 	viewport.scale(2, 2, 0, 0);
