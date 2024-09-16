@@ -97,7 +97,8 @@ public:
 
   bool dragInterNode(const std::string &query, float worldX, float worldY,
                      float newWorldX, float newWorldY) {
-    return interaction_.dragInterNode(query, worldX, worldY, newWorldX, newWorldY);
+    return interaction_.dragInterNode(query, worldX, worldY, newWorldX,
+                                      newWorldY);
   }
 
 private:
