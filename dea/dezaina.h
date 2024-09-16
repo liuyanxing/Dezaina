@@ -5,6 +5,7 @@
 #include "event.h"
 #include "interaction.h"
 #include "interaction/interaction.h"
+#include "render.h"
 #include "resource.h"
 #include "viewport/viewport.h"
 #include <memory>
@@ -64,24 +65,13 @@ public:
 
   void dumpDocument() { doc_.dump(); }
 
-  void dispatchEvent(event::Event &event) {
-    if (event::isMouse(event)) {
-      auto &mouseEvent = static_cast<event::MouseEvent &>(event);
-      auto worldCoord = viewport_.mapScreenToWorld(mouseEvent.x, mouseEvent.y);
-      mouseEvent.worldX = worldCoord.x;
-      mouseEvent.worldY = worldCoord.y;
-      mouseEvent.worldDx = viewport_.getWorldSize(mouseEvent.dx);
-      mouseEvent.worldDy = viewport_.getWorldSize(mouseEvent.dy);
-    }
-    eventSystem_.dispatchEvent(event);
-  }
+  void completeEvent(event::MouseEvent &event);
+  void dispatchEvent(event::Event &event);
 
   void dispatchMouseEvent(float x, float y, event::EventType type, int button,
                           int buttons) {
     auto event = event::MouseEvent::Make(x, y, type, button, buttons);
-    auto worldCoord = viewport_.mapScreenToWorld(event.x, event.y);
-    event.worldX = worldCoord.x;
-    event.worldY = worldCoord.y;
+    completeEvent(event);
     eventSystem_.dispatchEvent(event);
   }
 
@@ -111,7 +101,8 @@ public:
 
   bool dragInterNode(const std::string &query, float worldX, float worldY,
                      float newWorldX, float newWorldY) {
-    return interaction_.dragInterNode(query, worldX, worldY, newWorldX, newWorldY);
+    return interaction_.dragInterNode(query, worldX, worldY, newWorldX,
+                                      newWorldY);
   }
 
 private:

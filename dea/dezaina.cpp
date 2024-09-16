@@ -36,4 +36,20 @@ void Dezaina::flush() {
   change_.flush();
 }
 
+void Dezaina::completeEvent(event::MouseEvent &e) {
+  auto worldCoord = viewport_.mapScreenToWorld(e.x, e.y);
+  e.worldX = worldCoord.x;
+  e.worldY = worldCoord.y;
+  e.worldDx = viewport_.getWorldSize(e.dx);
+  e.worldDy = viewport_.getWorldSize(e.dy);
+}
+
+void Dezaina::dispatchEvent(event::Event &event) {
+  if (event::isMouse(event)) {
+    auto &mouseEvent = static_cast<event::MouseEvent &>(event);
+    completeEvent(mouseEvent);
+  }
+  eventSystem_.dispatchEvent(event);
+}
+
 } // namespace dea
