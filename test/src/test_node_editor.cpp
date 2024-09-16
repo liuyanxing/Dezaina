@@ -76,6 +76,9 @@ TEST(NodeEditor, DragEditorRotateEdge) {
 TEST(NodeEditor, DragEditorResizeEdge) {
   auto *node = interaction.getNodeEditor()->getFirstNode();
   auto *rect = node_cast<RectangleNode *>(node);
+ 
+  doc.editor().select({rect->getGuid()});
+  doc.editor().setTransform(Matrix());
 
   deza.dragInterNode("be0", 0, -50);
   EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 0, 0, 1, -50));
