@@ -122,6 +122,7 @@ TEST(NodeEditor, DragEditorResizeEdge) {
   auto *rect = node_cast<RectangleNode>(node);
 
   doc.editor().select({rect->getGuid()});
+  doc.editor().setSize(100, 100);
   doc.editor().setTransform(Matrix());
 
   deza.dragInterNode("be0", 0, -50);
