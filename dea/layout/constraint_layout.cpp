@@ -5,11 +5,31 @@
 #include "document/document.h"
 #include "node/container.h"
 #include "node/node_base.generated.h"
+#include <array>
+#include <optional>
 
 namespace dea::layout {
 
 using namespace document;
 using namespace node;
+
+static std::array<float, 2> layoutImpl(float pos, float size, float parentSize,
+                                       float parentOldSize,
+                                       ConstraintType constraint) {
+  float newPos = pos;
+  float newSize = size;
+  if (constraint == ConstraintType::MAX) {
+    newPos = pos + (parentSize - parentOldSize);
+  } else if (constraint == ConstraintType::CENTER) {
+    newPos = ((pos + size / 2) / parentOldSize) * parentSize - size / 2;
+  } else if (constraint == ConstraintType::STRETCH) {
+    newSize = parentSize - (parentOldSize - size);
+  } else if (constraint == ConstraintType::SCALE) {
+    newSize = size * parentSize / parentOldSize;
+    newPos = ((pos + size / 2) / parentOldSize) * parentSize - newSize / 2;
+  }
+  return {newPos, newSize};
+}
 
 void ContraintLayout::add(const document::EditRecordItem *record) {
   items_.push_back(record);
@@ -17,24 +37,50 @@ void ContraintLayout::add(const document::EditRecordItem *record) {
 
 void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
                                  change::Change *change) {
-  // Document::Iter iter(node);
-  // ++iter;
-  // iter.skipChild();
-  // while (iter.isValid()) {
-  //   auto *child = iter.get();
-  //   auto *shape = node_cast<DefaultShapeNode *>(child);
-  //
-  //   auto *childChange = nodeChange->getChange(child);
-  //   auto transform = shape->getTransform();
-  //   auto anchorPoint = transform * (child->getAnchor() * shape->getSize());
-  //   auto newAnchorPoint = transform * (child->getAnchor() * size);
-  //   auto diff = newAnchorPoint - anchorPoint;
-  //   transform.translate(diff.x, diff.y);
-  //   childChange->set_transform(transform.toChange(pool));
-  //   ++iter;
-  //   auto constraint = node_cast<ConstraintMixin>(child);
-  //   switch (constraint.getHorizontalConstraint()) {}
-  // }
+  auto *parentShape = node_cast<DefaultShapeNode *>(node);
+  if (!parentShape) {
+    return;
+  }
+  auto parentSize = parentShape->getSize();
+  Document::Iter iter(node);
+  ++iter;
+  iter.skipChild();
+  while (iter.isValid()) {
+    auto *child = iter.get();
+    auto *shape = node_cast<DefaultShapeNode *>(child);
+    auto *constraint = node_cast<ConstraintMixin *>(child);
+    if (!child || !constraint) {
+      ++iter;
+      continue;
+    }
+
+    auto hConstraint = constraint->getHorizontalConstraint();
+    auto vConstraint = constraint->getVerticalConstraint();
+    auto transform = shape->getTransform();
+    auto size = shape->getSize();
+    // todo: pos is not correct, should consider the rotation
+    auto pos =
+        node::Vector(transform.getTranslateX(), transform.getTranslateY());
+
+    auto [newX, newWidth] =
+        layoutImpl(pos.x, size.x, parentSize.x, oldSize.x, hConstraint);
+    auto [newY, newHeight] =
+        layoutImpl(pos.y, size.y, parentSize.y, oldSize.y, vConstraint);
+
+    auto *nodeChange = change ? change->getNodeChange(child) : nullptr;
+    if (node::Vector(newX, newY) != pos) {
+      transform.setTranslate(newX, newY);
+      nodeChange
+          ? nodeChange->set_transform(transform.toChange(change->getPool()))
+          : shape->setTransform(transform);
+    }
+
+    if (node::Vector(newWidth, newHeight) != size) {
+      auto newSize = node::Vector(newWidth, newHeight);
+      nodeChange ? nodeChange->set_size(newSize.toChange(change->getPool()))
+                 : shape->setSize(newSize);
+    }
+  }
 }
 
 void ContraintLayout::layout(change::Change &change) {
@@ -63,9 +109,8 @@ void ContraintLayout::layout(change::Change &change) {
       }
 
       auto transform = shape->getTransform();
-      auto anchorPonit = transform * (achor * shape->getSize());
-      auto newAnchorPonit = transform * (achor * size);
-      auto diff = newAnchorPonit - anchorPonit;
+      auto diff =
+          transform * (achor * size) - transform * (achor * shape->getSize());
       transform.translate(-diff.x, -diff.y);
       nodeChange->set_transform(transform.toChange(pool));
       if (node_cast<Container *>(node)) {
