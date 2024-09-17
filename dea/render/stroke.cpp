@@ -22,7 +22,7 @@ namespace dea::geometry {
 	}
 
 	GeometryType buildStroke(node::NodeConstPtr node) {
-		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
+		auto* shapeNode = node::node_cast<const DefaultShapeNode>(node);
 		if (shapeNode) {
 			return buildStroke(shapeNode);
 		}
@@ -30,7 +30,7 @@ namespace dea::geometry {
 	}
 
 	GeometryType getOrBuildStroke(node::NodeConstPtr node) {
-		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
+		auto* shapeNode = node::node_cast<const DefaultShapeNode>(node);
 		if (shapeNode) {
       if (auto& pathes = shapeNode->getStrokeGeometry(); !pathes.empty()) {
         return *getOrBuild(pathes.front().commandsBlob);

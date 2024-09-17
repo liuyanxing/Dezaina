@@ -37,7 +37,7 @@ void ContraintLayout::add(const document::EditRecordItem *record) {
 
 void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
                                  change::Change *change) {
-  auto *parentShape = node_cast<DefaultShapeNode *>(node);
+  auto *parentShape = node_cast<DefaultShapeNode>(node);
   if (!parentShape) {
     return;
   }
@@ -47,8 +47,8 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
   iter.skipChild();
   while (iter.isValid()) {
     auto *child = iter.get();
-    auto *shape = node_cast<DefaultShapeNode *>(child);
-    auto *constraint = node_cast<ConstraintMixin *>(child);
+    auto *shape = node_cast<DefaultShapeNode>(child);
+    auto *constraint = node_cast<ConstraintMixin>(child);
     if (!child || !constraint) {
       ++iter;
       continue;
@@ -91,7 +91,7 @@ void ContraintLayout::layout(change::Change &change) {
     if (!node) {
       continue;
     }
-    auto *shape = node_cast<DefaultShapeNode *>(node);
+    auto *shape = node_cast<DefaultShapeNode>(node);
     auto oldSize = shape->getSize();
     auto *nodeChange = change.getNodeChange(node);
 
@@ -113,7 +113,7 @@ void ContraintLayout::layout(change::Change &change) {
           transform * (achor * size) - transform * (achor * shape->getSize());
       transform.translate(-diff.x, -diff.y);
       nodeChange->set_transform(transform.toChange(pool));
-      if (node_cast<Container *>(node)) {
+      if (node_cast<Container>(node)) {
         layoutCild(node, oldSize, &change);
       }
       break;

@@ -35,7 +35,7 @@ void RectangleEditor::update(const std::vector<Node*> &nodes) {
   if (nodes.size() != 1) {
     assert(false);
   }
-  RectangleNode* node = node::node_cast<RectangleNode*>(nodes[0]); 
+  RectangleNode* node = node::node_cast<RectangleNode>(nodes[0]); 
   NodeEditor::update(nodes);
 }
 

@@ -18,7 +18,7 @@ void Selection::onMouseMove(MouseEvent& event) {
 
   while (iter.isValid()) {
     auto* node = iter.get();
-    if (auto* shape = node::node_cast<node::DefaultShapeNode*>(node)) {
+    if (auto* shape = node::node_cast<node::DefaultShapeNode>(node)) {
       auto matrix = viewport.getVPMatrix() * iter.getWorldMatrix();
       setEventLocalPosition(event, iter);
       auto cursorRect = Rect{event.localX - radius, event.localY - radius, 2 * radius, 2 * radius};

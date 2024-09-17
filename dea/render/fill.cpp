@@ -84,27 +84,27 @@ namespace dea::geometry {
 
 	GeometryType buildFill(NodeConstPtr node) {
 		if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
-			return buildFill(node_cast<const RectangleNode*>(node));
+			return buildFill(node_cast<const RectangleNode>(node));
 		} else if (node->getType() == NodeType::ELLIPSE) {
-			return buildFill(node_cast<const EllipseNode*>(node));
+			return buildFill(node_cast<const EllipseNode>(node));
 		} else if (node->getType() == NodeType::REGULAR_POLYGON) {
-			return buildFill(node_cast<const PolygonNode*>(node));
+			return buildFill(node_cast<const PolygonNode>(node));
 		} else if (node->getType() == NodeType::STAR) {
-			return buildFill(node_cast<const StarNode*>(node));
+			return buildFill(node_cast<const StarNode>(node));
 		} else if (node->getType() == NodeType::VECTOR) {
-			return buildFill(node_cast<const VectorNode*>(node));
+			return buildFill(node_cast<const VectorNode>(node));
 		} else if (node->getType() == NodeType::FRAME) {
-			return buildFill(node_cast<const FrameNode*>(node));
+			return buildFill(node_cast<const FrameNode>(node));
 		} else if (node->getType() == NodeType::SYMBOL) {
-			return buildFill(node_cast<const SymbolNode*>(node));
+			return buildFill(node_cast<const SymbolNode>(node));
 		} else if (node->getType() == NodeType::INSTANCE) {
-			return buildFill(node_cast<const InstanceNode*>(node));
+			return buildFill(node_cast<const InstanceNode>(node));
 		} else if (node->getType() == NodeType::TEXT) {
-			return buildFill(node_cast<const TextNode*>(node));
+			return buildFill(node_cast<const TextNode>(node));
 		} else if (node->getType() == NodeType::CANVAS) {
-			return buildFill(node_cast<const PageNode*>(node));
+			return buildFill(node_cast<const PageNode>(node));
 		} else if (node->getType() == NodeType::DOCUMENT) {
-			return buildFill(node_cast<const DocumentNode*>(node));
+			return buildFill(node_cast<const DocumentNode>(node));
 		} else {
 			assert(false);
 		}
@@ -112,7 +112,7 @@ namespace dea::geometry {
 	}
 
 	GeometryType getOrBuildFill(NodeConstPtr node) {
-		auto* shapeNode = node::node_cast<const DefaultShapeNode*>(node);
+		auto* shapeNode = node::node_cast<const DefaultShapeNode>(node);
 		if (shapeNode) {
       if (auto& pathes = shapeNode->getFillGeometry(); !pathes.empty()) {
         return *getOrBuild(pathes.front().commandsBlob);

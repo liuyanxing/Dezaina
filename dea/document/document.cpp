@@ -147,7 +147,7 @@ bool Document::processNodeChanges(message::Message& message) {
 }
 
 void Document::append(node::Node* child) {
-	if (auto* documentNode = node_cast<DocumentNode*>(child)) {
+	if (auto* documentNode = node_cast<DocumentNode>(child)) {
 		root_ = documentNode;
 		return;
 	}

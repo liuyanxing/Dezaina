@@ -29,13 +29,13 @@ void buildPaintDrawers(const node::Array<node::PaintUnion>& paints) {
 }
 
 PaintDrawers& buildFillPaintDrawers(node::NodeConstPtr node) {
-  auto* shapeNode = node::node_cast<const node::DefaultShapeNode*>(node);
+  auto* shapeNode = node::node_cast<const node::DefaultShapeNode>(node);
   buildPaintDrawers(shapeNode->getFillPaints());
   return paintDrawers;
 }
 
 PaintDrawers& buildStrokePaintDrawers(node::NodeConstPtr node) {
-  auto* shapeNode = node::node_cast<const node::DefaultShapeNode*>(node);
+  auto* shapeNode = node::node_cast<const node::DefaultShapeNode>(node);
   buildPaintDrawers(shapeNode->getStrokePaints());
   return paintDrawers;
 }

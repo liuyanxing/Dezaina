@@ -28,7 +28,7 @@ public:
 	template<typename T>
 	T* createNode(const node::GUID& id) {
 		auto* node = buildNode<T>(id);
-		if (!node::node_cast<node::DocumentNode*>(node)) {
+		if (!node::node_cast<node::DocumentNode>(node)) {
 			editor_.create(node);
 		}
 		return node;
@@ -69,7 +69,7 @@ public:
   auto* currentPage() const { return currentPage_; }
 	node::DocumentNode* getRoot() { return root_; }
 	node::Node* getParent(node::Node* node) {
-		if (node::node_cast<node::DocumentNode*>(node)) {
+		if (node::node_cast<node::DocumentNode>(node)) {
 			return nullptr;
 		}
 		return getNodeById(node->getParentIndex().guid);
