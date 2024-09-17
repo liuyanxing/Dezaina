@@ -36,17 +36,13 @@ namespace dea::node {
 				return result;
 		}
 
-		void Matrix::translate(float x, float y) {
-			  m02 += x;
-				m12 += y;
-		}
-
-		void Matrix::rotate(float angle) {
+		Matrix& Matrix::rotate(float angle) {
 				float cos = std::cos(angle);
 				float sin = std::sin(angle);
 				Matrix rotationMatrix{ cos, sin, 0, -sin, cos, 0 };
 				
 				*this = operator*(rotationMatrix);
+				return *this;
 		}
 
 		float Matrix::getRotation() const {
