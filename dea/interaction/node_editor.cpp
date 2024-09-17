@@ -18,6 +18,7 @@ void NodeEditor::initCtrls() {
   float edgeSize = 100;
   Vector size{edgeSize, edgeSize};
   container_.setSize(size);
+  container_.setName("bound");
 
   SolidPaint strokePaint;
   auto &[r, g, b, a] = config::color::Primary;
@@ -25,8 +26,8 @@ void NodeEditor::initCtrls() {
 
   translateCtrl_.setName("bt");
   translateCtrl_.setSize(size);
-  translateCtrl_.setVerticalConstraint(ConstraintType::STRETCH);
-  translateCtrl_.setHorizontalConstraint(ConstraintType::STRETCH);
+  translateCtrl_.setVerticalConstraint(ConstraintType::SCALE);
+  translateCtrl_.setHorizontalConstraint(ConstraintType::SCALE);
   translateCtrl_.setStrokePaints({strokePaint});
   translateCtrl_.setStrokeWeight(config::size::Min);
   appendToContainer(&translateCtrl_);
@@ -68,6 +69,7 @@ void NodeEditor::initCtrls() {
     rotateCtrl.setHorizontalConstraint(constraints[i][0]);
     rotateCtrl.setVerticalConstraint(constraints[i][1]);
     rotateCtrl.setSize({config::size::Small, config::size::Small});
+    appendToContainer(&rotateCtrl);
   }
 
   constraints = {{
@@ -91,6 +93,7 @@ void NodeEditor::initCtrls() {
     ctrl.setSize(sizes[i]);
     ctrl.setHorizontalConstraint(constraints[i][0]);
     ctrl.setVerticalConstraint(constraints[i][1]);
+    appendToContainer(&ctrl);
   }
 }
 
@@ -152,11 +155,9 @@ void NodeEditor::update() {
     assert(false);
   }
 
-  auto oldSize = container_.getSize();
+  layout::ContraintLayout::layoutCild(&container_, {size.width, size.height});
   container_.setTransform(transform);
   container_.setSize({size.width, size.height});
-
-  layout::ContraintLayout::layoutCild(&container_, oldSize);
 }
 
 } // namespace dea::interaction
