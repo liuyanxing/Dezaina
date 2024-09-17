@@ -10,4 +10,3 @@ for _, file in ipairs(os.files("src/test_*.cpp")) do
     add_tests("default")
     add_deps("dea")
 end
-

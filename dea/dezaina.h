@@ -8,6 +8,7 @@
 #include "resource.h"
 #include "viewport/viewport.h"
 #include <memory>
+#include <span>
 
 //#ifdef DEA_ENABLE_RENDER
 #include "render.h"
@@ -55,6 +56,7 @@ public:
     }
     return res;
   }
+  bool loadFig(std::span<char> data);
 
   void loadEmptyDocument() { doc_.loadEmpty(); }
 

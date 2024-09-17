@@ -54,6 +54,10 @@ public:
     return res;
   }
 
+  bool load(kiwi::ByteBuffer &buffer, message::BinarySchema &schema) {
+    return applyMessage(buffer);
+  };
+
   void loadEmpty();
 
   void unload() {}
@@ -85,8 +89,9 @@ public:
 
   auto &editor() { return editor_; }
 
-  bool applyMessage(kiwi::ByteBuffer &buffer);
-  bool applyMessage(message::Message &message);
+  bool applyMessage(kiwi::ByteBuffer &buffer,
+                    message::BinarySchema *schema = nullptr);
+  bool processMessage(message::Message &message);
   bool processBlobMessage(kiwi::Array<message::Blob> &blobs);
   bool processNodeChanges(message::Message &message);
 

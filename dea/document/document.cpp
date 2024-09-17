@@ -2,6 +2,7 @@
 #include "dezaina.h"
 #include "node.h"
 #include "base/data.h"
+#include "node.h"
 #include "resource.h"
 #include "spdlog/spdlog.h"
 
@@ -22,56 +23,58 @@ void Document::dump() {
 void Document::dump(node::Node* node) const {
   NodeIter iter(node);
   while (iter.isValid()) {
-    auto* node = iter.get();
+    auto *node = iter.get();
     spdlog::info("{}", getNodeTypeString(node));
     ++iter;
   }
 }
 
-bool Document::applyMessage(kiwi::ByteBuffer& buffer) {
-	message::Message message{};
-	kiwi::MemoryPool pool;
-	bool decode_success = message.decode(buffer, pool);
-	if (!decode_success) {
-		return false;
-	}
-	applyMessage(message);
-	return true;
+bool Document::applyMessage(kiwi::ByteBuffer &buffer,
+                            message::BinarySchema *schema) {
+  message::Message message{};
+  kiwi::MemoryPool pool;
+  bool decode_success = schema ? message.decode(buffer, pool, schema)
+                               : message.decode(buffer, pool);
+  if (!decode_success) {
+    return false;
+  }
+  processMessage(message);
+  return true;
 }
 
-bool Document::processBlobMessage(kiwi::Array<message::Blob>& blobs) {
-	uint32_t index = 0;
-	for (const auto& blob : blobs) {
-		auto* bytes = blob.bytes();
-		auto&& data = base::Data::MakeWithCopy(bytes->data(), bytes->size());
-		auto* resourceItem = resource::BlobResource::add(std::move(data));
-		if (resourceItem) {
-			blobIdMap_[index++] = resourceItem->id();
-		}
-	}
-	return true;
+bool Document::processBlobMessage(kiwi::Array<message::Blob> &blobs) {
+  uint32_t index = 0;
+  for (const auto &blob : blobs) {
+    auto *bytes = blob.bytes();
+    auto &&data = base::Data::MakeWithCopy(bytes->data(), bytes->size());
+    auto *resourceItem = resource::BlobResource::add(std::move(data));
+    if (resourceItem) {
+      blobIdMap_[index++] = resourceItem->id();
+    }
+  }
+  return true;
 }
 
-bool Document::applyMessage(message::Message& message) {
-	auto type = message.type();
-	if (type == nullptr) {
-		return false;
-	}
+bool Document::processMessage(message::Message &message) {
+  auto type = message.type();
+  if (type == nullptr) {
+    return false;
+  }
 
   processBlobMessage(*message.blobs());
-  
-	using message::MessageType;
-	switch (*type) {
-		case MessageType::NODE_CHANGES:
-			processNodeChanges(message);
-			break;
-		default:
-			break;
-	}
 
-	blobIdMap_.clear();
-	
-	return true;
+  using message::MessageType;
+  switch (*type) {
+  case MessageType::NODE_CHANGES:
+    processNodeChanges(message);
+    break;
+  default:
+    break;
+  }
+
+  blobIdMap_.clear();
+
+  return true;
 }
 
 bool Document::processNodeChanges(message::Message& message) {
@@ -130,19 +133,18 @@ bool Document::processNodeChanges(message::Message& message) {
 			}
 		}
 
-		if (node_change.fillGeometry()) {
-			for (auto& fillGeometry : *node_change.fillGeometry()) {
-				fillGeometry.set_commandsBlob(blobIdMap_[*fillGeometry.commandsBlob()]);
-			}
-		}
+    if (node_change.fillGeometry()) {
+      for (auto &fillGeometry : *node_change.fillGeometry()) {
+        fillGeometry.set_commandsBlob(blobIdMap_[*fillGeometry.commandsBlob()]);
+      }
+    }
 
-		node->applyChange(node_change);
-		if (isNewNode) {
-			append(node);
-		}
-	}
-	return true;
-
+    node->applyChange(node_change);
+    if (isNewNode) {
+      append(node);
+    }
+  }
+  return true;
 }
 
 void Document::append(node::Node* child) {
@@ -151,42 +153,41 @@ void Document::append(node::Node* child) {
 		return;
 	}
 
-	auto* parent = getParent(child);
-	assert(parent);
+  auto *parent = getParent(child);
+  assert(parent);
   append(child, parent);
 }
 
-void Document::append(node::Node* child, node::Node* parent) {
-	 if (!node::Container::append(child, parent)) {
-		return;
-	 }
+void Document::append(node::Node *child, node::Node *parent) {
+  if (!node::Container::append(child, parent)) {
+    return;
+  }
 
-	if (child->getParentIndex().guid != parent->getGuid()) {
-		auto parentIndex = child->getParentIndex();
-		parentIndex.guid = parent->getGuid();	
-		child->setParentIndex(parentIndex);
-		editor_.setParent(child);
-	}
-
+  if (child->getParentIndex().guid != parent->getGuid()) {
+    auto parentIndex = child->getParentIndex();
+    parentIndex.guid = parent->getGuid();
+    child->setParentIndex(parentIndex);
+    editor_.setParent(child);
+  }
 }
 
-void Document::applyNodeChange(message::NodeChange* change) {
-  auto* guid = change->guid();
-  auto* node = getNodeById({*guid->sessionID(), *guid->localID()});
+void Document::applyNodeChange(message::NodeChange *change) {
+  auto *guid = change->guid();
+  auto *node = getNodeById({*guid->sessionID(), *guid->localID()});
   if (!node) {
     return;
   }
   node->applyChange(*change);
 }
 
-void Document::setCurrentPage(node::PageNode* page) {
+void Document::setCurrentPage(node::PageNode *page) {
   currentPage_ = page;
   event::Event event;
   event.type = event::EventType::PageChange;
 	Dezaina::instance().dispatchEvent(event);
 }
 
-node::Node* Document::getNodeById(const node::GUID& id) const {
+node::Node *Document::getNodeById(const node::GUID &id) const {
   auto iter = nodeMap_.find(id);
   if (iter == nodeMap_.end()) {
     return nullptr;
@@ -194,8 +195,7 @@ node::Node* Document::getNodeById(const node::GUID& id) const {
   return iter->second;
 }
 
-
-void Document::handleViewMatrixChange(const node::Matrix& matrix) {
+void Document::handleViewMatrixChange(const node::Matrix &matrix) {
   if (currentPage_) {
     currentPage_->setTransform(matrix);
   }
@@ -205,8 +205,8 @@ void Document::loadEmpty() {
 	assert(!root_);
 	root_ = createNode<DocumentNode>(node::GUID{0, 0}, false);
 
-	auto* page = createNode<PageNode>(root_);
-	setCurrentPage(page);
+  auto *page = createNode<PageNode>(root_);
+  setCurrentPage(page);
 }
 
-}
+} // namespace dea::document
