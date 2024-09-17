@@ -8,6 +8,7 @@
 #include "node/rectangle.h"
 #include "viewport/viewport.h"
 #include <array>
+#include "base/math.h"
 
 namespace dea::interaction {
 
@@ -44,16 +45,15 @@ void NodeEditor::initCtrls() {
   }};
 
   auto offset = nodeR;
-  std::array<Vector, 4> translate = {{{-offset, -offset},
+  std::array<Vector, 4> sTranslate = {{{-offset, -offset},
                                       {-offset + edgeSize, -offset},
                                       {-offset + edgeSize, -offset + edgeSize},
                                       {-offset, -offset + edgeSize}}};
-  for (int i = 0; i < 4; i++) {
+ for (int i = 0; i < 4; i++) {
     auto &resizectrl = resizeNodeCtrls_[i];
     resizectrl.setName("bs" + std::to_string(i));
-    Matrix transform{};
     resizectrl.setTransform(
-        transform.translate(translate[i].x, translate[i].y));
+        Matrix().translate(sTranslate[i].x, sTranslate[i].y));
     resizectrl.setHorizontalConstraint(constraints[i][0]);
     resizectrl.setVerticalConstraint(constraints[i][1]);
     resizectrl.setFillPaints({fillPaint});
@@ -61,11 +61,17 @@ void NodeEditor::initCtrls() {
     resizectrl.setStrokeWeight(config::size::Min);
     resizectrl.setSize({config::size::Small, config::size::Small});
     appendToContainer(&resizectrl);
+  }
 
+  std::array<Vector, 4> rTranslate = {{{-offset * 3, -offset * 3},
+                                      {offset + edgeSize, -offset * 3},
+                                      {offset + edgeSize, offset + edgeSize},
+                                      {-offset * 3, offset + edgeSize}}};
+  for (int i = 0; i < 4; i++) {
     auto &rotateCtrl = rotateCtrls_[i];
     rotateCtrl.setName("br" + std::to_string(i));
     rotateCtrl.setTransform(
-        transform.translate(translate[i].x * 2, translate[i].y * 2));
+        Matrix().translate(rTranslate[i].x, rTranslate[i].y));
     rotateCtrl.setHorizontalConstraint(constraints[i][0]);
     rotateCtrl.setVerticalConstraint(constraints[i][1]);
     rotateCtrl.setSize({config::size::Small, config::size::Small});
@@ -78,7 +84,7 @@ void NodeEditor::initCtrls() {
       {node::ConstraintType::STRETCH, node::ConstraintType::MAX},
       {node::ConstraintType::MIN, node::ConstraintType::STRETCH},
   }};
-  translate = {{{offset, -0.5f},
+  std::array<Vector, 4> eTranslate = {{{offset, -0.5f},
                 {edgeSize - 0.5f, offset},
                 {offset, edgeSize - 0.5f},
                 {-0.5, offset}}};
@@ -89,7 +95,7 @@ void NodeEditor::initCtrls() {
   for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
     auto &ctrl = resizeEdgeCtrls_[i];
     ctrl.setName("be" + std::to_string(i));
-    ctrl.setTransform(Matrix().translate(translate[i].x, translate[i].y));
+    ctrl.setTransform(Matrix().translate(eTranslate[i].x, eTranslate[i].y));
     ctrl.setSize(sizes[i]);
     ctrl.setHorizontalConstraint(constraints[i][0]);
     ctrl.setVerticalConstraint(constraints[i][1]);

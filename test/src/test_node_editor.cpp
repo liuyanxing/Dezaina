@@ -21,8 +21,8 @@ auto &interaction = deza.interaction();
 
 const uint32_t width = 1280;
 const uint32_t height = 720;
-const uint32_t rw = 100;
-const uint32_t rh = 100;
+const uint32_t rw = 200;
+const uint32_t rh = 200;
 
 void init() {
   deza.setViewport(width, height, 1);
