@@ -55,7 +55,7 @@ void Interaction::updateNodeEditor() {
   if (selection.size() > 1) {
   } else {
     auto *node = doc_.getNodeById(selection[0]);
-    if (auto *rectangleNode = node::node_cast<node::RectangleNode *>(node);
+    if (auto *rectangleNode = node::node_cast<node::RectangleNode >(node);
         !node_editor_) {
       node_editor_ = std::make_unique<NodeEditor>(node::NodeArary{node});
     }
@@ -112,7 +112,7 @@ bool Interaction::dragInterNode(const std::string &query,
     auto *node = iter.get();
     if (query == node->getName()) {
       found = true;
-      auto *emitter = interaction::node_cast<event::EventEmitter *>(node);
+      auto *emitter = interaction::node_cast<event::EventEmitter >(node);
       emitter->emit(event);
     }
     ++iter;

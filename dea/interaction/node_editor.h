@@ -22,7 +22,7 @@ public:
 
   virtual ~NodeEditor() {
     if (auto *parent =
-            node::node_cast<node::Container *>(container_.getParent())) {
+            node::node_cast<node::Container >(container_.getParent())) {
       parent->removeChild(&container_);
     }
   };

@@ -12,16 +12,16 @@ class {{node}};
 {{/nodes}}
 
 template<typename T>
-T node_cast(const Node* node) {
+T* node_cast(const Node* node) {
 	if (node == nullptr) {
 		return nullptr;
 	}
 
-	using U = std::remove_cv_t<std::remove_pointer_t<T>>;
+	using U = std::remove_cv_t<T>;
 {{#nodes}}
 	if (node->getType() == NodeType::{{nodeType}}{{#alias}} || node->getType() == NodeType::{{.}}{{/alias}}) {
 		if constexpr (std::is_convertible_v<{{node}}, U>) {
-			return static_cast<T>(({{node}}*)(node));
+			return static_cast<T*>(({{node}}*)(node));
 		}
 	}
 {{/nodes}}

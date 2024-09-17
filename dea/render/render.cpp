@@ -103,9 +103,9 @@ namespace dea::render {
   }
 
 	void Render::renderNode(node::Node* node, bool isInterNode) {
-    auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
+    auto* shapeNode = node_cast<node::DefaultShapeNode>(node);
     if (!shapeNode) {
-      if (auto* page = node::node_cast<node::PageNode*>(node)) {
+      if (auto* page = node::node_cast<node::PageNode>(node)) {
         auto color = toSkColor(page->getBackgroundColor()); 
         canvas_->drawColor(color);
       }

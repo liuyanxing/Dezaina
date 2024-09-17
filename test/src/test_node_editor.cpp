@@ -38,7 +38,7 @@ TEST(NodeEditor, BuildWhenCursorDownOnNode) {
 
 TEST(NodeEditor, DragEditorToMoveNode) {
   auto *node = interaction.getNodeEditor()->getFirstNode();
-  auto *rect = node_cast<RectangleNode *>(node);
+  auto *rect = node_cast<RectangleNode >(node);
 
   deza.dragInterNode("bt", 50, 50);
   EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, 50, 0, 1, 50));
@@ -49,7 +49,7 @@ TEST(NodeEditor, DragEditorToMoveNode) {
 
 TEST(NodeEditor, DragEditorRotateEdge) {
   auto *node = interaction.getNodeEditor()->getFirstNode();
-  auto *rect = node_cast<RectangleNode *>(node);
+  auto *rect = node_cast<RectangleNode >(node);
   deza.dragInterNode("bt", -50, -50);
 
   auto sqrt = std::sqrt(100 * 100 + 100 * 100) / 2;
@@ -75,7 +75,7 @@ TEST(NodeEditor, DragEditorRotateEdge) {
 
 TEST(NodeEditor, DragEditorResizeEdge) {
   auto *node = interaction.getNodeEditor()->getFirstNode();
-  auto *rect = node_cast<RectangleNode *>(node);
+  auto *rect = node_cast<RectangleNode >(node);
 
   doc.editor().select({rect->getGuid()});
   doc.editor().setTransform(Matrix());
@@ -99,7 +99,7 @@ TEST(NodeEditor, DragEditorResizeEdge) {
 
 TEST(NodeEditor, DragEditorResizeNode) {
   auto *node = interaction.getNodeEditor()->getFirstNode();
-  auto *rect = node_cast<RectangleNode *>(node);
+  auto *rect = node_cast<RectangleNode >(node);
 
   doc.editor().select({rect->getGuid()});
   doc.editor().setSize(100, 100);

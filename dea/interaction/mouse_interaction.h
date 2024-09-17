@@ -23,7 +23,7 @@ private:
 		}
 		setEventLocalPosition(event, IterWithWorldMatrix(event.target));
 		for (auto* node : selection_.getSelection()) {
-			auto* emitter = interaction::node_cast<event::EventEmitter*>(node);
+			auto* emitter = interaction::node_cast<event::EventEmitter>(node);
 			emitter->emit(event);
 		}
 	}
