@@ -14,19 +14,19 @@ using namespace document;
 using namespace node;
 
 static std::array<float, 2> layoutImpl(float pos, float size, float parentSize,
-                                       float parentOldSize,
+                                       float parentNewSize,
                                        ConstraintType constraint) {
   float newPos = pos;
   float newSize = size;
   if (constraint == ConstraintType::MAX) {
-    newPos = pos + (parentSize - parentOldSize);
+    newPos = pos + (parentNewSize - parentSize);
   } else if (constraint == ConstraintType::CENTER) {
-    newPos = ((pos + size / 2) / parentOldSize) * parentSize - size / 2;
+    newPos = ((pos + size / 2) / parentSize) * parentNewSize - size / 2;
   } else if (constraint == ConstraintType::STRETCH) {
-    newSize = parentSize - (parentOldSize - size);
+    newSize = parentNewSize - (parentSize - size);
   } else if (constraint == ConstraintType::SCALE) {
-    newSize = size * parentSize / parentOldSize;
-    newPos = ((pos + size / 2) / parentOldSize) * parentSize - newSize / 2;
+    newSize = size * parentNewSize / parentSize;
+    newPos = ((pos + size / 2) / parentSize) * parentNewSize - newSize / 2;
   }
   return {newPos, newSize};
 }
@@ -35,7 +35,7 @@ void ContraintLayout::add(const document::EditRecordItem *record) {
   items_.push_back(record);
 }
 
-void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
+void ContraintLayout::layoutCild(node::Node *node, node::Vector newSize,
                                  change::Change *change) {
   auto *parentShape = node_cast<DefaultShapeNode>(node);
   if (!parentShape) {
@@ -63,9 +63,9 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
         node::Vector(transform.getTranslateX(), transform.getTranslateY());
 
     auto [newX, newWidth] =
-        layoutImpl(pos.x, size.x, parentSize.x, oldSize.x, hConstraint);
+        layoutImpl(pos.x, size.x, parentSize.x, newSize.x, hConstraint);
     auto [newY, newHeight] =
-        layoutImpl(pos.y, size.y, parentSize.y, oldSize.y, vConstraint);
+        layoutImpl(pos.y, size.y, parentSize.y, newSize.y, vConstraint);
 
     auto *nodeChange = change ? change->getNodeChange(child) : nullptr;
     if (node::Vector(newX, newY) != pos) {
@@ -80,6 +80,7 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
       nodeChange ? nodeChange->set_size(newSize.toChange(change->getPool()))
                  : shape->setSize(newSize);
     }
+    ++iter;
   }
 }
 
@@ -92,7 +93,6 @@ void ContraintLayout::layout(change::Change &change) {
       continue;
     }
     auto *shape = node_cast<DefaultShapeNode>(node);
-    auto oldSize = shape->getSize();
     auto *nodeChange = change.getNodeChange(node);
 
     switch (item->type) {
@@ -114,7 +114,7 @@ void ContraintLayout::layout(change::Change &change) {
       transform.translate(-diff.x, -diff.y);
       nodeChange->set_transform(transform.toChange(pool));
       if (node_cast<Container>(node)) {
-        layoutCild(node, oldSize, &change);
+        layoutCild(node, size, &change);
       }
       break;
     }

@@ -128,6 +128,7 @@ export const structs = [
 			"float getTranslateX() const { return m02; }",
 			"float getTranslateY() const { return m12; }",
 			"float getRotation() const;",
+			"Vector getTranslation() const { return Vector(m02, m12); }",
 			"Rect mapRect(const Rect& rect) const;",
 			"Vector mapPoint(const Vector& point) const;",
 			"Vector mapVector(const Vector& vector) const;",
