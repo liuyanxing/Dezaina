@@ -16,9 +16,7 @@ class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
   Dezaina()
       : doc_(0), viewport_(), eventSystem_(), interaction_(doc_),
-#ifdef DEA_EANBLE_RENDER
         render_(doc_, viewport_),
-#endif
         change_() {
     resource::Resource::Init();
     init();
