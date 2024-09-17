@@ -21,7 +21,7 @@ void Document::flushEditor() {
       continue;
     }
     change.addNodeChange(node);
-    if (node::node_cast<node::DefaultShapeNode*
+    if (node::node_cast<node::DefaultShapeNode
     >(node) && record.type >= RecordType::kLayoutRelation) {
       cLayout.add(&record);
       continue;
