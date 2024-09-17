@@ -481,6 +481,9 @@ struct Matrix  {
 	void rotate(float angle);
 	Matrix getInverse(const Matrix& defaultValue = Matrix()) const;
 	float getScaleX() const { return m00; }
+	float getScaleY() const { return m11; }
+	float getTranslateX() const { return m02; }
+	float getTranslateY() const { return m12; }
 	float getRotation() const;
 	Rect mapRect(const Rect& rect) const;
 	Vector mapPoint(const Vector& point) const;
