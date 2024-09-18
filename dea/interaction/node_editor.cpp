@@ -33,35 +33,41 @@ void NodeEditor::initCtrls() {
   translateCtrl_.setStrokeWeight(config::size::Min);
   appendToContainer(&translateCtrl_);
 
-  SolidPaint fillPaint;
-  fillPaint.setColor({1, 1, 1, 1});
   auto nodeD = config::size::Small;
   auto nodeR = nodeD / 2;
+  auto offset = nodeR;
+
+  std::array<std::array<node::ConstraintType, 2>, 4> eConstraints = {{
+      {node::ConstraintType::STRETCH, node::ConstraintType::MIN},
+      {node::ConstraintType::MAX, node::ConstraintType::STRETCH},
+      {node::ConstraintType::STRETCH, node::ConstraintType::MAX},
+      {node::ConstraintType::MIN, node::ConstraintType::STRETCH},
+  }};
+  std::array<Vector, 4> eTranslate = {{{offset, -0.5f},
+                {edgeSize - 0.5f, offset},
+                {offset, edgeSize - 0.5f},
+                {-0.5, offset}}};
+  auto edgeS = edgeSize - nodeD;
+  std::array<Vector, 4> sizes = {
+      {{edgeS, 1}, {1, edgeS}, {edgeS, 1}, {1, edgeS}}};
+  for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
+    auto &ctrl = resizeEdgeCtrls_[i];
+    ctrl.setName("be" + std::to_string(i));
+    ctrl.setTransform(Matrix().translate(eTranslate[i].x, eTranslate[i].y));
+    ctrl.setSize(sizes[i]);
+    ctrl.setHorizontalConstraint(eConstraints[i][0]);
+    ctrl.setVerticalConstraint(eConstraints[i][1]);
+    appendToContainer(&ctrl);
+  }
+
+  SolidPaint fillPaint;
+  fillPaint.setColor({1, 1, 1, 1});
   std::array<std::array<node::ConstraintType, 2>, 4> constraints = {{
       {node::ConstraintType::MIN, node::ConstraintType::MIN},
       {node::ConstraintType::MAX, node::ConstraintType::MIN},
       {node::ConstraintType::MAX, node::ConstraintType::MAX},
       {node::ConstraintType::MIN, node::ConstraintType::MAX},
   }};
-
-  auto offset = nodeR;
-  std::array<Vector, 4> sTranslate = {{{-offset, -offset},
-                                      {-offset + edgeSize, -offset},
-                                      {-offset + edgeSize, -offset + edgeSize},
-                                      {-offset, -offset + edgeSize}}};
- for (int i = 0; i < 4; i++) {
-    auto &resizectrl = resizeNodeCtrls_[i];
-    resizectrl.setName("bs" + std::to_string(i));
-    resizectrl.setTransform(
-        Matrix().translate(sTranslate[i].x, sTranslate[i].y));
-    resizectrl.setHorizontalConstraint(constraints[i][0]);
-    resizectrl.setVerticalConstraint(constraints[i][1]);
-    resizectrl.setFillPaints({fillPaint});
-    resizectrl.setStrokePaints({strokePaint});
-    resizectrl.setStrokeWeight(config::size::Min);
-    resizectrl.setSize({config::size::Small, config::size::Small});
-    appendToContainer(&resizectrl);
-  }
 
   std::array<Vector, 4> rTranslate = {{{-offset * 3, -offset * 3},
                                       {offset + edgeSize, -offset * 3},
@@ -78,28 +84,22 @@ void NodeEditor::initCtrls() {
     appendToContainer(&rotateCtrl);
   }
 
-  constraints = {{
-      {node::ConstraintType::STRETCH, node::ConstraintType::MIN},
-      {node::ConstraintType::MAX, node::ConstraintType::STRETCH},
-      {node::ConstraintType::STRETCH, node::ConstraintType::MAX},
-      {node::ConstraintType::MIN, node::ConstraintType::STRETCH},
-  }};
-  std::array<Vector, 4> eTranslate = {{{offset, -0.5f},
-                {edgeSize - 0.5f, offset},
-                {offset, edgeSize - 0.5f},
-                {-0.5, offset}}};
-  auto edgeS = edgeSize - nodeD;
-  std::array<Vector, 4> sizes = {
-      {{edgeS, 1}, {1, edgeS}, {edgeS, 1}, {1, edgeS}}};
-
-  for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
-    auto &ctrl = resizeEdgeCtrls_[i];
-    ctrl.setName("be" + std::to_string(i));
-    ctrl.setTransform(Matrix().translate(eTranslate[i].x, eTranslate[i].y));
-    ctrl.setSize(sizes[i]);
-    ctrl.setHorizontalConstraint(constraints[i][0]);
-    ctrl.setVerticalConstraint(constraints[i][1]);
-    appendToContainer(&ctrl);
+  std::array<Vector, 4> sTranslate = {{{-offset, -offset},
+                                      {-offset + edgeSize, -offset},
+                                      {-offset + edgeSize, -offset + edgeSize},
+                                      {-offset, -offset + edgeSize}}};
+ for (int i = 0; i < 4; i++) {
+    auto &resizectrl = resizeNodeCtrls_[i];
+    resizectrl.setName("bs" + std::to_string(i));
+    resizectrl.setTransform(
+        Matrix().translate(sTranslate[i].x, sTranslate[i].y));
+    resizectrl.setHorizontalConstraint(constraints[i][0]);
+    resizectrl.setVerticalConstraint(constraints[i][1]);
+    resizectrl.setFillPaints({fillPaint});
+    resizectrl.setStrokePaints({strokePaint});
+    resizectrl.setStrokeWeight(config::size::Min);
+    resizectrl.setSize({config::size::Small, config::size::Small});
+    appendToContainer(&resizectrl);
   }
 }
 
