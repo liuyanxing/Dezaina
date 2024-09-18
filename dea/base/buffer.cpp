@@ -75,7 +75,7 @@ Buffer Buffer::MakeWithCopy(const uint8_t* data, size_t size) {
 }
 
 uint8_t Buffer::readByte() const {
-  return data_[index_++];
+  return data_[cursor_++];
 }
 
 float Buffer::readFloat() const {
@@ -87,10 +87,10 @@ float Buffer::readFloat() const {
 
 uint32_t Buffer::readUint() const {
   uint32_t value = 0;
-  value |= data_[index_++];
-  value |= data_[index_++] << 8;
-  value |= data_[index_++] << 16;
-  value |= data_[index_++] << 24;
+  value |= data_[cursor_++];
+  value |= data_[cursor_++] << 8;
+  value |= data_[cursor_++] << 16;
+  value |= data_[cursor_++] << 24;
   return value;
 }
 
@@ -101,8 +101,8 @@ int32_t Buffer::readInt() const {
 
 void Buffer::writeByte(uint8_t value) {
   growBy_(1);
-  data_[index_++] = value;
-  size_ = index_;
+  data_[cursor_++] = value;
+  size_ = cursor_;
 }
 
 void Buffer::writeFloat(float value) {
@@ -111,11 +111,11 @@ void Buffer::writeFloat(float value) {
 
 void Buffer::writeUint(uint32_t value) {
   growBy_(4);
-  data_[index_++] = value;
-  data_[index_++] = value >> 8;
-  data_[index_++] = value >> 16;
-  data_[index_++] = value >> 24;
-  size_ = index_;
+  data_[cursor_++] = value;
+  data_[cursor_++] = value >> 8;
+  data_[cursor_++] = value >> 16;
+  data_[cursor_++] = value >> 24;
+  size_ = cursor_;
 }
 
 void Buffer::writeInt(int32_t value) {
@@ -123,11 +123,16 @@ void Buffer::writeInt(int32_t value) {
   writeUint(reinterpret_cast<uint32_t&>(value));
 }
 
+void Buffer::writeV2f(float x, float y) {
+  writeFloat(x);
+  writeFloat(y);
+}
+
 void Buffer::growBy_(size_t amount) {
-  if (index_ + amount > capacity_) {
+  if (cursor_ + amount > capacity_) {
     size_t newCapacity = capacity_ * 2;
-    if (newCapacity < index_ + amount) {
-      newCapacity = index_ + amount;
+    if (newCapacity < cursor_ + amount) {
+      newCapacity = cursor_ + amount;
     }
     uint8_t *newData = new uint8_t[newCapacity];
     memcpy(newData, data_, size_);
