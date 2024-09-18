@@ -3,6 +3,7 @@
 
 #include "change.h"
 #include "dezaina.h"
+#include "schema/utility.h"
 
 namespace dea::change {
 
@@ -14,11 +15,17 @@ void Change::flush() {
 	if (items_.empty() && changeMap_.empty()) {
 		return;
 	}
+	message::Message message;
 	auto& dezaina = Dezaina::instance();
 	auto& doc = dezaina.getDocument();
 	for (auto& [_, nodeChange] : changeMap_) {
-		doc.applyNodeChange(nodeChange);
+		if (!schema::isFillPathValid(nodeChange)) {
+		}
+		if (!schema::isStrokePathValid(nodeChange)) {
+		}
+		// doc.applyNodeChange(nodeChange);
 	}
+	doc.processMessage(message);
 	for (auto& item : items_) {
 		undoRedo_.recordChange(item);
 
