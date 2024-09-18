@@ -17,7 +17,7 @@ enum class EventType {
   BeforeTick,
   AfterTick,
   NextTick,
-  BeforeRender,
+  AfterFlushed,
   Any,
 };
 
