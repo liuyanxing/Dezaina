@@ -13,7 +13,8 @@ using namespace event;
 void Selection::onMouseMove(MouseEvent& event) {
   auto& dezaina = Dezaina::instance();
   auto& viewport = dezaina.getViewport();
-  float radius = 6;
+  hoverNode_ = nullptr;
+  float radius = 3;
   auto iter = iter_;
 
   while (iter.isValid()) {

@@ -84,19 +84,19 @@ TEST(NodeEditor, HoverCtrolNode) {
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br0");
 
-  em.x += rw + d;
+  em.x += rw + 2*d;
   deza.dispatchEvent(em);
   node = editor->getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br1");
 
-  em.y += rh + d;
+  em.y += rh + 2*d;
   deza.dispatchEvent(em);
   node = editor->getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br2");
 
-  em.x -= rw + d;
+  em.x -= rw + 2*d;
   deza.dispatchEvent(em);
   node = editor->getHoverNode();
   EXPECT_TRUE(node);
