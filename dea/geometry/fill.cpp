@@ -7,22 +7,29 @@ namespace dea::geometry {
 	using namespace dea::resource;
 	using namespace dea::base;
 
+	enum PathVerb : uint8_t {
+		CLOSE = 0,
+		MOVE = 1,
+		LINE = 2,
+		QUAD = 3,
+		CUBIC = 4
+	};
+
 	Data buildRectangle(node::Vector size, float tl, float tr, float br, float bl) {
 		constexpr float raduisRatio = 0.447715521F;
-		Data path{};
-
 		const float cr = tl * raduisRatio;
 
-		path.moveTo(0, tl);
-		path.cubicTo(0, tl - cr, tl - cr, 0, tl, 0);
-		path.lineTo(size.x - tr, 0);
-		path.cubicTo(size.x - tr + cr, 0, size.x, tr - cr, size.x, tr);
-		path.lineTo(size.x, size.y - br);
-		path.cubicTo(size.x, size.y - br + cr, size.x - br + cr, size.y, size.x - br, size.y);
-		path.lineTo(bl, size.y);
-		path.cubicTo(bl - cr, size.y, 0, size.y - bl + cr, 0, size.y - bl);
-		path.close();
-		return path;
+    Buffer buffer;
+		buffer.write(MOVE, 0, tl,
+								CUBIC, 0, tl - cr, tl - cr, 0, tl, 0,
+								LINE, size.x - tr, 0,
+								CUBIC, size.x - tr + cr, 0, size.x, tr - cr, size.x, tr,
+								LINE, size.x, size.y - br,
+								CUBIC, size.x, size.y - br + cr, size.x - br + cr, size.y, size.x - br, size.y,
+								LINE, bl, size.y,
+								CUBIC, bl - cr, size.y, 0, size.y - bl + cr, 0, size.y - bl,
+								CLOSE);
+		return buffer.toData();
 	}
 
 	Data buildFill(const RectangleNode* node) {
