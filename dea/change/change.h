@@ -50,6 +50,7 @@ public:
   }
   void flush();
 
+
 private:
   std::vector<ChangeItem> items_;
   UndoRedo<ChangeItem> undoRedo_;
