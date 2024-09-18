@@ -46,7 +46,7 @@ private:
   void onMouseWheel(event::MouseEvent &event) override;
   void onMouseDrag(event::MouseEvent &event) override;
   void onWindowResize(event::Event &event) override;
-  void onBeforeRender(event::Event &event) override;
+  void onAfterFlushed(event::Event &event) override;
   void onAfterTick(event::Event &event) override;
 };
 

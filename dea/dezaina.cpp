@@ -22,8 +22,9 @@ void Dezaina::tick() {
 
   flush();
 
-  eventSystem_.beforeRender();
+#ifdef DEA_EANBLE_RENDER
   render_.render();
+#endif
   eventSystem_.afterTick();
 }
 
@@ -31,6 +32,7 @@ void Dezaina::flush() {
   eventSystem_.fireAllEvents();
   doc_.flushEditor();
   change_.flush();
+  eventSystem_.afterFlushed();
 }
 
 void Dezaina::completeEvent(event::MouseEvent &e) {

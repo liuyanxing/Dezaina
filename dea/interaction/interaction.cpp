@@ -96,7 +96,7 @@ void Interaction::onEvent(event::Event &event) {
   InteractionListener::onEvent(event);
 }
 
-void Interaction::onBeforeRender(event::Event &event) { updateNodeEditor(); };
+void Interaction::onAfterFlushed(event::Event &event) { updateNodeEditor(); };
 
 void Interaction::onAfterTick(Event &event) { handleHover(); }
 

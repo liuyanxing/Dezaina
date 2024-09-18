@@ -37,8 +37,8 @@ public:
     events_.clear();
 	};
 
-  void beforeRender() {
-    Event event{EventType::BeforeRender};
+  void afterFlushed() {
+    Event event{EventType::AfterFlushed};
     fireEvent(event);
   }
 

@@ -16,8 +16,8 @@ public:
       case EventType::Initialized:
         onInitialized(e);
         break;
-      case EventType::BeforeRender:
-        onBeforeRender(e);
+      case EventType::AfterFlushed:
+        onAfterFlushed(e);
         break;
       case EventType::BeforeTick:
         onBeforeTick(e);
@@ -33,7 +33,7 @@ private:
   virtual void onInitialized(Event& event) {};
   virtual void onBeforeTick(Event& event) {};
   virtual void onAfterTick(Event& event) {};
-  virtual void onBeforeRender(Event& event) {};
+  virtual void onAfterFlushed(Event& event) {};
 };
 
 }
