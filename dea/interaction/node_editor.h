@@ -16,7 +16,8 @@ class Desaina;
 
 class NodeEditor {
 public:
-  NodeEditor(const node::NodeArary &nodes) : editNodes_(nodes), editor_(nodes) {
+  NodeEditor(const node::NodeArary &nodes) : editNodes_(nodes), editor_(nodes), selection_([&](node::Vector size) { return node::Size{size.x, size.y}; },
+                IterWithWorldMatrix{&container_}) {
     buildEditor();
   };
 
@@ -29,6 +30,7 @@ public:
 
   Frame *getContainer() { return &container_; }
   auto getFirstNode() { return editNodes_[0]; }
+  auto* getHoverNode() { return selection_.getHoverNode(); }
 
   virtual void update(const std::vector<node::Node *> &nodes) {};
   void update();
@@ -49,12 +51,10 @@ protected:
   std::array<Rectangle, 4> resizeNodeCtrls_;
   std::array<Rectangle, 4> resizeEdgeCtrls_;
   std::array<Rectangle, 4> rotateCtrls_;
-  node::Node *hoverNode_ = nullptr;
   document::Editor editor_;
   const node::NodeArary editNodes_;
-  MouseInteraction mouseInteraction_{
-      Selection{[](node::Vector size) { return node::Size{size.x, size.y}; },
-                IterWithWorldMatrix{&container_}}};
+	Selection selection_;
+  MouseInteraction mouseInteraction_{selection_};
 
   void initCtrls();
   void bindEvents();

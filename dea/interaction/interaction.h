@@ -19,6 +19,7 @@ public:
 
   auto *root() { return &page_; }
   auto &getNodeEditor() { return node_editor_; }
+  auto *getHoverNode() { return selection_.getHoverNode(); }
   void onEvent(event::Event &event) override;
 
   void dump();
