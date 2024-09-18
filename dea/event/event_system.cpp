@@ -1,4 +1,5 @@
 #include "event_system.h"
+#include "emitter.h"
 #include "dezaina.h"
 
 namespace dea::event {
