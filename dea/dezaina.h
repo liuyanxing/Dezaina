@@ -1,11 +1,10 @@
 #pragma once
 
+#include "event.h"
 #include "base/object.h"
 #include "change/change.h"
-#include "event.h"
 #include "interaction.h"
 #include "interaction/interaction.h"
-#include "render.h"
 #include "resource.h"
 #include "viewport/viewport.h"
 #include <memory>
@@ -105,6 +104,9 @@ public:
                                       newWorldY);
   }
 
+  static void setImmediate(bool immediate) { immediate_ = immediate;}
+  static bool isImmediate() { return immediate_; }
+
 private:
   document::Document doc_;
   Viewport viewport_;
@@ -116,6 +118,7 @@ private:
 
   interaction::Interaction interaction_;
   change::Change change_;
+  inline static bool immediate_ = false;
   void init();
 };
 

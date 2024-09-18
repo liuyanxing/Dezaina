@@ -9,14 +9,14 @@ namespace dea::interaction {
 
 class MouseInteraction : public InteractionListener {
 public:
-	MouseInteraction(const Selection& selection) :
+	MouseInteraction(Selection& selection) :
 		selection_(selection) {}
 	void onEvent(event::Event& e) override {
 		selection_.onEvent(e);
 		InteractionListener::onEvent(e);
 	}
 private:
-	Selection selection_;
+	Selection& selection_;
 	void onMouseDrag(event::MouseEvent& event) override {
 		if (selection_.empty() || event.target) {
 			return;

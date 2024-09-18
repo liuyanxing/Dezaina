@@ -19,7 +19,7 @@ void Editor::editNodes(std::function<void(Node *)> cb) {
 void Editor::addRecord(const GUID &layerId, const RecordType &type,
                        const RecordValue &value) {
   records_.emplace_back(layerId, type, value);
-  if (immediate_) {
+  if (immediate_ || Dezaina::isImmediate()) {
     Dezaina::instance().flush();
   }
 }
