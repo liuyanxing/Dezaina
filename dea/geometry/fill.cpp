@@ -1,5 +1,4 @@
-#include "node.h"
-#include "base/data.h"
+#include "geometry.h"
 #include "base/buffer.h"
 
 namespace dea::geometry {
@@ -89,8 +88,8 @@ namespace dea::geometry {
 	}
 
 	Data buildFill(NodeConstPtr node) {
-		if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
-			return buildFill(node_cast<const RectangleNode>(node));
+		if (auto* rectangle = node_cast<const RectangleNode>(node)) {
+			return buildFill(rectangle);
 		} else if (node->getType() == NodeType::ELLIPSE) {
 			return buildFill(node_cast<const EllipseNode>(node));
 		} else if (node->getType() == NodeType::REGULAR_POLYGON) {
@@ -114,17 +113,8 @@ namespace dea::geometry {
 		} else {
 			assert(false);
 		}
-		return Data{};
+		return Data{nullptr, 0};
 	}
 
-	Data getOrBuildFill(NodeConstPtr node) {
-		auto* shapeNode = node::node_cast<const DefaultShapeNode>(node);
-		if (shapeNode) {
-      if (auto& pathes = shapeNode->getFillGeometry(); !pathes.empty()) {
-        return *getOrBuild(pathes.front().commandsBlob);
-      }
-		}
-		return Data{};
-	}
 
 } // namespace dea::geometry
