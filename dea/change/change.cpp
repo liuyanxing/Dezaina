@@ -4,6 +4,7 @@
 #include "change.h"
 #include "dezaina.h"
 #include "schema/utility.h"
+#include "geometry/geometry.h"
 
 namespace dea::change {
 
@@ -18,8 +19,10 @@ void Change::flush() {
 	message::Message message;
 	auto& dezaina = Dezaina::instance();
 	auto& doc = dezaina.getDocument();
-	for (auto& [_, nodeChange] : changeMap_) {
+	for (auto& [node, nodeChange] : changeMap_) {
 		if (!schema::isFillPathValid(nodeChange)) {
+			doc.applyNodeChange(nodeChange);
+			geometry::buildFill(node);
 		}
 		if (!schema::isStrokePathValid(nodeChange)) {
 		}
