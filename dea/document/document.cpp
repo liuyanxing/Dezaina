@@ -36,7 +36,7 @@ bool Document::applyMessage(kiwi::ByteBuffer& buffer) {
 	if (!decode_success) {
 		return false;
 	}
-	processMessage(message);
+	applyMessage(message);
 	return true;
 }
 
@@ -53,7 +53,7 @@ bool Document::processBlobMessage(kiwi::Array<message::Blob>& blobs) {
 	return true;
 }
 
-bool Document::processMessage(message::Message& message) {
+bool Document::applyMessage(message::Message& message) {
 	auto type = message.type();
 	if (type == nullptr) {
 		return false;

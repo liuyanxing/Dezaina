@@ -1,30 +1,17 @@
 #pragma once
 
-#include <initializer_list>
-#include <string>
 #include <type_traits>
 #include <variant>
 #include <vector>
 #include <variant>
 
 #include "base/buffer.h"
+#include "base/type_traits.h"
 
 #include "vendor/figma/kiwi.h"
 #include "schema/message.h"
 
 namespace dea::node {
-
-template <typename T>
-struct is_string : std::false_type {};
-
-template <>
-struct is_string<std::string> : std::true_type {};
-
-template <typename T>
-struct is_variant : std::false_type {};
-
-template <typename... Args>
-struct is_variant<std::variant<Args...>> : std::true_type {};
 
 template <typename T, typename C>
 void applyChangeImpl(T& value, const C& change) {
@@ -32,13 +19,23 @@ void applyChangeImpl(T& value, const C& change) {
     value = static_cast<T>(change);
   } else if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T>) {
     value = change;
-  } else if constexpr (is_variant<T>()) {
+  } else if constexpr (base::is_variant<T>()) {
     std::visit([&change](auto &&arg) {
       applyChangeImpl(arg, change);
     }, value);
-  } else if constexpr (is_string<T>()) {
+  } else if constexpr (base::is_string<T>()) {
     value = change.c_str();
-  } else {
+  } else if constexpr (base::is_vector<T>()) {
+    // vector is like struct, always update all fields
+    value.clear();
+    using ElemType = typename T::value_type;
+    for (auto& item : change) {
+      value.push_back(ElemType{});
+      auto& v = value.back();
+      applyChangeImpl(v, item);
+    }
+  } 
+  else {
     value.applyChange(change);
   }
 }
@@ -52,6 +49,7 @@ inline void applyChangeImpl<base::Buffer, kiwi::Array<message::NodeChange>>(base
   }
   value.set(_bb.data(), _bb.size());
 }
+
 
 template<typename O, typename T, typename R, typename Arg>
 void toChangeImpl(O* obj, R (O::*setChangeFunc)(Arg), const T& value, kiwi::MemoryPool& pool) {
@@ -76,10 +74,14 @@ void toChangeImpl(T &change, const U& value, kiwi::MemoryPool& pool) {
     change = (T)value;
   } else if constexpr (std::is_same_v<U, std::string>) {
     change = kiwi::String(value.c_str());
-  } else if constexpr (is_variant<U>()) {
+  } else if constexpr (base::is_variant<U>()) {
     std::visit([&change, &pool](auto &&arg) {
       toChangeImpl(change, arg, pool);
     }, value);
+  } else if constexpr(base::is_vector<U>()) {
+    for (int i = 0; i < std::vector<T>::size(); i++) {
+      toChangeImpl(change[i], value[i], pool);
+    }
   } else {
     value.toChange(change, pool);
   }
@@ -87,48 +89,12 @@ void toChangeImpl(T &change, const U& value, kiwi::MemoryPool& pool) {
 
 template<typename O, typename T, typename R>
 void toChangeImpl(O* obj, kiwi::Array<R>& (O::*setChangeFunc)(kiwi::MemoryPool &pool, uint32_t count), T& value, kiwi::MemoryPool& pool) {
-  auto& changes = (obj->*setChangeFunc)(pool, value.size());
-  for (int i = 0; i < value.size(); i++) {
-    auto& item = value[i];
-    auto& change = changes[i];
-    toChangeImpl(change, item, pool);
-  }
+  // auto& changes = (obj->*setChangeFunc)(pool, value.size());
+  // for (int i = 0; i < value.size(); i++) {
+  //   auto& item = value[i];
+  //   auto& change = changes[i];
+  //   toChangeImpl(change, item, pool);
+  // }
 }
-
-template<typename O, typename R>
-void toChangeImpl(O* obj, kiwi::Array<R>& (O::*setChangeFunc)(kiwi::MemoryPool &pool, uint32_t count), const base::Buffer& value, kiwi::MemoryPool& pool) {
-}
-
-template<typename T>
-class Array : public std::vector<T> {
-public:
-  Array(std::initializer_list<T> list) : std::vector<T>(list) {}
-  Array() = default;
-
-  template<typename N>
-  void applyChange(const N& change) {
-    std::vector<T>::clear();
-    for (auto& item : change) {
-      std::vector<T>::push_back(T{});
-      auto& value = std::vector<T>::back();
-      applyChangeImpl(value, item);
-    }
-  }
-
-  template<typename F, typename C, typename K>
-  void toChange(const C& changes, kiwi::MemoryPool& pool) {
-    for (int i = 0; i < std::vector<T>::size(); i++) {
-      auto& value = (*this)[i];
-      auto& change = changes[i];
-      if constexpr (std::is_enum_v<T>) {
-        change = static_cast<K>(value);
-      } else if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T>) {
-        change = value;
-      } else {
-        value.toChange(change, pool);
-      }
-    }
-  }
-};
 
 }

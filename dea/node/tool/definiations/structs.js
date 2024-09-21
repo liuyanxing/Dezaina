@@ -342,7 +342,7 @@ export const structs = [
 			},
 			{
 				"name": "stops",
-				"type": "Array<ColorStop>"
+				"type": "std::vector<ColorStop>"
 			}
 		]
 	},
@@ -386,7 +386,7 @@ export const structs = [
 			},
 			{
 				"name": "position",
-				"type": "string"
+				"type": "std::string"
 			}
 		]
 	},
@@ -396,11 +396,11 @@ export const structs = [
 		"members": [
 			{
 				"name": "key",
-				"type": "string"
+				"type": "std::string"
 			},
 			{
 				"name": "version",
-				"type": "string"
+				"type": "std::string"
 			}
 		]
 	},
@@ -481,7 +481,7 @@ export const structs = [
 		"members": [
 			{
 				"name": "rects",
-				"type": "Array<Rect>"
+				"type": "std::vector<Rect>"
 			}
 		]
 	},
@@ -525,7 +525,7 @@ export const structs = [
 		"members": [
 			{
 				"name": "characters",
-				"type": "string"
+				"type": "std::string"
 			},
 			{
 				"name": "styleOverrideTable",
@@ -537,15 +537,15 @@ export const structs = [
 			},
 			{
 				"name": "baselines",
-				"type": "Array<Baseline>"
+				"type": "std::vector<Baseline>"
 			},
 			{
 				"name": "glyphs",
-				"type": "Array<Glyph>"
+				"type": "std::vector<Glyph>"
 			},
 			{
 				"name": "decorations",
-				"type": "Array<Decoration>"
+				"type": "std::vector<Decoration>"
 			}
 		]
 	},

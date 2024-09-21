@@ -20,10 +20,15 @@ public:
 
   ~Buffer();
   bool operator==(const Buffer& other) const {
-    return size_ == other.size_ && memcmp(data_, other.data_, size_) == 0;
+    return size() == other.size() && memcmp(data_, other.data_, cursor_) == 0;
   }
 
-  Data toData() const {  Data data(reinterpret_cast<char*>(data_) , size_); data_ = nullptr; return data; };
+  Data toData() {
+    Data data(reinterpret_cast<char*>(data_) , size());
+    data_ = nullptr;
+    return data;
+  };
+
   static Buffer MakeEmpty() { return Buffer(static_cast<uint8_t*>(nullptr), 0); };
   static Buffer MakeWithCopy(const uint8_t* data, size_t size);
 

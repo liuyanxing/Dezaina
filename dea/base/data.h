@@ -22,10 +22,19 @@ public:
 		return res;
 	}
 
+	Data() : size_(0), data_(nullptr) {}
 	Data(char* ptr, size_t size) : size_(size), data_(ptr) {}
-	Data(Data&& other) noexcept : size_(other.size_), data_(other.data_) {
+	Data(Data&& other) : size_(other.size_), data_(other.data_) {
 		other.size_ = 0;
 		other.data_ = nullptr;
+	}
+
+	Data& operator=(Data&& other) {
+		size_ = other.size_;
+		data_ = other.data_;
+		other.size_ = 0;
+		other.data_ = nullptr;
+		return *this;
 	}
 
 	bool operator==(const Data& other) const {
@@ -36,6 +45,7 @@ public:
   template<typename T>
 	const T data() const { return T(data_); }
   const char* data() const { return data_; }
+	const uint8_t* dataU8() const { return reinterpret_cast<uint8_t*>(data_); }
 private:
   size_t size_ = 0;
 	char* data_ = nullptr;

@@ -14,7 +14,7 @@ export const baseMixins = [
 			},
 			{
 				"name": "name",
-				"type": "string"
+				"type": "std::string"
 			},
 			{
 				"name": "type",
@@ -124,7 +124,7 @@ export const baseMixins = [
 		"members": [
 			{
 				"name": "strokePaints",
-				"type": "Array<PaintUnion>"
+				"type": "std::vector<PaintUnion>"
 			},
 			{
 				"name": "styleIdForStrokeFill",
@@ -145,11 +145,11 @@ export const baseMixins = [
 			},
 			{
 				"name": "dashPattern",
-				"type": "Array<float>"
+				"type": "std::vector<float>"
 			},
 			{
 				"name": "strokeGeometry",
-				"type": "Array<Path>"
+				"type": "std::vector<Path>"
 			}
 		]
 	},
@@ -160,7 +160,7 @@ export const baseMixins = [
 		"members": [
 			{
 				"name": "fillPaints",
-				"type": "Array<PaintUnion>"
+				"type": "std::vector<PaintUnion>"
 			},
 			{
 				"name": "styleIdForStrokeFill",
@@ -205,7 +205,7 @@ export const baseMixins = [
 		"members": [
 			{
 				"name": "effects",
-				"type": "Array<Effect>"
+				"type": "std::vector<Effect>"
 			},
 			{
 				"name": "styleIdForEffect",

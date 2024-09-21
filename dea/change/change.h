@@ -3,16 +3,11 @@
 #include "base/object.h"
 #include "node.h"
 #include "schema/message.h"
-#include "undoRedo.h"
 #include <variant>
 #include <vector>
+#include "primitives.h"
 
 namespace dea::change {
-
-enum class ChangeType {
-  Select,
-  NodeChange,
-};
 
 using ChangeValue = std::variant<message::NodeChange *, node::NodeIdArray>;
 
@@ -24,18 +19,18 @@ struct ChangeItem {
 class Change : public base::NonCopyable {
 public:
   bool addNodeChange(node::Node *node) {
-    if (changeMap_.find(node) == changeMap_.end()) {
+    if (nodeChangesMap_.find(node) == nodeChangesMap_.end()) {
       auto *nodeChange = pool_.allocate<message::NodeChange>();
       nodeChange->set_guid(node->getGuid().toChange(pool_));
-      changeMap_[node] = nodeChange;
+      nodeChangesMap_[node] = nodeChange;
       return true;
     }
     return false;
   }
 
   auto *getNodeChange(node::Node *node) {
-    auto it = changeMap_.find(node);
-    if (it != changeMap_.end()) {
+    auto it = nodeChangesMap_.find(node);
+    if (it != nodeChangesMap_.end()) {
       return it->second;
     }
     return static_cast<message::NodeChange *>(nullptr);
@@ -46,16 +41,16 @@ public:
   void clear() {
     items_.clear();
     pool_.clear();
-    changeMap_.clear();
+    nodeChangesMap_.clear();
   }
   void flush();
 
+  message::Message saveBeforeChange();
 
 private:
   std::vector<ChangeItem> items_;
-  UndoRedo<ChangeItem> undoRedo_;
   kiwi::MemoryPool pool_;
-  std::unordered_map<node::Node *, message::NodeChange *> changeMap_{};
+  std::unordered_map<node::Node *, message::NodeChange *> nodeChangesMap_{};
 };
 
 } // namespace dea::change

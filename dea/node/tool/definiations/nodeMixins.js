@@ -19,7 +19,7 @@ export const nodeMixins = [
       },
       {
         "name": "fillGeometry",
-        "type": "Array<Path>"
+        "type": "std::vector<Path>"
       }
     ]
   },
