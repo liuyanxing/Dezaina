@@ -1,5 +1,6 @@
 #include "geometry.h"
 #include "base/buffer.h"
+#include "resource.h"
 
 namespace dea::geometry {
 	using namespace dea::node;

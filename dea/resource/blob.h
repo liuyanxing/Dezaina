@@ -14,6 +14,7 @@ public:
 	BlobResourceItem(BlobResourceItem&& other) : ResourceItem(std::move(other)), data_(std::move(other.data_)) {}
 
   const auto* data() const { return &data_; }
+	static inline constexpr ResourceType Type = ResourceType::Blob;
 private:
 	base::Data data_;
 };
@@ -49,7 +50,7 @@ private:
 struct BlobResource {
 	friend class BlobResourceProvider;
 
-	static ResourceItem* add(base::Data&& data) {
+	static BlobResourceItem* add(base::Data&& data) {
 		auto& instance = Resource::getInstance();
 		auto* provider = static_cast<BlobResourceProvider*>(instance.getProvider(BlobResourceProvider::Type));
 		assert(provider);

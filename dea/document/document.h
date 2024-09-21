@@ -85,7 +85,7 @@ public:
 	auto& editor() { return editor_; }
 
 	bool applyMessage(kiwi::ByteBuffer& buffer);
-	bool processMessage(message::Message& message);
+	bool applyMessage(message::Message& message);
 	bool processBlobMessage(kiwi::Array<message::Blob>& blobs);
 	bool processNodeChanges(message::Message& message);
 

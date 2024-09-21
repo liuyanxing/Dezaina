@@ -7,7 +7,6 @@
 #include "node/node_base.generated.h"
 #include <array>
 #include <optional>
-#include "schema/utility.h"
 
 namespace dea::layout {
 
@@ -100,7 +99,7 @@ void ContraintLayout::layout(change::Change &change) {
     case RecordType::kSetSize: {
       auto &[size, direction] = std::get<SetSizeValue>(item->value);
       nodeChange->set_size(size.toChange(pool));
-      schema::invalidatePath(nodeChange, pool);
+      invalidatePath(nodeChange, pool);
 
       node::Vector achor{0, 0};
       if (direction.x < 0) {
