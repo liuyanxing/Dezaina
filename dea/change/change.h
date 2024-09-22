@@ -19,18 +19,18 @@ struct ChangeItem {
 class Change : public base::NonCopyable {
 public:
   bool addNodeChange(node::Node *node) {
-    if (nodeChangesMap_.find(node) == nodeChangesMap_.end()) {
+    if (nodeChanges_.find(node) == nodeChanges_.end()) {
       auto *nodeChange = pool_.allocate<message::NodeChange>();
       nodeChange->set_guid(node->getGuid().toChange(pool_));
-      nodeChangesMap_[node] = nodeChange;
+      nodeChanges_[node] = nodeChange;
       return true;
     }
     return false;
   }
 
   auto *getNodeChange(node::Node *node) {
-    auto it = nodeChangesMap_.find(node);
-    if (it != nodeChangesMap_.end()) {
+    auto it = nodeChanges_.find(node);
+    if (it != nodeChanges_.end()) {
       return it->second;
     }
     return static_cast<message::NodeChange *>(nullptr);
@@ -41,7 +41,7 @@ public:
   void clear() {
     items_.clear();
     pool_.clear();
-    nodeChangesMap_.clear();
+    nodeChanges_.clear();
   }
   void flush();
 
@@ -50,7 +50,7 @@ public:
 private:
   std::vector<ChangeItem> items_;
   kiwi::MemoryPool pool_;
-  std::unordered_map<node::Node *, message::NodeChange *> nodeChangesMap_{};
+  NodeChanges nodeChanges_{};
 };
 
 } // namespace dea::change

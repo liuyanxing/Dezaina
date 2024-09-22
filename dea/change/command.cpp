@@ -12,6 +12,25 @@ namespace dea::change {
 using namespace node;
 using namespace base;
 
+// SelectionCommand
+void SelectionCommand::execute() {
+  takeUndoSnapshot();
+	Dezaina::instance().document().setSelection(redoSelection_);
+}
+
+void SelectionCommand::undo() {
+	Dezaina::instance().document().setSelection(undoSelection_);
+}
+
+void SelectionCommand::redo() {
+	Dezaina::instance().document().setSelection(redoSelection_);
+}
+
+void SelectionCommand::takeUndoSnapshot() {
+	undoSelection_ = Dezaina::instance().document().getSelection();
+}
+
+// NodeChangesCommand
 void NodeChangesCommand::takeUndoSnapshot() {
 	message::Message message;
 	message.set_type(message::MessageType::NODE_CHANGES);
