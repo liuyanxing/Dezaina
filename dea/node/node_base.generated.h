@@ -1524,7 +1524,7 @@ public:
 		nextSibling_ = v;
 	}
 
-  void applyChange(const message::NodeChange& change) {
+  virtual void applyChange(const message::NodeChange& change) {
 		if (change.guid() != nullptr) {
 			applyChangeImpl(guid_, *change.guid());
 		}
@@ -1539,14 +1539,14 @@ public:
 		}
 	}
 
-void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+virtual void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_guid, guid_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_parentIndex, parentIndex_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_name, name_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_type, type_, pool);
 	}
 
-void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+virtual void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		if (change.guid() != nullptr) {
 			toChangeImpl(&snapshot, &message::NodeChange::set_guid, guid_, pool);
 		}

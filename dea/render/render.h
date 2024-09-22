@@ -25,7 +25,7 @@ private:
   void renderInteraction();
 	void render(node::NodeIterWithWorldMatrix& iter, bool isInterNode);
 	void renderNode(node::Node* node, bool isInterNode);
-	void renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers);
+	void renderGeometry(const render::GeometryType& geometry, const PaintDrawers& drawers);
 
 	const Viewport& viewport_;
 	const document::Document& doc_;

@@ -79,7 +79,7 @@ void toChangeImpl(T &change, const U& value, kiwi::MemoryPool& pool) {
       toChangeImpl(change, arg, pool);
     }, value);
   } else if constexpr(base::is_vector<U>()) {
-    for (int i = 0; i < std::vector<T>::size(); i++) {
+    for (int i = 0; i < value.size(); i++) {
       toChangeImpl(change[i], value[i], pool);
     }
   } else {

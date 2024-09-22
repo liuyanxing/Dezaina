@@ -23,23 +23,24 @@ void Change::flush() {
 		return;
 	}
 
-	std::unique_ptr<Command> command;
+	
 
+	if (!nodeChanges_.empty()) {
+		NodeChangesCommand::Make(nodeChanges_, pool_)->execute();
+	}
+	std::unique_ptr<Command> command;
 	auto& doc = Dezaina::instance().document();
 	for (auto& item : items_) {
 		switch (item.type) {
 			case ChangeType::Select:
 				command = SelectionCommand::Make(std::get<NodeIdArray>(item.value));
 				break;
-			case ChangeType::NodeChange:
-				command = NodeChangesCommand::Make(nodeChanges_, pool_);
-				break;
 			default:
 				assert(false);
 				break;
 		}
+		command->execute();
 	}
-	command->execute();
 	clear();
 }
 
