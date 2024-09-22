@@ -458,16 +458,20 @@ struct Matrix  {
 	void setM12(const float& v) {
 		m12 = v;
 	}
+	static Matrix Translate(float x, float y) { return Matrix(1, 0, x, 0, 1, y); }
+	static Matrix Translate(const Vector& v) { return Translate(v.x, v.y); }
+	static Matrix Scale(float x, float y) { return Matrix(x, 0, 0, 0, y, 0); }
+	static Matrix Scale(float s) { return Scale(s, s); }
+	static Matrix Rotate(float angle) { float c = cos(angle), s = sin(angle); return Matrix(c, -s, 0, s, c, 0); }
 	Matrix operator*(const Matrix& rhs) const;
 	Vector operator*(const Vector& rhs) const;
 	bool operator==(const Matrix& rhs) const;
-	Matrix& translate(float x, float y) { m02 += x; m12 += y; return *this; }
-	Matrix& rotate(float angle);
+	Matrix& translate(float x, float y) { return *this = Translate(x, y) * *this; }
+	Matrix& rotate(float angle) { return *this = Rotate(angle) * *this; }
+	Matrix& preRotate(float angle, Vector center);
 	Matrix getInverse(const Matrix& defaultValue = Matrix()) const;
 	float getScaleX() const { return m00; }
 	float getScaleY() const { return m11; }
-	float getTranslateX() const { return m02; }
-	float getTranslateY() const { return m12; }
 	float getRotation() const;
 	Vector getTranslation() const { return Vector(m02, m12); }
 	Rect mapRect(const Rect& rect) const;
@@ -1489,6 +1493,7 @@ private:
 	ParentIndex parentIndex_{};
 	std::string name_{};
 	NodeType type_{};
+	BaseNodeMixinPointer parent_{};
 	BaseNodeMixinPointer nextSibling_{};
 
 public:
@@ -1516,6 +1521,12 @@ public:
 	}
 	void setType(const NodeType& v) {
 		type_ = v;
+	}
+	const BaseNodeMixinPointer& getParent() const {
+		return parent_;
+	}
+	void setParent(const BaseNodeMixinPointer& v) {
+		parent_ = v;
 	}
 	const BaseNodeMixinPointer& getNextSibling() const {
 		return nextSibling_;

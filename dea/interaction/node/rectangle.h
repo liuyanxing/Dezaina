@@ -6,8 +6,6 @@
 
 namespace dea::interaction {
 
-class Rectangle : public node::RectangleNode, public InteractionNode,  public event::EventEmitter {
-  
-};
+class Rectangle : public node::RectangleNode, public event::EventEmitter {};
 
 }

@@ -153,13 +153,13 @@ void NodeEditor::bindEvents() {
     rotateCtrl.addEventListener(EventType::MouseMove, [this, i](Event &e) {
       UI::setCursor(CursorType::Handle);
     });
-    rotateCtrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
-      auto &event = static_cast<MouseEvent &>(e);
-      auto oldVector = Vector{event.localWorldX - event.localWorldDx,
-                              event.localWorldY - event.localWorldDy};
-      auto angle =
-          Vector{event.localWorldX, event.localWorldY}.angle(oldVector);
-      editor_.rotate(angle);
+    rotateCtrl.addEventListener(EventType::MouseDrag, [this, i](Event& e) {
+        auto& event = static_cast<MouseEvent&>(e);
+        auto center = getNodeCenterWorld(translateCtrl_);
+        auto v1 = Vector{event.worldX, event.worldY} - center;
+        auto v2 = Vector{ event.worldX - event.worldDx , event.worldY - event.worldDy } - center;
+        auto angle = v1.angle(v2);
+        editor_.rotate(angle);
     });
   }
 }

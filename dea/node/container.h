@@ -7,16 +7,6 @@ namespace dea::node {
 
 class Container {
 public:
-	void appendChild(Node* node) {
-    if (!lastChild_) {
-      firstChild_ = node;
-      lastChild_ = node;
-      return;
-    }
-    lastChild_->setNextSibling(node);
-    lastChild_ = node;
-  };
-
   Node* firstChild() const {
     return firstChild_;
   };
@@ -62,6 +52,17 @@ public:
 	
   static bool append(Node* child, Node* parent);
 protected:
+	void appendChild(Node* node) {
+    if (!lastChild_) {
+      firstChild_ = node;
+      lastChild_ = node;
+      return;
+    }
+    lastChild_->setNextSibling(node);
+    lastChild_ = node;
+  };
+
+ 
   Node* firstChild_ = nullptr;
   Node* lastChild_ = nullptr;
 };

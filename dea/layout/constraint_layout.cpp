@@ -59,8 +59,7 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector newSize,
     auto transform = shape->getTransform();
     auto size = shape->getSize();
     // todo: pos is not correct, should consider the rotation
-    auto pos =
-        node::Vector(transform.getTranslateX(), transform.getTranslateY());
+    auto pos = transform.getTranslation();
 
     auto [newX, newWidth] =
         layoutImpl(pos.x, size.x, parentSize.x, newSize.x, hConstraint);
