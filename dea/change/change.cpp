@@ -23,8 +23,6 @@ void Change::flush() {
 		return;
 	}
 
-	
-
 	if (!nodeChanges_.empty()) {
 		NodeChangesCommand::Make(nodeChanges_, pool_)->execute();
 	}

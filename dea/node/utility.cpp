@@ -32,7 +32,7 @@ NodeIter::IterDirection NodeIter::operator++() {
     return End;
   }
 
-  auto *container = node::node_cast<node::Container >(node_);
+  auto *container = node::node_cast<node::Container>(node_);
   if (container && !isSkipChild_) {
     node_ = container->firstChild();
     return node_ ? Forward : End;
@@ -77,12 +77,12 @@ NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node *node,
 }
 
 node::Matrix NodeIterWithWorldMatrix::getWorldMatrixImpl(node::Node *node) {
-  if (auto *page = node::node_cast<node::PageNode >(node)) {
+  if (auto *page = node::node_cast<node::PageNode>(node)) {
     return node::Matrix();
   }
   node::Matrix world = getTransfromMatrix(node);
   auto *parent = getParent_(node);
-  while (parent && !node::node_cast<node::PageNode >(parent)) {
+  while (parent && !node::node_cast<node::PageNode>(parent)) {
     world = getTransfromMatrix(parent) * world;
     parent = getParent_(parent);
   }
@@ -111,6 +111,17 @@ NodeIter::IterDirection NodeIterWithWorldMatrix::operator++() {
     break;
   }
   return direction;
+}
+
+void NodeIterWithWorldMatrix::rest() {
+  NodeIter::rest();
+  update();
+}
+
+void NodeIterWithWorldMatrix::update() {
+  world_ = getWorldMatrixImpl(node_);
+  worldStack_.clear();
+  worldStack_.push_back(world_);
 }
 
 } // namespace dea::node

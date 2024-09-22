@@ -1,20 +1,14 @@
 #pragma once
 
-namespace dea::ui {
+namespace ui {
 
 enum class CursorType {
-  Arrow,
-  Cross,
-  Hand,
-  IBeam,
-  SizeAll,
-  SizeNESW,
-  SizeNWSE,
-  SizeWE,
-  SizeNS,
-  Wait,
-  Help,
-  Forbidden,
+  SIZEWE,
+  SIZENS,
+  SIZENESW,
+  SIZENWSE,
+  Handle,
+  Default,
   None
 };
 

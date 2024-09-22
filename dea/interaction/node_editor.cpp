@@ -1,4 +1,5 @@
 #include "node_editor.h"
+#include "UI/ui.h"
 #include "config/size.h"
 #include "dezaina.h"
 #include "document.h"
@@ -8,12 +9,12 @@
 #include "node/rectangle.h"
 #include "viewport/viewport.h"
 #include <array>
-#include "base/math.h"
 
 namespace dea::interaction {
 
 using namespace node;
 using namespace event;
+using namespace ui;
 
 void NodeEditor::initCtrls() {
   float edgeSize = 100;
@@ -44,9 +45,9 @@ void NodeEditor::initCtrls() {
       {node::ConstraintType::MIN, node::ConstraintType::STRETCH},
   }};
   std::array<Vector, 4> eTranslate = {{{offset, -0.5f},
-                {edgeSize - 0.5f, offset},
-                {offset, edgeSize - 0.5f},
-                {-0.5, offset}}};
+                                       {edgeSize - 0.5f, offset},
+                                       {offset, edgeSize - 0.5f},
+                                       {-0.5, offset}}};
   auto edgeS = edgeSize - nodeD;
   std::array<Vector, 4> sizes = {
       {{edgeS, 1}, {1, edgeS}, {edgeS, 1}, {1, edgeS}}};
@@ -70,9 +71,9 @@ void NodeEditor::initCtrls() {
   }};
 
   std::array<Vector, 4> rTranslate = {{{-offset * 3, -offset * 3},
-                                      {offset + edgeSize, -offset * 3},
-                                      {offset + edgeSize, offset + edgeSize},
-                                      {-offset * 3, offset + edgeSize}}};
+                                       {offset + edgeSize, -offset * 3},
+                                       {offset + edgeSize, offset + edgeSize},
+                                       {-offset * 3, offset + edgeSize}}};
   for (int i = 0; i < 4; i++) {
     auto &rotateCtrl = rotateCtrls_[i];
     rotateCtrl.setName("br" + std::to_string(i));
@@ -85,10 +86,10 @@ void NodeEditor::initCtrls() {
   }
 
   std::array<Vector, 4> sTranslate = {{{-offset, -offset},
-                                      {-offset + edgeSize, -offset},
-                                      {-offset + edgeSize, -offset + edgeSize},
-                                      {-offset, -offset + edgeSize}}};
- for (int i = 0; i < 4; i++) {
+                                       {-offset + edgeSize, -offset},
+                                       {-offset + edgeSize, -offset + edgeSize},
+                                       {-offset, -offset + edgeSize}}};
+  for (int i = 0; i < 4; i++) {
     auto &resizectrl = resizeNodeCtrls_[i];
     resizectrl.setName("bs" + std::to_string(i));
     resizectrl.setTransform(
@@ -104,13 +105,24 @@ void NodeEditor::initCtrls() {
 }
 
 void NodeEditor::bindEvents() {
+  translateCtrl_.addEventListener(EventType::MouseMove, [this](Event &e) {
+    UI::setCursor(CursorType::Default);
+  });
   translateCtrl_.addEventListener(EventType::MouseDrag, [this](Event &e) {
+    UI::setCursor(CursorType::Handle);
     auto &event = static_cast<MouseEvent &>(e);
     editor_.translate(event.localWorldDx, event.localWorldDy);
   });
 
   for (int i = 0; i < 4; i++) {
     auto &resizeCtrl = resizeNodeCtrls_[i];
+    resizeCtrl.addEventListener(EventType::MouseMove, [this, i](Event &e) {
+      if (i == 0 || i == 2) {
+        UI::setCursor(CursorType::SIZENWSE);
+      } else {
+        UI::setCursor(CursorType::SIZENESW);
+      }
+    });
     resizeCtrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
       const std::array<node::Vector, 4> directions = {
           {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}}};
@@ -121,6 +133,13 @@ void NodeEditor::bindEvents() {
     });
 
     auto &edgeCtrl = resizeEdgeCtrls_[i];
+    edgeCtrl.addEventListener(EventType::MouseMove, [this, i](Event &e) {
+      if (i == 0 || i == 2) {
+        UI::setCursor(CursorType::SIZENS);
+      } else {
+        UI::setCursor(CursorType::SIZEWE);
+      }
+    });
     edgeCtrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
       const std::array<node::Vector, 4> directions = {
           {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}};
@@ -131,6 +150,9 @@ void NodeEditor::bindEvents() {
     });
 
     auto &rotateCtrl = rotateCtrls_[i];
+    rotateCtrl.addEventListener(EventType::MouseMove, [this, i](Event &e) {
+      UI::setCursor(CursorType::Handle);
+    });
     rotateCtrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
       auto &event = static_cast<MouseEvent &>(e);
       auto oldVector = Vector{event.localWorldX - event.localWorldDx,
