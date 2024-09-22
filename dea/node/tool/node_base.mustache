@@ -102,7 +102,7 @@ public:
 	}
 {{/members}}
 
-  {{#isChangeVirtual}}{{/isChangeVirtual}}void applyChange(const message::{{changeType}}& change) {
+  {{#isChangeVirtual}}virtual {{/isChangeVirtual}}void applyChange(const message::{{changeType}}& change) {
 {{#members}}
 {{^skipChange}}
 		if (change.{{name}}() != nullptr) {
@@ -115,7 +115,7 @@ public:
 {{/extends}}
 	}
 
-{{#isChangeVirtual}}{{/isChangeVirtual}}void toChange(message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
+{{#isChangeVirtual}}virtual {{/isChangeVirtual}}void toChange(message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
 {{#members}}
 {{^skipChange}}
 		toChangeImpl(&change, &message::{{changeType}}::set_{{name}}, {{name}}_, pool);
@@ -126,7 +126,7 @@ public:
 {{/extends}}
 	}
 
-{{#isChangeVirtual}}{{/isChangeVirtual}}void takeSnapshot(message::{{changeType}}& snapshot, message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
+{{#isChangeVirtual}}virtual {{/isChangeVirtual}}void takeSnapshot(message::{{changeType}}& snapshot, message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
 {{#members}}
 {{^skipChange}}
 		if (change.{{name}}() != nullptr) {

@@ -116,18 +116,18 @@ namespace dea::render {
 
     auto& fillPaints = buildFillPaintDrawers(node);
     if (!fillPaints.empty()) {
-      auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
+      auto fill = isInterNode ? render::buildFill(node) : render::getOrBuildFill(node);
       renderGeometry(fill, fillPaints);
     };
 
     auto& strokePaints = buildStrokePaintDrawers(node);
     if (!strokePaints.empty()) {
-      auto stroke = isInterNode ? geometry::buildStroke(node) : geometry::getOrBuildStroke(node);
+      auto stroke = isInterNode ? render::buildStroke(node) : render::getOrBuildStroke(node);
       renderGeometry(stroke, strokePaints);
     }
 	}
 
-  void Render::renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers) {
+  void Render::renderGeometry(const render::GeometryType& geometry, const PaintDrawers& drawers) {
     SkAutoCanvasRestore acr(canvas_, true); 
     canvas_->clipPath(geometry, true);
     for (auto& drawer : drawers) {

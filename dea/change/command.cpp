@@ -46,7 +46,9 @@ void NodeChangesCommand::takeUndoSnapshot() {
 			auto* item = resource::Resource::getInstance().get(shape->getFillGeometry().front().commandsBlob);
 			if (item && item->as<resource::BlobResourceItem>()) {
 				pathes.push_back(item->as<resource::BlobResourceItem>()->data());
-				snapshot.set_fillGeometry(pool, 1)[0].set_commandsBlob(pathes.size() - 1);
+				auto& fillGeometry = snapshot.set_fillGeometry(pool, 1);
+				toChangeImpl(fillGeometry, shape->getFillGeometry(), pool);
+				fillGeometry[0].set_commandsBlob(pathes.size() - 1);
 			}
 		}
 	}
@@ -64,18 +66,22 @@ void NodeChangesCommand::takeUndoSnapshot() {
 }
 
 void NodeChangesCommand::takeRedoSnapShot() {
-	message::Message message;
+	redoMessage_ = std::make_unique<message::Message>();
+	auto& message = *redoMessage_;
   message.set_type(message::MessageType::NODE_CHANGES);
 	auto& pool = *pool_;
   auto& nodeChanges = message.set_nodeChanges(pool, changes_->size());
   
 	std::vector<const Data*> pathes;
 	for (int index = 0; auto& [node, nodeChange] : *changes_) {
-	  Dezaina::instance().document().applyNodeChange(nodeChange);
-		if (!isFillPathValid(nodeChange)) {
+	    Dezaina::instance().document().applyNodeChange(nodeChange);
+		if (auto* shape = node_cast<DefaultShapeNode>(node); shape && !isFillPathValid(nodeChange)) {
 			auto *item = resource::BlobResource::add(geometry::buildFill(node));
 			pathes.push_back(item->data());
-      nodeChange->set_fillGeometry(pool, 1)[0].set_commandsBlob(pathes.size() - 1);
+
+			auto& fillGeometry = nodeChange->set_fillGeometry(pool, 1);
+			toChangeImpl(fillGeometry, shape->getFillGeometry(), pool);
+			fillGeometry[0].set_commandsBlob(pathes.size() - 1);
 		}
 		if (!isStrokePathValid(nodeChange)) {
 		}

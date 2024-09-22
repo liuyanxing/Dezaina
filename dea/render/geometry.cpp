@@ -8,7 +8,7 @@
 #include <memory>
 #include <utility>
 
-namespace dea::geometry {
+namespace dea::render {
 	using namespace dea::node;
 	using namespace dea::resource;
 

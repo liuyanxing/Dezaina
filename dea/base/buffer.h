@@ -33,7 +33,7 @@ public:
   static Buffer MakeWithCopy(const uint8_t* data, size_t size);
 
   uint8_t *data() const { return data_; }
-  size_t size() const { return cursor_; }
+  size_t size() const { return size_; }
   void set(const uint8_t *data, size_t size);
   void seek(size_t offset) const { cursor_ = offset; };
   bool isEnd() const { return cursor_ >= size(); }

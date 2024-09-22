@@ -21,8 +21,7 @@ void Dezaina::tick() {
   emit(event);
 
   flush();
-
-#ifdef DEA_EANBLE_RENDER
+#if
   render_.render();
 #endif
 

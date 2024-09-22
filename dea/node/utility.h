@@ -68,21 +68,29 @@ protected:
   }
 
   inline bool isFillPathValid(message::NodeChange *nodeChange) {
-    if (nodeChange->fillGeometry()->size() == 0) {
+   auto* fillGeometry = nodeChange->fillGeometry();
+   if (!fillGeometry) {
       return true;
     }
-    return *nodeChange->fillGeometry()->begin()->commandsBlob() != UINT32_MAX; 
+    return *fillGeometry->begin()->commandsBlob() != UINT32_MAX; 
   }
 
   inline bool isStrokePathValid(message::NodeChange *nodeChange) {
-    if (nodeChange->strokeGeometry()->size() == 0) {
+    auto* strokeGeometry = nodeChange->strokeGeometry();
+    if (!strokeGeometry) {
       return true;
     }
-    return *nodeChange->strokeGeometry()->begin()->commandsBlob() != UINT32_MAX; 
+    return *strokeGeometry->begin()->commandsBlob() != UINT32_MAX; 
   }
 
   inline bool isPathValid(message::NodeChange *nodeChange) {
     return isFillPathValid(nodeChange) && isStrokePathValid(nodeChange);
+  }
+
+  inline void updateFillPath(DefaultShapeNode* shape, message::NodeChange *nodeChange, const uint32_t & blobId, kiwi::MemoryPool &pool) {
+    auto& fillGeometry = nodeChange->set_fillGeometry(pool, 1);
+    toChangeImpl(fillGeometry, shape->getFillGeometry(), pool);
+    fillGeometry[0].set_commandsBlob(blobId);
   }
   
 

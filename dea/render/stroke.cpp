@@ -6,7 +6,7 @@
 #include "include/core/SkPaint.h"
 #include "include/core/SkPathUtils.h"
 
-namespace dea::geometry {
+namespace dea::render {
 	using namespace dea::node;
 	using namespace dea::resource;
 

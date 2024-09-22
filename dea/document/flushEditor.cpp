@@ -16,6 +16,11 @@ void Document::flushEditor() {
   auto &pool = change.getPool();
   auto& records = editor_.getRecords();
   for (auto &record : records) {
+      if (record.type == RecordType::kSelection) {
+          change.addChange(change::ChangeType::Select,
+              std::get<node::NodeIdArray>(record.value));
+          continue;
+    }
     auto *node = getNodeById(record.nodeId);
     if (node == nullptr) {
       continue;
@@ -24,16 +29,6 @@ void Document::flushEditor() {
     if (node::node_cast<node::DefaultShapeNode
     >(node) && record.type >= RecordType::kLayoutRelation) {
       cLayout.add(&record);
-      continue;
-    }
-
-    switch (record.type) {
-    case RecordType::kSelection: {
-      change.addChange(change::ChangeType::Select,
-                       std::get<node::NodeIdArray>(record.value));
-      continue;
-    }
-    default:
       continue;
     }
   }
