@@ -24,8 +24,8 @@ node::Size getSize(node::NodeConstPtr node) {
   return node::Size();
 }
 
-NodeIter::NodeIter(node::Node *node, const GetParentFunc &getParent)
-    : node_(node), root_(node_), getParent_(getParent) {}
+NodeIter::NodeIter(node::Node *node)
+    : node_(node), root_(node_) {}
 
 NodeIter::IterDirection NodeIter::operator++() {
   if (!node_) {
@@ -43,7 +43,7 @@ NodeIter::IterDirection NodeIter::operator++() {
     node_ = next;
     return Right;
   }
-  auto *parent = getParent_(node_);
+  auto *parent = node_->getParent();
   if (!parent || parent == root_) {
     node_ = nullptr;
     return End;
@@ -66,9 +66,8 @@ NodeIter::IterDirection NodeIter::operator--() {
   return Backword;
 }
 
-NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node *node,
-                                                 const GetParentFunc &getParent)
-    : NodeIter(node, getParent) {
+NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node *node)
+    : NodeIter(node) {
   if (!node_) {
     return;
   }

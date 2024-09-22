@@ -20,29 +20,23 @@ public:
 
   using GetParentFunc = std::function<node::Node *(node::Node *)>;
 
-  NodeIter(node::Node *node, const GetParentFunc &);
+  NodeIter(node::Node *node);
   IterDirection operator++();
   IterDirection operator--();
   bool isValid() { return node_ != nullptr; }
   auto *get() { return node_; }
-  node::Node *getParent() {
-    if (node_)
-      return getParent_(node_);
-    return nullptr;
-  }
   void skipChild() { isSkipChild_ = true; }
   void rest() { node_ = root_; }
 
 protected:
   node::Node *node_{nullptr};
   node::Node *root_{nullptr};
-  GetParentFunc getParent_;
   bool isSkipChild_{false};
 };
 
 class NodeIterWithWorldMatrix : public NodeIter {
 public:
-  NodeIterWithWorldMatrix(node::Node *node, const GetParentFunc &getParent);
+  NodeIterWithWorldMatrix(node::Node *node);
   IterDirection operator++();
   IterDirection operator--();
   const auto &getWorldMatrix() const { return world_; }

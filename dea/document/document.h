@@ -106,19 +106,6 @@ public:
 	void dump();
 	void dump(node::Node* node) const;
 
-class Iter : public node::NodeIter {
-public:
-	Iter(node::Node* node) : node::NodeIter(node, [this](node::Node* node) { return doc_->getParent(node); }) {
-  }
-  static inline Document* doc_ = nullptr;
-};
-
-class IterWithWorldMatrix : public node::NodeIterWithWorldMatrix {
-public:
-	IterWithWorldMatrix(node::Node* node) : node::NodeIterWithWorldMatrix(node, [](node::Node* node) { return Iter::doc_->getParent(node); }) {
-  }
-};
-
 private:
 	NodeMap nodeMap_{100};
 	node::DocumentNode* root_{};

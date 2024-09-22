@@ -22,6 +22,11 @@ export const baseMixins = [
 				"default": "NONE"
 			},
 			{
+				"name": "parent",
+				"type": "BaseNodeMixinPointer",
+				"skipChange": true
+			},
+			{
 				"name": "nextSibling",
 				"type": "BaseNodeMixinPointer",
 				"skipChange": true

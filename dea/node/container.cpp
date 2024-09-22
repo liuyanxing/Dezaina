@@ -10,6 +10,7 @@ bool Container::append(Node* child, Node* parent) {
 	auto container = node_cast<Container>(parent);
 	if (container) {
 		container->appendChild(child);
+		child->setParent(parent);
 	}
 	return true;
 
