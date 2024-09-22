@@ -28,6 +28,7 @@ namespace dea::change {
 		void execute() override;
 		void undo() override;
 		void redo() override;
+		void takeUndoSnapshot();
 	private:
 		node::NodeIdArray undoSelection_;
 		node::NodeIdArray redoSelection_;

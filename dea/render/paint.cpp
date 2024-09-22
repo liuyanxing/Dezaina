@@ -18,7 +18,7 @@ static void pushPaintDrawer(const node::ImagePaint& paint) {
   paintDrawers.push_back(ImagePaintDrawer{paint});
 }
 
-void buildPaintDrawers(const node::Array<node::PaintUnion>& paints) {
+void buildPaintDrawers(const std::vector<node::PaintUnion>& paints) {
   paintDrawers.clear();
   paintDrawers.reserve(20);
   for (const auto& paint : paints) {
