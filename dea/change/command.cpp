@@ -43,6 +43,7 @@ void NodeChangesCommand::takeUndoSnapshot() {
 		auto& snapshot = snapshots[index];
 		node->takeSnapshot(snapshot, *nodeChange, pool);
 		if (auto *shape = node_cast<DefaultShapeNode>(node); shape && !isFillPathValid(nodeChange)) {
+			if (!shape->getFillGeometry().size()) continue;
 			auto* item = resource::Resource::getInstance().get(shape->getFillGeometry().front().commandsBlob);
 			if (item && item->as<resource::BlobResourceItem>()) {
 				pathes.push_back(item->as<resource::BlobResourceItem>()->data());

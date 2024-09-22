@@ -6,7 +6,7 @@ for _, file in ipairs(os.files("src/test_*.cpp")) do
     set_kind("binary")
     add_packages("gtest")
     set_default(false)
-    add_files(file)
+    add_files(file, "src/ui.cpp")
     add_tests("default")
     add_deps("dea")
 end

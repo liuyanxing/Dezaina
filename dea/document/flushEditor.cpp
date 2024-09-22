@@ -16,7 +16,7 @@ void Document::flushEditor() {
   auto &pool = change.getPool();
   auto& records = editor_.getRecords();
   for (auto &record : records) {
-      if (record.type == RecordType::kSelection) {
+    if (record.type == RecordType::kSelection) {
           change.addChange(change::ChangeType::Select,
               std::get<node::NodeIdArray>(record.value));
           continue;
