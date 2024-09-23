@@ -16,7 +16,7 @@ using namespace document;
 Interaction::Interaction(Document &doc) : doc_(doc) {
   page_.setBackgroundColor({0, 0, 0, 0});
   doc_.addEventListener(EventType::PageChange, [this](Event &event) {
-    selection_.setIter(Document::IterWithWorldMatrix{doc_.currentPage()});
+    selection_.setRoot(doc_.currentPage());
   });
 
   selection_.onSelectionChange(
@@ -107,7 +107,7 @@ bool Interaction::dragInterNode(const std::string &query,
   }
 
   bool found = false;
-  interaction::Iter iter(&page_);
+  NodeIter iter(&page_);
   while (iter.isValid()) {
     auto *node = iter.get();
     if (query == node->getName()) {
@@ -144,11 +144,11 @@ bool Interaction::dragInterNode(const std::string &query, float worldX,
 }
 
 void Interaction::dump() {
-  Iter iter(&page_);
+  NodeIter iter(&page_);
   spdlog::info("dumping page");
   while (iter.isValid()) {
     auto *node = iter.get();
-    auto *parent = iter.getParent();
+    auto *parent = node->getParent();
     spdlog::info("node: {}, parent: {}", getNodeTypeString(node),
                  getNodeTypeString(parent));
     ++iter;

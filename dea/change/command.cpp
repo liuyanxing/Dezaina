@@ -98,7 +98,6 @@ void NodeChangesCommand::takeRedoSnapShot() {
 
 	kiwi::ByteBuffer buffer;
 	message.encode(buffer);
-
 	redoSnapshot_ = Data::MakeWithCopy(buffer.data(), buffer.size());
 }
 

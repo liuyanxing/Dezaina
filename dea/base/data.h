@@ -23,10 +23,16 @@ public:
 	}
 
 	Data() : size_(0), data_(nullptr) {}
-	Data(char* ptr, size_t size) : size_(size), data_(ptr) {}
+	Data(char* ptr, size_t size) : size_(size), data_(ptr), isOwner_{false} {}
 	Data(Data&& other) : size_(other.size_), data_(other.data_) {
 		other.size_ = 0;
 		other.data_ = nullptr;
+	}
+
+  ~Data() {
+		if (data_ && isOwner_) {
+			free(data_);
+		}
 	}
 
 	Data& operator=(Data&& other) {
@@ -49,6 +55,7 @@ public:
 private:
   size_t size_ = 0;
 	char* data_ = nullptr;
+	bool isOwner_ = true;
 };
 
 } // namespace dea::base

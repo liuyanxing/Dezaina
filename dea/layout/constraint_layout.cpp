@@ -42,7 +42,7 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector newSize,
     return;
   }
   auto parentSize = parentShape->getSize();
-  Document::Iter iter(node);
+  node::NodeIter iter(node);
   ++iter;
   iter.skipChild();
   while (iter.isValid()) {

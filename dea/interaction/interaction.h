@@ -5,8 +5,6 @@
 #include "event.h"
 #include "listener.h"
 #include "node.h"
-#include "node/page.h"
-#include "node/path.h"
 #include "node_editor.h"
 #include "selection.h"
 #include <memory>
@@ -31,13 +29,13 @@ public:
   static node::Size GetItersectBound(node::Vector size);
 
 private:
-  Page page_;
+  node::PageNode page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
-  Selection selection_{GetItersectBound, IterWithWorldMatrix{nullptr}};
+  Selection selection_{nullptr, GetItersectBound};
   Creation creation_;
   document::Document &doc_;
 
-  void appendToContainer(node::Node *child) { appendChild(&page_, child); }
+  void appendToContainer(node::Node *child) { node::Container::append(&page_, child); }
 
   void handleSelectionChange(const node::NodeArary &nodes);
   void updateNodeEditor();

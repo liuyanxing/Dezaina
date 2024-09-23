@@ -3,6 +3,7 @@
 #include "listener.h"
 #include "node.h"
 #include "node.h"
+#include "node/node.h"
 #include <functional>
 
 namespace dea::interaction {
@@ -13,19 +14,19 @@ using OnSelectionChangeCb = std::function<void(const node::NodeArary&)>;
 class Interaction;
 class Selection : public InteractionListener {
 public:
-  Selection(const GetIntersectBound& getIntersectBound, const node::NodeIterWithWorldMatrix& iter) : getIntersectBound_(getIntersectBound), iter_(iter) {}
+  Selection(node::NodeConstPtr node, const GetIntersectBound& getIntersectBound) : root_(node), getIntersectBound_(getIntersectBound) {}
   bool empty() const { return selection_.empty(); }
   node::NodeAraryConstRef getSelection() const { return selection_; }
   void clear() { selection_.clear(); hoverNode_ = nullptr; }
   node::NodeConstPtr getHoverNode() const { return hoverNode_; }
-  void setIter(const node::NodeIterWithWorldMatrix& iter) { iter_ = iter; }
+  void setRoot(node::NodeConstPtr node) { root_ = node; }
   void onSelectionChange(const OnSelectionChangeCb& callback) { onSelectionChangeCb_ = callback; }
 
 private:
   node::NodeArary selection_;
   node::Node* hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
-  node::NodeIterWithWorldMatrix iter_;
+  node::NodeConstPtr root_;
   OnSelectionChangeCb onSelectionChangeCb_;
 
 	void setSelection(const std::vector<node::Node*>& nodes);

@@ -158,7 +158,7 @@ TEST(NodeEditor, CtrolNodesLayout) {
       {"be2", {{r, rh - 0.5}, {rw - d, 1}}},
       {"be3", {{-0.5, r}, {1, rh - d}}},
   };
-  dea::interaction::Iter iter{container};
+  NodeIter iter{container};
   while (iter.isValid()) {
     auto *node = iter.get();
     auto shape = node_cast<DefaultShapeNode>(node);

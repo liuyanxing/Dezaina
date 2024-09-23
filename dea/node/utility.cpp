@@ -16,12 +16,15 @@ node::Matrix getTransfromMatrix(node::Node *node) {
   return node::Matrix();
 }
 
-node::Size getSize(node::NodeConstPtr node) {
+node::Vector getSize(node::NodeConstPtr node) {
   if (auto *shape = node::node_cast<const node::DefaultShapeNode>(node)) {
-    auto &size = shape->getSize();
-    return {size.x, size.y};
+    return shape->getSize();
   }
-  return node::Size();
+  return node::Vector();
+}
+
+node::Vector getNodeCenterWorld(node::Node *node) {
+  return GetWorldMatrix(node) * (getSize(node) / 2);
 }
 
 NodeIter::NodeIter(node::Node *node)
@@ -57,7 +60,7 @@ NodeIter::IterDirection NodeIter::operator--() {
     return End;
   }
 
-  auto *parent = getParent_(node_);
+  auto *parent = node_->getParent();
   if (!parent) {
     node_ = nullptr;
     return End;
@@ -71,21 +74,8 @@ NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node *node)
   if (!node_) {
     return;
   }
-  world_ = getWorldMatrixImpl(node);
+  world_ = GetWorldMatrix(node);
   worldStack_.push_back(world_);
-}
-
-node::Matrix NodeIterWithWorldMatrix::getWorldMatrixImpl(node::Node *node) {
-  if (auto *page = node::node_cast<node::PageNode>(node)) {
-    return node::Matrix();
-  }
-  node::Matrix world = getTransfromMatrix(node);
-  auto *parent = getParent_(node);
-  while (parent && !node::node_cast<node::PageNode>(parent)) {
-    world = getTransfromMatrix(parent) * world;
-    parent = getParent_(parent);
-  }
-  return world;
 }
 
 NodeIter::IterDirection NodeIterWithWorldMatrix::operator++() {
@@ -118,7 +108,7 @@ void NodeIterWithWorldMatrix::rest() {
 }
 
 void NodeIterWithWorldMatrix::update() {
-  world_ = getWorldMatrixImpl(node_);
+  world_ = GetWorldMatrix(node_);
   worldStack_.clear();
   worldStack_.push_back(world_);
 }

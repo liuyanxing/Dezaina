@@ -8,12 +8,10 @@ namespace dea::document {
 
 using namespace node;
 
-Document::Document(uint32_t sessionId) : sessionId_(sessionId) {
-	Iter::doc_ = this;
-}
+Document::Document(uint32_t sessionId) : sessionId_(sessionId) {}
 
 void Document::dump() {
-	Iter iter(root_);
+	NodeIter iter(root_);
 	while (iter.isValid()) {
 		auto* node = iter.get();
 		++iter;
@@ -21,7 +19,7 @@ void Document::dump() {
 }
 
 void Document::dump(node::Node* node) const {
-  Iter iter(node);
+  NodeIter iter(node);
   while (iter.isValid()) {
     auto* node = iter.get();
     spdlog::info("{}", getNodeTypeString(node));

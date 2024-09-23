@@ -1,5 +1,6 @@
 #include "selection.h"
 #include "dezaina.h"
+#include "node/utility.h"
 #include "spdlog/spdlog.h"
 #include "utility.h"
 #include "utility/coords.h"
@@ -15,8 +16,8 @@ void Selection::onMouseMove(MouseEvent &event) {
   auto &viewport = dezaina.getViewport();
   hoverNode_ = nullptr;
   float radius = 3;
-  iter_.update();
-  auto iter = iter_;
+  // todo remove const_cast
+  auto iter = NodeIterWithWorldMatrix(const_cast<Node*>(root_));
 
   while (iter.isValid()) {
     auto *node = iter.get();

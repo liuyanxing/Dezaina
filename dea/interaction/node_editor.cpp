@@ -155,7 +155,7 @@ void NodeEditor::bindEvents() {
     });
     rotateCtrl.addEventListener(EventType::MouseDrag, [this, i](Event& e) {
         auto& event = static_cast<MouseEvent&>(e);
-        auto center = getNodeCenterWorld(translateCtrl_);
+        auto center = getNodeCenterWorld(&translateCtrl_);
         auto v1 = Vector{event.worldX, event.worldY} - center;
         auto v2 = Vector{ event.worldX - event.worldDx , event.worldY - event.worldDy } - center;
         auto angle = v1.angle(v2);
@@ -171,21 +171,21 @@ void NodeEditor::buildEditor() {
 
 void NodeEditor::update() {
   node::Matrix transform;
-  node::Size size;
+  node::Vector size;
   if (editNodes_.empty()) {
     return;
   } else if (editNodes_.size() == 1) {
     auto &viewport = Dezaina::viewport();
     auto *node = editNodes_[0];
-    transform = document::getWorldMatrix(node);
+    transform =  node::GetWorldMatrix(node);
     size = viewport.getScreenSize(node);
   } else {
     assert(false);
   }
 
-  layout::ContraintLayout::layoutCild(&container_, {size.width, size.height});
+  layout::ContraintLayout::layoutCild(&container_, size);
   container_.setTransform(transform);
-  container_.setSize({size.width, size.height});
+  container_.setSize(size);
 }
 
 } // namespace dea::interaction

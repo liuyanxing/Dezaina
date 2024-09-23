@@ -2,8 +2,10 @@
 
 #include "event.h"
 #include "node/type.h"
+#include "node/utility.h"
 #include "selection.h"
 #include "utility.h"
+#include "node/interaction_node.h"
 
 namespace dea::interaction {
 
@@ -28,7 +30,7 @@ private:
     if (selection_.empty()) {
       return;
     }
-    setEventLocalPosition(event, IterWithWorldMatrix(event.target));
+    setEventLocalPosition(event, node::NodeIterWithWorldMatrix(event.target));
     for (auto *node : selection_.getSelection()) {
       auto *emitter = interaction::node_cast<event::EventEmitter>(node);
       emitter->emit(event);

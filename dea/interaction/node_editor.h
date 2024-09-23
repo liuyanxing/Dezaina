@@ -10,6 +10,7 @@
 #include "utility.h"
 #include <array>
 #include <vector>
+#include "document.h"
 
 namespace dea::interaction {
 
@@ -18,10 +19,8 @@ class Desaina;
 class NodeEditor {
 public:
   NodeEditor(const node::NodeArary &nodes)
-      : editNodes_(nodes), editor_(nodes),
-        selection_(
-            [&](node::Vector size) { return node::Size{size.x, size.y}; },
-            IterWithWorldMatrix{&container_}) {
+      : editNodes_(nodes), editor_(),
+        selection_( &container_, [&](node::Vector size) { return node::Size{size.x, size.y}; }) {
     buildEditor();
   };
 
@@ -38,7 +37,7 @@ public:
 
   virtual void update(const std::vector<node::Node *> &nodes) {};
   void update();
-  void appendToContainer(node::Node *node) { appendChild(&container_, node); }
+  void appendToContainer(node::Node *node) { node::Container::append(&container_, node); }
 
   void onEvent(event::Event &event) {
     mouseInteraction_.onEvent(event);
