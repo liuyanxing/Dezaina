@@ -318,6 +318,7 @@ struct Vector  {
 	void setY(const float& v) {
 		y = v;
 	}
+	float lengthSquared() const { return x * x + y * y; }
 	float length() const { return sqrt(x * x + y * y); }
 	void normalize() { float l = length(); if (l != 0) { x /= l; y /= l; } }
 	Vector operator+(const Vector& rhs) const { return Vector(x + rhs.x, y + rhs.y); }

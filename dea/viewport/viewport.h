@@ -62,6 +62,10 @@ public:
     return mapScreenToWorld(length, 0).x;
   }
 
+  auto getWorldSize(node::Vector size) {
+    return mapScreenToWorld(size.x, size.y);
+  }
+
   // get the size of a world unit in screen space
   auto getScreenSize(float length) {
     return mapWorldToScreen(node::Vector{1, 0}).length() * length;

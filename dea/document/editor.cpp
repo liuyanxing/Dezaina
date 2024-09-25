@@ -18,6 +18,9 @@ void Editor::editNodes(std::function<void(Node *)> cb) {
 
 void Editor::addRecord(const GUID &layerId, const RecordType &type,
                        const RecordValue &value) {
+  if (locked_) {
+    return;
+  }
   records_.emplace_back(layerId, type, value);
   if (immediate_ || Dezaina::isImmediate()) {
     Dezaina::instance().flush();
@@ -39,31 +42,30 @@ Editor &Editor::resize(float width, float height, const Vector &direction) {
   return *this;
 }
 
-Editor &Editor::setSize(float width, float height, const Vector &direction) {
-  editNodes([width, height, &direction, this](Node *node) {
+Editor &Editor::setSize(node::Vector size, const Vector &direction) {
+  editNodes([&size, &direction, this](Node *node) {
     addRecord(node->getGuid(), RecordType::kSetSize,
-              SetSizeValue{Vector{width, height}, direction});
+              SetSizeValue{size, direction});
   });
   return *this;
 }
 
-Editor &Editor::setTranslate(float x, float y) {
-  editNodes([x, y, this](Node *node) {
+Editor &Editor::setTranslate(node::Vector translation) {
+  editNodes([translation, this](Node *node) {
     if (auto *shape = node_cast<DefaultShapeNode>(node)) {
       auto m = shape->getTransform();
-      m.setM02(x);
-      m.setM12(y);
+      m.setTranslate(translation.x, translation.y);
       addRecord(node->getGuid(), RecordType::kTransform, m);
     }
   });
   return *this;
 }
 
-Editor &Editor::translate(float x, float y) {
-  editNodes([x, y, this](Node *node) mutable {
+Editor &Editor::translate(node::Vector translation) {
+  editNodes([translation, this](Node *node) mutable {
     if (auto *shape = node_cast<DefaultShapeNode>(node)) {
       auto m = shape->getTransform();
-      m.translate(x, y);
+      m.translate(translation.x, translation.y);
       addRecord(node->getGuid(), RecordType::kTransform, m);
     }
   });
@@ -87,5 +89,20 @@ Editor &Editor::setTransform(const Matrix &matrix) {
   });
   return *this;
 }
+
+
+Editor &Editor::appendSolidPaint(node::Color color) {
+  editNodes([color, this](Node *node) {
+    if (auto *shape = node_cast<DefaultShapeNode>(node)) {
+      auto newPaints = shape->getFillPaints();
+      SolidPaint paint;
+      paint.color = color;
+      paint.type = PaintType::SOLID;
+      paint.blendMode = BlendMode::NORMAL;
+      newPaints.push_back(paint);
+      addRecord(node->getGuid(), RecordType::FillPaint, newPaints);
+    }
+  });
+  return *this;
 
 } // namespace dea::document

@@ -23,7 +23,7 @@ node::Vector getSize(node::NodeConstPtr node) {
   return node::Vector();
 }
 
-node::Vector getNodeCenterWorld(node::Node *node) {
+node::Vector getNodeCenter(node::Node *node) {
   return GetWorldMatrix(node) * (getSize(node) / 2);
 }
 

@@ -24,7 +24,9 @@ void Change::flush() {
 	}
 
 	if (!nodeChanges_.empty()) {
-		NodeChangesCommand::Make(nodeChanges_, pool_)->execute();
+		auto cmd = NodeChangesCommand::Make(nodeChanges_, pool_);
+		auto& redoMessage = cmd->getRedoSnapshot();
+		cmdManager_.execute(std::move(cmd));
 	}
 	std::unique_ptr<Command> command;
 	auto& doc = Dezaina::instance().document();
@@ -37,7 +39,7 @@ void Change::flush() {
 				assert(false);
 				break;
 		}
-		command->execute();
+		cmdManager_.execute(std::move(command));
 	}
 	clear();
 }

@@ -38,6 +38,8 @@ namespace dea::change {
 	public:
 		NodeChangesCommand(NodeChanges* changes, kiwi::MemoryPool& pool)
 			: changes_(changes), pool_(&pool) {
+				takeUndoSnapshot();
+				takeRedoSnapShot();
 			}
 
 		static auto Make(NodeChanges& changes, kiwi::MemoryPool& pool) {
@@ -49,6 +51,7 @@ namespace dea::change {
 		void redo() override;
 		void takeRedoSnapShot();
 		void takeUndoSnapshot();
+		base::Data& getRedoSnapshot() { return redoSnapshot_; }
 
 	private:
 		NodeChanges* changes_;

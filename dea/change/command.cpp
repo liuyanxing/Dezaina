@@ -102,9 +102,6 @@ void NodeChangesCommand::takeRedoSnapShot() {
 }
 
 void NodeChangesCommand::execute() {
-	takeUndoSnapshot();
-	takeRedoSnapShot();
-
 	Dezaina::instance().document().applyMessage(*redoMessage_);
 	redoMessage_ = nullptr;
 }

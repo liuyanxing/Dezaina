@@ -3,9 +3,11 @@
 #include "document.h"
 #include "interaction/interaction.h"
 #include "node.h"
+#include "node/node.generated.h"
 #include "node/node.h"
 #include "selection.h"
 #include "spdlog/spdlog.h"
+#include "rectangle_editor.h"
 
 namespace dea::interaction {
 
@@ -13,14 +15,27 @@ using namespace event;
 using namespace node;
 using namespace document;
 
-Interaction::Interaction(Document &doc) : doc_(doc) {
+Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
   page_.setBackgroundColor({0, 0, 0, 0});
+
+  // todo use event system
   doc_.addEventListener(EventType::PageChange, [this](Event &event) {
     selection_.setRoot(doc_.currentPage());
   });
 
   selection_.onSelectionChange(
       [this](const NodeArary &nodes) { handleSelectionChange(nodes); });
+  
+  creation_.onCreateNode([this](Node *node, event::MouseEvent& event) {
+    selection_.setSelection({node});
+    updateNodeEditor();
+    if (!node_editor_) {
+      assert(false);
+    }
+    node_editor_->selectNearestCtrlNode({event.worldX, event.worldY}, [](Node *node) {
+      return node->getName().starts_with("rs");
+    });
+  }
 }
 
 void Interaction::handleSelectionChange(const node::NodeArary &selection) {
@@ -55,15 +70,17 @@ void Interaction::updateNodeEditor() {
   if (selection.size() > 1) {
   } else {
     auto *node = doc_.getNodeById(selection[0]);
-    if (auto *rectangleNode = node::node_cast<node::RectangleNode >(node);
-        !node_editor_) {
-      node_editor_ = std::make_unique<NodeEditor>(node::NodeArary{node});
+    if (!node_editor_) {
+      if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
+        node_editor_ = std::make_unique<RectangleEditor>(*rectangleNode, doc_.editor());
+      }
     }
   }
 
   if (node_editor_ == nullptr) {
     return;
   }
+
   node_editor_->update();
   auto *editorContainer = node_editor_->getContainer();
   if (!page_.findChild(editorContainer)) {
@@ -97,9 +114,7 @@ void Interaction::onEvent(event::Event &event) {
 }
 
 void Interaction::onAfterFlushed(event::Event &event) { updateNodeEditor(); };
-
 void Interaction::onAfterTick(Event &event) { handleHover(); }
-
 bool Interaction::dragInterNode(const std::string &query,
                                 event::MouseEvent &event) {
   if (!node_editor_) {
@@ -112,8 +127,7 @@ bool Interaction::dragInterNode(const std::string &query,
     auto *node = iter.get();
     if (query == node->getName()) {
       found = true;
-      auto *emitter = interaction::node_cast<event::EventEmitter >(node);
-      emitter->emit(event);
+      interaction::node_cast<event::EventEmitter >(node)->emit(event);
     }
     ++iter;
   }

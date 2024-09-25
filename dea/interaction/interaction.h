@@ -26,7 +26,7 @@ public:
                      float newWorldX, float newWorldY);
   bool dragInterNode(const std::string &query, event::MouseEvent &event);
 
-  static node::Size GetItersectBound(node::Vector size);
+  static node::Vector GetItersectBound(node::Vector size);
 
 private:
   node::PageNode page_;

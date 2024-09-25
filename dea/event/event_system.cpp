@@ -14,6 +14,11 @@ namespace dea::event {
 	}
 
   void EventSystem::handleMouseEvent(MouseEvent& event) {
+    if (event.type == EventType::MouseDown) {
+      event.dragStartX = event.x;
+      event.dragStartY = event.y;
+    }
+
     event.mode = keyMode_;
     if (lastMouseEvent_.has_value()) {
       auto& lastEvent = lastMouseEvent_.value();
@@ -22,6 +27,8 @@ namespace dea::event {
         event.type = EventType::MouseDrag;
         event.dx = event.x - lastEvent.x;
         event.dy = event.y - lastEvent.y;
+        event.dragStartX = lastEvent.dragStartX;
+        event.dragStartY = lastEvent.dragStartY;
         event.worldDx = event.worldX - lastEvent.worldX;
         event.worldDy = event.worldY - lastEvent.worldY;
       }

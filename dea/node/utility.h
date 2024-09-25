@@ -8,7 +8,7 @@ namespace dea::node {
 
 node::Matrix getTransfromMatrix(node::Node *node);
 node::Vector getSize(node::NodeConstPtr node);
-node::Vector getNodeCenterWorld(node::Node *node);
+node::Vector getNodeCenter(node::NodeConstPtr node);
 
 inline Matrix GetWorldMatrix(Node *node) {
   Matrix matrix;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/object.h"
+#include "change/command.h"
 #include "node.h"
 #include "schema/message.h"
 #include <variant>
@@ -45,12 +46,16 @@ public:
   }
   void flush();
 
+  void undo() { cmdManager_.undo(); }
+  void redo() { cmdManager_.redo(); }
+
   message::Message saveBeforeChange();
 
 private:
   std::vector<ChangeItem> items_;
   kiwi::MemoryPool pool_;
   NodeChanges nodeChanges_{};
+  CommandManager cmdManager_;
 };
 
 } // namespace dea::change

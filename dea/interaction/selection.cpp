@@ -1,5 +1,6 @@
 #include "selection.h"
 #include "dezaina.h"
+#include "node/node.h"
 #include "node/utility.h"
 #include "spdlog/spdlog.h"
 #include "utility.h"
@@ -14,7 +15,7 @@ using namespace event;
 void Selection::onMouseMove(MouseEvent &event) {
   auto &dezaina = Dezaina::instance();
   auto &viewport = dezaina.getViewport();
-  hoverNode_ = nullptr;
+  hoverNode_ = root_;
   float radius = 3;
   // todo remove const_cast
   auto iter = NodeIterWithWorldMatrix(const_cast<Node*>(root_));
@@ -36,32 +37,32 @@ void Selection::onMouseMove(MouseEvent &event) {
     ++iter;
   }
 
-  if (!hoverNode_) {
-    return;
-  }
-  event.target = hoverNode_;
+  event.target = const_cast<node::NodePtr>(hoverNode_);
 }
 
 void Selection::onMouseDown(MouseEvent &event) {
-  if (hoverNode_ != nullptr) {
+  if (hoverNode_ && !node::node_cast<node::PageNode>(hoverNode_)) {
     if (std::find(selection_.begin(), selection_.end(), hoverNode_) !=
         selection_.end()) {
       return;
     }
-    event.target = hoverNode_;
     setSelection({hoverNode_});
-    if (onSelectionChangeCb_)
-      onSelectionChangeCb_(selection_);
   } else {
-    setSelection(std::vector<Node *>{});
+    event.target = const_cast<node::NodePtr>(root_);
+    setSelection(node::NodeConstArary{});
   }
+  event.target = const_cast<node::NodePtr>(hoverNode_);
 }
 
-void Selection::setSelection(const std::vector<Node *> &nodes) {
+void Selection::setSelection(const node::NodeConstArary &nodes) {
   if (!nodes.empty()) {
     hoverNode_ = nullptr;
   }
+
   selection_ = nodes;
+  if (onSelectionChangeCb_) {
+    onSelectionChangeCb_(selection_);
+  }
 }
 
 } // namespace dea::interaction
