@@ -6,11 +6,11 @@
 
 namespace dea::node {
 
-node::Matrix getTransfromMatrix(node::Node *node);
+node::Matrix getTransfromMatrix(node::NodeConstPtr node);
 node::Vector getSize(node::NodeConstPtr node);
 node::Vector getNodeCenter(node::NodeConstPtr node);
 
-inline Matrix GetWorldMatrix(Node *node) {
+inline Matrix GetWorldMatrix(node::NodeConstPtr node) {
   Matrix matrix;
   while (node) {
     matrix = getTransfromMatrix(node) * matrix;

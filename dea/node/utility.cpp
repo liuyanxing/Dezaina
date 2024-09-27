@@ -6,7 +6,7 @@
 
 namespace dea::node {
 
-node::Matrix getTransfromMatrix(node::Node *node) {
+node::Matrix getTransfromMatrix(node::NodeConstPtr node) {
   if (auto *page = node::node_cast<node::PageNode>(node)) {
     return node::Matrix();
   }
@@ -23,7 +23,7 @@ node::Vector getSize(node::NodeConstPtr node) {
   return node::Vector();
 }
 
-node::Vector getNodeCenter(node::Node *node) {
+node::Vector getNodeCenter(node::NodeConstPtr node) {
   return GetWorldMatrix(node) * (getSize(node) / 2);
 }
 

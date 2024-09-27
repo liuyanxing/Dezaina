@@ -50,10 +50,6 @@ public:
     return getWorldToScreenScale() * x;
   }
 
-  auto mapWorldToScreen(const node::Size& size) {
-    return node::Size{ mapWorldToScreen(size.width), mapWorldToScreen(size.height) };
-  }
-
   auto mapScreenToWorld(float x, float y) {
     return viewProjectionMatrix_.getInverse().mapVector(node::Vector{x, y});
   }

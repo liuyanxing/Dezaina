@@ -6,10 +6,12 @@ namespace dea::interaction {
 
 class RectangleEditor : public NodeEditor, public BoundEditor, public RadiusEditor {
 public:
-	RectangleEditor(node::RectangleNode& node, document::Editor& editor) :
-		NodeEditor(node),
+	RectangleEditor(node::RectangleNode& node, document::Editor& editor, node::PageNode& parent) :
+		NodeEditor(node, parent),
 		BoundEditor{frame_, editor},
-		RadiusEditor(frame_, editor) {};
+		RadiusEditor(frame_, editor) {
+		update();
+	};
 	void update() override;
 };
 

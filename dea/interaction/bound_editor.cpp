@@ -7,6 +7,7 @@
 #include "node/node_base.generated.h"
 #include "node/rectangle.h"
 #include "event.h"
+#include "node/utility.h"
 #include <array>
 
 namespace dea::interaction {
@@ -37,13 +38,13 @@ void BoundEditor::initCtrls() {
   auto nodeR = nodeD / 2;
   auto offset = nodeR;
 
-  std::array<std::array<node::ConstraintType, 2>, 4> eConstraints = {{
+  base::v4<base::v2<node::ConstraintType>> edgeConstraints = {{
       {node::ConstraintType::STRETCH, node::ConstraintType::MIN},
       {node::ConstraintType::MAX, node::ConstraintType::STRETCH},
       {node::ConstraintType::STRETCH, node::ConstraintType::MAX},
       {node::ConstraintType::MIN, node::ConstraintType::STRETCH},
   }};
-  std::array<Vector, 4> eTranslate = {{{offset, -0.5f},
+  std::array<Vector, 4> edgeTranslate = {{{offset, -0.5f},
                                        {edgeSize - 0.5f, offset},
                                        {offset, edgeSize - 0.5f},
                                        {-0.5, offset}}};
@@ -53,10 +54,10 @@ void BoundEditor::initCtrls() {
   for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
     auto &ctrl = resizeEdgeCtrls_[i];
     ctrl.setName("be" + std::to_string(i));
-    ctrl.setTransform(Matrix().translate(eTranslate[i].x, eTranslate[i].y));
+    ctrl.setTransform(Matrix().translate(edgeTranslate[i].x, edgeTranslate[i].y));
     ctrl.setSize(sizes[i]);
-    ctrl.setHorizontalConstraint(eConstraints[i][0]);
-    ctrl.setVerticalConstraint(eConstraints[i][1]);
+    ctrl.setHorizontalConstraint(edgeConstraints[i][0]);
+    ctrl.setVerticalConstraint(edgeConstraints[i][1]);
     appendToContainer(&ctrl);
   }
 
@@ -69,7 +70,7 @@ void BoundEditor::initCtrls() {
       {node::ConstraintType::MIN, node::ConstraintType::MAX},
   }};
 
-  std::array<Vector, 4> rTranslate = {{{-offset * 3, -offset * 3},
+  std::array<Vector, 4> rotateTranslate = {{{-offset * 3, -offset * 3},
                                        {offset + edgeSize, -offset * 3},
                                        {offset + edgeSize, offset + edgeSize},
                                        {-offset * 3, offset + edgeSize}}};
@@ -77,14 +78,14 @@ void BoundEditor::initCtrls() {
     auto &rotateCtrl = rotateCtrls_[i];
     rotateCtrl.setName("br" + std::to_string(i));
     rotateCtrl.setTransform(
-        Matrix().translate(rTranslate[i].x, rTranslate[i].y));
+        Matrix().translate(rotateTranslate[i].x, rotateTranslate[i].y));
     rotateCtrl.setHorizontalConstraint(constraints[i][0]);
     rotateCtrl.setVerticalConstraint(constraints[i][1]);
     rotateCtrl.setSize({config::size::Small, config::size::Small});
     appendToContainer(&rotateCtrl);
   }
 
-  std::array<Vector, 4> sTranslate = {{{-offset, -offset},
+  base::v4<Vector> resizeTranslate = {{{-offset, -offset},
                                        {-offset + edgeSize, -offset},
                                        {-offset + edgeSize, -offset + edgeSize},
                                        {-offset, -offset + edgeSize}}};
@@ -92,7 +93,7 @@ void BoundEditor::initCtrls() {
     auto &resizectrl = resizeNodeCtrls_[i];
     resizectrl.setName("bs" + std::to_string(i));
     resizectrl.setTransform(
-        Matrix().translate(sTranslate[i].x, sTranslate[i].y));
+        Matrix().translate(resizeTranslate[i].x, resizeTranslate[i].y));
     resizectrl.setHorizontalConstraint(constraints[i][0]);
     resizectrl.setVerticalConstraint(constraints[i][1]);
     resizectrl.setFillPaints({fillPaint});
@@ -110,7 +111,7 @@ void BoundEditor::bindEvents() {
   translateCtrl_.addEventListener(EventType::MouseDrag, [this](Event &e) {
     UI::setCursor(CursorType::Handle);
     auto &event = static_cast<MouseEvent &>(e);
-    editor_.translate(event.localWorldDx, event.localWorldDy);
+    editor_.translate({event.localWorldDx, event.localWorldDy});
   });
 
   for (int i = 0; i < 4; i++) {
@@ -168,31 +169,12 @@ void BoundEditor::buildEditor() {
   bindEvents();
 }
 
-void BoundEditor::update(const node::Matrix& transform, const node::Vector& size) {
+void BoundEditor::update() {
+  auto size = getSize(container_.getParent());
+  auto transform = getTransfromMatrix(container_.getParent());
   layout::ContraintLayout::layoutCild(&container_, size);
   container_.setTransform(transform);
   container_.setSize(size);
-}
-
-void BoundEditor::getNearestResizeCtrl(Vector worldPoint) {
-  int minDistance = std::numeric_limits<int>::max();
-  auto matrix = node::GetWorldMatrix(&translateCtrl_);
-  Vector points[4] = {
-      {0, 0},
-      {1, 0},
-      {1, 1},
-      {0, 1},};
-  int minIndex = 0;
-  auto size = translateCtrl_.getSize();
-  for (int i = 0; i < 4; i++) {
-    auto point = matrix * (size * points[i]);
-    auto distance = (point - worldPoint).lengthSquared();
-    if (distance < minDistance) {
-      minDistance = distance;
-      minIndex = i;
-    }
-  }
-  selection_.setSelection({&resizeNodeCtrls_[minIndex]});
 }
 
 } // namespace dea::interaction

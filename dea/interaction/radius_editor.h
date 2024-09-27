@@ -9,15 +9,17 @@ namespace dea::interaction {
 
 class RadiusEditor {
  public:
-  RadiusEditor(node::FrameNode& container, document::Editor& editor) : editor_(editor) {
-    buildEditor(container);
+  RadiusEditor(node::FrameNode& parent, document::Editor& editor) : editor_(editor) {
+    node::Container::append(&container_, &parent);
+    buildEditor();
   };
 
-  void buildEditor(node::FrameNode& container);
-  void update(node::Vector size, std::array<float, 4> cornerSizes);
+  void buildEditor();
+  void update(base::v4<float> cornerSizes);
 
 private:
-  std::array<Rectangle, 4> cornerSizeCtrls_;
+  Frame container_;
+  base::v4<Rectangle> cornerSizeCtrls_;
   document::Editor& editor_;
 };
 

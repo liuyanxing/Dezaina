@@ -14,10 +14,10 @@ void NodeEditor::selectNearestCtrlNode(node::Vector worldPoint, std::function<bo
 		}
 		++iter;
 	}
-	auto& nearestNode = base::min(nodes, [&worldPoint](const auto& node) {
-		return (node::getNodeCenter(node) - worldPoint).lengthSquared();
-	});
-	selection_.setSelection({nearestNode});
+	// auto& nearestNode = base::min(nodes, [&worldPoint](const auto& node) {
+	// 	return (node::getNodeCenter(node) - worldPoint).lengthSquared();
+	// });
+	// selection_.setSelection({nearestNode});
 }
 
 } // namespace dea::interaction

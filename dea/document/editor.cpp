@@ -104,5 +104,6 @@ Editor &Editor::appendSolidPaint(node::Color color) {
     }
   });
   return *this;
+}
 
 } // namespace dea::document

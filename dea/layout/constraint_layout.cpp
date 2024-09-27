@@ -6,7 +6,6 @@
 #include "node/container.h"
 #include "node/node_base.generated.h"
 #include <array>
-#include <optional>
 
 namespace dea::layout {
 
@@ -66,8 +65,8 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector newSize,
     auto [newY, newHeight] =
         layoutImpl(pos.y, size.y, parentSize.y, newSize.y, vConstraint);
 
-    auto *nodeChange = change ? change->getNodeChange(child) : nullptr;
     if (node::Vector(newX, newY) != pos) {
+      auto *nodeChange = change ? change->getOrAddNodeChange(child) : nullptr;
       transform.setTranslate(newX, newY);
       nodeChange
           ? nodeChange->set_transform(transform.toChange(change->getPool()))
@@ -75,6 +74,7 @@ void ContraintLayout::layoutCild(node::Node *node, node::Vector newSize,
     }
 
     if (node::Vector(newWidth, newHeight) != size) {
+      auto *nodeChange = change ? change->getOrAddNodeChange(child) : nullptr;
       auto newSize = node::Vector(newWidth, newHeight);
       nodeChange ? nodeChange->set_size(newSize.toChange(change->getPool()))
                  : shape->setSize(newSize);

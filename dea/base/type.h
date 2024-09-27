@@ -2,15 +2,15 @@
 
 #include <array>
 
-namespace base {
+namespace dea::base {
 
 template <typename T>
-using V2 = std::array<T, 2>;
+using v2 = std::array<T, 2>;
 
 template <typename T>
-using V3 = std::array<T, 3>;
+using v3 = std::array<T, 3>;
 
 template <typename T>
-using V4 = std::array<T, 4>;
+using v4 = std::array<T, 4>;
 
 }

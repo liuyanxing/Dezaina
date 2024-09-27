@@ -13,13 +13,4 @@ namespace dea::node {
 	using NodeAraryRef = std::vector<Node*>&;
 	using NodeAraryConstRef = const std::vector<Node*>&;
 	using NodeIdArray = std::vector<GUID>;
-
-	struct Size {
-		float width{};
-		float height{};
-		bool operator==(const Size& other) const {
-			return width == other.width && height == other.height;
-		}
-	};
-
 }

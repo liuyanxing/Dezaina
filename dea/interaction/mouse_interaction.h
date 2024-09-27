@@ -5,20 +5,22 @@
 #include "node/utility.h"
 #include "selection.h"
 #include "utility.h"
-#include "node/interaction_node.h"
 
 namespace dea::interaction {
 
 class MouseInteraction : public InteractionListener {
 public:
-  MouseInteraction(Selection &selection) : selection_(selection) {}
+  MouseInteraction(node::NodeConstPtr root, const GetIntersectBound& getInterBound = DefaultGetIntersectBound) : selection_(root, getInterBound) {}
   void onEvent(event::Event &e) override {
     selection_.onEvent(e);
     InteractionListener::onEvent(e);
   }
 
+  auto *getHoverNode() { return selection_.getHoverNode(); }
+
 private:
-  Selection &selection_;
+  Selection selection_;
+  node::NodeConstPtr root_;
   void onMouseMove(event::MouseEvent &event) override {
     if (!event.target) {
       return;

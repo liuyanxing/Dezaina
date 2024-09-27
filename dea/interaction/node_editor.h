@@ -9,17 +9,17 @@ namespace dea::interaction {
 
 class NodeEditor {
 public:
-	NodeEditor(node::Node& node) : node_(node) {};
+	NodeEditor(node::Node& node, node::Node& parent) : node_(node) {
+		node::Container::append(&frame_, &parent);
+	};
 	virtual void update() = 0;
 	void selectNearestCtrlNode(node::Vector worldPoint, std::function<bool(node::NodeConstPtr)> filter);
 	auto* getContainer() { return &frame_; }
-	void onEvent(event::Event& event) { mouseInteraction_.onEvent(event); }
+	auto* getEditNode() { return &node_; }
 
 protected:
 	node::Node& node_;
 	Frame frame_;
-	Selection selection_{&frame_, [](node::Vector size){ return size; }};
-	MouseInteraction mouseInteraction_{selection_};
 };
 
 } // namespace dea::interaction

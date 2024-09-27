@@ -7,16 +7,16 @@ namespace dea::interaction {
 
 class InteractionNode : public event::EventEmitter  {
 public:
-  void setDirection(base::V2<float> direction) {
+  void setDirection(base::v2<float> direction) {
 		direction_ = direction;
 	}
 
-	base::V2<float> getDirection() const {
+	base::v2<float> getDirection() const {
 		return direction_;
 	}
 
 private:
-  base::V2<float> direction_{1, 1};
+  base::v2<float> direction_{1, 1};
 };
 
 }

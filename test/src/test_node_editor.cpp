@@ -17,7 +17,7 @@ using namespace dea::event;
 
 auto &deza = dea::Dezaina::instance();
 auto &doc = deza.document();
-auto &interaction = deza.interaction();
+auto &inter = deza.interaction();
 
 const uint32_t width = 1280;
 const uint32_t height = 720;
@@ -42,105 +42,105 @@ TEST(NodeEditor, BuildWhenCursorDownOnNode) {
   deza.dispatchMouseEvent(ox, oy, EventType::MouseMove, 0, 0);
   deza.dispatchMouseEvent(ox, oy, EventType::MouseDown, 0, 0);
 
-  auto &editor = interaction.getNodeEditor();
+  auto &editor = inter.getNodeEditor();
   EXPECT_TRUE(editor);
   deza.dispatchMouseEvent(ox + 50, oy + 50, EventType::MouseUp,
                           0, 0);
 }
 
 TEST(NodeEditor, HoverCtrolNode) {
-  auto &editor = interaction.getNodeEditor();
+  auto &editor = inter.getNodeEditor();
 	auto mx = ox;
 	auto my = oy;
 
 	MouseEvent em(mx, my, EventType::MouseMove);
   deza.dispatchEvent(em);
-  auto *node = editor->getHoverNode();
+  auto *node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs0");
 
   em.x += rw;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs1");
 
   em.y += rh;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs2");
 
   em.x -= rw;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs3");
 
   em.x = ox - d;
   em.y = oy - d;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br0");
 
   em.x += rw + 2*d;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br1");
 
   em.y += rh + 2*d;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br2");
 
   em.x -= rw + 2*d;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br3");
 
   em.x = ox + rw / 2;
   em.y = oy + rh / 2;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bt");
 
   em.x = ox + rw / 2;
   em.y = oy;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be0");
 
   em.x = ox + rw;
   em.y = oy + rh / 2;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be1");
 
   em.x = ox + rw / 2;
   em.y = oy + rh;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be2");
 
   em.x = ox;
   em.y = oy + rh / 2;
   deza.dispatchEvent(em);
-  node = editor->getHoverNode();
+  node = inter.getHoverNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be3");
 
 }
 
 TEST(NodeEditor, CtrolNodesLayout) {
-  auto &editor = interaction.getNodeEditor();
+  auto &editor = inter.getNodeEditor();
   auto *container = editor->getContainer();
   std::unordered_map<std::string, std::vector<Vector>> nodes = {
       {"bound", {{0, 0}, {rw, rh}}},
@@ -176,7 +176,7 @@ TEST(NodeEditor, CtrolNodesLayout) {
 }
 
 TEST(NodeEditor, DragEditorToMoveNode) {
-  auto *node = interaction.getNodeEditor()->getFirstNode();
+  auto *node = inter.getNodeEditor()->getEditNode();
   auto *rect = node_cast<RectangleNode>(node);
 
   deza.dragInterNode("bt", 50, 50);
@@ -187,7 +187,7 @@ TEST(NodeEditor, DragEditorToMoveNode) {
 }
 
 TEST(NodeEditor, DragEditorRotateEdge) {
-  auto *node = interaction.getNodeEditor()->getFirstNode();
+  auto *node = inter.getNodeEditor()->getEditNode();
   auto *rect = node_cast<RectangleNode>(node);
   deza.dragInterNode("bt", -50, -50);
 
@@ -213,11 +213,11 @@ TEST(NodeEditor, DragEditorRotateEdge) {
 }
 
 TEST(NodeEditor, DragEditorResizeEdge) {
-  auto *node = interaction.getNodeEditor()->getFirstNode();
+  auto *node = inter.getNodeEditor()->getEditNode();
   auto *rect = node_cast<RectangleNode>(node);
 
   doc.editor().select({rect->getGuid()});
-  doc.editor().setSize(100, 100);
+  doc.editor().setSize({100, 100});
   doc.editor().setTransform(Matrix());
 
   deza.dragInterNode("be0", 0, -50);
@@ -238,13 +238,13 @@ TEST(NodeEditor, DragEditorResizeEdge) {
 }
 
 TEST(NodeEditor, DragEditorResizeNode) {
-  auto *node = interaction.getNodeEditor()->getFirstNode();
+  auto *node = inter.getNodeEditor()->getEditNode();
   auto *rect = node_cast<RectangleNode>(node);
 
   doc.editor().select({rect->getGuid()});
-  doc.editor().setSize(100, 100);
+  doc.editor().setSize({100, 100});
   doc.editor().setTransform(Matrix());
-  doc.editor().translate(-50, -50);
+  doc.editor().translate({-50, -50});
 
   deza.dragInterNode("bs1", -50, 50);
   EXPECT_TRUE(rect->getTransform() == Matrix(1, 0, -50, 0, 1, 0));

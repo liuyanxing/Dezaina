@@ -1,6 +1,8 @@
 #include "base/buffer.h"
 #include "geometry.h"
+#include "node/type.generated.h"
 #include "resource.h"
+#include <corecrt_math_defines.h>
 
 namespace dea::geometry {
 using namespace dea::node;
@@ -21,6 +23,51 @@ Data buildRectangle(node::Vector size, float tl, float tr, float br, float bl) {
   return buffer.toData();
 }
 
+Data buildPolygon(node::Vector size, int sides, float radius) {
+  Buffer buffer;
+  buffer.write(MOVE, size.x / 2, 0);
+  const float angle = 2 * M_PI / sides;
+  for (int i = 0; i < sides; ++i) {
+    buffer.write(LINE, size.x / 2 + size.x / 2 * cos(angle * i),
+                 size.y / 2 + size.y / 2 * sin(angle * i));
+  }
+  buffer.write(CLOSE);
+  return buffer.toData();
+}
+
+Data buildStar(node::Vector size, int count, float ratio, float radius) {
+  Buffer buffer;
+  buffer.write(MOVE, size.x / 2, 0);
+  const float angle = 2 * M_PI / count;
+  for (int i = 0; i < count; ++i) {
+    buffer.write(LINE, size.x / 2 + size.x / 2 * cos(angle * i),
+                 size.y / 2 + size.y / 2 * sin(angle * i),
+                  LINE, size.x / 2 + size.x / 2 * ratio * cos(angle * i + angle / 2),
+                 size.y / 2 + size.y / 2 * ratio * sin(angle * i + angle / 2));
+  }
+  buffer.write(CLOSE);
+  return buffer.toData();
+}
+
+Data buildEllipse(node::Vector size) {
+  Buffer buffer;
+  buffer.write(MOVE, size.x / 2, 0);
+  buffer.write(CUBIC, size.x, 0, size.x, size.y, size.x / 2, size.y);
+  buffer.write(CUBIC, 0, size.y, 0, 0, size.x / 2, 0);
+  buffer.write(CLOSE);
+  return buffer.toData();
+}
+
+Data buildLine(node::Vector size) {
+  Buffer buffer;
+  buffer.write(MOVE, 0, 0);
+  buffer.write(LINE, size.x, 0);
+  buffer.write(LINE, size.x, size.y);
+  buffer.write(LINE, 0, size.y);
+  buffer.write(CLOSE);
+  return buffer.toData();
+}
+
 Data buildFill(const RectangleNode *node) {
   return buildRectangle(node->getSize(),
                         node->getRectangleTopLeftCornerRadius(),
@@ -29,11 +76,18 @@ Data buildFill(const RectangleNode *node) {
                         node->getRectangleBottomLeftCornerRadius());
 }
 
-Data buildFill(const EllipseNode *node) { return Data{}; }
+Data buildFill(const EllipseNode *node) { return buildEllipse(node->getSize()); }
 
-Data buildFill(const PolygonNode *node) { return Data{}; }
+Data buildFill(const PolygonNode *node) {
+  return buildPolygon(node->getSize(), node->getCount(),
+                      node->getCornerRadius());
+}
 
-Data buildFill(const StarNode *node) { return Data{}; }
+Data buildFill(const StarNode *node) {
+  return Data{};
+  // return buildStar(node->getSize(), node->getCount(), node->getCornerRadius(),
+  //                  node->getCornerRadius());
+}
 
 Data buildFill(const VectorNode *node) { return Data{}; }
 

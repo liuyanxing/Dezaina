@@ -8,6 +8,7 @@
 #include "selection.h"
 #include "spdlog/spdlog.h"
 #include "rectangle_editor.h"
+#include "frame_editor.h"
 
 namespace dea::interaction {
 
@@ -24,7 +25,7 @@ Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
   });
 
   selection_.onSelectionChange(
-      [this](const NodeArary &nodes) { handleSelectionChange(nodes); });
+      [this](const node::NodeConstArary &nodes) { handleSelectionChange(nodes); });
   
   creation_.onCreateNode([this](Node *node, event::MouseEvent& event) {
     selection_.setSelection({node});
@@ -32,13 +33,13 @@ Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
     if (!node_editor_) {
       assert(false);
     }
-    node_editor_->selectNearestCtrlNode({event.worldX, event.worldY}, [](Node *node) {
+    node_editor_->selectNearestCtrlNode({event.worldX, event.worldY}, [](node::NodeConstPtr node) {
       return node->getName().starts_with("rs");
     });
-  }
+  });
 }
 
-void Interaction::handleSelectionChange(const node::NodeArary &selection) {
+void Interaction::handleSelectionChange(const node::NodeConstArary &selection) {
   if (selection.empty()) {
     return;
   }
@@ -50,9 +51,9 @@ void Interaction::handleSelectionChange(const node::NodeArary &selection) {
   doc_.editor().select(ids);
 }
 
-node::Size Interaction::GetItersectBound(node::Vector size) {
+node::Vector Interaction::GetItersectBound(node::Vector size) {
   return Dezaina::instance().getViewport().mapWorldToScreen(
-      node::Size{size.x, size.y});
+      node::Vector{size.x, size.y});
 }
 
 void Interaction::updateNodeEditor() {
@@ -72,7 +73,11 @@ void Interaction::updateNodeEditor() {
     auto *node = doc_.getNodeById(selection[0]);
     if (!node_editor_) {
       if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
-        node_editor_ = std::make_unique<RectangleEditor>(*rectangleNode, doc_.editor());
+        node_editor_ = std::make_unique<RectangleEditor>(*rectangleNode, doc_.editor(), page_);
+      } else if (auto *frameNode = node::node_cast<node::FrameNode>(node)) {
+        node_editor_ = std::make_unique<FrameEditor>(*frameNode, doc_.editor(), page_);
+      } else {
+        assert(false);
       }
     }
   }
@@ -103,10 +108,7 @@ void Interaction::onEvent(event::Event &event) {
     return;
   }
 
-  if (node_editor_ != nullptr) {
-    node_editor_->onEvent(event);
-  }
-
+  mouseInter_.onEvent(event);
   selection_.onEvent(event);
   creation_.onEvent(event);
 

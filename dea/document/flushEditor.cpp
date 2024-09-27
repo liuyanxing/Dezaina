@@ -43,7 +43,7 @@ void Document::flushEditor() {
     {
       auto& fill = std::get<PaintsValue>(record.value);
       auto& fillChange = nodeChange->set_fillPaints(pool, fill.size());
-      node::toChangeImpl(fill, fillChange, pool);
+      node::toChangeImpl(fillChange, fill, pool);
       break;
     }
     

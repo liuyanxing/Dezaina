@@ -13,18 +13,18 @@ class Desaina;
 
 class BoundEditor {
 public:
-  BoundEditor(Frame& container, document::Editor& editor)
-      : container_(container), editor_(editor) {
+  BoundEditor(Frame& parent, document::Editor& editor) : editor_(editor) {
+    node::Container::append(&container_, &parent);
     buildEditor();
   };
 
   Frame *getContainer() { return &container_; }
   void getNearestResizeCtrl(node::Vector worldPoint);
-  void appendToContainer(node::Node *node) { node::Container::append(&container_, node); }
-  void update(const node::Matrix& transform, const node::Vector& size);
+  void appendToContainer(node::Node *node) { node::Container::append(node, &container_); }
+  void update();
 
 protected:
-  Frame& container_;
+  Frame container_;
   Rectangle translateCtrl_;
   std::array<Rectangle, 4> resizeNodeCtrls_;
   std::array<Rectangle, 4> resizeEdgeCtrls_;

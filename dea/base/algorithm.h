@@ -2,7 +2,7 @@
 
 #include <functional>
 
-namespace base {
+namespace dea::base {
 	template<typename T, typename U, typename K>
 	const U& min(const T& array, const std::function<K(const U& ele)>& getVal) {
 		const U& minEle = array[0];

@@ -8,8 +8,10 @@ using namespace node;
 void RectangleEditor::update() {
 	auto* node = node::node_cast<node::RectangleNode>(&node_);
 	assert(node);
-	BoundEditor::update(GetWorldMatrix(node), getSize(node));
-	RadiusEditor::update(getSize(node),
+	frame_.setTransform(GetWorldMatrix(node));
+	frame_.setSize(getSize(node));
+	BoundEditor::update();
+	RadiusEditor::update(
 		{node->getRectangleTopLeftCornerRadius(), node->getRectangleTopRightCornerRadius(),
 		 node->getRectangleBottomRightCornerRadius(), node->getRectangleBottomLeftCornerRadius()});
 }

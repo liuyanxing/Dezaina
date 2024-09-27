@@ -64,7 +64,11 @@ public:
     }
   }
 
-  template <typename... F> void write(F... args) { (write(args), ...); }
+  template <typename... F> void write(F... args) {
+    auto size = (sizeof(F) + ...);
+    growBy_(size);
+    (write(args), ...);
+  }
 
 private:
   void growBy_(size_t amount);

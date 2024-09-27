@@ -4,6 +4,7 @@
 #include "node.h"
 #include "node.h"
 #include "node/node.h"
+#include "node/node_base.generated.h"
 #include <functional>
 
 namespace dea::interaction {
@@ -11,10 +12,14 @@ namespace dea::interaction {
 using GetIntersectBound = std::function<node::Vector(node::Vector)>;
 using OnSelectionChangeCb = std::function<void(const node::NodeConstArary&)>;
 
+inline node::Vector DefaultGetIntersectBound(node::Vector size) {
+  return size;
+}
+
 class Interaction;
 class Selection : public InteractionListener {
 public:
-  Selection(node::NodeConstPtr node, const GetIntersectBound& getIntersectBound) : root_(node), getIntersectBound_(getIntersectBound) {}
+  Selection(node::NodeConstPtr node, const GetIntersectBound& getIntersectBound = DefaultGetIntersectBound) : root_(node), getIntersectBound_(getIntersectBound) {}
   bool empty() const { return selection_.empty(); }
   const node::NodeConstArary& getSelection() const { return selection_; }
   void clear() { selection_.clear(); hoverNode_ = nullptr; }

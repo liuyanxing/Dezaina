@@ -19,14 +19,12 @@ struct ChangeItem {
 
 class Change : public base::NonCopyable {
 public:
-  bool addNodeChange(node::Node *node) {
+  void addNodeChange(node::Node *node) {
     if (nodeChanges_.find(node) == nodeChanges_.end()) {
       auto *nodeChange = pool_.allocate<message::NodeChange>();
       nodeChange->set_guid(node->getGuid().toChange(pool_));
       nodeChanges_[node] = nodeChange;
-      return true;
     }
-    return false;
   }
 
   auto *getNodeChange(node::Node *node) {
@@ -35,6 +33,13 @@ public:
       return it->second;
     }
     return static_cast<message::NodeChange *>(nullptr);
+  }
+
+  auto* getOrAddNodeChange(node::Node *node) {
+    if (!getNodeChange(node)) {
+      addNodeChange(node);
+    }
+    return getNodeChange(node);
   }
 
   void addChange(ChangeType type, ChangeValue &&value);

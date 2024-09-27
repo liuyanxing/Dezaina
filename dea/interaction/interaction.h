@@ -7,6 +7,7 @@
 #include "node.h"
 #include "node_editor.h"
 #include "selection.h"
+#include "mouse_interaction.h"
 #include <memory>
 
 namespace dea::interaction {
@@ -26,6 +27,8 @@ public:
                      float newWorldX, float newWorldY);
   bool dragInterNode(const std::string &query, event::MouseEvent &event);
 
+  auto *getHoverInterNode() { return mouseInter_.getHoverNode(); }
+
   static node::Vector GetItersectBound(node::Vector size);
 
 private:
@@ -34,10 +37,11 @@ private:
   Selection selection_{nullptr, GetItersectBound};
   Creation creation_;
   document::Document &doc_;
+  MouseInteraction mouseInter_{&page_};
 
   void appendToContainer(node::Node *child) { node::Container::append(&page_, child); }
 
-  void handleSelectionChange(const node::NodeArary &nodes);
+  void handleSelectionChange(const node::NodeConstArary &selection);
   void updateNodeEditor();
   void handleHover();
   // void onBeforeTick(event::Event* event) override;

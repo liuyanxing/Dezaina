@@ -8,7 +8,7 @@ class ContraintLayout : public Layout {
 public:
   void layout(change::Change &change) override;
   void add(const document::EditRecordItem *record) override;
-  static void layoutCild(node::Node *node, node::Vector oldSize,
+  static void layoutCild(node::Node *node, node::Vector newSize,
                          change::Change *nodeChange = nullptr);
 
 private:
