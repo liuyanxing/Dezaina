@@ -19,7 +19,10 @@ inline node::Vector DefaultGetIntersectBound(node::Vector size) {
 class Interaction;
 class Selection : public InteractionListener {
 public:
-  Selection(node::NodeConstPtr node, const GetIntersectBound& getIntersectBound = DefaultGetIntersectBound) : root_(node), getIntersectBound_(getIntersectBound) {}
+  Selection(node::NodeConstArary& selection, node::NodeConstPtr root, GetIntersectBound getBound = DefaultGetIntersectBound) :
+    selection_(selection),
+    root_(root),
+    getIntersectBound_(getBound) {}
   bool empty() const { return selection_.empty(); }
   const node::NodeConstArary& getSelection() const { return selection_; }
   void clear() { selection_.clear(); hoverNode_ = nullptr; }
@@ -29,7 +32,7 @@ public:
 	void setSelection(const node::NodeConstArary& nodes);
 
 private:
-  node::NodeConstArary selection_;
+  node::NodeConstArary& selection_;
   node::NodeConstPtr hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
   node::NodeConstPtr root_;

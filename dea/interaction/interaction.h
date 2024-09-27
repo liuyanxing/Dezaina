@@ -34,10 +34,12 @@ public:
 private:
   node::PageNode page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
-  Selection selection_{nullptr, GetItersectBound};
+  node::NodeConstArary docSelection_;
+  node::NodeConstArary interSelection_;
+  MouseInteraction mouseInter_{};
+
   Creation creation_;
   document::Document &doc_;
-  MouseInteraction mouseInter_{&page_};
 
   void appendToContainer(node::Node *child) { node::Container::append(&page_, child); }
 

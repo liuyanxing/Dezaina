@@ -8,9 +8,11 @@
 
 namespace dea::interaction {
 
+class Interaction;
 class MouseInteraction : public InteractionListener {
 public:
-  MouseInteraction(node::NodeConstPtr root, const GetIntersectBound& getInterBound = DefaultGetIntersectBound) : selection_(root, getInterBound) {}
+  MouseInteraction(Interaction &interaction);
+
   void onEvent(event::Event &e) override {
     selection_.onEvent(e);
     InteractionListener::onEvent(e);
@@ -19,8 +21,9 @@ public:
   auto *getHoverNode() { return selection_.getHoverNode(); }
 
 private:
-  Selection selection_;
-  node::NodeConstPtr root_;
+  Selection docSelection_;
+  Selection interSelection_;
+
   void onMouseMove(event::MouseEvent &event) override {
     if (!event.target) {
       return;
