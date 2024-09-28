@@ -39,9 +39,8 @@ Matrix Matrix::getInverse(const Matrix &defaultValue) const {
 }
 
 Matrix &Matrix::preRotate(float angle, Vector center) {
-    std::cout << "angle: " << angle << std::endl;
   auto translation = getTranslation() + center;
-  return *this = Translate(center) * Rotate(getRotation() + angle) *
+  return *this = Translate(translation) * Rotate(getRotation() + angle) *
                  Translate(-center);
 }
 

@@ -11,6 +11,7 @@ namespace dea::interaction {
 
 using GetIntersectBound = std::function<node::Vector(node::Vector)>;
 using OnSelectionChangeCb = std::function<void(const node::NodeConstArary&)>;
+using OnMoveOnNode = std::function<bool(node::NodeConstPtr)>;
 
 inline node::Vector DefaultGetIntersectBound(node::Vector size) {
   return size;
@@ -31,12 +32,15 @@ public:
   void onSelectionChange(const OnSelectionChangeCb& callback) { onSelectionChangeCb_ = callback; }
 	void setSelection(const node::NodeConstArary& nodes);
 
+  void onMoveOnNode(const OnMoveOnNode& callback) { onMoveOnNode_ = callback; }
+
 private:
   node::NodeConstArary& selection_;
   node::NodeConstPtr hoverNode_ = nullptr;
   GetIntersectBound getIntersectBound_;
   node::NodeConstPtr root_;
   OnSelectionChangeCb onSelectionChangeCb_;
+  OnMoveOnNode onMoveOnNode_ = [](node::NodeConstPtr) { return true; };
 
   void onMouseMove(event::MouseEvent& event) override;
   void onMouseDown(event::MouseEvent& event) override;

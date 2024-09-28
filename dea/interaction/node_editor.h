@@ -10,6 +10,7 @@ namespace dea::interaction {
 class NodeEditor {
 public:
 	NodeEditor(node::Node& node, node::Node& parent) : node_(node) {
+		frame_.setName("nodeEditor");
 		node::Container::append(&frame_, &parent);
 	};
 	virtual void update() = 0;

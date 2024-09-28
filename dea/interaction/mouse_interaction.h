@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event.h"
+#include "event/listener.h"
 #include "node/type.h"
 #include "node/utility.h"
 #include "selection.h"
@@ -9,38 +10,29 @@
 namespace dea::interaction {
 
 class Interaction;
-class MouseInteraction : public InteractionListener {
+class MouseInteraction : public event::MouseListener, public document::Listener {
 public:
   MouseInteraction(Interaction &interaction);
 
-  void onEvent(event::Event &e) override {
-    selection_.onEvent(e);
-    InteractionListener::onEvent(e);
+  void onEvent(event::Event &e) {
+    interSelection_.onEvent(e);
+    docSelection_.onEvent(e);
+    event::MouseListener::onEvent(e);
+    document::Listener::onEvent(e);
   }
 
-  auto *getHoverNode() { return selection_.getHoverNode(); }
+  auto *getHoverInterNode() { return interSelection_.getHoverNode(); }
+  auto *getHoverDocNode() { return docSelection_.getHoverNode(); }
 
 private:
   Selection docSelection_;
   Selection interSelection_;
 
-  void onMouseMove(event::MouseEvent &event) override {
-    if (!event.target) {
-      return;
-    }
-    auto *emitter = interaction::node_cast<event::EventEmitter>(event.target);
-    emitter->emit(event);
-  }
-  void onMouseDrag(event::MouseEvent &event) override {
-    if (selection_.empty()) {
-      return;
-    }
-    setEventLocalPosition(event, node::NodeIterWithWorldMatrix(event.target));
-    for (auto *node : selection_.getSelection()) {
-      auto *emitter = interaction::node_cast<event::EventEmitter>(node);
-      emitter->emit(event);
-    }
-  }
+  void onMouseMove(event::MouseEvent &event) override;
+  void onMouseDrag(event::MouseEvent &event) override;
+  void onPageChange(event::Event &event) override;
+
+  void handleSelectionChange(const node::NodeConstArary &selection);
 };
 
 } // namespace dea::interaction

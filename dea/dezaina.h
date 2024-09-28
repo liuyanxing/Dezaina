@@ -107,6 +107,17 @@ public:
   static void setImmediate(bool immediate) { immediate_ = immediate;}
   static bool isImmediate() { return immediate_; }
 
+class ImmediateModeScope {
+public:
+  ImmediateModeScope() {
+    Dezaina::setImmediate(true);
+  }
+
+  ~ImmediateModeScope() {
+    Dezaina::setImmediate(false);
+  }
+};
+
 private:
   document::Document doc_;
   Viewport viewport_;

@@ -1,42 +1,18 @@
 #pragma once
 
+#include "document/listener.h"
 #include "event.h"
+#include "dezaina/listener.h"
+#include "document.h"
 
 namespace dea::interaction {
-
-class InteractionListener : public event::SystemHookListener {
+class InteractionListener : public event::Listener, public event::MouseListener, public dea::Listener, public document::Listener {
 public:
 	void onEvent(event::Event& event) override {
-		if (event.isStop()) return;
-    event::SystemHookListener::onEvent(event);
-		switch (event.type) {
-			case event::EventType::MouseDown:
-				onMouseDown(static_cast<event::MouseEvent&>(event));
-				break;
-			case event::EventType::MouseMove:
-				onMouseMove(static_cast<event::MouseEvent&>(event));
-				break;
-			case event::EventType::MouseUp:
-				onMouseUp(static_cast<event::MouseEvent&>(event));
-				break;
-      case event::EventType::MouseWheel:
-        onMouseWheel(static_cast<event::MouseEvent&>(event));
-        break;
-      case event::EventType::MouseDrag:
-        onMouseDrag(static_cast<event::MouseEvent&>(event));
-        break;
-      default:
-        break;
-		}
+		event::MouseListener::onEvent(event);
+    dea::Listener::onEvent(event);
+		document::Listener::onEvent(event);
 	}
-
-protected:
-	virtual void onMouseDown(event::MouseEvent& event) {};
-	virtual void onMouseMove(event::MouseEvent& event) {};
-	virtual void onMouseUp(event::MouseEvent& event) {};
-	virtual void onMouseDrag(event::MouseEvent& event) {};
-	virtual void onMouseWheel(event::MouseEvent& event) {};
-	virtual void onWindowResize(event::Event& event) {};
 };
 
 } // namespace interaction

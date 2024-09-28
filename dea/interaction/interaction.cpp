@@ -19,17 +19,10 @@ using namespace document;
 Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
   page_.setBackgroundColor({0, 0, 0, 0});
 
-  // todo use event system
-  doc_.addEventListener(EventType::PageChange, [this](Event &event) {
-    selection_.setRoot(doc_.currentPage());
-  });
-
-  selection_.onSelectionChange(
-      [this](const node::NodeConstArary &nodes) { handleSelectionChange(nodes); });
-  
   creation_.onCreateNode([this](Node *node, event::MouseEvent& event) {
-    selection_.setSelection({node});
-    updateNodeEditor();
+    Dezaina::ImmediateModeScope scope;
+    Dezaina::instance().editor().select({node->getGuid()});
+    update();
     if (!node_editor_) {
       assert(false);
     }
@@ -39,26 +32,24 @@ Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
   });
 }
 
-void Interaction::handleSelectionChange(const node::NodeConstArary &selection) {
-  if (selection.empty()) {
-    return;
-  }
+void Interaction::handleSelectionChange(const node::NodeConstArary &selection) {}
 
-  node::NodeIdArray ids;
-  for (auto *node : selection) {
-    ids.push_back(node->getGuid());
-  }
-  doc_.editor().select(ids);
-}
-
-node::Vector Interaction::GetItersectBound(node::Vector size) {
+node::Vector Interaction::GetDocNodeScreenBound(node::Vector size) {
   return Dezaina::instance().getViewport().mapWorldToScreen(
       node::Vector{size.x, size.y});
 }
 
-void Interaction::updateNodeEditor() {
+void Interaction::update() {
   auto &selection = doc_.getSelection();
-  if (selection.empty()) {
+  docSelection_.clear();
+  for (auto& id : selection) {
+    auto *node = doc_.getNodeById(id);
+    if (node) {
+      docSelection_.push_back(node);
+    }
+  }
+
+  if (docSelection_.empty()) {
     if (node_editor_ != nullptr) {
       auto *editorContainer = node_editor_->getContainer();
       page_.removeChild(editorContainer);
@@ -68,9 +59,9 @@ void Interaction::updateNodeEditor() {
     return;
   }
 
-  if (selection.size() > 1) {
+  if (docSelection_.size() > 1) {
   } else {
-    auto *node = doc_.getNodeById(selection[0]);
+    auto *node = docSelection_.front();
     if (!node_editor_) {
       if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
         node_editor_ = std::make_unique<RectangleEditor>(*rectangleNode, doc_.editor(), page_);
@@ -94,29 +85,21 @@ void Interaction::updateNodeEditor() {
   // dump();
 }
 
-void Interaction::handleHover() {
-  auto *hoverNode = selection_.getHoverNode();
-  if (hoverNode == nullptr) {
-    // hover_.clearPath();
-    return;
-  }
-  // hover_.setPath(SkPath());
-}
+void Interaction::handleHover() {}
 
 void Interaction::onEvent(event::Event &event) {
   if (!doc_.loaded()) {
     return;
   }
 
-  mouseInter_.onEvent(event);
-  selection_.onEvent(event);
   creation_.onEvent(event);
+  mouseInter_.onEvent(event);
 
   InteractionListener::onEvent(event);
 }
 
-void Interaction::onAfterFlushed(event::Event &event) { updateNodeEditor(); };
-void Interaction::onAfterTick(Event &event) { handleHover(); }
+void Interaction::onAfterFlushed(event::Event &event) { update(); };
+void Interaction::onAfterTick(Event &event) {}
 bool Interaction::dragInterNode(const std::string &query,
                                 event::MouseEvent &event) {
   if (!node_editor_) {
@@ -155,6 +138,11 @@ bool Interaction::dragInterNode(const std::string &query, float worldX,
   event.localWorldY = newWorldY;
   event.localWorldDx = newWorldX - worldX;
   event.localWorldDy = newWorldY - worldY;
+
+  event.worldX = newWorldX;
+  event.worldY = newWorldY;
+  event.worldDx = newWorldX - worldX;
+  event.worldDy = newWorldY - worldY;
 
   return dragInterNode(query, event);
 }

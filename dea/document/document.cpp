@@ -1,4 +1,5 @@
 #include "document.h"
+#include "dezaina.h"
 #include "node.h"
 #include "base/data.h"
 #include "resource.h"
@@ -182,7 +183,7 @@ void Document::setCurrentPage(node::PageNode* page) {
   currentPage_ = page;
   event::Event event;
   event.type = event::EventType::PageChange;
-  emit(event);
+	Dezaina::instance().dispatchEvent(event);
 }
 
 node::Node* Document::getNodeById(const node::GUID& id) const {

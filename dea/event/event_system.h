@@ -11,7 +11,7 @@
 
 namespace dea::event {
 
-using EventUnion = std::variant<MouseEvent, KeyEvent>;
+using EventUnion = std::variant<Event, MouseEvent, KeyEvent>;
 
 class EventSystem {
 public:

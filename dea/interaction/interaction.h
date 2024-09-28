@@ -18,7 +18,6 @@ public:
 
   auto *root() { return &page_; }
   auto &getNodeEditor() { return node_editor_; }
-  auto *getHoverNode() { return selection_.getHoverNode(); }
   void onEvent(event::Event &event) override;
 
   void dump();
@@ -27,16 +26,21 @@ public:
                      float newWorldX, float newWorldY);
   bool dragInterNode(const std::string &query, event::MouseEvent &event);
 
-  auto *getHoverInterNode() { return mouseInter_.getHoverNode(); }
+  auto *getHoverInterNode() { return mouseInter_.getHoverInterNode(); }
+  auto *getHoverDocNode() { return mouseInter_.getHoverDocNode(); }
 
-  static node::Vector GetItersectBound(node::Vector size);
+  auto &getDocSelection() { return docSelection_; }
+  auto &getInterSelection() { return interSelection_; }
+  auto *getInterPage() { return &page_; }
+
+  static node::Vector GetDocNodeScreenBound(node::Vector size);
 
 private:
   node::PageNode page_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
   node::NodeConstArary docSelection_;
   node::NodeConstArary interSelection_;
-  MouseInteraction mouseInter_{};
+  MouseInteraction mouseInter_{*this};
 
   Creation creation_;
   document::Document &doc_;
@@ -44,12 +48,11 @@ private:
   void appendToContainer(node::Node *child) { node::Container::append(&page_, child); }
 
   void handleSelectionChange(const node::NodeConstArary &selection);
-  void updateNodeEditor();
+  void update();
   void handleHover();
   // void onBeforeTick(event::Event* event) override;
   void onMouseWheel(event::MouseEvent &event) override;
   void onMouseDrag(event::MouseEvent &event) override;
-  void onWindowResize(event::Event &event) override;
   void onAfterFlushed(event::Event &event) override;
   void onAfterTick(event::Event &event) override;
 };

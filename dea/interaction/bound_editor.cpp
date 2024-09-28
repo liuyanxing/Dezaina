@@ -158,7 +158,7 @@ void BoundEditor::bindEvents() {
         auto center = getNodeCenter(&translateCtrl_);
         auto v1 = Vector{event.worldX, event.worldY} - center;
         auto v2 = Vector{ event.worldX - event.worldDx , event.worldY - event.worldDy } - center;
-        auto angle = v1.angle(v2);
+        auto angle = v2.angle(v1);
         editor_.rotate(angle);
     });
   }
@@ -173,7 +173,6 @@ void BoundEditor::update() {
   auto size = getSize(container_.getParent());
   auto transform = getTransfromMatrix(container_.getParent());
   layout::ContraintLayout::layoutCild(&container_, size);
-  container_.setTransform(transform);
   container_.setSize(size);
 }
 

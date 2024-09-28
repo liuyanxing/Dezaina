@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./event.h"
+#include "mouse.h"
 
 namespace dea::event {
 
@@ -9,31 +10,36 @@ public:
 	virtual void onEvent(Event& event) = 0;
 };
 
-class SystemHookListener : public Listener {
+class MouseListener {
 public:
-  virtual void onEvent(Event& e) override {
-    switch (e.type) {
-      case EventType::Initialized:
-        onInitialized(e);
+	void onEvent(Event& event) {
+		switch (event.type) {
+			case EventType::MouseDown:
+				onMouseDown(static_cast<MouseEvent&>(event));
+				break;
+			case EventType::MouseMove:
+				onMouseMove(static_cast<MouseEvent&>(event));
+				break;
+			case EventType::MouseUp:
+				onMouseUp(static_cast<MouseEvent&>(event));
+				break;
+      case EventType::MouseWheel:
+        onMouseWheel(static_cast<MouseEvent&>(event));
         break;
-      case EventType::AfterFlushed:
-        onAfterFlushed(e);
-        break;
-      case EventType::BeforeTick:
-        onBeforeTick(e);
-        break;
-      case EventType::AfterTick:
-        onAfterTick(e);
+      case EventType::MouseDrag:
+        onMouseDrag(static_cast<MouseEvent&>(event));
         break;
       default:
         break;
-    }
-  }
-private:
-  virtual void onInitialized(Event& event) {};
-  virtual void onBeforeTick(Event& event) {};
-  virtual void onAfterTick(Event& event) {};
-  virtual void onAfterFlushed(Event& event) {};
+		}
+	}
+
+protected:
+	virtual void onMouseDown(MouseEvent& event) {};
+	virtual void onMouseMove(MouseEvent& event) {};
+	virtual void onMouseUp(MouseEvent& event) {};
+	virtual void onMouseDrag(MouseEvent& event) {};
+	virtual void onMouseWheel(MouseEvent& event) {};
 };
 
 }

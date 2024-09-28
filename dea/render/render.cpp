@@ -70,7 +70,7 @@ namespace dea::render {
   }
 
   void Render::renderDocument() {
-    document::Document::IterWithWorldMatrix iter{doc_.currentPage()};
+    node::NodeIterWithWorldMatrix iter{doc_.currentPage()};
     render(iter, false);
   }
 
@@ -80,7 +80,7 @@ namespace dea::render {
       return;
     }
 
-    interaction::IterWithWorldMatrix iter{interaction.root()};
+    node::NodeIterWithWorldMatrix iter{interaction.root()};
     render(iter, true);
   }
 

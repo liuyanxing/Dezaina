@@ -30,7 +30,7 @@ void Selection::onMouseMove(MouseEvent &event) {
       auto [width, height] = getIntersectBound_(shape->getSize());
       auto bound = Rect{0, 0, width, height};
       // spdlog::info("local: x: {}, y: {}", local.x(), local.y());
-      if (bound.intersects(cursorRect)) {
+      if (bound.intersects(cursorRect) && onMoveOnNode_(node)) {
         hoverNode_ = node;
       }
     }

@@ -58,7 +58,7 @@ namespace dea::event {
     } else if (isKey(event)) {
       handleKeyEvent(static_cast<KeyEvent&>(event));
     } else {
-      assert(false);
+        addEvent(event);
     }
 	}
 

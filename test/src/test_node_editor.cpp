@@ -7,6 +7,7 @@
 #include <cmath>
 #include <gtest/gtest.h>
 #include <unordered_map>
+#include "base/math.h"
 
 // The purpose of these tests are just to  make sure that gtest was properly
 // installed.
@@ -14,6 +15,7 @@
 using namespace dea::document;
 using namespace dea::node;
 using namespace dea::event;
+using namespace dea::base;
 
 auto &deza = dea::Dezaina::instance();
 auto &doc = deza.document();
@@ -55,85 +57,85 @@ TEST(NodeEditor, HoverCtrolNode) {
 
 	MouseEvent em(mx, my, EventType::MouseMove);
   deza.dispatchEvent(em);
-  auto *node = inter.getHoverNode();
+  auto *node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs0");
 
   em.x += rw;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs1");
 
   em.y += rh;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs2");
 
   em.x -= rw;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bs3");
 
   em.x = ox - d;
   em.y = oy - d;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br0");
 
   em.x += rw + 2*d;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br1");
 
   em.y += rh + 2*d;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br2");
 
   em.x -= rw + 2*d;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "br3");
 
   em.x = ox + rw / 2;
   em.y = oy + rh / 2;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "bt");
 
   em.x = ox + rw / 2;
   em.y = oy;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be0");
 
   em.x = ox + rw;
   em.y = oy + rh / 2;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be1");
 
   em.x = ox + rw / 2;
   em.y = oy + rh;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be2");
 
   em.x = ox;
   em.y = oy + rh / 2;
   deza.dispatchEvent(em);
-  node = inter.getHoverNode();
+  node = inter.getHoverInterNode();
   EXPECT_TRUE(node);
   EXPECT_TRUE(node->getName() == "be3");
 
@@ -189,24 +191,36 @@ TEST(NodeEditor, DragEditorToMoveNode) {
 TEST(NodeEditor, DragEditorRotateEdge) {
   auto *node = inter.getNodeEditor()->getEditNode();
   auto *rect = node_cast<RectangleNode>(node);
+
+  doc.editor().select({rect->getGuid()});
+  doc.editor().setSize({100, 100});
+  doc.editor().setTransform(Matrix());
+
   deza.dragInterNode("bt", -50, -50);
 
   auto sqrt = std::sqrt(100 * 100 + 100 * 100) / 2;
 
+  float rotation = 0;
+
   deza.dragInterNode("br0", 50, 50, sqrt, 0);
-  EXPECT_TRUE(rect->getTransform().getRotation() == 0.7853981852531433);
+  rotation = rect->getTransform().getRotation();
+  EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
   deza.dragInterNode("br0", sqrt, 0, 50, 50);
+  rotation = rect->getTransform().getRotation();
 
   deza.dragInterNode("br1", 50, -50, 0, -sqrt);
-  EXPECT_TRUE(rect->getTransform().getRotation() == 0.7853981852531433);
+  rotation = rect->getTransform().getRotation();
+  EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
   deza.dragInterNode("br1", 0, -sqrt, 50, -50);
 
   deza.dragInterNode("br2", -50, -50, -sqrt, 0);
-  EXPECT_TRUE(rect->getTransform().getRotation() == 0.7853981852531433);
+  rotation = rect->getTransform().getRotation();
+  EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
   deza.dragInterNode("br2", -sqrt, 0, -50, -50);
 
   deza.dragInterNode("br3", -50, 50, 0, sqrt);
-  EXPECT_TRUE(rect->getTransform().getRotation() == 0.7853981852531433);
+  rotation = rect->getTransform().getRotation();
+  EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
   deza.dragInterNode("br3", 0, sqrt, -50, 50);
 
   deza.dragInterNode("bt", 50, 50);

@@ -9,7 +9,7 @@ namespace dea::interaction {
 
 using OnCreateNode = std::function<void(node::Node*, event::MouseEvent& event)>;
 
-class Creation : public InteractionListener {
+class Creation : public event::MouseListener {
 public:
 	Creation(document::Document& doc) : document_(doc) {};
 
