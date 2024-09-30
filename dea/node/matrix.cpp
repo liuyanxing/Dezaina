@@ -39,12 +39,11 @@ Matrix Matrix::getInverse(const Matrix &defaultValue) const {
 }
 
 Matrix &Matrix::preRotate(float angle, Vector center) {
-  auto translation = getTranslation() + center;
-  return *this = Translate(translation) * Rotate(getRotation() + angle) *
+  return *this = *this * Translate(center) * Rotate(angle) *
                  Translate(-center);
 }
 
-float Matrix::getRotation() const { return std::atan2(m01, m00); }
+float Matrix::getRotation() const { return -std::atan2(m01, m00); }
 
 Vector Matrix::operator*(const Vector &rhs) const {
   return Vector(m00 * rhs.x + m01 * rhs.y + m02,

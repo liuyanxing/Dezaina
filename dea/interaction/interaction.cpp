@@ -40,6 +40,9 @@ node::Vector Interaction::GetDocNodeScreenBound(node::Vector size) {
 }
 
 void Interaction::update() {
+    if (!doc_.currentPage()) {
+        return;
+  }
   auto &selection = doc_.getSelection();
   docSelection_.clear();
   for (auto& id : selection) {

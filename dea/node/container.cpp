@@ -1,4 +1,5 @@
 #include "container.h"
+#include "type.generated.h"
 
 namespace dea::node {
 

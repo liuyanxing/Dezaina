@@ -1,7 +1,6 @@
 #pragma once
 
 #include "node.h"
-#include "type.generated.h"
 #include "container.h"
 #include "guid.h"
 #include "selection.h"

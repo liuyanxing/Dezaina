@@ -1,7 +1,6 @@
 #pragma once
 
 #include "node.h"
-#include "type.generated.h"
 
 namespace dea::node {
 

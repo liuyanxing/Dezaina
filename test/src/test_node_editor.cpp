@@ -188,7 +188,7 @@ TEST(NodeEditor, DragEditorToMoveNode) {
   EXPECT_TRUE(rect->getTransform() == Matrix());
 }
 
-TEST(NodeEditor, DragEditorRotateEdge) {
+TEST(NodeEditor, DragEditorRotateNode) {
   auto *node = inter.getNodeEditor()->getEditNode();
   auto *rect = node_cast<RectangleNode>(node);
 
@@ -202,26 +202,29 @@ TEST(NodeEditor, DragEditorRotateEdge) {
 
   float rotation = 0;
 
-  deza.dragInterNode("br0", 50, 50, sqrt, 0);
+  deza.dragInterNode("br0", 50, 50, 0, sqrt);
   rotation = rect->getTransform().getRotation();
   EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
-  deza.dragInterNode("br0", sqrt, 0, 50, 50);
+  deza.dragInterNode("br0", 0, sqrt, 50, 50);
   rotation = rect->getTransform().getRotation();
 
-  deza.dragInterNode("br1", 50, -50, 0, -sqrt);
+  deza.dragInterNode("br1", -50, 50, -sqrt, 0);
   rotation = rect->getTransform().getRotation();
   EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
-  deza.dragInterNode("br1", 0, -sqrt, 50, -50);
+  deza.dragInterNode("br1", -sqrt, 0, -50, 50);
+  rotation = rect->getTransform().getRotation();
 
-  deza.dragInterNode("br2", -50, -50, -sqrt, 0);
+  deza.dragInterNode("br2", -50, -50, 0, -sqrt);
   rotation = rect->getTransform().getRotation();
   EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
-  deza.dragInterNode("br2", -sqrt, 0, -50, -50);
+  deza.dragInterNode("br2", 0, -sqrt, -50, -50);
+  rotation = rect->getTransform().getRotation();
 
-  deza.dragInterNode("br3", -50, 50, 0, sqrt);
+  deza.dragInterNode("br3", 50, -50, sqrt, 0);
   rotation = rect->getTransform().getRotation();
   EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
-  deza.dragInterNode("br3", 0, sqrt, -50, 50);
+  deza.dragInterNode("br3", sqrt, 0, 50, -50);
+  rotation = rect->getTransform().getRotation();
 
   deza.dragInterNode("bt", 50, 50);
 }
