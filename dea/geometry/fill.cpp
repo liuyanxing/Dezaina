@@ -14,12 +14,17 @@ Data buildRectangle(node::Vector size, float tl, float tr, float br, float bl) {
   const float cr = tl * raduisRatio;
 
   Buffer buffer;
-  buffer.write(MOVE, 0, tl, CUBIC, 0, tl - cr, tl - cr, 0, tl, 0, LINE,
-               size.x - tr, 0, CUBIC, size.x - tr + cr, 0, size.x, tr - cr,
-               size.x, tr, LINE, size.x, size.y - br, CUBIC, size.x,
-               size.y - br + cr, size.x - br + cr, size.y, size.x - br, size.y,
-               LINE, bl, size.y, CUBIC, bl - cr, size.y, 0, size.y - bl + cr, 0,
-               size.y - bl, CLOSE);
+  // clang-format off
+  buffer.write(MOVE, 0, tl,
+               CUBIC, 0, tl - cr, tl - cr, 0, tl, 0,
+               LINE, size.x - tr, 0,
+               CUBIC, size.x - tr + cr, 0, size.x, tr - cr, size.x, tr,
+               LINE, size.x, size.y - br,
+               CUBIC, size.x, size.y - br + cr, size.x - br + cr, size.y, size.x - br, size.y,
+               LINE, bl, size.y,
+               CUBIC, bl - cr, size.y, 0, size.y - bl + cr, 0, size.y - bl,
+               CLOSE);
+  // clang-format on
   return buffer.toData();
 }
 
@@ -40,10 +45,12 @@ Data buildStar(node::Vector size, int count, float ratio, float radius) {
   buffer.write(MOVE, size.x / 2, 0);
   const float angle = 2 * M_PI / count;
   for (int i = 0; i < count; ++i) {
+    // clang-format off
     buffer.write(LINE, size.x / 2 + size.x / 2 * cos(angle * i),
                  size.y / 2 + size.y / 2 * sin(angle * i),
-                  LINE, size.x / 2 + size.x / 2 * ratio * cos(angle * i + angle / 2),
+                 LINE, size.x / 2 + size.x / 2 * ratio * cos(angle * i + angle / 2),
                  size.y / 2 + size.y / 2 * ratio * sin(angle * i + angle / 2));
+    // clang-format on
   }
   buffer.write(CLOSE);
   return buffer.toData();
@@ -51,20 +58,24 @@ Data buildStar(node::Vector size, int count, float ratio, float radius) {
 
 Data buildEllipse(node::Vector size) {
   Buffer buffer;
-  buffer.write(MOVE, size.x / 2, 0);
-  buffer.write(CUBIC, size.x, 0, size.x, size.y, size.x / 2, size.y);
-  buffer.write(CUBIC, 0, size.y, 0, 0, size.x / 2, 0);
-  buffer.write(CLOSE);
+  // clang-format off
+  buffer.write(MOVE, size.x / 2, 0,
+               CUBIC, size.x, 0, size.x, size.y, size.x / 2, size.y,
+               CUBIC, 0, size.y, 0, 0, size.x / 2, 0,
+               CLOSE);
+  // clang-format on
   return buffer.toData();
 }
 
 Data buildLine(node::Vector size) {
   Buffer buffer;
-  buffer.write(MOVE, 0, 0);
-  buffer.write(LINE, size.x, 0);
-  buffer.write(LINE, size.x, size.y);
-  buffer.write(LINE, 0, size.y);
-  buffer.write(CLOSE);
+  // clang-format off
+  buffer.write(MOVE, 0, 0,
+               LINE, size.x, 0,
+               LINE, size.x, size.y,
+               LINE, 0, size.y,
+               CLOSE);
+  // clang-format on
   return buffer.toData();
 }
 

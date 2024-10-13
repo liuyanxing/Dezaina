@@ -27,7 +27,7 @@ T* node_cast(const Node* node) {
 	}
 
 	using U = std::remove_cv_t<T>;
-	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
+	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE || node->getType() == NodeType::INTER_RECTANGLE) {
 		if constexpr (std::is_convertible_v<RectangleNode, U>) {
 			return static_cast<T*>((RectangleNode*)(node));
 		}
@@ -57,7 +57,7 @@ T* node_cast(const Node* node) {
 			return static_cast<T*>((VectorNode*)(node));
 		}
 	}
-	if (node->getType() == NodeType::FRAME) {
+	if (node->getType() == NodeType::FRAME || node->getType() == NodeType::INTER_FRAME) {
 		if constexpr (std::is_convertible_v<FrameNode, U>) {
 			return static_cast<T*>((FrameNode*)(node));
 		}
@@ -95,7 +95,7 @@ inline std::string getNodeTypeString(const Node* node) {
 		return std::string("Null");
 	}
 
-	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE) {
+	if (node->getType() == NodeType::RECTANGLE || node->getType() == NodeType::ROUNDED_RECTANGLE || node->getType() == NodeType::INTER_RECTANGLE) {
 		return std::string("RECTANGLE");
 	}
 	if (node->getType() == NodeType::LINE) {
@@ -113,7 +113,7 @@ inline std::string getNodeTypeString(const Node* node) {
 	if (node->getType() == NodeType::VECTOR) {
 		return std::string("VECTOR");
 	}
-	if (node->getType() == NodeType::FRAME) {
+	if (node->getType() == NodeType::FRAME || node->getType() == NodeType::INTER_FRAME) {
 		return std::string("FRAME");
 	}
 	if (node->getType() == NodeType::SYMBOL) {

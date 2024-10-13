@@ -8,6 +8,7 @@ namespace dea::interaction {
 class Frame : public node::FrameNode, public InteractionNode {
 public:
 	Frame() {
+		setType(node::NodeType::INTER_FRAME);
 	}
 	~Frame() = default;
 };
