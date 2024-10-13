@@ -10,7 +10,9 @@
 namespace dea::interaction {
 
 class Interaction;
-class MouseInteraction : public event::MouseListener, public document::Listener {
+
+class MouseInteraction : public event::MouseListener,
+                         public document::Listener {
 public:
   MouseInteraction(Interaction &interaction);
 
@@ -27,10 +29,12 @@ public:
 private:
   Selection docSelection_;
   Selection interSelection_;
+  Interaction &interaction_;
 
   void onMouseMove(event::MouseEvent &event) override;
   void onMouseDrag(event::MouseEvent &event) override;
   void onPageChange(event::Event &event) override;
+  void hanldeDragCreateNode(event::MouseEvent &event);
 
   void handleSelectionChange(const node::NodeConstArary &selection);
 };

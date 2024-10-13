@@ -1,6 +1,5 @@
 #pragma once
 
-#include "creation.h"
 #include "document.h"
 #include "event.h"
 #include "listener.h"
@@ -35,6 +34,13 @@ public:
   auto &getInterSelection() { return interSelection_; }
   auto *getInterPage() { return &container_; }
 
+  template <typename T> void startCreateNode() {
+    endCreateNode();
+    creatingNode_ = doc_.createNode<T>(false);
+  }
+  auto *getCreatingNode() { return creatingNode_; }
+  void endCreateNode();
+
   static node::Vector GetDocNodeScreenBound(node::Vector size);
 
 private:
@@ -43,8 +49,8 @@ private:
   node::NodeConstArary docSelection_;
   node::NodeConstArary interSelection_;
   MouseInteraction mouseInter_{*this};
+  node::Node *creatingNode_ = nullptr;
 
-  Creation creation_;
   document::Document &doc_;
 
   void appendToContainer(node::Node *child) {

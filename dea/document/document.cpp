@@ -88,41 +88,41 @@ bool Document::processNodeChanges(message::Message& message) {
 			using message::NodeType;
 			switch (type) {
 				case NodeType::DOCUMENT:
-					node = buildNode<DocumentNode>(id);
+					node = createNode<DocumentNode>(id, false);
 					break;
 				case NodeType::CANVAS:
-					node = buildNode<PageNode>(id);
+					node = createNode<PageNode>(id, false);
 					break;
 				case NodeType::FRAME:
-					node = buildNode<FrameNode>(id);
+					node = createNode<FrameNode>(id, false);
 					break;
 				case NodeType::RECTANGLE:
 				case NodeType::ROUNDED_RECTANGLE:
-					node = buildNode<RectangleNode>(id);
+					node = createNode<RectangleNode>(id, false);
 					break;
 				case NodeType::VECTOR:
-					node = buildNode<VectorNode>(id);
+					node = createNode<VectorNode>(id, false);
 					break;
 				case NodeType::STAR:
-					node = buildNode<StarNode>(id);
+					node = createNode<StarNode>(id, false);
 					break;
 				case NodeType::LINE:
-					node = buildNode<LineNode>(id);
+					node = createNode<LineNode>(id, false);
 					break;
 				case NodeType::ELLIPSE:
-					node = buildNode<EllipseNode>(id);
+					node = createNode<EllipseNode>(id, false);
 					break;
 				case NodeType::REGULAR_POLYGON:
-					node = buildNode<PolygonNode>(id);
+					node = createNode<PolygonNode>(id, false);
 					break;
 				case NodeType::TEXT:
-					node = buildNode<TextNode>(id);
+					node = createNode<TextNode>(id, false);
 					break;
 				case NodeType::SYMBOL:
-					node = buildNode<SymbolNode>(id);
+					node = createNode<SymbolNode>(id, false);
 					break;
 				case NodeType::INSTANCE:
-					node = buildNode<InstanceNode>(id);
+					node = createNode<InstanceNode>(id, false);
 					break;
 				default:
 					assert(false);
@@ -203,7 +203,7 @@ void Document::handleViewMatrixChange(const node::Matrix& matrix) {
 
 void Document::loadEmpty() {
 	assert(!root_);
-	root_ = createNode<DocumentNode>(node::GUID{0, 0});
+	root_ = createNode<DocumentNode>(node::GUID{0, 0}, false);
 
 	auto* page = createNode<PageNode>(root_);
 	setCurrentPage(page);

@@ -19,26 +19,13 @@ using namespace node;
 using namespace document;
 using namespace ui;
 
-Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
+Interaction::Interaction(Document &doc) : doc_(doc) {
   container_.setName("inter");
   container_.setSize({FLT_MAX, FLT_MAX});
   container_.addEventListener(EventType::MouseMove, [this](Event &event) {
     if (node_editor_) {
       UI::setCursor(CursorType::Default);
     }
-  });
-
-  creation_.onCreateNode([this](Node *node, event::MouseEvent &event) {
-    Dezaina::ImmediateModeScope scope;
-    Dezaina::instance().editor().select({node->getGuid()});
-    update();
-    if (!node_editor_) {
-      assert(false);
-    }
-    node_editor_->selectNearestCtrlNode(
-        {event.worldX, event.worldY}, [](node::NodeConstPtr node) {
-          return node->getName().starts_with("rs");
-        });
   });
 }
 
@@ -114,7 +101,6 @@ void Interaction::onEvent(event::Event &event) {
   InteractionListener::onEvent(event);
 }
 
-
 node::NodeConstPtr Interaction::queryByName(const std::string &query) {
   NodeIter iter(&container_);
   while (iter.isValid()) {
@@ -135,7 +121,7 @@ bool Interaction::dragInterNode(const std::string &query,
     return false;
   }
 
-  auto* node = queryByName(query);
+  auto *node = queryByName(query);
   if (!node) {
     return false;
   }
@@ -182,6 +168,28 @@ void Interaction::dump() {
     ++iter;
   }
   spdlog::info("dump end");
+}
+
+void Interaction::endCreateNode() {
+  if (!creatingNode_) {
+    return;
+  }
+
+  Dezaina::ImmediateModeScope scope;
+
+  if (!creatingNode_->getParent()) {
+    doc_.remove(creatingNode_);
+    creatingNode_ = nullptr;
+    return;
+  }
+
+  doc_.editor().select({creatingNode_->getGuid()});
+  update();
+  creatingNode_ = nullptr;
+  assert(node_editor_);
+  node_editor_->selectNearestCtrlNode({0, 0}, [](node::NodeConstPtr node) {
+    return node->getName().starts_with("rs");
+  });
 }
 
 } // namespace dea::interaction
