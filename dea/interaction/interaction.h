@@ -4,10 +4,10 @@
 #include "document.h"
 #include "event.h"
 #include "listener.h"
+#include "mouse_interaction.h"
 #include "node.h"
 #include "node_editor.h"
 #include "selection.h"
-#include "mouse_interaction.h"
 #include <memory>
 
 namespace dea::interaction {
@@ -16,7 +16,7 @@ class Interaction : public InteractionListener {
 public:
   Interaction(document::Document &doc);
 
-  auto *root() { return &page_; }
+  auto *root() { return &container_; }
   auto &getNodeEditor() { return node_editor_; }
   void onEvent(event::Event &event) override;
 
@@ -31,12 +31,12 @@ public:
 
   auto &getDocSelection() { return docSelection_; }
   auto &getInterSelection() { return interSelection_; }
-  auto *getInterPage() { return &page_; }
+  auto *getInterPage() { return &container_; }
 
   static node::Vector GetDocNodeScreenBound(node::Vector size);
 
 private:
-  node::PageNode page_;
+  Frame container_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
   node::NodeConstArary docSelection_;
   node::NodeConstArary interSelection_;
@@ -45,7 +45,9 @@ private:
   Creation creation_;
   document::Document &doc_;
 
-  void appendToContainer(node::Node *child) { node::Container::append(&page_, child); }
+  void appendToContainer(node::Node *child) {
+    node::Container::append(&container_, child);
+  }
 
   void handleSelectionChange(const node::NodeConstArary &selection);
   void update();

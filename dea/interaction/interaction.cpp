@@ -1,38 +1,49 @@
 #include "interaction.h"
+#include "UI/primitives.h"
+#include "UI/ui.h"
 #include "dezaina.h"
 #include "document.h"
+#include "frame_editor.h"
 #include "interaction/interaction.h"
 #include "node.h"
 #include "node/node.generated.h"
 #include "node/node.h"
+#include "rectangle_editor.h"
 #include "selection.h"
 #include "spdlog/spdlog.h"
-#include "rectangle_editor.h"
-#include "frame_editor.h"
 
 namespace dea::interaction {
 
 using namespace event;
 using namespace node;
 using namespace document;
+using namespace ui;
 
 Interaction::Interaction(Document &doc) : doc_(doc), creation_(doc) {
-  page_.setBackgroundColor({0, 0, 0, 0});
+  container_.setName("inter");
+  container_.setSize({FLT_MAX, FLT_MAX});
+  container_.addEventListener(EventType::MouseMove, [this](Event &event) {
+    if (node_editor_) {
+      UI::setCursor(CursorType::Default);
+    }
+  });
 
-  creation_.onCreateNode([this](Node *node, event::MouseEvent& event) {
+  creation_.onCreateNode([this](Node *node, event::MouseEvent &event) {
     Dezaina::ImmediateModeScope scope;
     Dezaina::instance().editor().select({node->getGuid()});
     update();
     if (!node_editor_) {
       assert(false);
     }
-    node_editor_->selectNearestCtrlNode({event.worldX, event.worldY}, [](node::NodeConstPtr node) {
-      return node->getName().starts_with("rs");
-    });
+    node_editor_->selectNearestCtrlNode(
+        {event.worldX, event.worldY}, [](node::NodeConstPtr node) {
+          return node->getName().starts_with("rs");
+        });
   });
 }
 
-void Interaction::handleSelectionChange(const node::NodeConstArary &selection) {}
+void Interaction::handleSelectionChange(const node::NodeConstArary &selection) {
+}
 
 node::Vector Interaction::GetDocNodeScreenBound(node::Vector size) {
   return Dezaina::instance().getViewport().mapWorldToScreen(
@@ -40,12 +51,12 @@ node::Vector Interaction::GetDocNodeScreenBound(node::Vector size) {
 }
 
 void Interaction::update() {
-    if (!doc_.currentPage()) {
-        return;
+  if (!doc_.currentPage()) {
+    return;
   }
   auto &selection = doc_.getSelection();
   docSelection_.clear();
-  for (auto& id : selection) {
+  for (auto &id : selection) {
     auto *node = doc_.getNodeById(id);
     if (node) {
       docSelection_.push_back(node);
@@ -55,7 +66,7 @@ void Interaction::update() {
   if (docSelection_.empty()) {
     if (node_editor_ != nullptr) {
       auto *editorContainer = node_editor_->getContainer();
-      page_.removeChild(editorContainer);
+      container_.removeChild(editorContainer);
       node_editor_ = nullptr;
       return;
     }
@@ -67,9 +78,11 @@ void Interaction::update() {
     auto *node = docSelection_.front();
     if (!node_editor_) {
       if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
-        node_editor_ = std::make_unique<RectangleEditor>(*rectangleNode, doc_.editor(), page_);
+        node_editor_ = std::make_unique<RectangleEditor>(
+            *rectangleNode, doc_.editor(), container_);
       } else if (auto *frameNode = node::node_cast<node::FrameNode>(node)) {
-        node_editor_ = std::make_unique<FrameEditor>(*frameNode, doc_.editor(), page_);
+        node_editor_ = std::make_unique<FrameEditor>(*frameNode, doc_.editor(),
+                                                     container_);
       } else {
         assert(false);
       }
@@ -82,7 +95,7 @@ void Interaction::update() {
 
   node_editor_->update();
   auto *editorContainer = node_editor_->getContainer();
-  if (!page_.findChild(editorContainer)) {
+  if (!container_.findChild(editorContainer)) {
     appendToContainer(editorContainer);
   }
   // dump();
@@ -110,12 +123,12 @@ bool Interaction::dragInterNode(const std::string &query,
   }
 
   bool found = false;
-  NodeIter iter(&page_);
+  NodeIter iter(&container_);
   while (iter.isValid()) {
     auto *node = iter.get();
     if (query == node->getName()) {
       found = true;
-      interaction::node_cast<event::EventEmitter >(node)->emit(event);
+      interaction::node_cast<event::EventEmitter>(node)->emit(event);
     }
     ++iter;
   }
@@ -151,7 +164,7 @@ bool Interaction::dragInterNode(const std::string &query, float worldX,
 }
 
 void Interaction::dump() {
-  NodeIter iter(&page_);
+  NodeIter iter(&container_);
   spdlog::info("dumping page");
   while (iter.isValid()) {
     auto *node = iter.get();
