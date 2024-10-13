@@ -114,6 +114,19 @@ void Interaction::onEvent(event::Event &event) {
   InteractionListener::onEvent(event);
 }
 
+
+node::NodeConstPtr Interaction::queryByName(const std::string &query) {
+  NodeIter iter(&container_);
+  while (iter.isValid()) {
+    auto *node = iter.get();
+    if (query == node->getName()) {
+      return node;
+    }
+    ++iter;
+  }
+  return nullptr;
+}
+
 void Interaction::onAfterFlushed(event::Event &event) { update(); };
 void Interaction::onAfterTick(Event &event) {}
 bool Interaction::dragInterNode(const std::string &query,
@@ -122,18 +135,13 @@ bool Interaction::dragInterNode(const std::string &query,
     return false;
   }
 
-  bool found = false;
-  NodeIter iter(&container_);
-  while (iter.isValid()) {
-    auto *node = iter.get();
-    if (query == node->getName()) {
-      found = true;
-      interaction::node_cast<event::EventEmitter>(node)->emit(event);
-    }
-    ++iter;
+  auto* node = queryByName(query);
+  if (!node) {
+    return false;
   }
 
-  return found;
+  interaction::node_cast<event::EventEmitter>(node)->emit(event);
+  return true;
 }
 
 bool Interaction::dragInterNode(const std::string &query, float dx, float dy) {

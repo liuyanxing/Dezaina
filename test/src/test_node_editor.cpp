@@ -205,6 +205,7 @@ TEST(NodeEditor, DragEditorRotateNode) {
   deza.dragInterNode("br0", 50, 50, 0, sqrt);
   rotation = rect->getTransform().getRotation();
   EXPECT_TRUE(sameFloat(rotation, 0.7853981852531433));
+
   deza.dragInterNode("br0", 0, sqrt, 50, 50);
   rotation = rect->getTransform().getRotation();
 

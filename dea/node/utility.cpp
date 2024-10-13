@@ -82,18 +82,18 @@ NodeIter::IterDirection NodeIterWithWorldMatrix::operator++() {
   auto direction = NodeIter::operator++();
   switch (direction) {
   case Forward:
-    world_ = getTransfromMatrix(node_) * world_;
+    world_ = world_ * getTransfromMatrix(node_);
     worldStack_.push_back(world_);
     break;
   case Backword:
     worldStack_.pop_back();
     worldStack_.pop_back();
-    world_ = getTransfromMatrix(node_) * worldStack_.top();
+    world_ = worldStack_.top() * getTransfromMatrix(node_);
     worldStack_.push_back(world_);
     break;
   case Right:
     worldStack_.pop_back();
-    world_ = getTransfromMatrix(node_) * worldStack_.top();
+    world_ = worldStack_.top() * getTransfromMatrix(node_);
     worldStack_.push_back(world_);
     break;
   case End:

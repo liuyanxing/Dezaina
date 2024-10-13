@@ -6,6 +6,7 @@
 #include "listener.h"
 #include "mouse_interaction.h"
 #include "node.h"
+#include "node/node.h"
 #include "node_editor.h"
 #include "selection.h"
 #include <memory>
@@ -25,6 +26,7 @@ public:
   bool dragInterNode(const std::string &query, float worldX, float worldY,
                      float newWorldX, float newWorldY);
   bool dragInterNode(const std::string &query, event::MouseEvent &event);
+  node::NodeConstPtr queryByName(const std::string &query);
 
   auto *getHoverInterNode() { return mouseInter_.getHoverInterNode(); }
   auto *getHoverDocNode() { return mouseInter_.getHoverDocNode(); }

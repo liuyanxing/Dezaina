@@ -13,7 +13,7 @@ node::Vector getNodeCenter(node::NodeConstPtr node);
 inline Matrix GetWorldMatrix(node::NodeConstPtr node) {
   Matrix matrix;
   while (node) {
-    matrix = getTransfromMatrix(node) * matrix;
+    matrix = matrix * getTransfromMatrix(node);
     node = node->getParent();
   }
   return matrix;

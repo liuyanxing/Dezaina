@@ -2,11 +2,11 @@
 #include "UI/ui.h"
 #include "config/size.h"
 #include "document.h"
+#include "event.h"
 #include "layout.h"
 #include "layout/constraint_layout.h"
 #include "node/node_base.generated.h"
 #include "node/rectangle.h"
-#include "event.h"
 #include "node/utility.h"
 #include <array>
 
@@ -45,16 +45,17 @@ void BoundEditor::initCtrls() {
       {node::ConstraintType::MIN, node::ConstraintType::STRETCH},
   }};
   std::array<Vector, 4> edgeTranslate = {{{offset, -0.5f},
-                                       {edgeSize - 0.5f, offset},
-                                       {offset, edgeSize - 0.5f},
-                                       {-0.5, offset}}};
+                                          {edgeSize - 0.5f, offset},
+                                          {offset, edgeSize - 0.5f},
+                                          {-0.5, offset}}};
   auto edgeS = edgeSize - nodeD;
   std::array<Vector, 4> sizes = {
       {{edgeS, 1}, {1, edgeS}, {edgeS, 1}, {1, edgeS}}};
   for (int i = 0; i < resizeEdgeCtrls_.size(); i++) {
     auto &ctrl = resizeEdgeCtrls_[i];
     ctrl.setName("be" + std::to_string(i));
-    ctrl.setTransform(Matrix().translate(edgeTranslate[i].x, edgeTranslate[i].y));
+    ctrl.setTransform(
+        Matrix().translate(edgeTranslate[i].x, edgeTranslate[i].y));
     ctrl.setSize(sizes[i]);
     ctrl.setHorizontalConstraint(edgeConstraints[i][0]);
     ctrl.setVerticalConstraint(edgeConstraints[i][1]);
@@ -70,10 +71,11 @@ void BoundEditor::initCtrls() {
       {node::ConstraintType::MIN, node::ConstraintType::MAX},
   }};
 
-  std::array<Vector, 4> rotateTranslate = {{{-offset * 3, -offset * 3},
-                                       {offset + edgeSize, -offset * 3},
-                                       {offset + edgeSize, offset + edgeSize},
-                                       {-offset * 3, offset + edgeSize}}};
+  std::array<Vector, 4> rotateTranslate = {
+      {{-offset * 3, -offset * 3},
+       {offset + edgeSize, -offset * 3},
+       {offset + edgeSize, offset + edgeSize},
+       {-offset * 3, offset + edgeSize}}};
   for (int i = 0; i < 4; i++) {
     auto &rotateCtrl = rotateCtrls_[i];
     rotateCtrl.setName("br" + std::to_string(i));
@@ -153,13 +155,15 @@ void BoundEditor::bindEvents() {
     rotateCtrl.addEventListener(EventType::MouseMove, [this, i](Event &e) {
       UI::setCursor(CursorType::Handle);
     });
-    rotateCtrl.addEventListener(EventType::MouseDrag, [this, i](Event& e) {
-        auto& event = static_cast<MouseEvent&>(e);
-        auto center = getNodeCenter(&translateCtrl_);
-        auto v1 = Vector{event.worldX, event.worldY} - center;
-        auto v2 = Vector{ event.worldX - event.worldDx , event.worldY - event.worldDy } - center;
-        auto angle = v2.angle(v1);
-        editor_.rotate(angle);
+    rotateCtrl.addEventListener(EventType::MouseDrag, [this, i](Event &e) {
+      auto &event = static_cast<MouseEvent &>(e);
+      auto center = getNodeCenter(&translateCtrl_);
+      auto v1 = Vector{event.worldX, event.worldY} - center;
+      auto v2 =
+          Vector{event.worldX - event.worldDx, event.worldY - event.worldDy} -
+          center;
+      auto angle = v2.angle(v1);
+      editor_.rotate(angle);
     });
   }
 }
