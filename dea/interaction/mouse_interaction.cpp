@@ -17,7 +17,7 @@ namespace dea::interaction {
 
   void MouseInteraction::onMouseMove(event::MouseEvent &event) {
 	auto* node = interSelection_.getHoverNode();
-	if (!node) return;
+	if (!node || node::node_cast<node::PageNode>(node)) return;
     auto *emitter = interaction::node_cast<event::EventEmitter>(node);
     emitter->emit(event);
 	}

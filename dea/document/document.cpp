@@ -88,7 +88,7 @@ bool Document::processNodeChanges(message::Message& message) {
 			using message::NodeType;
 			switch (type) {
 				case NodeType::DOCUMENT:
-					node = buildNode<DocumentNode>();
+					node = buildNode<DocumentNode>(id);
 					break;
 				case NodeType::CANVAS:
 					node = buildNode<PageNode>(id);

@@ -9,9 +9,9 @@
 #include "viewport/viewport.h"
 #include <memory>
 
-#ifdef DEA_EANBLE_RENDER
+//#ifdef DEA_ENABLE_RENDER
 #include "render.h"
-#endif
+//#endif
 
 namespace dea {
 
@@ -19,9 +19,9 @@ class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
   Dezaina()
       : doc_(0), viewport_(), eventSystem_(), interaction_(doc_),
-#ifdef DEA_EANBLE_RENDER
+// #ifdef DEA_ENABLE_RENDER
         render_(doc_, viewport_),
-#endif
+// #endif
         change_() {
     resource::Resource::Init();
     init();
@@ -123,9 +123,9 @@ private:
   Viewport viewport_;
   event::EventSystem eventSystem_;
 
-#ifdef DEA_EANBLE_RENDER
+//#ifdef DEA_ENABLE_RENDER
   render::Render render_;
-#endif
+//#endif
 
   interaction::Interaction interaction_;
   change::Change change_;

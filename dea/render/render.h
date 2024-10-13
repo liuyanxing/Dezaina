@@ -14,7 +14,9 @@ namespace dea::render {
 class Render : public base::NonCopyable {
 public:
 	Render(const document::Document& document, const Viewport& viewPort)
-		: viewport_(viewPort), doc_(document) {};
+		: viewport_(viewPort), doc_(document) {
+		wWidth_ = 100;
+	};
 
 	void render();
 	bool makeSurface();

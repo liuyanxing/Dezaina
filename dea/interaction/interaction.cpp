@@ -95,7 +95,7 @@ void Interaction::onEvent(event::Event &event) {
     return;
   }
 
-  creation_.onEvent(event);
+  // creation_.onEvent(event);
   mouseInter_.onEvent(event);
 
   InteractionListener::onEvent(event);

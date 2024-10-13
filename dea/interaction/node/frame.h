@@ -5,6 +5,11 @@
 
 
 namespace dea::interaction {
-class Frame : public node::FrameNode, public InteractionNode {};
+class Frame : public node::FrameNode, public InteractionNode {
+public:
+	Frame() {
+	}
+	~Frame() = default;
+};
 
 }
