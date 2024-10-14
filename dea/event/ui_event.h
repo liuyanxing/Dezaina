@@ -21,8 +21,8 @@ struct UIEvent : public Event {
   float worldY;
   float worldDx;
   float worldDy;
-  float dragDx;
-  float dragDy;
+  float dragStartX;
+  float dragStartY;
 };
 
 } // namespace event

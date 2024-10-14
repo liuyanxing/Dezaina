@@ -13,7 +13,7 @@ export const nodeBase = [
     "members": [],
     "node": "RectangleNode",
     "nodeType": "RECTANGLE",
-    "alias": [ "ROUNDED_RECTANGLE" ]
+    "alias": [ "ROUNDED_RECTANGLE", "INTER_RECTANGLE" ]
   },
   {
     "name": "LineNodeBase",
@@ -112,6 +112,7 @@ export const nodeBase = [
     "node": "FrameNode",
     "nodedExtends": ["Container"],
     "nodeType": "FRAME",
+    "alias": [ "INTER_FRAME" ]
   },
   {
     "name": "SymbolNodeBase",

@@ -7,7 +7,7 @@
 #include <optional>
 #include <utility>
 
-namespace dea::geometry {
+namespace dea::render {
 	using GeometryType = SkPath;
 
 	class GeometryResourceAttachment : public resource::ResourceAttachment {

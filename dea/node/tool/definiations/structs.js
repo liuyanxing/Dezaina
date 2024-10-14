@@ -31,6 +31,7 @@ export const structs = [
 			}
 		],
 		"methods": [
+			"float lengthSquared() const { return x * x + y * y; }",
 			"float length() const { return sqrt(x * x + y * y); }",
 			"void normalize() { float l = length(); if (l != 0) { x /= l; y /= l; } }",
 			"Vector operator+(const Vector& rhs) const { return Vector(x + rhs.x, y + rhs.y); }",
@@ -117,14 +118,22 @@ export const structs = [
 			}
 		],
 		"methods": [
+			"static Matrix Translate(float x, float y) { return Matrix(1, 0, x, 0, 1, y); }",
+			"static Matrix Translate(const Vector& v) { return Translate(v.x, v.y); }",
+			"static Matrix Scale(float x, float y) { return Matrix(x, 0, 0, 0, y, 0); }",
+			"static Matrix Scale(float s) { return Scale(s, s); }",
+			"static Matrix Rotate(float angle) { float c = cos(angle), s = sin(angle); return Matrix(c, -s, 0, s, c, 0); }",
 			"Matrix operator*(const Matrix& rhs) const;",
 			"Vector operator*(const Vector& rhs) const;",
 			"bool operator==(const Matrix& rhs) const;",
-			"void translate(float x, float y);",
-			"void rotate(float angle);",
+			"Matrix& translate(float x, float y) { return *this = Translate(x, y) * *this; }",
+			"Matrix& rotate(float angle) { return *this = Rotate(angle) * *this; }",
+			"Matrix& preRotate(float angle, Vector center);",
 			"Matrix getInverse(const Matrix& defaultValue = Matrix()) const;",
 			"float getScaleX() const { return m00; }",
+			"float getScaleY() const { return m11; }",
 			"float getRotation() const;",
+			"Vector getTranslation() const { return Vector(m02, m12); }",
 			"Rect mapRect(const Rect& rect) const;",
 			"Vector mapPoint(const Vector& point) const;",
 			"Vector mapVector(const Vector& vector) const;",
@@ -338,7 +347,7 @@ export const structs = [
 			},
 			{
 				"name": "stops",
-				"type": "Array<ColorStop>"
+				"type": "std::vector<ColorStop>"
 			}
 		]
 	},
@@ -382,7 +391,7 @@ export const structs = [
 			},
 			{
 				"name": "position",
-				"type": "string"
+				"type": "std::string"
 			}
 		]
 	},
@@ -392,11 +401,11 @@ export const structs = [
 		"members": [
 			{
 				"name": "key",
-				"type": "string"
+				"type": "std::string"
 			},
 			{
 				"name": "version",
-				"type": "string"
+				"type": "std::string"
 			}
 		]
 	},
@@ -477,7 +486,7 @@ export const structs = [
 		"members": [
 			{
 				"name": "rects",
-				"type": "Array<Rect>"
+				"type": "std::vector<Rect>"
 			}
 		]
 	},
@@ -521,7 +530,7 @@ export const structs = [
 		"members": [
 			{
 				"name": "characters",
-				"type": "string"
+				"type": "std::string"
 			},
 			{
 				"name": "styleOverrideTable",
@@ -533,15 +542,15 @@ export const structs = [
 			},
 			{
 				"name": "baselines",
-				"type": "Array<Baseline>"
+				"type": "std::vector<Baseline>"
 			},
 			{
 				"name": "glyphs",
-				"type": "Array<Glyph>"
+				"type": "std::vector<Glyph>"
 			},
 			{
 				"name": "decorations",
-				"type": "Array<Decoration>"
+				"type": "std::vector<Decoration>"
 			}
 		]
 	},

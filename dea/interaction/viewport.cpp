@@ -19,8 +19,4 @@ void Interaction::onMouseDrag(MouseEvent& event) {
   }
 }
 
-void Interaction::onWindowResize(Event& event) {
-  // desaina_->viewPort.update();
-}
-
 } // namespace interaction

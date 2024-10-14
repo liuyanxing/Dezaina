@@ -1,4 +1,6 @@
 #include "document.h"
+#include "dezaina.h"
+#include "node.h"
 #include "base/data.h"
 #include "node.h"
 #include "resource.h"
@@ -8,20 +10,18 @@ namespace dea::document {
 
 using namespace node;
 
-Document::Document(uint32_t sessionId) : sessionId_(sessionId) {
-  Iter::doc_ = this;
-}
+Document::Document(uint32_t sessionId) : sessionId_(sessionId) {}
 
 void Document::dump() {
-  Iter iter(root_);
-  while (iter.isValid()) {
-    auto *node = iter.get();
-    ++iter;
-  }
+	NodeIter iter(root_);
+	while (iter.isValid()) {
+		auto* node = iter.get();
+		++iter;
+	}
 }
 
-void Document::dump(node::Node *node) const {
-  Iter iter(node);
+void Document::dump(node::Node* node) const {
+  NodeIter iter(node);
   while (iter.isValid()) {
     auto *node = iter.get();
     spdlog::info("{}", getNodeTypeString(node));
@@ -29,17 +29,15 @@ void Document::dump(node::Node *node) const {
   }
 }
 
-bool Document::applyMessage(kiwi::ByteBuffer &buffer,
-                            message::BinarySchema *schema) {
-  message::Message message{};
-  kiwi::MemoryPool pool;
-  bool decode_success = schema ? message.decode(buffer, pool, schema)
-                               : message.decode(buffer, pool);
-  if (!decode_success) {
-    return false;
-  }
-  processMessage(message);
-  return true;
+bool Document::applyMessage(kiwi::ByteBuffer& buffer) {
+	message::Message message{};
+	kiwi::MemoryPool pool;
+	bool decode_success = message.decode(buffer, pool);
+	if (!decode_success) {
+		return false;
+	}
+	applyMessage(message);
+	return true;
 }
 
 bool Document::processBlobMessage(kiwi::Array<message::Blob> &blobs) {
@@ -55,11 +53,11 @@ bool Document::processBlobMessage(kiwi::Array<message::Blob> &blobs) {
   return true;
 }
 
-bool Document::processMessage(message::Message &message) {
-  auto type = message.type();
-  if (type == nullptr) {
-    return false;
-  }
+bool Document::applyMessage(message::Message& message) {
+	auto type = message.type();
+	if (type == nullptr) {
+		return false;
+	}
 
   processBlobMessage(*message.blobs());
 
@@ -77,61 +75,61 @@ bool Document::processMessage(message::Message &message) {
   return true;
 }
 
-bool Document::processNodeChanges(message::Message &message) {
-  using namespace dea::node;
-  auto *node_changs = message.nodeChanges();
-  for (auto &node_change : *node_changs) {
-    GUID id;
-    auto *guid = node_change.guid();
-    id.applyChange(*guid);
-    auto *node = getNodeById(id);
-    bool isNewNode = !node;
-    if (!node) {
-      auto type = *node_change.type();
-      using message::NodeType;
-      switch (type) {
-      case NodeType::DOCUMENT:
-        node = buildNode<DocumentNode>();
-        break;
-      case NodeType::CANVAS:
-        node = buildNode<PageNode>(id);
-        break;
-      case NodeType::FRAME:
-        node = buildNode<FrameNode>(id);
-        break;
-      case NodeType::RECTANGLE:
-      case NodeType::ROUNDED_RECTANGLE:
-        node = buildNode<RectangleNode>(id);
-        break;
-      case NodeType::VECTOR:
-        node = buildNode<VectorNode>(id);
-        break;
-      case NodeType::STAR:
-        node = buildNode<StarNode>(id);
-        break;
-      case NodeType::LINE:
-        node = buildNode<LineNode>(id);
-        break;
-      case NodeType::ELLIPSE:
-        node = buildNode<EllipseNode>(id);
-        break;
-      case NodeType::REGULAR_POLYGON:
-        node = buildNode<PolygonNode>(id);
-        break;
-      case NodeType::TEXT:
-        node = buildNode<TextNode>(id);
-        break;
-      case NodeType::SYMBOL:
-        node = buildNode<SymbolNode>(id);
-        break;
-      case NodeType::INSTANCE:
-        node = buildNode<InstanceNode>(id);
-        break;
-      default:
-        assert(false);
-        break;
-      }
-    }
+bool Document::processNodeChanges(message::Message& message) {
+	using namespace dea::node;
+	auto* node_changs = message.nodeChanges();
+	for (auto& node_change : *node_changs) {
+		GUID id;
+		auto* guid = node_change.guid();
+		id.applyChange(*guid);
+		auto* node = getNodeById(id);
+		bool isNewNode = !node;
+		if (!node) {
+			auto type = *node_change.type();
+			using message::NodeType;
+			switch (type) {
+				case NodeType::DOCUMENT:
+					node = createNode<DocumentNode>(id, false);
+					break;
+				case NodeType::CANVAS:
+					node = createNode<PageNode>(id, false);
+					break;
+				case NodeType::FRAME:
+					node = createNode<FrameNode>(id, false);
+					break;
+				case NodeType::RECTANGLE:
+				case NodeType::ROUNDED_RECTANGLE:
+					node = createNode<RectangleNode>(id, false);
+					break;
+				case NodeType::VECTOR:
+					node = createNode<VectorNode>(id, false);
+					break;
+				case NodeType::STAR:
+					node = createNode<StarNode>(id, false);
+					break;
+				case NodeType::LINE:
+					node = createNode<LineNode>(id, false);
+					break;
+				case NodeType::ELLIPSE:
+					node = createNode<EllipseNode>(id, false);
+					break;
+				case NodeType::REGULAR_POLYGON:
+					node = createNode<PolygonNode>(id, false);
+					break;
+				case NodeType::TEXT:
+					node = createNode<TextNode>(id, false);
+					break;
+				case NodeType::SYMBOL:
+					node = createNode<SymbolNode>(id, false);
+					break;
+				case NodeType::INSTANCE:
+					node = createNode<InstanceNode>(id, false);
+					break;
+				default:
+					assert(false);
+					break;
+			}
+		}
 
     if (node_change.fillGeometry()) {
       for (auto &fillGeometry : *node_change.fillGeometry()) {
@@ -147,11 +145,11 @@ bool Document::processNodeChanges(message::Message &message) {
   return true;
 }
 
-void Document::append(node::Node *child) {
-  if (auto *documentNode = node_cast<DocumentNode *>(child)) {
-    root_ = documentNode;
-    return;
-  }
+void Document::append(node::Node* child) {
+	if (auto* documentNode = node_cast<DocumentNode>(child)) {
+		root_ = documentNode;
+		return;
+	}
 
   auto *parent = getParent(child);
   assert(parent);
@@ -184,7 +182,7 @@ void Document::setCurrentPage(node::PageNode *page) {
   currentPage_ = page;
   event::Event event;
   event.type = event::EventType::PageChange;
-  emit(event);
+	Dezaina::instance().dispatchEvent(event);
 }
 
 node::Node *Document::getNodeById(const node::GUID &id) const {
@@ -202,8 +200,8 @@ void Document::handleViewMatrixChange(const node::Matrix &matrix) {
 }
 
 void Document::loadEmpty() {
-  assert(!root_);
-  root_ = createNode<DocumentNode>(node::GUID{0, 0});
+	assert(!root_);
+	root_ = createNode<DocumentNode>(node::GUID{0, 0}, false);
 
   auto *page = createNode<PageNode>(root_);
   setCurrentPage(page);

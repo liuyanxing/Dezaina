@@ -2,6 +2,10 @@
 
 #include <algorithm>
 #include <type_traits>
+#include <vector>
+#include <variant>
+
+namespace dea::base {
 
 template <typename T1, typename T2, typename... Ts>
 struct max_sizeof_helper {
@@ -26,3 +30,20 @@ struct max_sizeof<T1, T2> {
 
 template <typename T1, typename T2, typename... Ts>
 using max_sizeof_t = typename max_sizeof<T1, T2, Ts...>::type;
+
+template <typename T>
+struct is_string : std::false_type {};
+template <>
+struct is_string<std::string> : std::true_type {};
+
+template <typename T>
+struct is_vector : std::false_type {};
+template <typename T, typename Alloc>
+struct is_vector<std::vector<T, Alloc>> : std::true_type {};
+
+template <typename T>
+struct is_variant : std::false_type {};
+template <typename... Args>
+struct is_variant<std::variant<Args...>> : std::true_type {};
+
+}

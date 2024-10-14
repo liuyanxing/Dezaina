@@ -285,12 +285,8 @@ struct GUID  {
 	}
 
 	void applyChange(const message::GUID& change) {
-		if (change.sessionID() != nullptr) {
-			applyChangeImpl(sessionID, *change.sessionID());
-		}
-		if (change.localID() != nullptr) {
-			applyChangeImpl(localID, *change.localID());
-		}
+		applyChangeImpl(sessionID, *change.sessionID());
+		applyChangeImpl(localID, *change.localID());
 	}
 
 	void toChange(message::GUID& change, kiwi::MemoryPool& pool) const {
@@ -322,6 +318,7 @@ struct Vector  {
 	void setY(const float& v) {
 		y = v;
 	}
+	float lengthSquared() const { return x * x + y * y; }
 	float length() const { return sqrt(x * x + y * y); }
 	void normalize() { float l = length(); if (l != 0) { x /= l; y /= l; } }
 	Vector operator+(const Vector& rhs) const { return Vector(x + rhs.x, y + rhs.y); }
@@ -341,12 +338,8 @@ struct Vector  {
 	float angle(const Vector& rhs) const { return atan2(cross(rhs), dot(rhs)); }
 
 	void applyChange(const message::Vector& change) {
-		if (change.x() != nullptr) {
-			applyChangeImpl(x, *change.x());
-		}
-		if (change.y() != nullptr) {
-			applyChangeImpl(y, *change.y());
-		}
+		applyChangeImpl(x, *change.x());
+		applyChangeImpl(y, *change.y());
 	}
 
 	void toChange(message::Vector& change, kiwi::MemoryPool& pool) const {
@@ -401,18 +394,10 @@ struct Rect  {
 	Rect makeOutset(float dx, float dy);
 
 	void applyChange(const message::Rect& change) {
-		if (change.x() != nullptr) {
-			applyChangeImpl(x, *change.x());
-		}
-		if (change.y() != nullptr) {
-			applyChangeImpl(y, *change.y());
-		}
-		if (change.w() != nullptr) {
-			applyChangeImpl(w, *change.w());
-		}
-		if (change.h() != nullptr) {
-			applyChangeImpl(h, *change.h());
-		}
+		applyChangeImpl(x, *change.x());
+		applyChangeImpl(y, *change.y());
+		applyChangeImpl(w, *change.w());
+		applyChangeImpl(h, *change.h());
 	}
 
 	void toChange(message::Rect& change, kiwi::MemoryPool& pool) const {
@@ -474,14 +459,22 @@ struct Matrix  {
 	void setM12(const float& v) {
 		m12 = v;
 	}
+	static Matrix Translate(float x, float y) { return Matrix(1, 0, x, 0, 1, y); }
+	static Matrix Translate(const Vector& v) { return Translate(v.x, v.y); }
+	static Matrix Scale(float x, float y) { return Matrix(x, 0, 0, 0, y, 0); }
+	static Matrix Scale(float s) { return Scale(s, s); }
+	static Matrix Rotate(float angle) { float c = cos(angle), s = sin(angle); return Matrix(c, -s, 0, s, c, 0); }
 	Matrix operator*(const Matrix& rhs) const;
 	Vector operator*(const Vector& rhs) const;
 	bool operator==(const Matrix& rhs) const;
-	void translate(float x, float y);
-	void rotate(float angle);
+	Matrix& translate(float x, float y) { return *this = Translate(x, y) * *this; }
+	Matrix& rotate(float angle) { return *this = Rotate(angle) * *this; }
+	Matrix& preRotate(float angle, Vector center);
 	Matrix getInverse(const Matrix& defaultValue = Matrix()) const;
 	float getScaleX() const { return m00; }
+	float getScaleY() const { return m11; }
 	float getRotation() const;
+	Vector getTranslation() const { return Vector(m02, m12); }
 	Rect mapRect(const Rect& rect) const;
 	Vector mapPoint(const Vector& point) const;
 	Vector mapVector(const Vector& vector) const;
@@ -492,24 +485,12 @@ struct Matrix  {
 	void preScale(float x, float y, float cx, float cy);
 
 	void applyChange(const message::Matrix& change) {
-		if (change.m00() != nullptr) {
-			applyChangeImpl(m00, *change.m00());
-		}
-		if (change.m01() != nullptr) {
-			applyChangeImpl(m01, *change.m01());
-		}
-		if (change.m02() != nullptr) {
-			applyChangeImpl(m02, *change.m02());
-		}
-		if (change.m10() != nullptr) {
-			applyChangeImpl(m10, *change.m10());
-		}
-		if (change.m11() != nullptr) {
-			applyChangeImpl(m11, *change.m11());
-		}
-		if (change.m12() != nullptr) {
-			applyChangeImpl(m12, *change.m12());
-		}
+		applyChangeImpl(m00, *change.m00());
+		applyChangeImpl(m01, *change.m01());
+		applyChangeImpl(m02, *change.m02());
+		applyChangeImpl(m10, *change.m10());
+		applyChangeImpl(m11, *change.m11());
+		applyChangeImpl(m12, *change.m12());
 	}
 
 	void toChange(message::Matrix& change, kiwi::MemoryPool& pool) const {
@@ -547,12 +528,8 @@ struct Number  {
 	}
 
 	void applyChange(const message::Number& change) {
-		if (change.value() != nullptr) {
-			applyChangeImpl(value, *change.value());
-		}
-		if (change.units() != nullptr) {
-			applyChangeImpl(units, *change.units());
-		}
+		applyChangeImpl(value, *change.value());
+		applyChangeImpl(units, *change.units());
 	}
 
 	void toChange(message::Number& change, kiwi::MemoryPool& pool) const {
@@ -600,18 +577,10 @@ struct Color  {
 	}
 
 	void applyChange(const message::Color& change) {
-		if (change.r() != nullptr) {
-			applyChangeImpl(r, *change.r());
-		}
-		if (change.g() != nullptr) {
-			applyChangeImpl(g, *change.g());
-		}
-		if (change.b() != nullptr) {
-			applyChangeImpl(b, *change.b());
-		}
-		if (change.a() != nullptr) {
-			applyChangeImpl(a, *change.a());
-		}
+		applyChangeImpl(r, *change.r());
+		applyChangeImpl(g, *change.g());
+		applyChangeImpl(b, *change.b());
+		applyChangeImpl(a, *change.a());
 	}
 
 	void toChange(message::Color& change, kiwi::MemoryPool& pool) const {
@@ -640,9 +609,7 @@ struct Effect  {
 	}
 
 	void applyChange(const message::Effect& change) {
-		if (change.type() != nullptr) {
-			applyChangeImpl(type, *change.type());
-		}
+		applyChangeImpl(type, *change.type());
 	}
 
 	void toChange(message::Effect& change, kiwi::MemoryPool& pool) const {
@@ -710,27 +677,13 @@ struct DropShadowEffect  {
 	}
 
 	void applyChange(const message::Effect& change) {
-		if (change.color() != nullptr) {
-			applyChangeImpl(color, *change.color());
-		}
-		if (change.offset() != nullptr) {
-			applyChangeImpl(offset, *change.offset());
-		}
-		if (change.radius() != nullptr) {
-			applyChangeImpl(radius, *change.radius());
-		}
-		if (change.spread() != nullptr) {
-			applyChangeImpl(spread, *change.spread());
-		}
-		if (change.visible() != nullptr) {
-			applyChangeImpl(visible, *change.visible());
-		}
-		if (change.blendMode() != nullptr) {
-			applyChangeImpl(blendMode, *change.blendMode());
-		}
-		if (change.showShadowBehindNode() != nullptr) {
-			applyChangeImpl(showShadowBehindNode, *change.showShadowBehindNode());
-		}
+		applyChangeImpl(color, *change.color());
+		applyChangeImpl(offset, *change.offset());
+		applyChangeImpl(radius, *change.radius());
+		applyChangeImpl(spread, *change.spread());
+		applyChangeImpl(visible, *change.visible());
+		applyChangeImpl(blendMode, *change.blendMode());
+		applyChangeImpl(showShadowBehindNode, *change.showShadowBehindNode());
 	}
 
 	void toChange(message::Effect& change, kiwi::MemoryPool& pool) const {
@@ -797,24 +750,12 @@ struct InnerShadowEffect  {
 	}
 
 	void applyChange(const message::Effect& change) {
-		if (change.color() != nullptr) {
-			applyChangeImpl(color, *change.color());
-		}
-		if (change.offset() != nullptr) {
-			applyChangeImpl(offset, *change.offset());
-		}
-		if (change.radius() != nullptr) {
-			applyChangeImpl(radius, *change.radius());
-		}
-		if (change.spread() != nullptr) {
-			applyChangeImpl(spread, *change.spread());
-		}
-		if (change.visible() != nullptr) {
-			applyChangeImpl(visible, *change.visible());
-		}
-		if (change.blendMode() != nullptr) {
-			applyChangeImpl(blendMode, *change.blendMode());
-		}
+		applyChangeImpl(color, *change.color());
+		applyChangeImpl(offset, *change.offset());
+		applyChangeImpl(radius, *change.radius());
+		applyChangeImpl(spread, *change.spread());
+		applyChangeImpl(visible, *change.visible());
+		applyChangeImpl(blendMode, *change.blendMode());
 	}
 
 	void toChange(message::Effect& change, kiwi::MemoryPool& pool) const {
@@ -852,12 +793,8 @@ struct BlurEffect  {
 	}
 
 	void applyChange(const message::Effect& change) {
-		if (change.radius() != nullptr) {
-			applyChangeImpl(radius, *change.radius());
-		}
-		if (change.visible() != nullptr) {
-			applyChangeImpl(visible, *change.visible());
-		}
+		applyChangeImpl(radius, *change.radius());
+		applyChangeImpl(visible, *change.visible());
 	}
 
 	void toChange(message::Effect& change, kiwi::MemoryPool& pool) const {
@@ -891,12 +828,8 @@ struct ColorStop  {
 	}
 
 	void applyChange(const message::ColorStop& change) {
-		if (change.position() != nullptr) {
-			applyChangeImpl(position, *change.position());
-		}
-		if (change.color() != nullptr) {
-			applyChangeImpl(color, *change.color());
-		}
+		applyChangeImpl(position, *change.position());
+		applyChangeImpl(color, *change.color());
 	}
 
 	void toChange(message::ColorStop& change, kiwi::MemoryPool& pool) const {
@@ -944,18 +877,10 @@ struct Paint  {
 	}
 
 	void applyChange(const message::Paint& change) {
-		if (change.type() != nullptr) {
-			applyChangeImpl(type, *change.type());
-		}
-		if (change.visible() != nullptr) {
-			applyChangeImpl(visible, *change.visible());
-		}
-		if (change.opacity() != nullptr) {
-			applyChangeImpl(opacity, *change.opacity());
-		}
-		if (change.blendMode() != nullptr) {
-			applyChangeImpl(blendMode, *change.blendMode());
-		}
+		applyChangeImpl(type, *change.type());
+		applyChangeImpl(visible, *change.visible());
+		applyChangeImpl(opacity, *change.opacity());
+		applyChangeImpl(blendMode, *change.blendMode());
 	}
 
 	void toChange(message::Paint& change, kiwi::MemoryPool& pool) const {
@@ -984,9 +909,7 @@ struct SolidPaint : public Paint {
 	}
 
 	void applyChange(const message::Paint& change) {
-		if (change.color() != nullptr) {
-			applyChangeImpl(color, *change.color());
-		}
+		applyChangeImpl(color, *change.color());
 	}
 
 	void toChange(message::Paint& change, kiwi::MemoryPool& pool) const {
@@ -1003,7 +926,7 @@ struct SolidPaint : public Paint {
 
 struct GradientPaint : public Paint {
 	Matrix transform{  };
-	Array<ColorStop> stops{  };
+	std::vector<ColorStop> stops{  };
 
 	const Matrix& getTransform() const {
 		return transform;
@@ -1011,20 +934,16 @@ struct GradientPaint : public Paint {
 	void setTransform(const Matrix& v) {
 		transform = v;
 	}
-	const Array<ColorStop>& getStops() const {
+	const std::vector<ColorStop>& getStops() const {
 		return stops;
 	}
-	void setStops(const Array<ColorStop>& v) {
+	void setStops(const std::vector<ColorStop>& v) {
 		stops = v;
 	}
 
 	void applyChange(const message::Paint& change) {
-		if (change.transform() != nullptr) {
-			applyChangeImpl(transform, *change.transform());
-		}
-		if (change.stops() != nullptr) {
-			applyChangeImpl(stops, *change.stops());
-		}
+		applyChangeImpl(transform, *change.transform());
+		applyChangeImpl(stops, *change.stops());
 	}
 
 	void toChange(message::Paint& change, kiwi::MemoryPool& pool) const {
@@ -1058,12 +977,8 @@ struct ImagePaint : public Paint {
 	}
 
 	void applyChange(const message::Paint& change) {
-		if (change.imageScaleMode() != nullptr) {
-			applyChangeImpl(imageScaleMode, *change.imageScaleMode());
-		}
-		if (change.transform() != nullptr) {
-			applyChangeImpl(transform, *change.transform());
-		}
+		applyChangeImpl(imageScaleMode, *change.imageScaleMode());
+		applyChangeImpl(transform, *change.transform());
 	}
 
 	void toChange(message::Paint& change, kiwi::MemoryPool& pool) const {
@@ -1097,12 +1012,8 @@ struct Path  {
 	}
 
 	void applyChange(const message::Path& change) {
-		if (change.windingRule() != nullptr) {
-			applyChangeImpl(windingRule, *change.windingRule());
-		}
-		if (change.commandsBlob() != nullptr) {
-			applyChangeImpl(commandsBlob, *change.commandsBlob());
-		}
+		applyChangeImpl(windingRule, *change.windingRule());
+		applyChangeImpl(commandsBlob, *change.commandsBlob());
 	}
 
 	void toChange(message::Path& change, kiwi::MemoryPool& pool) const {
@@ -1120,7 +1031,7 @@ struct Path  {
 
 struct ParentIndex  {
 	GUID guid{  };
-	string position{  };
+	std::string position{  };
 
 	const GUID& getGuid() const {
 		return guid;
@@ -1128,20 +1039,16 @@ struct ParentIndex  {
 	void setGuid(const GUID& v) {
 		guid = v;
 	}
-	const string& getPosition() const {
+	const std::string& getPosition() const {
 		return position;
 	}
-	void setPosition(const string& v) {
+	void setPosition(const std::string& v) {
 		position = v;
 	}
 
 	void applyChange(const message::ParentIndex& change) {
-		if (change.guid() != nullptr) {
-			applyChangeImpl(guid, *change.guid());
-		}
-		if (change.position() != nullptr) {
-			applyChangeImpl(position, *change.position());
-		}
+		applyChangeImpl(guid, *change.guid());
+		applyChangeImpl(position, *change.position());
 	}
 
 	void toChange(message::ParentIndex& change, kiwi::MemoryPool& pool) const {
@@ -1158,29 +1065,25 @@ struct ParentIndex  {
 };
 
 struct AssetRef  {
-	string key{  };
-	string version{  };
+	std::string key{  };
+	std::string version{  };
 
-	const string& getKey() const {
+	const std::string& getKey() const {
 		return key;
 	}
-	void setKey(const string& v) {
+	void setKey(const std::string& v) {
 		key = v;
 	}
-	const string& getVersion() const {
+	const std::string& getVersion() const {
 		return version;
 	}
-	void setVersion(const string& v) {
+	void setVersion(const std::string& v) {
 		version = v;
 	}
 
 	void applyChange(const message::AssetRef& change) {
-		if (change.key() != nullptr) {
-			applyChangeImpl(key, *change.key());
-		}
-		if (change.version() != nullptr) {
-			applyChangeImpl(version, *change.version());
-		}
+		applyChangeImpl(key, *change.key());
+		applyChangeImpl(version, *change.version());
 	}
 
 	void toChange(message::AssetRef& change, kiwi::MemoryPool& pool) const {
@@ -1214,12 +1117,8 @@ struct StyleId  {
 	}
 
 	void applyChange(const message::StyleId& change) {
-		if (change.guid() != nullptr) {
-			applyChangeImpl(guid, *change.guid());
-		}
-		if (change.assetRef() != nullptr) {
-			applyChangeImpl(assetRef, *change.assetRef());
-		}
+		applyChangeImpl(guid, *change.guid());
+		applyChangeImpl(assetRef, *change.assetRef());
 	}
 
 	void toChange(message::StyleId& change, kiwi::MemoryPool& pool) const {
@@ -1260,15 +1159,9 @@ struct ArcData  {
 	}
 
 	void applyChange(const message::ArcData& change) {
-		if (change.startingAngle() != nullptr) {
-			applyChangeImpl(startingAngle, *change.startingAngle());
-		}
-		if (change.endingAngle() != nullptr) {
-			applyChangeImpl(endingAngle, *change.endingAngle());
-		}
-		if (change.innerRadius() != nullptr) {
-			applyChangeImpl(innerRadius, *change.innerRadius());
-		}
+		applyChangeImpl(startingAngle, *change.startingAngle());
+		applyChangeImpl(endingAngle, *change.endingAngle());
+		applyChangeImpl(innerRadius, *change.innerRadius());
 	}
 
 	void toChange(message::ArcData& change, kiwi::MemoryPool& pool) const {
@@ -1296,9 +1189,7 @@ struct VectorData  {
 	}
 
 	void applyChange(const message::VectorData& change) {
-		if (change.vectorNetworkBlob() != nullptr) {
-			applyChangeImpl(vectorNetworkBlob, *change.vectorNetworkBlob());
-		}
+		applyChangeImpl(vectorNetworkBlob, *change.vectorNetworkBlob());
 	}
 
 	void toChange(message::VectorData& change, kiwi::MemoryPool& pool) const {
@@ -1352,21 +1243,11 @@ struct Glyph  {
 	}
 
 	void applyChange(const message::Glyph& change) {
-		if (change.styleID() != nullptr) {
-			applyChangeImpl(styleID, *change.styleID());
-		}
-		if (change.commandsBlob() != nullptr) {
-			applyChangeImpl(commandsBlob, *change.commandsBlob());
-		}
-		if (change.position() != nullptr) {
-			applyChangeImpl(position, *change.position());
-		}
-		if (change.fontSize() != nullptr) {
-			applyChangeImpl(fontSize, *change.fontSize());
-		}
-		if (change.advance() != nullptr) {
-			applyChangeImpl(advance, *change.advance());
-		}
+		applyChangeImpl(styleID, *change.styleID());
+		applyChangeImpl(commandsBlob, *change.commandsBlob());
+		applyChangeImpl(position, *change.position());
+		applyChangeImpl(fontSize, *change.fontSize());
+		applyChangeImpl(advance, *change.advance());
 	}
 
 	void toChange(message::Glyph& change, kiwi::MemoryPool& pool) const {
@@ -1386,19 +1267,17 @@ struct Glyph  {
 };
 
 struct Decoration  {
-	Array<Rect> rects{  };
+	std::vector<Rect> rects{  };
 
-	const Array<Rect>& getRects() const {
+	const std::vector<Rect>& getRects() const {
 		return rects;
 	}
-	void setRects(const Array<Rect>& v) {
+	void setRects(const std::vector<Rect>& v) {
 		rects = v;
 	}
 
 	void applyChange(const message::Decoration& change) {
-		if (change.rects() != nullptr) {
-			applyChangeImpl(rects, *change.rects());
-		}
+		applyChangeImpl(rects, *change.rects());
 	}
 
 	void toChange(message::Decoration& change, kiwi::MemoryPool& pool) const {
@@ -1466,27 +1345,13 @@ struct Baseline  {
 	}
 
 	void applyChange(const message::Baseline& change) {
-		if (change.position() != nullptr) {
-			applyChangeImpl(position, *change.position());
-		}
-		if (change.width() != nullptr) {
-			applyChangeImpl(width, *change.width());
-		}
-		if (change.lineY() != nullptr) {
-			applyChangeImpl(lineY, *change.lineY());
-		}
-		if (change.lineHeight() != nullptr) {
-			applyChangeImpl(lineHeight, *change.lineHeight());
-		}
-		if (change.lineAscent() != nullptr) {
-			applyChangeImpl(lineAscent, *change.lineAscent());
-		}
-		if (change.firstCharacter() != nullptr) {
-			applyChangeImpl(firstCharacter, *change.firstCharacter());
-		}
-		if (change.endCharacter() != nullptr) {
-			applyChangeImpl(endCharacter, *change.endCharacter());
-		}
+		applyChangeImpl(position, *change.position());
+		applyChangeImpl(width, *change.width());
+		applyChangeImpl(lineY, *change.lineY());
+		applyChangeImpl(lineHeight, *change.lineHeight());
+		applyChangeImpl(lineAscent, *change.lineAscent());
+		applyChangeImpl(firstCharacter, *change.firstCharacter());
+		applyChangeImpl(endCharacter, *change.endCharacter());
 	}
 
 	void toChange(message::Baseline& change, kiwi::MemoryPool& pool) const {
@@ -1508,17 +1373,17 @@ struct Baseline  {
 };
 
 struct TextData  {
-	string characters{  };
+	std::string characters{  };
 	Buffer styleOverrideTable{  };
 	Vector layoutSize{  };
-	Array<Baseline> baselines{  };
-	Array<Glyph> glyphs{  };
-	Array<Decoration> decorations{  };
+	std::vector<Baseline> baselines{  };
+	std::vector<Glyph> glyphs{  };
+	std::vector<Decoration> decorations{  };
 
-	const string& getCharacters() const {
+	const std::string& getCharacters() const {
 		return characters;
 	}
-	void setCharacters(const string& v) {
+	void setCharacters(const std::string& v) {
 		characters = v;
 	}
 	const Buffer& getStyleOverrideTable() const {
@@ -1533,44 +1398,32 @@ struct TextData  {
 	void setLayoutSize(const Vector& v) {
 		layoutSize = v;
 	}
-	const Array<Baseline>& getBaselines() const {
+	const std::vector<Baseline>& getBaselines() const {
 		return baselines;
 	}
-	void setBaselines(const Array<Baseline>& v) {
+	void setBaselines(const std::vector<Baseline>& v) {
 		baselines = v;
 	}
-	const Array<Glyph>& getGlyphs() const {
+	const std::vector<Glyph>& getGlyphs() const {
 		return glyphs;
 	}
-	void setGlyphs(const Array<Glyph>& v) {
+	void setGlyphs(const std::vector<Glyph>& v) {
 		glyphs = v;
 	}
-	const Array<Decoration>& getDecorations() const {
+	const std::vector<Decoration>& getDecorations() const {
 		return decorations;
 	}
-	void setDecorations(const Array<Decoration>& v) {
+	void setDecorations(const std::vector<Decoration>& v) {
 		decorations = v;
 	}
 
 	void applyChange(const message::TextData& change) {
-		if (change.characters() != nullptr) {
-			applyChangeImpl(characters, *change.characters());
-		}
-		if (change.styleOverrideTable() != nullptr) {
-			applyChangeImpl(styleOverrideTable, *change.styleOverrideTable());
-		}
-		if (change.layoutSize() != nullptr) {
-			applyChangeImpl(layoutSize, *change.layoutSize());
-		}
-		if (change.baselines() != nullptr) {
-			applyChangeImpl(baselines, *change.baselines());
-		}
-		if (change.glyphs() != nullptr) {
-			applyChangeImpl(glyphs, *change.glyphs());
-		}
-		if (change.decorations() != nullptr) {
-			applyChangeImpl(decorations, *change.decorations());
-		}
+		applyChangeImpl(characters, *change.characters());
+		applyChangeImpl(styleOverrideTable, *change.styleOverrideTable());
+		applyChangeImpl(layoutSize, *change.layoutSize());
+		applyChangeImpl(baselines, *change.baselines());
+		applyChangeImpl(glyphs, *change.glyphs());
+		applyChangeImpl(decorations, *change.decorations());
 	}
 
 	void toChange(message::TextData& change, kiwi::MemoryPool& pool) const {
@@ -1615,15 +1468,9 @@ struct SymbolData  {
 	}
 
 	void applyChange(const message::SymbolData& change) {
-		if (change.symbolID() != nullptr) {
-			applyChangeImpl(symbolID, *change.symbolID());
-		}
-		if (change.symbolOverrides() != nullptr) {
-			applyChangeImpl(symbolOverrides, *change.symbolOverrides());
-		}
-		if (change.uniformScaleFactor() != nullptr) {
-			applyChangeImpl(uniformScaleFactor, *change.uniformScaleFactor());
-		}
+		applyChangeImpl(symbolID, *change.symbolID());
+		applyChangeImpl(symbolOverrides, *change.symbolOverrides());
+		applyChangeImpl(uniformScaleFactor, *change.uniformScaleFactor());
 	}
 
 	void toChange(message::SymbolData& change, kiwi::MemoryPool& pool) const {
@@ -1645,8 +1492,9 @@ class BaseNodeMixin  {
 private:
 	GUID guid_{};
 	ParentIndex parentIndex_{};
-	string name_{};
+	std::string name_{};
 	NodeType type_{};
+	BaseNodeMixinPointer parent_{};
 	BaseNodeMixinPointer nextSibling_{};
 
 public:
@@ -1663,10 +1511,10 @@ public:
 	void setParentIndex(const ParentIndex& v) {
 		parentIndex_ = v;
 	}
-	const string& getName() const {
+	const std::string& getName() const {
 		return name_;
 	}
-	void setName(const string& v) {
+	void setName(const std::string& v) {
 		name_ = v;
 	}
 	const NodeType& getType() const {
@@ -1674,6 +1522,12 @@ public:
 	}
 	void setType(const NodeType& v) {
 		type_ = v;
+	}
+	const BaseNodeMixinPointer& getParent() const {
+		return parent_;
+	}
+	void setParent(const BaseNodeMixinPointer& v) {
+		parent_ = v;
 	}
 	const BaseNodeMixinPointer& getNextSibling() const {
 		return nextSibling_;
@@ -1697,11 +1551,26 @@ public:
 		}
 	}
 
-	virtual void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+virtual void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_guid, guid_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_parentIndex, parentIndex_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_name, name_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_type, type_, pool);
+	}
+
+virtual void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.guid() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_guid, guid_, pool);
+		}
+		if (change.parentIndex() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_parentIndex, parentIndex_, pool);
+		}
+		if (change.name() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_name, name_, pool);
+		}
+		if (change.type() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_type, type_, pool);
+		}
 	}
 
 };
@@ -1735,9 +1604,18 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_visible, visible_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_locked, locked_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.visible() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_visible, visible_, pool);
+		}
+		if (change.locked() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_locked, locked_, pool);
+		}
 	}
 
 };
@@ -1771,9 +1649,18 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_cornerRadius, cornerRadius_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_cornerSmoothing, cornerSmoothing_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.cornerRadius() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_cornerRadius, cornerRadius_, pool);
+		}
+		if (change.cornerSmoothing() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_cornerSmoothing, cornerSmoothing_, pool);
+		}
 	}
 
 };
@@ -1827,11 +1714,26 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_rectangleTopLeftCornerRadius, rectangleTopLeftCornerRadius_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_rectangleTopRightCornerRadius, rectangleTopRightCornerRadius_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_rectangleBottomLeftCornerRadius, rectangleBottomLeftCornerRadius_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_rectangleBottomRightCornerRadius, rectangleBottomRightCornerRadius_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.rectangleTopLeftCornerRadius() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_rectangleTopLeftCornerRadius, rectangleTopLeftCornerRadius_, pool);
+		}
+		if (change.rectangleTopRightCornerRadius() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_rectangleTopRightCornerRadius, rectangleTopRightCornerRadius_, pool);
+		}
+		if (change.rectangleBottomLeftCornerRadius() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_rectangleBottomLeftCornerRadius, rectangleBottomLeftCornerRadius_, pool);
+		}
+		if (change.rectangleBottomRightCornerRadius() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_rectangleBottomRightCornerRadius, rectangleBottomRightCornerRadius_, pool);
+		}
 	}
 
 };
@@ -1885,31 +1787,46 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_borderTopWeight, borderTopWeight_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_borderBottomWeight, borderBottomWeight_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_borderLeftWeight, borderLeftWeight_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_borderRightWeight, borderRightWeight_, pool);
 	}
 
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.borderTopWeight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_borderTopWeight, borderTopWeight_, pool);
+		}
+		if (change.borderBottomWeight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_borderBottomWeight, borderBottomWeight_, pool);
+		}
+		if (change.borderLeftWeight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_borderLeftWeight, borderLeftWeight_, pool);
+		}
+		if (change.borderRightWeight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_borderRightWeight, borderRightWeight_, pool);
+		}
+	}
+
 };
 
 class MinimalStrokesMixin  {
 private:
-	Array<PaintUnion> strokePaints_{};
+	std::vector<PaintUnion> strokePaints_{};
 	StyleId styleIdForStrokeFill_{};
 	float strokeWeight_{};
 	StrokeJoin strokeJoin_{};
 	StrokeAlign strokeAlign_{};
-	Array<float> dashPattern_{};
-	Array<Path> strokeGeometry_{};
+	std::vector<float> dashPattern_{};
+	std::vector<Path> strokeGeometry_{};
 
 public:
 
-	const Array<PaintUnion>& getStrokePaints() const {
+	const std::vector<PaintUnion>& getStrokePaints() const {
 		return strokePaints_;
 	}
-	void setStrokePaints(const Array<PaintUnion>& v) {
+	void setStrokePaints(const std::vector<PaintUnion>& v) {
 		strokePaints_ = v;
 	}
 	const StyleId& getStyleIdForStrokeFill() const {
@@ -1936,16 +1853,16 @@ public:
 	void setStrokeAlign(const StrokeAlign& v) {
 		strokeAlign_ = v;
 	}
-	const Array<float>& getDashPattern() const {
+	const std::vector<float>& getDashPattern() const {
 		return dashPattern_;
 	}
-	void setDashPattern(const Array<float>& v) {
+	void setDashPattern(const std::vector<float>& v) {
 		dashPattern_ = v;
 	}
-	const Array<Path>& getStrokeGeometry() const {
+	const std::vector<Path>& getStrokeGeometry() const {
 		return strokeGeometry_;
 	}
-	void setStrokeGeometry(const Array<Path>& v) {
+	void setStrokeGeometry(const std::vector<Path>& v) {
 		strokeGeometry_ = v;
 	}
 
@@ -1973,7 +1890,7 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_strokePaints, strokePaints_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_styleIdForStrokeFill, styleIdForStrokeFill_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_strokeWeight, strokeWeight_, pool);
@@ -1983,19 +1900,43 @@ public:
 		toChangeImpl(&change, &message::NodeChange::set_strokeGeometry, strokeGeometry_, pool);
 	}
 
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.strokePaints() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_strokePaints, strokePaints_, pool);
+		}
+		if (change.styleIdForStrokeFill() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_styleIdForStrokeFill, styleIdForStrokeFill_, pool);
+		}
+		if (change.strokeWeight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_strokeWeight, strokeWeight_, pool);
+		}
+		if (change.strokeJoin() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_strokeJoin, strokeJoin_, pool);
+		}
+		if (change.strokeAlign() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_strokeAlign, strokeAlign_, pool);
+		}
+		if (change.dashPattern() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_dashPattern, dashPattern_, pool);
+		}
+		if (change.strokeGeometry() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_strokeGeometry, strokeGeometry_, pool);
+		}
+	}
+
 };
 
 class MinimalFillsMixin  {
 private:
-	Array<PaintUnion> fillPaints_{};
+	std::vector<PaintUnion> fillPaints_{};
 	StyleId styleIdForStrokeFill_{};
 
 public:
 
-	const Array<PaintUnion>& getFillPaints() const {
+	const std::vector<PaintUnion>& getFillPaints() const {
 		return fillPaints_;
 	}
-	void setFillPaints(const Array<PaintUnion>& v) {
+	void setFillPaints(const std::vector<PaintUnion>& v) {
 		fillPaints_ = v;
 	}
 	const StyleId& getStyleIdForStrokeFill() const {
@@ -2014,9 +1955,18 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_fillPaints, fillPaints_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_styleIdForStrokeFill, styleIdForStrokeFill_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.fillPaints() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_fillPaints, fillPaints_, pool);
+		}
+		if (change.styleIdForStrokeFill() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_styleIdForStrokeFill, styleIdForStrokeFill_, pool);
+		}
 	}
 
 };
@@ -2050,9 +2000,18 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_size, size_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_transform, transform_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.size() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_size, size_, pool);
+		}
+		if (change.transform() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_transform, transform_, pool);
+		}
 	}
 
 };
@@ -2086,24 +2045,33 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_horizontalConstraint, horizontalConstraint_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_verticalConstraint, verticalConstraint_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.horizontalConstraint() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_horizontalConstraint, horizontalConstraint_, pool);
+		}
+		if (change.verticalConstraint() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_verticalConstraint, verticalConstraint_, pool);
+		}
 	}
 
 };
 
 class EffectMixin  {
 private:
-	Array<Effect> effects_{};
+	std::vector<Effect> effects_{};
 	StyleId styleIdForEffect_{};
 
 public:
 
-	const Array<Effect>& getEffects() const {
+	const std::vector<Effect>& getEffects() const {
 		return effects_;
 	}
-	void setEffects(const Array<Effect>& v) {
+	void setEffects(const std::vector<Effect>& v) {
 		effects_ = v;
 	}
 	const StyleId& getStyleIdForEffect() const {
@@ -2122,9 +2090,18 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_effects, effects_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_styleIdForEffect, styleIdForEffect_, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.effects() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_effects, effects_, pool);
+		}
+		if (change.styleIdForEffect() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_styleIdForEffect, styleIdForEffect_, pool);
+		}
 	}
 
 };
@@ -2138,7 +2115,10 @@ public:
   void applyChange(const message::NodeChange& change) {
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
 	}
 
 };
@@ -2152,7 +2132,10 @@ public:
   void applyChange(const message::NodeChange& change) {
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
 	}
 
 };
@@ -2226,7 +2209,7 @@ public:
 		}
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_stackMode, stackMode_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_stackWrap, stackWrap_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_stackPaddingRight, stackPaddingRight_, pool);
@@ -2235,13 +2218,34 @@ public:
 		toChangeImpl(&change, &message::NodeChange::set_stackVerticalPadding, stackVerticalPadding_, pool);
 	}
 
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.stackMode() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_stackMode, stackMode_, pool);
+		}
+		if (change.stackWrap() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_stackWrap, stackWrap_, pool);
+		}
+		if (change.stackPaddingRight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_stackPaddingRight, stackPaddingRight_, pool);
+		}
+		if (change.stackPaddingBottom() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_stackPaddingBottom, stackPaddingBottom_, pool);
+		}
+		if (change.stackHorizontalPadding() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_stackHorizontalPadding, stackHorizontalPadding_, pool);
+		}
+		if (change.stackVerticalPadding() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_stackVerticalPadding, stackVerticalPadding_, pool);
+		}
+	}
+
 };
 
 class GeometryMixin : public MinimalStrokesMixin, public MinimalFillsMixin {
 private:
 	StrokeCap strokeCap_{};
 	float miterLimit_{};
-	Array<Path> fillGeometry_{};
+	std::vector<Path> fillGeometry_{};
 
 public:
 
@@ -2257,10 +2261,10 @@ public:
 	void setMiterLimit(const float& v) {
 		miterLimit_ = v;
 	}
-	const Array<Path>& getFillGeometry() const {
+	const std::vector<Path>& getFillGeometry() const {
 		return fillGeometry_;
 	}
-	void setFillGeometry(const Array<Path>& v) {
+	void setFillGeometry(const std::vector<Path>& v) {
 		fillGeometry_ = v;
 	}
 
@@ -2278,12 +2282,26 @@ public:
 		MinimalFillsMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_strokeCap, strokeCap_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_miterLimit, miterLimit_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_fillGeometry, fillGeometry_, pool);
 		MinimalStrokesMixin::toChange(change, pool);
 		MinimalFillsMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.strokeCap() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_strokeCap, strokeCap_, pool);
+		}
+		if (change.miterLimit() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_miterLimit, miterLimit_, pool);
+		}
+		if (change.fillGeometry() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_fillGeometry, fillGeometry_, pool);
+		}
+		MinimalStrokesMixin::takeSnapshot(snapshot, change, pool);
+		MinimalFillsMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2298,8 +2316,12 @@ public:
 		DimensionAndPositionMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DimensionAndPositionMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DimensionAndPositionMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2319,13 +2341,22 @@ public:
 		LayoutMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		BaseNodeMixin::toChange(change, pool);
 		SceneNodeMixin::toChange(change, pool);
 		ExportMixin::toChange(change, pool);
 		BlendMixin::toChange(change, pool);
 		GeometryMixin::toChange(change, pool);
 		LayoutMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		BaseNodeMixin::takeSnapshot(snapshot, change, pool);
+		SceneNodeMixin::takeSnapshot(snapshot, change, pool);
+		ExportMixin::takeSnapshot(snapshot, change, pool);
+		BlendMixin::takeSnapshot(snapshot, change, pool);
+		GeometryMixin::takeSnapshot(snapshot, change, pool);
+		LayoutMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2345,13 +2376,22 @@ public:
 		IndividualStrokesMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DefaultShapeNode::toChange(change, pool);
 		CornerMixin::toChange(change, pool);
 		RectangleCornerMixin::toChange(change, pool);
 		EffectMixin::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
 		IndividualStrokesMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		CornerMixin::takeSnapshot(snapshot, change, pool);
+		RectangleCornerMixin::takeSnapshot(snapshot, change, pool);
+		EffectMixin::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
+		IndividualStrokesMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2366,8 +2406,12 @@ public:
 		BaseFrameMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		BaseFrameMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		BaseFrameMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2412,11 +2456,24 @@ public:
 		DefaultShapeNode::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_styleID, styleID_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_letterSpacing, letterSpacing_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_lineHeight, lineHeight_, pool);
 		DefaultShapeNode::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.styleID() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_styleID, styleID_, pool);
+		}
+		if (change.letterSpacing() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_letterSpacing, letterSpacing_, pool);
+		}
+		if (change.lineHeight() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_lineHeight, lineHeight_, pool);
+		}
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2431,8 +2488,12 @@ public:
 		DefaultShapeNode::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DefaultShapeNode::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2451,12 +2512,20 @@ public:
 		IndividualStrokesMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DefaultShapeNode::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
 		CornerMixin::toChange(change, pool);
 		RectangleCornerMixin::toChange(change, pool);
 		IndividualStrokesMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
+		CornerMixin::takeSnapshot(snapshot, change, pool);
+		RectangleCornerMixin::takeSnapshot(snapshot, change, pool);
+		IndividualStrokesMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2472,9 +2541,14 @@ public:
 		ConstraintMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DefaultShapeNode::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2501,11 +2575,20 @@ public:
 		CornerMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_arcData, arcData_, pool);
 		DefaultShapeNode::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
 		CornerMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.arcData() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_arcData, arcData_, pool);
+		}
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
+		CornerMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2532,11 +2615,20 @@ public:
 		CornerMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_count, count_, pool);
 		DefaultShapeNode::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
 		CornerMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.count() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_count, count_, pool);
+		}
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
+		CornerMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2563,11 +2655,20 @@ public:
 		CornerMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_count, count_, pool);
 		DefaultShapeNode::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
 		CornerMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.count() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_count, count_, pool);
+		}
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
+		CornerMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2594,11 +2695,20 @@ public:
 		CornerMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_vectorData, vectorData_, pool);
 		DefaultShapeNode::toChange(change, pool);
 		ConstraintMixin::toChange(change, pool);
 		CornerMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.vectorData() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_vectorData, vectorData_, pool);
+		}
+		DefaultShapeNode::takeSnapshot(snapshot, change, pool);
+		ConstraintMixin::takeSnapshot(snapshot, change, pool);
+		CornerMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2613,8 +2723,12 @@ public:
 		DefaultFrameMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DefaultFrameMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DefaultFrameMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2629,8 +2743,12 @@ public:
 		DefaultFrameMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		DefaultFrameMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		DefaultFrameMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2665,10 +2783,20 @@ public:
 		DefaultFrameMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_symbolData, symbolData_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_derivedSymbolData, derivedSymbolData_, pool);
 		DefaultFrameMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.symbolData() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_symbolData, symbolData_, pool);
+		}
+		if (change.derivedSymbolData() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_derivedSymbolData, derivedSymbolData_, pool);
+		}
+		DefaultFrameMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2693,9 +2821,16 @@ public:
 		TextNodeMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_textData, textData_, pool);
 		TextNodeMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.textData() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_textData, textData_, pool);
+		}
+		TextNodeMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2740,11 +2875,24 @@ public:
 		BaseNodeMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_backgroundColor, backgroundColor_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_backgroundOpacity, backgroundOpacity_, pool);
 		toChangeImpl(&change, &message::NodeChange::set_backgroundEnabled, backgroundEnabled_, pool);
 		BaseNodeMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		if (change.backgroundColor() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_backgroundColor, backgroundColor_, pool);
+		}
+		if (change.backgroundOpacity() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_backgroundOpacity, backgroundOpacity_, pool);
+		}
+		if (change.backgroundEnabled() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_backgroundEnabled, backgroundEnabled_, pool);
+		}
+		BaseNodeMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };
@@ -2759,8 +2907,12 @@ public:
 		BaseNodeMixin::applyChange(change);
 	}
 
-	void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
+void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		BaseNodeMixin::toChange(change, pool);
+	}
+
+void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
+		BaseNodeMixin::takeSnapshot(snapshot, change, pool);
 	}
 
 };

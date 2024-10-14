@@ -1,19 +1,18 @@
 #pragma once
 
+#include "event.h"
 #include "base/object.h"
 #include "change/change.h"
-#include "event.h"
 #include "interaction.h"
 #include "interaction/interaction.h"
-#include "render.h"
 #include "resource.h"
 #include "viewport/viewport.h"
 #include <memory>
 #include <span>
 
-#ifdef DEA_EANBLE_RENDER
+//#ifdef DEA_ENABLE_RENDER
 #include "render.h"
-#endif
+//#endif
 
 namespace dea {
 
@@ -21,9 +20,9 @@ class Dezaina : public event::EventEmitter, public base::NonCopyable {
 public:
   Dezaina()
       : doc_(0), viewport_(), eventSystem_(), interaction_(doc_),
-#ifdef DEA_EANBLE_RENDER
+// #ifdef DEA_ENABLE_RENDER
         render_(doc_, viewport_),
-#endif
+// #endif
         change_() {
     resource::Resource::Init();
     init();
@@ -107,17 +106,32 @@ public:
                                       newWorldY);
   }
 
+  static void setImmediate(bool immediate) { immediate_ = immediate;}
+  static bool isImmediate() { return immediate_; }
+
+class ImmediateModeScope {
+public:
+  ImmediateModeScope() {
+    Dezaina::setImmediate(true);
+  }
+
+  ~ImmediateModeScope() {
+    Dezaina::setImmediate(false);
+  }
+};
+
 private:
   document::Document doc_;
   Viewport viewport_;
   event::EventSystem eventSystem_;
 
-#ifdef DEA_EANBLE_RENDER
+//#ifdef DEA_ENABLE_RENDER
   render::Render render_;
-#endif
+//#endif
 
   interaction::Interaction interaction_;
   change::Change change_;
+  inline static bool immediate_ = false;
   void init();
 };
 

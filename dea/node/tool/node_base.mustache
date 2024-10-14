@@ -58,9 +58,7 @@ struct {{name}} {{#inherits}}{{.}}{{/inherits}} {
 	void applyChange(const message::{{changeType}}& change) {
 {{#members}}
 {{^skipChange}}
-		if (change.{{name}}() != nullptr) {
-			applyChangeImpl({{name}}, *change.{{name}}());
-		}
+		applyChangeImpl({{name}}, *change.{{name}}());
 {{/skipChange}}
 {{/members}}
 	}
@@ -117,7 +115,7 @@ public:
 {{/extends}}
 	}
 
-	{{#isChangeVirtual}}virtual {{/isChangeVirtual}}void toChange(message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
+{{#isChangeVirtual}}virtual {{/isChangeVirtual}}void toChange(message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
 {{#members}}
 {{^skipChange}}
 		toChangeImpl(&change, &message::{{changeType}}::set_{{name}}, {{name}}_, pool);
@@ -125,6 +123,19 @@ public:
 {{/members}}
 {{#extends}}
 		{{.}}::toChange(change, pool);
+{{/extends}}
+	}
+
+{{#isChangeVirtual}}virtual {{/isChangeVirtual}}void takeSnapshot(message::{{changeType}}& snapshot, message::{{changeType}}& change, kiwi::MemoryPool& pool) const {
+{{#members}}
+{{^skipChange}}
+		if (change.{{name}}() != nullptr) {
+			toChangeImpl(&snapshot, &message::{{changeType}}::set_{{name}}, {{name}}_, pool);
+		}
+{{/skipChange}}
+{{/members}}
+{{#extends}}
+		{{.}}::takeSnapshot(snapshot, change, pool);
 {{/extends}}
 	}
 

@@ -1,18 +1,14 @@
 #pragma once
 
 #include "base/object.h"
+#include "change/command.h"
 #include "node.h"
 #include "schema/message.h"
-#include "undoRedo.h"
 #include <variant>
 #include <vector>
+#include "primitives.h"
 
 namespace dea::change {
-
-enum class ChangeType {
-  Select,
-  NodeChange,
-};
 
 using ChangeValue = std::variant<message::NodeChange *, node::NodeIdArray>;
 
@@ -23,22 +19,27 @@ struct ChangeItem {
 
 class Change : public base::NonCopyable {
 public:
-  bool addNodeChange(node::Node *node) {
-    if (changeMap_.find(node) == changeMap_.end()) {
+  void addNodeChange(node::Node *node) {
+    if (nodeChanges_.find(node) == nodeChanges_.end()) {
       auto *nodeChange = pool_.allocate<message::NodeChange>();
       nodeChange->set_guid(node->getGuid().toChange(pool_));
-      changeMap_[node] = nodeChange;
-      return true;
+      nodeChanges_[node] = nodeChange;
     }
-    return false;
   }
 
   auto *getNodeChange(node::Node *node) {
-    auto it = changeMap_.find(node);
-    if (it != changeMap_.end()) {
+    auto it = nodeChanges_.find(node);
+    if (it != nodeChanges_.end()) {
       return it->second;
     }
     return static_cast<message::NodeChange *>(nullptr);
+  }
+
+  auto* getOrAddNodeChange(node::Node *node) {
+    if (!getNodeChange(node)) {
+      addNodeChange(node);
+    }
+    return getNodeChange(node);
   }
 
   void addChange(ChangeType type, ChangeValue &&value);
@@ -46,15 +47,20 @@ public:
   void clear() {
     items_.clear();
     pool_.clear();
-    changeMap_.clear();
+    nodeChanges_.clear();
   }
   void flush();
 
+  void undo() { cmdManager_.undo(); }
+  void redo() { cmdManager_.redo(); }
+
+  message::Message saveBeforeChange();
+
 private:
   std::vector<ChangeItem> items_;
-  UndoRedo<ChangeItem> undoRedo_;
   kiwi::MemoryPool pool_;
-  std::unordered_map<node::Node *, message::NodeChange *> changeMap_{};
+  NodeChanges nodeChanges_{};
+  CommandManager cmdManager_;
 };
 
 } // namespace dea::change

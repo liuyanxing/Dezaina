@@ -1,19 +1,22 @@
 #pragma once
 
-
-#include "document.h"
+#include "event.h"
+#include "base/type.h"
 
 namespace dea::interaction {
 
-class InteractionNode {
+class InteractionNode : public event::EventEmitter  {
 public:
-  void setParent(node::Node* parent) {
-    parent_ = parent;
-  }
-  node::Node* getParent() { return parent_; }
-  
+  void setDirection(base::v2<float> direction) {
+		direction_ = direction;
+	}
+
+	base::v2<float> getDirection() const {
+		return direction_;
+	}
+
 private:
-  node::Node* parent_ = nullptr;
+  base::v2<float> direction_{1, 1};
 };
 
 }

@@ -5,36 +5,82 @@
 #include "document/document.h"
 #include "node/container.h"
 #include "node/node_base.generated.h"
+#include <array>
 
 namespace dea::layout {
 
 using namespace document;
 using namespace node;
 
+static std::array<float, 2> layoutImpl(float pos, float size, float parentSize,
+                                       float parentNewSize,
+                                       ConstraintType constraint) {
+  float newPos = pos;
+  float newSize = size;
+  if (constraint == ConstraintType::MAX) {
+    newPos = pos + (parentNewSize - parentSize);
+  } else if (constraint == ConstraintType::CENTER) {
+    newPos = ((pos + size / 2) / parentSize) * parentNewSize - size / 2;
+  } else if (constraint == ConstraintType::STRETCH) {
+    newSize = parentNewSize - (parentSize - size);
+  } else if (constraint == ConstraintType::SCALE) {
+    newSize = size * parentNewSize / parentSize;
+    newPos = ((pos + size / 2) / parentSize) * parentNewSize - newSize / 2;
+  }
+  return {newPos, newSize};
+}
+
 void ContraintLayout::add(const document::EditRecordItem *record) {
   items_.push_back(record);
 }
 
-void ContraintLayout::layoutCild(node::Node *node, node::Vector oldSize,
+void ContraintLayout::layoutCild(node::Node *node, node::Vector newSize,
                                  change::Change *change) {
-  // Document::Iter iter(node);
-  // ++iter;
-  // iter.skipChild();
-  // while (iter.isValid()) {
-  //   auto *child = iter.get();
-  //   auto *shape = node_cast<DefaultShapeNode *>(child);
-  //
-  //   auto *childChange = nodeChange->getChange(child);
-  //   auto transform = shape->getTransform();
-  //   auto anchorPoint = transform * (child->getAnchor() * shape->getSize());
-  //   auto newAnchorPoint = transform * (child->getAnchor() * size);
-  //   auto diff = newAnchorPoint - anchorPoint;
-  //   transform.translate(diff.x, diff.y);
-  //   childChange->set_transform(transform.toChange(pool));
-  //   ++iter;
-  //   auto constraint = node_cast<ConstraintMixin>(child);
-  //   switch (constraint.getHorizontalConstraint()) {}
-  // }
+  auto *parentShape = node_cast<DefaultShapeNode>(node);
+  if (!parentShape) {
+    return;
+  }
+  auto parentSize = parentShape->getSize();
+  node::NodeIter iter(node);
+  ++iter;
+  iter.skipChild();
+  while (iter.isValid()) {
+    auto *child = iter.get();
+    auto *shape = node_cast<DefaultShapeNode>(child);
+    auto *constraint = node_cast<ConstraintMixin>(child);
+    if (!child || !constraint) {
+      ++iter;
+      continue;
+    }
+
+    auto hConstraint = constraint->getHorizontalConstraint();
+    auto vConstraint = constraint->getVerticalConstraint();
+    auto transform = shape->getTransform();
+    auto size = shape->getSize();
+    // todo: pos is not correct, should consider the rotation
+    auto pos = transform.getTranslation();
+
+    auto [newX, newWidth] =
+        layoutImpl(pos.x, size.x, parentSize.x, newSize.x, hConstraint);
+    auto [newY, newHeight] =
+        layoutImpl(pos.y, size.y, parentSize.y, newSize.y, vConstraint);
+
+    if (node::Vector(newX, newY) != pos) {
+      auto *nodeChange = change ? change->getOrAddNodeChange(child) : nullptr;
+      transform.setTranslate(newX, newY);
+      nodeChange
+          ? nodeChange->set_transform(transform.toChange(change->getPool()))
+          : shape->setTransform(transform);
+    }
+
+    if (node::Vector(newWidth, newHeight) != size) {
+      auto *nodeChange = change ? change->getOrAddNodeChange(child) : nullptr;
+      auto newSize = node::Vector(newWidth, newHeight);
+      nodeChange ? nodeChange->set_size(newSize.toChange(change->getPool()))
+                 : shape->setSize(newSize);
+    }
+    ++iter;
+  }
 }
 
 void ContraintLayout::layout(change::Change &change) {
@@ -45,14 +91,14 @@ void ContraintLayout::layout(change::Change &change) {
     if (!node) {
       continue;
     }
-    auto *shape = node_cast<DefaultShapeNode *>(node);
-    auto oldSize = shape->getSize();
+    auto *shape = node_cast<DefaultShapeNode>(node);
     auto *nodeChange = change.getNodeChange(node);
 
     switch (item->type) {
     case RecordType::kSetSize: {
       auto &[size, direction] = std::get<SetSizeValue>(item->value);
       nodeChange->set_size(size.toChange(pool));
+      invalidatePath(nodeChange, pool);
 
       node::Vector achor{0, 0};
       if (direction.x < 0) {
@@ -63,13 +109,12 @@ void ContraintLayout::layout(change::Change &change) {
       }
 
       auto transform = shape->getTransform();
-      auto anchorPonit = transform * (achor * shape->getSize());
-      auto newAnchorPonit = transform * (achor * size);
-      auto diff = newAnchorPonit - anchorPonit;
+      auto diff =
+          transform * (achor * size) - transform * (achor * shape->getSize());
       transform.translate(-diff.x, -diff.y);
       nodeChange->set_transform(transform.toChange(pool));
-      if (node_cast<Container *>(node)) {
-        layoutCild(node, oldSize, &change);
+      if (node_cast<Container>(node)) {
+        layoutCild(node, size, &change);
       }
       break;
     }

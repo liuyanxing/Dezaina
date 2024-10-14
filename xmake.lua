@@ -30,8 +30,8 @@ includes("dea")
 
 includes("test")
 
--- if has_config("app") then
--- 	includes("app/native")
--- end
+if has_config("app") then
+	includes("app/native")
+end
 
 includes("app/helloworld")

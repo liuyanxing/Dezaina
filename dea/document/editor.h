@@ -12,6 +12,7 @@ namespace dea::document {
 enum class RecordType {
   kCreate,
   kSelection,
+  FillPaint,
   kLayoutRelation,
   kSetParent = kLayoutRelation,
   kTransform,
@@ -20,10 +21,11 @@ enum class RecordType {
 
 using SetSizeValue = std::array<node::Vector, 2>;
 using CreateNodeValue = std::tuple<node::NodeType, node::Node *>;
+using PaintsValue = std::vector<node::PaintUnion>;
 using RecordValue =
     std::variant<float, node::Matrix, node::Node *, std::array<float, 2>,
                  std::array<float, 4>, SetSizeValue, node::NodeIdArray,
-                 CreateNodeValue>;
+                 CreateNodeValue, PaintsValue>;
 
 struct EditRecordItem {
   EditRecordItem(const node::GUID &nodeId, RecordType type,
@@ -51,12 +53,13 @@ public:
   Editor &createAndSelect(node::NodeType type, node::Node *parent);
   void setEditNodes(node::NodeArary &&nodes) { nodes_ = move(nodes); };
   Editor &rotate(float degrees);
-  Editor &translate(float x, float y);
+  Editor &translate(node::Vector translation);
   Editor &resize(float width, float height, const node::Vector &direction);
-  Editor &setTranslate(float x, float y);
-  Editor &setSize(float width, float height,
-                  const node::Vector &direction = {1, 1});
+  Editor &setTranslate(node::Vector translation);
+  Editor &setSize(node::Vector size, const node::Vector &direction = {1, 1});
   Editor &setTransform(const node::Matrix &transform);
+
+  Editor &appendSolidPaint(node::Color color);
 
   Editor &select(const node::NodeIdArray &selection) {
     addRecord(RecordType::kSelection, selection);
@@ -68,10 +71,17 @@ public:
   static const auto &getRecords() { return records_; }
   ~Editor() = default;
 
+  class ScopeLock {
+  public:
+    ScopeLock() { locked_ = true; }
+    ~ScopeLock() { locked_ = false; }
+  };
+
 private:
   std::vector<node::Node *> nodes_;
   inline static std::vector<EditRecordItem> records_;
   inline static bool immediate_ = false;
+  inline static bool locked_ = false;
 
   void editNodes(std::function<void(node::Node *)>);
   void addRecord(const node::GUID &layerId, const RecordType &type,

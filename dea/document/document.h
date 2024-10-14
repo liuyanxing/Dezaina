@@ -25,16 +25,18 @@ public:
     return buildNode<T>(node::GUID{sessionId_, localId_++});
   };
 
-  template <typename T> T *createNode(const node::GUID &id) {
-    auto *node = buildNode<T>(id);
-    if (!node::node_cast<node::DocumentNode *>(node)) {
+  template <typename T> T *createNode(const node::GUID &id, bool sync = true) {
+    auto *node = new T();
+    node->setGuid(id);
+    nodeMap_[id] = node;
+    if (sync) {
       editor_.create(node);
     }
     return node;
   };
 
-  template <typename T> T *createNode() {
-    return createNode<T>(node::GUID{sessionId_, localId_++});
+  template <typename T> T *createNode(bool sync = true) {
+    return createNode<T>(node::GUID{sessionId_, localId_++}, sync);
   };
 
   template <typename T> T *createNode(node::NodePtr parent) {
@@ -52,10 +54,6 @@ public:
     return res;
   }
 
-  bool load(kiwi::ByteBuffer &buffer, message::BinarySchema &schema) {
-    return applyMessage(buffer);
-  };
-
   void loadEmpty();
 
   void unload() {}
@@ -72,7 +70,7 @@ public:
   auto *currentPage() const { return currentPage_; }
   node::DocumentNode *getRoot() { return root_; }
   node::Node *getParent(node::Node *node) {
-    if (node::node_cast<node::DocumentNode *>(node)) {
+    if (node::node_cast<node::DocumentNode>(node)) {
       return nullptr;
     }
     return getNodeById(node->getParentIndex().guid);
@@ -87,18 +85,17 @@ public:
 
   auto &editor() { return editor_; }
 
-  bool applyMessage(kiwi::ByteBuffer &buffer,
-                    message::BinarySchema *schema = nullptr);
-  bool processMessage(message::Message &message);
+  bool applyMessage(kiwi::ByteBuffer &buffer);
+  bool applyMessage(message::Message &message);
   bool processBlobMessage(kiwi::Array<message::Blob> &blobs);
   bool processNodeChanges(message::Message &message);
 
   auto &getSelection() { return currentPage_->getSelection(); }
-  void setSelection(std::vector<node::GUID> &&ids) {
+  void setSelection(const std::vector<node::GUID> &ids) {
     node::NodeArary nodes;
     nodes.reserve(ids.size());
 
-    currentPage_->setSelection(std::move(ids));
+    currentPage_->setSelection(ids);
     for (auto id : currentPage_->getSelection()) {
       if (auto *node = getNodeById(id)) {
         nodes.push_back(node);
@@ -109,23 +106,6 @@ public:
 
   void dump();
   void dump(node::Node *node) const;
-
-  class Iter : public node::NodeIter {
-  public:
-    Iter(node::Node *node)
-        : node::NodeIter(node, [this](node::Node *node) {
-            return doc_->getParent(node);
-          }) {}
-    static inline Document *doc_ = nullptr;
-  };
-
-  class IterWithWorldMatrix : public node::NodeIterWithWorldMatrix {
-  public:
-    IterWithWorldMatrix(node::Node *node)
-        : node::NodeIterWithWorldMatrix(node, [](node::Node *node) {
-            return Iter::doc_->getParent(node);
-          }) {}
-  };
 
 private:
   NodeMap nodeMap_{100};

@@ -27,6 +27,15 @@ public:
 		other.attachment_ = nullptr;
 	}
 
+	template<typename T>
+	T* as() {
+		return type_ == T::Type ? static_cast<T*>(this) : nullptr;
+	}
+	template<typename T>
+	const T* as() const {
+		type_ == T::Type ? static_cast<const T*>(this) : nullptr;
+	}
+
 	ResourceId id() const { return id_; }
   ResourceType type() const { return type_; }
 

@@ -70,7 +70,7 @@ namespace dea::render {
   }
 
   void Render::renderDocument() {
-    document::Document::IterWithWorldMatrix iter{doc_.currentPage()};
+    node::NodeIterWithWorldMatrix iter{doc_.currentPage()};
     render(iter, false);
   }
 
@@ -80,7 +80,7 @@ namespace dea::render {
       return;
     }
 
-    interaction::IterWithWorldMatrix iter{interaction.root()};
+    node::NodeIterWithWorldMatrix iter{interaction.root()};
     render(iter, true);
   }
 
@@ -103,9 +103,9 @@ namespace dea::render {
   }
 
 	void Render::renderNode(node::Node* node, bool isInterNode) {
-    auto* shapeNode = node_cast<node::DefaultShapeNode*>(node);
+    auto* shapeNode = node_cast<node::DefaultShapeNode>(node);
     if (!shapeNode) {
-      if (auto* page = node::node_cast<node::PageNode*>(node)) {
+      if (auto* page = node::node_cast<node::PageNode>(node)) {
         auto color = toSkColor(page->getBackgroundColor()); 
         canvas_->drawColor(color);
       }
@@ -116,18 +116,18 @@ namespace dea::render {
 
     auto& fillPaints = buildFillPaintDrawers(node);
     if (!fillPaints.empty()) {
-      auto fill = isInterNode ? geometry::buildFill(node) :	geometry::getOrBuildFill(node);
+      auto fill = isInterNode ? render::buildFill(node) : render::getOrBuildFill(node);
       renderGeometry(fill, fillPaints);
     };
 
     auto& strokePaints = buildStrokePaintDrawers(node);
     if (!strokePaints.empty()) {
-      auto stroke = isInterNode ? geometry::buildStroke(node) : geometry::getOrBuildStroke(node);
+      auto stroke = isInterNode ? render::buildStroke(node) : render::getOrBuildStroke(node);
       renderGeometry(stroke, strokePaints);
     }
 	}
 
-  void Render::renderGeometry(const geometry::GeometryType& geometry, const PaintDrawers& drawers) {
+  void Render::renderGeometry(const render::GeometryType& geometry, const PaintDrawers& drawers) {
     SkAutoCanvasRestore acr(canvas_, true); 
     canvas_->clipPath(geometry, true);
     for (auto& drawer : drawers) {

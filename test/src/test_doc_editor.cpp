@@ -12,7 +12,7 @@ using namespace dea::event;
 auto& deza = dea::Dezaina::instance();
 auto& doc = deza.document();
 auto& editor = doc.editor();
-auto& interaction = deza.interaction();
+auto& inter = deza.interaction();
 
 const uint32_t width = 1280;
 const uint32_t height = 720;
@@ -34,13 +34,13 @@ TEST(DocEditor, Selection) {
 
 TEST(DocEditor, Resize) {
 		editor.resize(200, 200, {0, 0});
-		auto* rect = node_cast<RectangleNode*>(doc.currentPage()->firstChild());
+		auto* rect = node_cast<RectangleNode>(doc.currentPage()->firstChild());
 		// EXPECT_TRUE(rect->getSize() == Vector{200, 200});
 }
 
 TEST(DocEditor, Translate) {
-		editor.setTranslate(10, 10);
-		auto* rect = node_cast<RectangleNode*>(doc.currentPage()->firstChild());
+		editor.setTranslate({10, 10});
+		auto* rect = node_cast<RectangleNode>(doc.currentPage()->firstChild());
 		EXPECT_TRUE(rect->getTransform().m02 == 10);
 		EXPECT_TRUE(rect->getTransform().m12 == 10);
 }
