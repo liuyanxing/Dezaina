@@ -1,9 +1,10 @@
 add_requires("libsdl")
 add_requires("imgui v1.89.4", { configs = { sdl2 = true, opengl3 = true } })
+add_requires("zlib", "minizip")
 
 target("app")
 set_kind("binary")
 add_files("src/*.cpp")
-add_deps("dea", "loader")
-add_packages("libsdl", "imgui")
+add_deps("dea")
+add_packages("libsdl", "imgui", "zlib", "minizip")
 set_rundir("$(projectdir)")

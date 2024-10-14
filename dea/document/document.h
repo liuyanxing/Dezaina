@@ -45,9 +45,8 @@ public:
     return node;
   };
 
-  bool load(char *data, size_t size) {
-    kiwi::ByteBuffer buffer(reinterpret_cast<uint8_t *>(data), size);
-    auto res = applyMessage(buffer);
+  bool load(kiwi::ByteBuffer& buffer, const message::BinarySchema* schema = nullptr) {
+    auto res = applyMessage(buffer, schema);
     if (!root_->empty()) {
       setCurrentPage(static_cast<node::PageNode *>(root_->firstChild()));
     }
@@ -85,7 +84,7 @@ public:
 
   auto &editor() { return editor_; }
 
-  bool applyMessage(kiwi::ByteBuffer &buffer);
+  bool applyMessage(kiwi::ByteBuffer &buffer,  const message::BinarySchema* schema = nullptr);
   bool applyMessage(message::Message &message);
   bool processBlobMessage(kiwi::Array<message::Blob> &blobs);
   bool processNodeChanges(message::Message &message);

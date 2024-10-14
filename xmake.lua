@@ -25,13 +25,10 @@ set_showmenu(true)
 set_description("Build app")
 option_end()
 
-includes("loader")
 includes("dea")
 
 includes("test")
 
-if has_config("app") then
-	includes("app/native")
-end
+includes("app/native")
 
-includes("app/helloworld")
+-- includes("app/helloworld")

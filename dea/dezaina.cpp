@@ -62,7 +62,7 @@ bool Dezaina::loadFig(std::span<char> data) {
   auto fig = kiwi::ByteBuffer(cusor + 4, figSize);
   message::BinarySchema binarySchema;
   binarySchema.parse(schema);
-  doc_.load(fig, binarySchema);
+  doc_.load(fig, &binarySchema);
   return true;
 }
 

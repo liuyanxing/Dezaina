@@ -29,10 +29,10 @@ void Document::dump(node::Node* node) const {
   }
 }
 
-bool Document::applyMessage(kiwi::ByteBuffer& buffer) {
+bool Document::applyMessage(kiwi::ByteBuffer& buffer, const message::BinarySchema* schema) {
 	message::Message message{};
 	kiwi::MemoryPool pool;
-	bool decode_success = message.decode(buffer, pool);
+	bool decode_success = message.decode(buffer, pool, schema);
 	if (!decode_success) {
 		return false;
 	}
