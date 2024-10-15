@@ -30,6 +30,11 @@ public:
   Loader() = default;
   ~Loader() = default;
 
+  static Loader &getInstance() {
+    static Loader instance;
+    return instance;
+  }
+
   bool loadFig(const std::string &filename);
   std::span<char> getFig() const;
 

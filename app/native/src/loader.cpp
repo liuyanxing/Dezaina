@@ -94,10 +94,8 @@ bool extractAllFiles(const std::string &zipFilePath, Loader &loader) {
   return true;
 }
 
-bool Loader::loadFig(const std::string &filename) {
-  std::filesystem::path fig_dir =
-      std::filesystem::current_path() / "figs" / filename;
-  return extractAllFiles(fig_dir.string(), *this);
+bool Loader::loadFig(const std::string &filePath) {
+  return extractAllFiles(filePath, *this);
 }
 
 std::span<char> Loader::getFig() const {

@@ -56,12 +56,18 @@ bool Dezaina::loadFig(std::span<char> data) {
   auto *cusor = reinterpret_cast<const uint8_t *>(data.data());
   cusor += 12;
   auto schemaSize = *reinterpret_cast<const uint32_t *>(cusor);
-  auto schema = kiwi::ByteBuffer(cusor + 4, schemaSize);
-  cusor += 4 + schemaSize;
+  cusor += 4;
+  auto schema = kiwi::ByteBuffer(cusor, schemaSize);
+  message::BinarySchema binarySchema;
+  if (!binarySchema.parse(schema)) {
+      assert(false);
+      return false;
+  }
+
+  cusor += schemaSize;
   auto figSize = *reinterpret_cast<const uint32_t *>(cusor);
   auto fig = kiwi::ByteBuffer(cusor + 4, figSize);
-  message::BinarySchema binarySchema;
-  binarySchema.parse(schema);
+
   doc_.load(fig, &binarySchema);
   return true;
 }
