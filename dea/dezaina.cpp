@@ -1,5 +1,7 @@
 #include "dezaina.h"
 #include "schema/message.h"
+#include "utility/zip.h"
+#include <vector>
 
 namespace dea {
 
@@ -52,23 +54,38 @@ void Dezaina::dispatchEvent(event::Event &event) {
   eventSystem_.dispatchEvent(event);
 }
 
+static std::vector<unsigned char> decompressBuffer(std::span<char> compressedData) {
+  std::vector<unsigned char> decompressedData;
+  if (!utility::decompressZlib(compressedData, decompressedData) &&
+      !utility::decompressZSTD(compressedData, decompressedData)) {
+        assert(false);
+        return {};
+  }
+  return decompressedData;
+} 
+
 bool Dezaina::loadFig(std::span<char> data) {
-  auto *cusor = reinterpret_cast<const uint8_t *>(data.data());
+  auto *cusor = reinterpret_cast<uint8_t *>(data.data());
   cusor += 12;
-  auto schemaSize = *reinterpret_cast<const uint32_t *>(cusor);
+
+  auto schemaSize = *reinterpret_cast<uint32_t *>(cusor);
   cusor += 4;
-  auto schema = kiwi::ByteBuffer(cusor, schemaSize);
+  auto schema = decompressBuffer({reinterpret_cast<char*>(cusor), schemaSize});
   message::BinarySchema binarySchema;
-  if (!binarySchema.parse(schema)) {
+  kiwi::ByteBuffer schemaBuffer(schema.data(), schema.size());
+  if (!binarySchema.parse(schemaBuffer)) {
       assert(false);
       return false;
   }
 
   cusor += schemaSize;
-  auto figSize = *reinterpret_cast<const uint32_t *>(cusor);
-  auto fig = kiwi::ByteBuffer(cusor + 4, figSize);
+  auto figSize = *reinterpret_cast<uint32_t *>(cusor);
+  cusor += 4;
+  auto offset = cusor - reinterpret_cast<uint8_t*>(data.data());
+  auto fig = decompressBuffer({reinterpret_cast<char*>(cusor), figSize});
+  auto figBuffer = kiwi::ByteBuffer(fig.data(), fig.size());
 
-  doc_.load(fig, &binarySchema);
+  doc_.load(figBuffer, &binarySchema);
   return true;
 }
 

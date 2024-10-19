@@ -5,7 +5,7 @@ includes("xmake/package.lua")
 set_languages("cxx20")
 
 target("dea")
-		add_packages("nlohmann_json", "spdlog", {public = true})
+		add_packages("nlohmann_json", "spdlog", "zlib", "minizip", "zstd", {public = true})
     -- add_deps("genNode")
 
     -- make as a static/shared library
