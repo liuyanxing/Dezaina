@@ -1,12 +1,11 @@
 add_requires("libsdl")
 add_requires("imgui v1.89.4", { configs = { sdl2 = true, opengl3 = true } })
-add_requires("zlib", "minizip")
 
 target("app")
 	set_kind("binary")
 	add_files("src/*.cpp")
 	add_deps("dea")
-	add_packages("libsdl", "imgui", "zlib", "minizip")
+	add_packages("libsdl", "imgui")
 	set_rundir("$(projectdir)")
 	if is_plat("windows") then
 			add_syslinks("gdi32", "user32", "opengl32")

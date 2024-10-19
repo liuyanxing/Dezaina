@@ -29,6 +29,13 @@ namespace message {
 
 	const messagePath = "./dea/schema/message.h";
 	fs.writeFileSync(messagePath, cppCode);
+
+	cursor += schemaLength;
+	const canvasLength = new DataView(fig.buffer).getUint32(cursor, true);
+	cursor += 4;
+	const canvasZip = fig.slice(cursor, cursor + canvasLength);
+	const canvasBuffer = pako.inflateRaw(canvasZip);
+
 }
 
 main();
