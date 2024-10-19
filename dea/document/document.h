@@ -45,7 +45,7 @@ public:
     return node;
   };
 
-  bool load(kiwi::ByteBuffer& buffer, const message::BinarySchema* schema = nullptr) {
+  bool load(kiwi::ByteBuffer& buffer, message::BinarySchema* schema = nullptr) {
     auto res = applyMessage(buffer, schema);
     if (!root_->empty()) {
       setCurrentPage(static_cast<node::PageNode *>(root_->firstChild()));

@@ -102,7 +102,7 @@ void NodeChangesCommand::takeRedoSnapShot() {
 }
 
 void NodeChangesCommand::execute() {
-	// Dezaina::instance().document().applyMessage(*redoMessage_);
+	Dezaina::instance().document().processMessage(*redoMessage_);
 	redoMessage_ = nullptr;
 }
 
@@ -111,7 +111,7 @@ void NodeChangesCommand::redo() {
 	message::Message message;
 	kiwi::MemoryPool pool;
 	message.decode(buffer, pool);
-	// Dezaina::instance().document().applyMessage(message);
+	Dezaina::instance().document().processMessage(message);
 }
 
 void NodeChangesCommand::undo() {
@@ -119,7 +119,7 @@ void NodeChangesCommand::undo() {
 	message::Message message;
 	kiwi::MemoryPool pool;
 	message.decode(buffer, pool);
-	// Dezaina::instance().document().applyMessage(message);
+	Dezaina::instance().document().processMessage(message);
 }
 
 }
