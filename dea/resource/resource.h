@@ -37,15 +37,17 @@ public:
 	}
 
 	ResourceId id() const { return id_; }
-  ResourceType type() const { return type_; }
+	ResourceType type() const { return type_; }
 
-	void setAttachment(std::unique_ptr<ResourceAttachment> attachment) { attachment_ = std::move(attachment); }
+	void setAttachment(std::unique_ptr<ResourceAttachment> attachment) {
+		attachment_ = std::move(attachment);
+	}
 	template<typename T>
 	auto* attachment() const {
-    if (attachment_ == nullptr) {
-      return static_cast<T>(nullptr);
-    }
-    return static_cast<T>(attachment_.get());
+		if (attachment_ == nullptr) {
+			return static_cast<T>(nullptr);
+		}
+		return static_cast<T>(attachment_.get());
   }
 
 	virtual ~ResourceItem();

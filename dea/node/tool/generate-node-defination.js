@@ -5,6 +5,7 @@ import mustache from './mustache/mustache.js'
 import {
 	enums,
 	structs,
+	messages,
 	baseMixins,
 	nodeMixins,
 	nodeBase,
@@ -42,7 +43,7 @@ async function writeFileSync(path, data) {
 let data = {
 	enums,
 	structs,
-	classes: [...baseMixins, ...nodeMixins, ...nodeBase],
+	classes: [...messages, ...baseMixins, ...nodeMixins, ...nodeBase],
 	customType,
 }
 

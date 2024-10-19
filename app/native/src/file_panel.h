@@ -42,6 +42,7 @@ inline void CreateFilePanel(dea::Dezaina& desaina) {
 	}
 
 	if (ImGui::Button("load fig")) {
+    // std::filesystem::path fig_dir = std::filesystem::current_path() / "figs" / "all shapes.fig";
     std::filesystem::path fig_dir = std::filesystem::current_path() / "figs" / "rect.fig";
 		auto& loader = loader::Loader::getInstance();
 		loader.loadFig(fig_dir.string());

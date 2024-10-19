@@ -16,6 +16,7 @@ using string = std::string;
 using Buffer = base::Buffer;
 using boolean = bool;
 
+class TextData;
 class BaseNodeMixin;
 class SceneNodeMixin;
 class CornerMixin;
@@ -73,7 +74,6 @@ struct VectorData;
 struct Glyph;
 struct Decoration;
 struct Baseline;
-struct TextData;
 struct SymbolData;
 
 using PaintUnion = std::variant<SolidPaint, GradientPaint, ImagePaint>;
@@ -1372,77 +1372,6 @@ struct Baseline  {
 
 };
 
-struct TextData  {
-	std::string characters{  };
-	Buffer styleOverrideTable{  };
-	Vector layoutSize{  };
-	std::vector<Baseline> baselines{  };
-	std::vector<Glyph> glyphs{  };
-	std::vector<Decoration> decorations{  };
-
-	const std::string& getCharacters() const {
-		return characters;
-	}
-	void setCharacters(const std::string& v) {
-		characters = v;
-	}
-	const Buffer& getStyleOverrideTable() const {
-		return styleOverrideTable;
-	}
-	void setStyleOverrideTable(const Buffer& v) {
-		styleOverrideTable = v;
-	}
-	const Vector& getLayoutSize() const {
-		return layoutSize;
-	}
-	void setLayoutSize(const Vector& v) {
-		layoutSize = v;
-	}
-	const std::vector<Baseline>& getBaselines() const {
-		return baselines;
-	}
-	void setBaselines(const std::vector<Baseline>& v) {
-		baselines = v;
-	}
-	const std::vector<Glyph>& getGlyphs() const {
-		return glyphs;
-	}
-	void setGlyphs(const std::vector<Glyph>& v) {
-		glyphs = v;
-	}
-	const std::vector<Decoration>& getDecorations() const {
-		return decorations;
-	}
-	void setDecorations(const std::vector<Decoration>& v) {
-		decorations = v;
-	}
-
-	void applyChange(const message::TextData& change) {
-		applyChangeImpl(characters, *change.characters());
-		applyChangeImpl(styleOverrideTable, *change.styleOverrideTable());
-		applyChangeImpl(layoutSize, *change.layoutSize());
-		applyChangeImpl(baselines, *change.baselines());
-		applyChangeImpl(glyphs, *change.glyphs());
-		applyChangeImpl(decorations, *change.decorations());
-	}
-
-	void toChange(message::TextData& change, kiwi::MemoryPool& pool) const {
-		toChangeImpl(&change, &message::TextData::set_characters, characters, pool);
-		toChangeImpl(&change, &message::TextData::set_styleOverrideTable, styleOverrideTable, pool);
-		toChangeImpl(&change, &message::TextData::set_layoutSize, layoutSize, pool);
-		toChangeImpl(&change, &message::TextData::set_baselines, baselines, pool);
-		toChangeImpl(&change, &message::TextData::set_glyphs, glyphs, pool);
-		toChangeImpl(&change, &message::TextData::set_decorations, decorations, pool);
-	}
-
-	auto* toChange(kiwi::MemoryPool& pool) const {
-		auto* change = pool.allocate<message::TextData>();
-		toChange(*change, pool);
-		return change;
-	}
-
-};
-
 struct SymbolData  {
 	GUID symbolID{  };
 	Buffer symbolOverrides{  };
@@ -1487,6 +1416,107 @@ struct SymbolData  {
 
 };
 
+
+class TextData  {
+private:
+	std::string characters_{};
+	Buffer styleOverrideTable_{};
+	Vector layoutSize_{};
+	std::vector<Baseline> baselines_{};
+	std::vector<Glyph> glyphs_{};
+	std::vector<Decoration> decorations_{};
+
+public:
+
+	const std::string& getCharacters() const {
+		return characters_;
+	}
+	void setCharacters(const std::string& v) {
+		characters_ = v;
+	}
+	const Buffer& getStyleOverrideTable() const {
+		return styleOverrideTable_;
+	}
+	void setStyleOverrideTable(const Buffer& v) {
+		styleOverrideTable_ = v;
+	}
+	const Vector& getLayoutSize() const {
+		return layoutSize_;
+	}
+	void setLayoutSize(const Vector& v) {
+		layoutSize_ = v;
+	}
+	const std::vector<Baseline>& getBaselines() const {
+		return baselines_;
+	}
+	void setBaselines(const std::vector<Baseline>& v) {
+		baselines_ = v;
+	}
+	const std::vector<Glyph>& getGlyphs() const {
+		return glyphs_;
+	}
+	void setGlyphs(const std::vector<Glyph>& v) {
+		glyphs_ = v;
+	}
+	const std::vector<Decoration>& getDecorations() const {
+		return decorations_;
+	}
+	void setDecorations(const std::vector<Decoration>& v) {
+		decorations_ = v;
+	}
+
+  void applyChange(const message::TextData& change) {
+		if (change.characters() != nullptr) {
+			applyChangeImpl(characters_, *change.characters());
+		}
+		if (change.styleOverrideTable() != nullptr) {
+			applyChangeImpl(styleOverrideTable_, *change.styleOverrideTable());
+		}
+		if (change.layoutSize() != nullptr) {
+			applyChangeImpl(layoutSize_, *change.layoutSize());
+		}
+		if (change.baselines() != nullptr) {
+			applyChangeImpl(baselines_, *change.baselines());
+		}
+		if (change.glyphs() != nullptr) {
+			applyChangeImpl(glyphs_, *change.glyphs());
+		}
+		if (change.decorations() != nullptr) {
+			applyChangeImpl(decorations_, *change.decorations());
+		}
+	}
+
+void toChange(message::TextData& change, kiwi::MemoryPool& pool) const {
+		toChangeImpl(&change, &message::TextData::set_characters, characters_, pool);
+		toChangeImpl(&change, &message::TextData::set_styleOverrideTable, styleOverrideTable_, pool);
+		toChangeImpl(&change, &message::TextData::set_layoutSize, layoutSize_, pool);
+		toChangeImpl(&change, &message::TextData::set_baselines, baselines_, pool);
+		toChangeImpl(&change, &message::TextData::set_glyphs, glyphs_, pool);
+		toChangeImpl(&change, &message::TextData::set_decorations, decorations_, pool);
+	}
+
+void takeSnapshot(message::TextData& snapshot, message::TextData& change, kiwi::MemoryPool& pool) const {
+		if (change.characters() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_characters, characters_, pool);
+		}
+		if (change.styleOverrideTable() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_styleOverrideTable, styleOverrideTable_, pool);
+		}
+		if (change.layoutSize() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_layoutSize, layoutSize_, pool);
+		}
+		if (change.baselines() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_baselines, baselines_, pool);
+		}
+		if (change.glyphs() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_glyphs, glyphs_, pool);
+		}
+		if (change.decorations() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_decorations, decorations_, pool);
+		}
+	}
+
+};
 
 class BaseNodeMixin  {
 private:
