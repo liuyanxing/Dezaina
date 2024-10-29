@@ -17,7 +17,7 @@ public:
 	virtual ~ResourceAttachment() = default;
 };
 
-class ResourceItem : public base::NonCopyable {
+class ResourceItem {
 friend class Resource;
 public:
   ResourceItem(ResourceType type) : type_(type) {}
@@ -85,7 +85,7 @@ public:
 	ResourceId add(ResourceItem* item) {
 		auto id = nextId_++;
 		resources_[id] = item;
-    item->id_ = id;
+		item->id_ = id;
   
 		return id;
 	}
@@ -106,7 +106,7 @@ public:
 	ResourceItem* get(ResourceId id) {
 		auto it = resources_.find(id);
 		if (it != resources_.end()) {
-      return it->second;
+			return it->second;
 		}
 		return nullptr;
 	}
@@ -120,16 +120,16 @@ private:
 	  for (auto& provider : providers_) {
 		  if (provider->isType(item->type())) {
 			  provider->remove(item);
-				resources_.erase(item->id());
+			  resources_.erase(item->id());
 			  return;
 		  }
 	  }
 	}
 
 	Resource() = default;
+	std::unordered_map<ResourceId, ResourceItem*> resources_;
 	std::vector<std::unique_ptr<ResourceProvider>> providers_;
 	ResourceId nextId_ = 1;
-	std::unordered_map<ResourceId, ResourceItem*> resources_;
 };
 
 } // namespace dea::change

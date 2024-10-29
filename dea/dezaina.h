@@ -24,7 +24,7 @@ public:
     eventSystem_(),
     interaction_(doc_),
 // #ifdef DEA_ENABLE_RENDER
-        render_(doc_, viewport_),
+    render_(doc_, viewport_),
 // #endif
     change_() {
 

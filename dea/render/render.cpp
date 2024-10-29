@@ -16,6 +16,7 @@
 #include "include/gpu/ganesh/gl/GrGLDirectContext.h"
 #include "include/gpu/gl/GrGLInterface.h"
 #include "utility.h"
+#include "resource.h"
 
 namespace dea::render {
 
@@ -85,6 +86,7 @@ namespace dea::render {
   }
 
 	void Render::render() {
+    auto& resource = resource::Resource::getInstance();
 		if (!checkViewPort()) {
 			updateViewPort();
 			if (!makeSurface()) {
@@ -97,6 +99,7 @@ namespace dea::render {
         return;
       }
     }
+
     renderDocument();
     renderInteraction();
 
