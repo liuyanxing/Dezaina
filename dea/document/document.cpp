@@ -48,7 +48,7 @@ bool Document::processBlobMessage(kiwi::Array<message::Blob> &blobs) {
   uint32_t index = 0;
   for (const auto &blob : blobs) {
     auto *bytes = blob.bytes();
-    auto *resourceItem = Resource::getProvider(ResourceType::Blob)->store(Data::MakeWithCopy(bytes->data(), bytes->size()));
+    auto *resourceItem = Resource::getInstance().getProvider<BlobResourceProvider>()->store(Data::MakeWithCopy(bytes->data(), bytes->size()));
     if (resourceItem) {
       blobIdMap_[index++] = resourceItem->id();
     }

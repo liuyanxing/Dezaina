@@ -78,7 +78,7 @@ void NodeChangesCommand::takeRedoSnapShot() {
 	for (int index = 0; auto& [node, nodeChange] : *changes_) {
 	    Dezaina::instance().document().applyNodeChange(nodeChange);
 		if (auto* shape = node_cast<DefaultShapeNode>(node); shape && !isFillPathValid(nodeChange)) {
-			auto *item = Resource::getProvider(ResourceType::Blob)->store(geometry::buildFill(node));
+			auto *item = Resource::getInstance().getProvider<BlobResourceProvider>()->store(geometry::buildFill(node));
 			pathes.push_back(item->data());
 
 			auto& fillGeometry = nodeChange->set_fillGeometry(pool, 1);

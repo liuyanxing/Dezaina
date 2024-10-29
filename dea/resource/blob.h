@@ -14,21 +14,41 @@ public:
 	BlobResourceItem(BlobResourceItem&& other) : ResourceItem(std::move(other)), data_(std::move(other.data_)) {}
 
   const auto* data() const { return &data_; }
+
+	static constexpr ResourceType Type = ResourceType::Blob;
 private:
 	base::Data data_;
 };
 
+} // namespace dea::resource
+
+namespace std {
+template<>
+struct hash<dea::resource::BlobResourceItem> {
+	size_t operator()(const dea::resource::BlobResourceItem& item) const {
+		return std::hash<dea::base::Data>()(*item.data());
+	}
+};
+
+template<>
+struct equal_to<dea::resource::BlobResourceItem> {
+	bool operator()(const dea::resource::BlobResourceItem& lhs, const dea::resource::BlobResourceItem& rhs) const {
+		return *lhs.data() == *rhs.data();
+	}
+};
+
+} // namespace std
+
+namespace dea::resource {
 class BlobResourceProvider : public ResourceProvider {
 public:
 	BlobResourceProvider() : ResourceProvider(ResourceType::Blob) {}
 	BlobResourceProvider(const BlobResourceProvider&) = delete;
 
 	BlobResourceItem* store(base::Data&& data) {
-		if (data_.find(data) != data_.end()) {
-			return nullptr;
-		}
-	  auto item = &data_.emplace(std::move(data)).second;
+		auto iter = data_.insert(std::move(data)).first;
 		auto& instance = Resource::getInstance();
+		BlobResourceItem* item = const_cast<BlobResourceItem*>(&(*iter));
 		instance.add(item);
 		return item;
 	}
@@ -37,8 +57,10 @@ public:
 	}
 
 	bool has(const base::Data& data) const {
-		return data_.find(data) != data_.end();
+		
 	}
+
+	static constexpr ResourceType Type = ResourceType::Blob;
 
 private:
 	std::unordered_set<BlobResourceItem> data_;

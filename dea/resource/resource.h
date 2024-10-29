@@ -94,10 +94,11 @@ public:
 		providers_.push_back(std::move(provider));
 	}
 
-	ResourceProvider* getProvider(ResourceType type) {
+	template<typename T>
+	T* getProvider() {
 		for (auto& provider : providers_) {
-			if (provider->isType(type)) {
-				return provider.get();
+			if (provider->isType(T::Type)) {
+				return static_cast<T*>(provider.get());
 			}
 		}
 		return nullptr;
