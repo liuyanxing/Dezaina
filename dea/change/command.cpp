@@ -11,6 +11,7 @@ namespace dea::change {
 
 using namespace node;
 using namespace base;
+using namespace resource;
 
 // SelectionCommand
 void SelectionCommand::execute() {
@@ -77,7 +78,7 @@ void NodeChangesCommand::takeRedoSnapShot() {
 	for (int index = 0; auto& [node, nodeChange] : *changes_) {
 	    Dezaina::instance().document().applyNodeChange(nodeChange);
 		if (auto* shape = node_cast<DefaultShapeNode>(node); shape && !isFillPathValid(nodeChange)) {
-			auto *item = resource::BlobResource::add(geometry::buildFill(node));
+			auto *item = Resource::getProvider(ResourceType::Blob)->store(geometry::buildFill(node));
 			pathes.push_back(item->data());
 
 			auto& fillGeometry = nodeChange->set_fillGeometry(pool, 1);
