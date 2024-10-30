@@ -18,6 +18,7 @@ void Document::dump() {
 	NodeIter iter(root_);
 	while (iter.isValid()) {
 		auto* node = iter.get();
+		spdlog::info("name {}", node->getName());
 		++iter;
 	}
 }
@@ -141,6 +142,7 @@ bool Document::processNodeChanges(message::Message& message) {
     }
 
     node->applyChange(node_change);
+
     if (isNewNode) {
       append(node);
     }

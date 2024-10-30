@@ -37,8 +37,12 @@ NodeIter::IterDirection NodeIter::operator++() {
 
   auto *container = node::node_cast<node::Container>(node_);
   if (container && !isSkipChild_) {
-    node_ = container->firstChild();
-    return node_ ? Forward : End;
+    if (container->firstChild()) {
+      node_ = container->firstChild();
+      return Forward;
+    }
+    node_ = node_->getNextSibling(); 
+    return Backword;
   }
 
   auto *next = node_->getNextSibling();

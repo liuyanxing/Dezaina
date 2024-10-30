@@ -33,6 +33,9 @@ public:
   NodeIter(node::Node *node);
   IterDirection operator++();
   IterDirection operator--();
+  bool tryGoChild();
+  bool tryGoNextSibling();
+
   bool isValid() { return node_ != nullptr; }
   auto *get() { return node_; }
   void skipChild() { isSkipChild_ = true; }
