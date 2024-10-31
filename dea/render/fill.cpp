@@ -55,9 +55,6 @@ GeometryType getOrBuildFill(NodeConstPtr node) {
   auto *shapeNode = node::node_cast<const DefaultShapeNode>(node);
   if (shapeNode) {
     if (auto &pathes = shapeNode->getFillGeometry(); !pathes.empty()) {
-      if (node->getName() == "Rectangle 1") {
-          printf("");
-      }
       return *getOrBuild(pathes.front().commandsBlob);
     }
   }

@@ -141,6 +141,12 @@ bool Document::processNodeChanges(message::Message& message) {
       }
     }
 
+    if (node_change.strokeGeometry()) {
+      for (auto &strokeGeometry : *node_change.strokeGeometry()) {
+        strokeGeometry.set_commandsBlob(blobIdMap_[*strokeGeometry.commandsBlob()]);
+      }
+    }
+
     node->applyChange(node_change);
 
     if (isNewNode) {
