@@ -32,7 +32,7 @@ NodeIter::NodeIter(node::Node *node)
 
 bool NodeIter::tryGoChild() {
   auto *container = node::node_cast<node::Container>(node_);
-  if (!container || isSkipChild_) {
+  if (isSkipChild_ || !container || !container->firstChild()) {
     return false;
   }
   node_ = container->firstChild();
