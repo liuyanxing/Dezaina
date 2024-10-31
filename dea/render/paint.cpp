@@ -4,7 +4,6 @@
 namespace dea::render {
 
 static PaintDrawers paintDrawers{};
-static PaintDrawers strokeDrawers{};
 
 static void pushPaintDrawer(const node::SolidPaint& paint) {
   paintDrawers.push_back(SolidPaintDrawer{paint});
@@ -20,12 +19,14 @@ static void pushPaintDrawer(const node::ImagePaint& paint) {
 
 void buildPaintDrawers(const std::vector<node::PaintUnion>& paints) {
   paintDrawers.clear();
-  paintDrawers.reserve(20);
   for (const auto& paint : paints) {
     std::visit([](auto&& p) {
       pushPaintDrawer(p);
     }, paint);
   }
+}
+
+PaintDrawers& buildFillPaintDrawers(const node::TextNode* node) {
 }
 
 PaintDrawers& buildFillPaintDrawers(node::NodeConstPtr node) {
