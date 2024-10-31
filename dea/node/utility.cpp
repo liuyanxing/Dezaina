@@ -30,47 +30,59 @@ node::Vector getNodeCenter(node::NodeConstPtr node) {
 NodeIter::NodeIter(node::Node *node)
     : node_(node), root_(node_) {}
 
-NodeIter::IterDirection NodeIter::operator++() {
-  if (!node_) {
-    return End;
-  }
-
+bool NodeIter::tryGoChild() {
   auto *container = node::node_cast<node::Container>(node_);
-  if (container && !isSkipChild_) {
-    if (container->firstChild()) {
-      node_ = container->firstChild();
-      return Forward;
-    }
-    node_ = node_->getNextSibling(); 
-    return Backword;
+  if (!container || isSkipChild_) {
+    return false;
   }
+  node_ = container->firstChild();
+  return true;
+}
 
+bool NodeIter::tryGoNextSibling() {
   auto *next = node_->getNextSibling();
-  if (next) {
-    node_ = next;
-    return Right;
+  if (!next) {
+    return false;
   }
+  node_ = next;
+  return true;
+}
+
+bool NodeIter::tryGoParent() {
+  auto *parent = node_->getParent();
+  if (!parent) {
+    return false;
+  }
+  node_ = parent;
+  return true;
+}
+
+bool NodeIter::tryGoParentNextSibling() {
   auto *parent = node_->getParent();
   if (!parent || parent == root_) {
     node_ = nullptr;
-    return End;
+    return false;
   }
   node_ = parent->getNextSibling();
-  return node_ ? Backword : End;
+  return node_ != nullptr;
 }
 
-NodeIter::IterDirection NodeIter::operator--() {
-  if (!node_) {
-    return End;
-  }
+NodeIter::Direction NodeIter::goNext() {
+  if (tryGoChild()) return Forward; 
+  if (tryGoNextSibling()) return Right;
+  if (tryGoParentNextSibling()) return Backword;
 
-  auto *parent = node_->getParent();
-  if (!parent) {
-    node_ = nullptr;
-    return End;
-  }
-  node_ = parent;
-  return Backword;
+  return End;
+}
+
+NodeIter::Direction NodeIter::operator++() {
+  if (!node_) return End;
+  return goNext();
+}
+
+NodeIter::Direction NodeIter::operator--() {
+  if (!node_) return End;
+  return tryGoParent() ? Backword : End;
 }
 
 NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node *node)
@@ -82,16 +94,16 @@ NodeIterWithWorldMatrix::NodeIterWithWorldMatrix(node::Node *node)
   worldStack_.push_back(world_);
 }
 
-NodeIter::IterDirection NodeIterWithWorldMatrix::operator++() {
-  auto direction = NodeIter::operator++();
+NodeIter::Direction NodeIterWithWorldMatrix::operator++() {
+  auto direction = goNext();
   switch (direction) {
   case Forward:
     world_ = world_ * getTransfromMatrix(node_);
     worldStack_.push_back(world_);
     break;
   case Backword:
-    worldStack_.pop_back();
-    worldStack_.pop_back();
+    worldStack_.pop_back(); // pop the current node matrix
+    worldStack_.pop_back(); // pop the parent node matrix
     world_ = worldStack_.top() * getTransfromMatrix(node_);
     worldStack_.push_back(world_);
     break;

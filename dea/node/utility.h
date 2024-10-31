@@ -21,7 +21,7 @@ inline Matrix GetWorldMatrix(node::NodeConstPtr node) {
 
 class NodeIter {
 public:
-  enum IterDirection {
+  enum Direction {
     Forward,
     Backword,
     Right,
@@ -31,10 +31,13 @@ public:
   using GetParentFunc = std::function<node::Node *(node::Node *)>;
 
   NodeIter(node::Node *node);
-  IterDirection operator++();
-  IterDirection operator--();
+  Direction operator++();
+  Direction operator--();
   bool tryGoChild();
   bool tryGoNextSibling();
+  bool tryGoParent();
+  bool tryGoParentNextSibling();
+  Direction goNext();
 
   bool isValid() { return node_ != nullptr; }
   auto *get() { return node_; }
@@ -50,8 +53,8 @@ protected:
 class NodeIterWithWorldMatrix : public NodeIter {
 public:
   NodeIterWithWorldMatrix(node::Node *node);
-  IterDirection operator++();
-  IterDirection operator--();
+  Direction operator++();
+  Direction operator--();
   const auto &getWorldMatrix() const { return world_; }
   void rest();
   void update();
