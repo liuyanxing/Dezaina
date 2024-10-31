@@ -5,12 +5,18 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPaint.h"
 #include "node/include/node.h"
+#include "node/node_base.generated.h"
 #include "utility.h"
 
 namespace dea::render {
 
 class PaintDrawer {
 public:
+  void setRegion(const node::Rect& region) {
+    region_ = region;
+  }
+private:
+  node::Rect region_;
 };
 
 class SolidPaintDrawer : public PaintDrawer {

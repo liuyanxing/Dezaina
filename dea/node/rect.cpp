@@ -1,4 +1,5 @@
 #include "node.generated.h"
+#include "node/node_base.generated.h"
 
 namespace dea::node {
 	Rect Rect::MakeXYWH(float x, float y, float w, float h) {
@@ -35,5 +36,9 @@ namespace dea::node {
 
 	Rect Rect::makeOutset(float dx, float dy) {
 		return Rect::MakeXYWH(x - dx, y - dy, w + 2 * dx, h + 2 * dy);
+	}
+
+	void Rect::join(const Rect& rect) {
+		*this = unite(rect);
 	}
 }

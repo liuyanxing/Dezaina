@@ -97,6 +97,9 @@ GeometryType buildFill(NodeConstPtr node) {
 }
 
 GeometryType getOrBuildFill(NodeConstPtr node) {
+  if (auto* text = node_cast<const TextNode>(node)) {
+    return buildFill(text);
+  }
   auto *shapeNode = node::node_cast<const DefaultShapeNode>(node);
   if (shapeNode) {
     if (auto &pathes = shapeNode->getFillGeometry(); !pathes.empty()) {

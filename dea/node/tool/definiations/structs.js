@@ -79,6 +79,8 @@ export const structs = [
 			"bool intersects(const Rect& rect) const;",
 			"Rect intersection(const Rect& rect) const;",
 			"Rect unite(const Rect& rect) const;",
+			"void reset() { x = y = w = h = 0; }",
+			"void join(const Rect& rect);",
 			"Rect makeOutset(float dx, float dy);",
 		]
 	},
