@@ -10,7 +10,7 @@ public:
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor},
 		RadiusEditor(frame_, editor) {
-		update();
+			update();
 	};
 	void update() override;
 };

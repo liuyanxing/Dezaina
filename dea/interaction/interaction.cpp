@@ -37,26 +37,40 @@ node::Vector Interaction::GetDocNodeScreenBound(node::Vector size) {
       node::Vector{size.x, size.y});
 }
 
-void Interaction::update() {
-  if (!doc_.currentPage()) {
-    return;
-  }
-  auto &selection = doc_.getSelection();
-  docSelection_.clear();
-  for (auto &id : selection) {
-    auto *node = doc_.getNodeById(id);
-    if (node) {
-      docSelection_.push_back(node);
-    }
-  }
+void Interaction::updateDocSelection() {
+  docSelection_ = doc_.getSelectionNodes();
+}
 
+void Interaction::createNodeEditor(node::NodeConstPtr node) {
+  if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
+    node_editor_ = std::make_unique<RectangleEditor>(
+        *rectangleNode, doc_.editor(), container_);
+  } else if (auto *frameNode = node::node_cast<node::FrameNode>(node)) {
+    node_editor_ = std::make_unique<FrameEditor>(*frameNode, doc_.editor(),
+                                                 container_);
+  } else if (auto *vectorNode = node::node_cast<node::VectorNode>(node)) {
+    node_editor_ = std::make_unique<VectorEditor>(*vectorNode, doc_.editor(),
+                                                  container_);
+  } else if (auto *textNode = node::node_cast<node::TextNode>(node)) {
+    node_editor_ = std::make_unique<TextEditor>(*textNode, doc_.editor(),
+                                                container_);
+  } else if (auto *starNode = node::node_cast<node::StarNode>(node)) {
+    node_editor_ = std::make_unique<StarEditor>(*starNode, doc_.editor(),
+                                                container_);
+  } else if (auto *ellipseNode = node::node_cast<node::EllipseNode>(node)) {
+    node_editor_ = std::make_unique<EllipseEditor>(*ellipseNode, doc_.editor(),
+                                                   container_);
+  } else if (auto *lineNode = node::node_cast<node::LineNode>(node)) {
+    node_editor_ = std::make_unique<LineEditor>(*lineNode, doc_.editor(),
+                                                container_);
+  } else {
+    assert(false);
+  }
+}
+
+void Interaction::updateNodeEditor() {
   if (docSelection_.empty()) {
-    if (node_editor_ != nullptr) {
-      auto *editorContainer = node_editor_->getContainer();
-      container_.removeChild(editorContainer);
-      node_editor_ = nullptr;
-      return;
-    }
+    node_editor_ = nullptr;
     return;
   }
 
@@ -64,28 +78,22 @@ void Interaction::update() {
   } else {
     auto *node = docSelection_.front();
     if (!node_editor_) {
-      if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
-        node_editor_ = std::make_unique<RectangleEditor>(
-            *rectangleNode, doc_.editor(), container_);
-      } else if (auto *frameNode = node::node_cast<node::FrameNode>(node)) {
-        node_editor_ = std::make_unique<FrameEditor>(*frameNode, doc_.editor(),
-                                                     container_);
-      } else {
-        assert(false);
-      }
+      createNodeEditor(node);
+    } else if (node_editor_->getEditNode() != node) {
+      node_editor_->setEditNode(node);
     }
   }
 
-  if (node_editor_ == nullptr) {
+  node_editor_->update();
+}
+
+void Interaction::update() {
+  if (!doc_.currentPage()) {
     return;
   }
 
-  node_editor_->update();
-  auto *editorContainer = node_editor_->getContainer();
-  if (!container_.findChild(editorContainer)) {
-    appendToContainer(editorContainer);
-  }
-  // dump();
+  updateDocSelection();
+  updateNodeEditor();
 }
 
 void Interaction::handleHover() {}
@@ -95,9 +103,7 @@ void Interaction::onEvent(event::Event &event) {
     return;
   }
 
-  // creation_.onEvent(event);
   mouseInter_.onEvent(event);
-
   InteractionListener::onEvent(event);
 }
 

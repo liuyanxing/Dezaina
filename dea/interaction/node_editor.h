@@ -13,10 +13,22 @@ public:
 		frame_.setName("nodeEditor");
 		node::Container::append(&frame_, &parent);
 	};
-	virtual void update() = 0;
+	virtual ~NodeEditor() {
+		if (auto* parent = frame_.getParent()) {
+			node::Container::remove(&frame_, parent);
+		}
+	};
+
+	virtual void update() {
+		frame_.setTransform(GetWorldMatrix(node_));
+		frame_.setSize(getSize(node_));
+	}
 	void selectNearestCtrlNode(node::Vector worldPoint, std::function<bool(node::NodeConstPtr)> filter);
-	auto* getContainer() { return &frame_; }
+
+	void setEditNode(node::NodeConstPtr node) { node_ = *node; }
 	auto* getEditNode() { return &node_; }
+
+	auto* getContainer() { return &frame_; }
 
 protected:
 	node::Node& node_;

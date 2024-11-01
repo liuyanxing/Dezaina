@@ -10,6 +10,38 @@ public:
     return firstChild_;
   };
 
+  Node* findChild(Node* node) {
+    if (!node) {
+      return nullptr;
+    }
+    Node* current = firstChild_;
+    while (current) {
+      if (current == node) {
+        return current;
+      }
+      current = current->getNextSibling();
+    }
+    return nullptr;
+  }
+
+  bool empty() const {
+    return !firstChild_;
+  };
+	
+  static bool append(Node* child, Node* parent);
+  static void remove(Node* child, Node* parent);
+protected:
+  // becaue container cannot cast to node, we cannot set child's parent, so we cannot use appendChild directly
+	void appendChild(Node* node) {
+    if (!lastChild_) {
+      firstChild_ = node;
+      lastChild_ = node;
+      return;
+    }
+    lastChild_->setNextSibling(node);
+    lastChild_ = node;
+  };
+
   Node* removeChild(Node* node) {
     if (!node) {
       return nullptr;
@@ -30,37 +62,6 @@ public:
     }
     return nullptr;
   }
-
-  Node* findChild(Node* node) {
-    if (!node) {
-      return nullptr;
-    }
-    Node* current = firstChild_;
-    while (current) {
-      if (current == node) {
-        return current;
-      }
-      current = current->getNextSibling();
-    }
-    return nullptr;
-  }
-
-  bool empty() const {
-    return !firstChild_;
-  };
-	
-  static bool append(Node* child, Node* parent);
-protected:
-	void appendChild(Node* node) {
-    if (!lastChild_) {
-      firstChild_ = node;
-      lastChild_ = node;
-      return;
-    }
-    lastChild_->setNextSibling(node);
-    lastChild_ = node;
-  };
-
  
   Node* firstChild_ = nullptr;
   Node* lastChild_ = nullptr;

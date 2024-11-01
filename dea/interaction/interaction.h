@@ -59,6 +59,9 @@ private:
 
   void handleSelectionChange(const node::NodeConstArary &selection);
   void update();
+  void updateDocSelection();
+  void updateNodeEditor();
+  void createNodeEditor(node::NodeConstPtr node);
   void handleHover();
   // void onBeforeTick(event::Event* event) override;
   void onMouseWheel(event::MouseEvent &event) override;

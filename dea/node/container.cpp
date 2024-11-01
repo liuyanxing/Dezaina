@@ -17,6 +17,16 @@ bool Container::append(Node* child, Node* parent) {
 
 };
 
+void Container::remove(Node* child, Node* parent) {
+	if (!parent || !child) {
+		return;
+	}
+
+	auto container = node_cast<Container>(parent);
+	if (container) {
+		container->removeChild(child);
+		child->setParent(nullptr);
+	}
+};
+
 }
-
-

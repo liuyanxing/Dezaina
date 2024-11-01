@@ -95,6 +95,16 @@ public:
   bool processNodeChanges(message::Message &message);
 
   auto &getSelection() { return currentPage_->getSelection(); }
+  auto getSelectionNodes() {
+    std::vector<node::Node *> nodes;
+    nodes.reserve(getSelection().size());
+    for (auto id : getSelection()) {
+      if (auto *node = getNodeById(id)) {
+        nodes.push_back(node);
+      }
+    }
+    return nodes;
+  }
   void setSelection(const std::vector<node::GUID> &ids) {
     node::NodeArary nodes;
     nodes.reserve(ids.size());
