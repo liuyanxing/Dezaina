@@ -33,7 +33,7 @@ public:
 protected:
   // becaue container cannot cast to node, we cannot set child's parent, so we cannot use appendChild directly
 	void appendChild(Node* node) {
-    if (!lastChild_) {
+    if (!firstChild_) {
       firstChild_ = node;
       lastChild_ = node;
       return;
@@ -42,26 +42,33 @@ protected:
     lastChild_ = node;
   };
 
-  Node* removeChild(Node* node) {
+  struct ListNode {
+    Node* node;
+    Node* next;
+  };
+
+  void removeChild(Node* node) {
     if (!node) {
-      return nullptr;
+      return;
     }
-    if (node == firstChild_) {
-      firstChild_ = node->getNextSibling();
-      return firstChild_;
+    ListNode preNode = ListNode{nullptr, nullptr};
+    preNode.next = firstChild_;
+    while (preNode.next) {
+      if (preNode.next == node) {
+        if (preNode.node) {
+          preNode.node->setNextSibling(node->getNextSibling());
+          if (lastChild_ == node) {
+            lastChild_ = preNode.node;
+          }
+        } else {
+          firstChild_ = node->getNextSibling();
+        }
+        break;
+      }
+      preNode.node = preNode.next;
+      preNode.next = preNode.next->getNextSibling();
     }
-    // find pre node
-    Node* preNode = firstChild_;
-    while (preNode && preNode->getNextSibling() != node) {
-      preNode = preNode->getNextSibling();
-    }
-    if (preNode) {
-      auto* next = node->getNextSibling();
-      preNode->setNextSibling(next);
-      return next;
-    }
-    return nullptr;
-  }
+ }
  
   Node* firstChild_ = nullptr;
   Node* lastChild_ = nullptr;

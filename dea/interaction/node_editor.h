@@ -20,8 +20,8 @@ public:
 	};
 
 	virtual void update() {
-		frame_.setTransform(GetWorldMatrix(node_));
-		frame_.setSize(getSize(node_));
+		frame_.setTransform(GetWorldMatrix(&node_));
+		frame_.setSize(getSize(&node_));
 	}
 	void selectNearestCtrlNode(node::Vector worldPoint, std::function<bool(node::NodeConstPtr)> filter);
 

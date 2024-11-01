@@ -4,11 +4,17 @@
 #include "dezaina.h"
 #include "document.h"
 #include "frame_editor.h"
+#include "rectangle_editor.h"
+#include "vector_editor.h"
+#include "text_editor.h"
+#include "star_editor.h"
+#include "ellipse_editor.h"
+#include "line_editor.h"
 #include "interaction/interaction.h"
 #include "node.h"
 #include "node/node.generated.h"
 #include "node/node.h"
-#include "rectangle_editor.h"
+
 #include "selection.h"
 #include "spdlog/spdlog.h"
 
@@ -77,10 +83,9 @@ void Interaction::updateNodeEditor() {
   if (docSelection_.size() > 1) {
   } else {
     auto *node = docSelection_.front();
-    if (!node_editor_) {
-      createNodeEditor(node);
-    } else if (node_editor_->getEditNode() != node) {
-      node_editor_->setEditNode(node);
+    if (!node_editor_ || node_editor_->getEditNode() != node) {
+        node_editor_ = nullptr;
+        createNodeEditor(node);
     }
   }
 

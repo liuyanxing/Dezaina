@@ -96,7 +96,7 @@ public:
 
   auto &getSelection() { return currentPage_->getSelection(); }
   auto getSelectionNodes() {
-    std::vector<node::Node *> nodes;
+    node::NodeConstArary nodes;
     nodes.reserve(getSelection().size());
     for (auto id : getSelection()) {
       if (auto *node = getNodeById(id)) {
