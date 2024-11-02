@@ -18,7 +18,7 @@ void Selection::onMouseMove(MouseEvent &event) {
   hoverNode_ = root_;
   float radius = 3;
   // todo remove const_cast
-  auto iter = NodeIterWithWorldMatrix(const_cast<Node*>(root_));
+  auto iter = NodeIterWithWorldMatrix(const_cast<Node *>(root_));
 
   while (iter.isValid()) {
     auto *node = iter.get();
@@ -30,12 +30,13 @@ void Selection::onMouseMove(MouseEvent &event) {
       auto [width, height] = getIntersectBound_(shape->getSize());
       auto bound = Rect{0, 0, width, height};
       // spdlog::info("local: x: {}, y: {}", local.x(), local.y());
-      if (bound.intersects(cursorRect) && onMoveOnNode_(node)) {
+      if (bound.intersects(cursorRect) && mouseHoverFilter(node)) {
         hoverNode_ = node;
       }
     }
     ++iter;
   }
+  onHoverCb_(hoverNode_);
 
   event.target = const_cast<node::NodePtr>(hoverNode_);
 }

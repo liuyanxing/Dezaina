@@ -9,6 +9,7 @@
 #include "backends/imgui_impl_opengl3.h"
 
 #include "file_panel.h"
+#include "status_panel.h"
 #include "process_event.h"
 
 // #include "create_node_panel.h"
@@ -149,6 +150,7 @@ int main(int, char**)
         }
 
         CreateFilePanel(dezaina);
+        CreateStatusPanel(dezaina);
 
         // Rendering
         ImGui::Render();

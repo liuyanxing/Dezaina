@@ -12,9 +12,17 @@ MouseInteraction::MouseInteraction(Interaction &inter)
   docSelection_.onSelectionChange([this](const node::NodeConstArary &nodes) {
     handleSelectionChange(nodes);
   });
-  interSelection_.onMoveOnNode([this](node::NodeConstPtr node) {
+
+  docSelection_.onHover([this](node::NodeConstPtr node) {
+    interaction_.status.hoverDocNode = node;
+  });
+
+  // frame cannot be selected, it acts as a container
+  interSelection_.setMouseHoverFilter([this](node::NodeConstPtr node) {
     return !interaction::node_cast<Frame>(node);
   });
+
+
 }
 
 void MouseInteraction::onMouseMove(event::MouseEvent &event) {

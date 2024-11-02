@@ -43,6 +43,11 @@ public:
 
   static node::Vector GetDocNodeScreenBound(node::Vector size);
 
+  struct Status {
+    node::NodeConstPtr hoverDocNode = nullptr;
+    node::NodeConstPtr hoverInterNode = nullptr;
+  } status;
+
 private:
   Frame container_;
   std::unique_ptr<NodeEditor> node_editor_ = nullptr;
