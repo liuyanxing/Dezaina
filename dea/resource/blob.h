@@ -33,11 +33,7 @@ struct hash<dea::resource::BlobResourceItem> {
 template<>
 struct equal_to<dea::resource::BlobResourceItem> {
 	bool operator()(const dea::resource::BlobResourceItem& lhs, const dea::resource::BlobResourceItem& rhs) const {
-		bool isEqual = *lhs.data() == *rhs.data();
-		if (isEqual) {
-			return true;
-		}
-		return false;
+		return *lhs.data() == *rhs.data();
 	}
 };
 

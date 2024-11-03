@@ -63,12 +63,8 @@ public:
   }
 
   // get the size of a world unit in screen space
-  auto getScreenSize(float length) {
-    return mapWorldToScreen(node::Vector{1, 0}).length() * length;
-  }
-
-  auto getScreenSize(node::NodeConstPtr node) {
-    return mapWorldToScreen(node::getSize(node));
+  auto getScreenSize(node::Vector size) {
+      return node::Vector{mapWorldToScreen(size.getX()), mapWorldToScreen(size.getY())};
   }
 
   auto width() const { return width_; }

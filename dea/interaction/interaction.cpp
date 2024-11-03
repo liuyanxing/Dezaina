@@ -9,6 +9,7 @@
 #include "text_editor.h"
 #include "star_editor.h"
 #include "ellipse_editor.h"
+#include "polygon_editor.h"
 #include "line_editor.h"
 #include "interaction/interaction.h"
 #include "node.h"
@@ -39,8 +40,7 @@ void Interaction::handleSelectionChange(const node::NodeConstArary &selection) {
 }
 
 node::Vector Interaction::GetDocNodeScreenBound(node::Vector size) {
-  return Dezaina::instance().getViewport().mapWorldToScreen(
-      node::Vector{size.x, size.y});
+  return Dezaina::instance().getViewport().getScreenSize(size);
 }
 
 void Interaction::updateDocSelection() {
@@ -69,7 +69,11 @@ void Interaction::createNodeEditor(node::NodeConstPtr node) {
   } else if (auto *lineNode = node::node_cast<node::LineNode>(node)) {
     node_editor_ = std::make_unique<LineEditor>(*lineNode, doc_.editor(),
                                                 container_);
-  } else {
+  } else if (auto *polygonNode = node::node_cast<node::PolygonNode>(node)) {
+    node_editor_ = std::make_unique<PolygonEditor>(*polygonNode, doc_.editor(),
+                                                   container_);
+  }
+  else {
     assert(false);
   }
 }
