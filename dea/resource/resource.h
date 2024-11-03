@@ -20,10 +20,11 @@ public:
 class ResourceItem {
 friend class Resource;
 public:
-  ResourceItem(ResourceType type) : type_(type) {}
+	static constexpr ResourceId InvalidId = UINT32_MAX;
+	ResourceItem(ResourceType type) : type_(type) {}
 
 	ResourceItem(ResourceItem&& other) : id_(other.id_), type_(other.type_), attachment_(std::move(other.attachment_)) {
-		other.id_ = 0;
+		other.id_ = InvalidId;
 		other.attachment_ = nullptr;
 	}
 
@@ -52,7 +53,7 @@ public:
 
 	virtual ~ResourceItem();
 private:
-  ResourceId id_{};
+  ResourceId id_{InvalidId};
   ResourceType type_;
   std::unique_ptr<ResourceAttachment> attachment_ = nullptr;
 };
@@ -130,7 +131,7 @@ private:
 	Resource() = default;
 	std::unordered_map<ResourceId, ResourceItem*> resources_;
 	std::vector<std::unique_ptr<ResourceProvider>> providers_;
-	ResourceId nextId_ = 1;
+	ResourceId nextId_ = 0;
 };
 
 } // namespace dea::change

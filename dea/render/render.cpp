@@ -133,6 +133,7 @@ namespace dea::render {
     canvas_->clipPath(geometry, true);
     for (auto& drawer : drawers) {
       std::visit([this](auto&& d) {
+        SkAutoCanvasRestore acr(canvas_, true);
         d.draw(canvas_);
       }, drawer);
     }

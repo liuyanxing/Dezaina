@@ -46,10 +46,13 @@ void buildPaintDrawers(const std::vector<node::PaintUnion>& paints) {
 
 PaintDrawers& buildFillPaintDrawers(const node::TextNode* node) {
   paintDrawers.clear();
+
   const auto& textData = node->getTextData();
-  const auto& glyphs = textData.getGlyphs();
-  const auto& decorations = textData.getDecorations();
-  const auto& baselines = textData.getBaselines();
+  const auto& characterStyleIDs = textData.getCharacterStyleIDs();
+  const auto& derivedTextData = node->getDerivedTextData();
+  const auto& glyphs = derivedTextData.getGlyphs();
+  const auto& decorations = derivedTextData.getDecorations();
+  const auto& baselines = derivedTextData.getBaselines();
   const auto& styleOverrideTable = textData.getStyleOverrideTable();
 
   kiwi::ByteBuffer buffer(styleOverrideTable.data(), styleOverrideTable.size());
@@ -79,26 +82,26 @@ PaintDrawers& buildFillPaintDrawers(const node::TextNode* node) {
 
   for (int i = 0; i < glyphs.size(); i++) {
     auto& glyph = glyphs[i];
-    if (curBaseline == -1 || glyph.position.y != baseline.position.y) {
+    if (curBaseline == -1 || glyph.getPosition().y != baseline.position.y) {
       if (lastPaint) pushPaintDrawer(*lastPaint, rect);
       curBaseline++;
+      baseline = baselines[curBaseline];
+      lineAscentPosition = baseline.position.y - baseline.lineAscent;
+      lineDescentPosition = baseline.position.y + baseline.lineHeight - baseline.lineAscent;
       rect.reset();
       lastPaint = nullptr;
       lastStyleID = -1;
     }
 
-    auto fontSize = glyph.fontSize;
-    auto advance = glyph.advance * fontSize;
-    auto styleID = glyph.styleID;
-    auto glyphRect = Rect::MakeXYWH(glyph.position.x, lineAscentPosition, advance, lineDescentPosition - lineAscentPosition);
+    auto fontSize = glyph.getFontSize();
+    auto advance = glyph.getAdvance()* fontSize;
+    auto styleID = characterStyleIDs[i];
+    auto glyphRect = Rect::MakeXYWH(glyph.getPosition().x, lineAscentPosition, advance, lineDescentPosition - lineAscentPosition);
 
-    if (lastStyleID != styleID) {
+    if (lastStyleID != styleID ) {
       if (lastPaint) pushPaintDrawer(*lastPaint, rect);
       rect = glyphRect;
-      auto& styleOverride = map[styleID]; 
-      if (auto& paints = styleOverride.getFillPaints(); paints.size() > 0) {
-        lastPaint = &paints;
-      }
+      lastPaint = map.contains(styleID) ? &map[styleID].getFillPaints() : &node->getFillPaints();
     } else {
       rect.join(glyphRect);
     }

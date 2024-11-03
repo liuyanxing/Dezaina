@@ -34,4 +34,8 @@ inline SkColor toSkColor(const node::Color& color) {
 	return skColorf.toSkColor();
 }
 
+inline SkRect toSkRect(const node::Rect& rect) {
+	return SkRect::MakeXYWH(rect.x, rect.y, rect.w, rect.h);
+}
+
 } // namespace dea::render

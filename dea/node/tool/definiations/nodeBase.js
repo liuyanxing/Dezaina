@@ -156,6 +156,10 @@ export const nodeBase = [
       {
         "name": "textData",
         "type": "TextData"
+      },
+      {
+        "name": "derivedTextData",
+        "type": "DerivedTextData"
       }
     ],
     "node": "TextNode",

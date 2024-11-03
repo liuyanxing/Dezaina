@@ -13,7 +13,7 @@ public:
 	BlobResourceItem(base::Data&& data) : ResourceItem(ResourceType::Blob), data_(std::move(data)) {}
 	BlobResourceItem(BlobResourceItem&& other) : ResourceItem(std::move(other)), data_(std::move(other.data_)) {}
 
-  const auto* data() const { return &data_; }
+	const auto* data() const { return &data_; }
 
 	static constexpr ResourceType Type = ResourceType::Blob;
 private:
@@ -33,7 +33,11 @@ struct hash<dea::resource::BlobResourceItem> {
 template<>
 struct equal_to<dea::resource::BlobResourceItem> {
 	bool operator()(const dea::resource::BlobResourceItem& lhs, const dea::resource::BlobResourceItem& rhs) const {
-		return *lhs.data() == *rhs.data();
+		bool isEqual = *lhs.data() == *rhs.data();
+		if (isEqual) {
+			return true;
+		}
+		return false;
 	}
 };
 
@@ -46,7 +50,7 @@ public:
 	BlobResourceProvider(const BlobResourceProvider&) = delete;
 
 	BlobResourceItem* store(base::Data&& data) {
-		auto iter = data_.insert(std::move(data)).first;
+		auto iter = data_.insert(BlobResourceItem{ std::move(data) }).first;
 		auto& instance = Resource::getInstance();
 		BlobResourceItem* item = const_cast<BlobResourceItem*>(&(*iter));
 		instance.add(item);

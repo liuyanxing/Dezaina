@@ -82,6 +82,7 @@ export const structs = [
 			"void reset() { x = y = w = h = 0; }",
 			"void join(const Rect& rect);",
 			"Rect makeOutset(float dx, float dy);",
+			"bool isEmpty() const { return w <= 0 || h <= 0; }",
 		]
 	},
 	{
@@ -453,32 +454,6 @@ export const structs = [
 			{
 				"name": "vectorNetworkBlob",
 				"type": "uint"
-			}
-		]
-	},
-	{
-		"name": "Glyph",
-		"type": "struct",
-		"members": [
-			{
-				"name": "styleID",
-				"type": "uint"
-			},
-			{
-				"name": "commandsBlob",
-				"type": "uint"
-			},
-			{
-				"name": "position",
-				"type": "Vector"
-			},
-			{
-				"name": "fontSize",
-				"type": "float"
-			},
-			{
-				"name": "advance",
-				"type": "float"
 			}
 		]
 	},

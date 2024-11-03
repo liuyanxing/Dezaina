@@ -15,6 +15,10 @@ public:
   void setRegion(const node::Rect& region) {
     region_ = region;
   }
+  void draw(SkCanvas* canvas) const {
+    if (region_.isEmpty()) return;
+    canvas->clipRect(toSkRect(region_));
+  }
 private:
   node::Rect region_;
 };
@@ -23,6 +27,7 @@ class SolidPaintDrawer : public PaintDrawer {
 public:
   SolidPaintDrawer(const node::SolidPaint& paint) : paint_{paint} {}
   void draw(SkCanvas* canvas) const {
+    PaintDrawer::draw(canvas);
     canvas->drawColor(toSkColor(paint_.color));
   }
 private:
@@ -33,6 +38,7 @@ class GradientPaintDrawer : public PaintDrawer {
 public:
   GradientPaintDrawer(const node::GradientPaint& paint) : paint_{paint} {}
   void draw(SkCanvas* canvas) const {
+    PaintDrawer::draw(canvas);
   }
 private:
   node::GradientPaint paint_;
@@ -42,6 +48,7 @@ class ImagePaintDrawer : public PaintDrawer {
 public:
   ImagePaintDrawer(const node::ImagePaint& paint) : paint_{paint} {}
   void draw(SkCanvas* canvas) const {
+    PaintDrawer::draw(canvas);
   }
 private:
   node::ImagePaint paint_;

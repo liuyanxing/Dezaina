@@ -16,7 +16,9 @@ using string = std::string;
 using Buffer = base::Buffer;
 using boolean = bool;
 
+class Glyph;
 class TextData;
+class DerivedTextData;
 class BaseNodeMixin;
 class SceneNodeMixin;
 class CornerMixin;
@@ -71,7 +73,6 @@ struct AssetRef;
 struct StyleId;
 struct ArcData;
 struct VectorData;
-struct Glyph;
 struct Decoration;
 struct Baseline;
 struct SymbolData;
@@ -394,6 +395,7 @@ struct Rect  {
 	void reset() { x = y = w = h = 0; }
 	void join(const Rect& rect);
 	Rect makeOutset(float dx, float dy);
+	bool isEmpty() const { return w <= 0 || h <= 0; }
 
 	void applyChange(const message::Rect& change) {
 		applyChangeImpl(x, *change.x());
@@ -1206,68 +1208,6 @@ struct VectorData  {
 
 };
 
-struct Glyph  {
-	uint styleID{  };
-	uint commandsBlob{  };
-	Vector position{  };
-	float fontSize{  };
-	float advance{  };
-
-	const uint& getStyleID() const {
-		return styleID;
-	}
-	void setStyleID(const uint& v) {
-		styleID = v;
-	}
-	const uint& getCommandsBlob() const {
-		return commandsBlob;
-	}
-	void setCommandsBlob(const uint& v) {
-		commandsBlob = v;
-	}
-	const Vector& getPosition() const {
-		return position;
-	}
-	void setPosition(const Vector& v) {
-		position = v;
-	}
-	const float& getFontSize() const {
-		return fontSize;
-	}
-	void setFontSize(const float& v) {
-		fontSize = v;
-	}
-	const float& getAdvance() const {
-		return advance;
-	}
-	void setAdvance(const float& v) {
-		advance = v;
-	}
-
-	void applyChange(const message::Glyph& change) {
-		applyChangeImpl(styleID, *change.styleID());
-		applyChangeImpl(commandsBlob, *change.commandsBlob());
-		applyChangeImpl(position, *change.position());
-		applyChangeImpl(fontSize, *change.fontSize());
-		applyChangeImpl(advance, *change.advance());
-	}
-
-	void toChange(message::Glyph& change, kiwi::MemoryPool& pool) const {
-		toChangeImpl(&change, &message::Glyph::set_styleID, styleID, pool);
-		toChangeImpl(&change, &message::Glyph::set_commandsBlob, commandsBlob, pool);
-		toChangeImpl(&change, &message::Glyph::set_position, position, pool);
-		toChangeImpl(&change, &message::Glyph::set_fontSize, fontSize, pool);
-		toChangeImpl(&change, &message::Glyph::set_advance, advance, pool);
-	}
-
-	auto* toChange(kiwi::MemoryPool& pool) const {
-		auto* change = pool.allocate<message::Glyph>();
-		toChange(*change, pool);
-		return change;
-	}
-
-};
-
 struct Decoration  {
 	std::vector<Rect> rects{  };
 
@@ -1419,9 +1359,97 @@ struct SymbolData  {
 };
 
 
+class Glyph  {
+private:
+	uint styleID_{};
+	uint commandsBlob_{};
+	Vector position_{};
+	float fontSize_{};
+	float advance_{};
+
+public:
+
+	const uint& getStyleID() const {
+		return styleID_;
+	}
+	void setStyleID(const uint& v) {
+		styleID_ = v;
+	}
+	const uint& getCommandsBlob() const {
+		return commandsBlob_;
+	}
+	void setCommandsBlob(const uint& v) {
+		commandsBlob_ = v;
+	}
+	const Vector& getPosition() const {
+		return position_;
+	}
+	void setPosition(const Vector& v) {
+		position_ = v;
+	}
+	const float& getFontSize() const {
+		return fontSize_;
+	}
+	void setFontSize(const float& v) {
+		fontSize_ = v;
+	}
+	const float& getAdvance() const {
+		return advance_;
+	}
+	void setAdvance(const float& v) {
+		advance_ = v;
+	}
+
+  void applyChange(const message::Glyph& change) {
+		if (change.styleID() != nullptr) {
+			applyChangeImpl(styleID_, *change.styleID());
+		}
+		if (change.commandsBlob() != nullptr) {
+			applyChangeImpl(commandsBlob_, *change.commandsBlob());
+		}
+		if (change.position() != nullptr) {
+			applyChangeImpl(position_, *change.position());
+		}
+		if (change.fontSize() != nullptr) {
+			applyChangeImpl(fontSize_, *change.fontSize());
+		}
+		if (change.advance() != nullptr) {
+			applyChangeImpl(advance_, *change.advance());
+		}
+	}
+
+void toChange(message::Glyph& change, kiwi::MemoryPool& pool) const {
+		toChangeImpl(&change, &message::Glyph::set_styleID, styleID_, pool);
+		toChangeImpl(&change, &message::Glyph::set_commandsBlob, commandsBlob_, pool);
+		toChangeImpl(&change, &message::Glyph::set_position, position_, pool);
+		toChangeImpl(&change, &message::Glyph::set_fontSize, fontSize_, pool);
+		toChangeImpl(&change, &message::Glyph::set_advance, advance_, pool);
+	}
+
+void takeSnapshot(message::Glyph& snapshot, message::Glyph& change, kiwi::MemoryPool& pool) const {
+		if (change.styleID() != nullptr) {
+			toChangeImpl(&snapshot, &message::Glyph::set_styleID, styleID_, pool);
+		}
+		if (change.commandsBlob() != nullptr) {
+			toChangeImpl(&snapshot, &message::Glyph::set_commandsBlob, commandsBlob_, pool);
+		}
+		if (change.position() != nullptr) {
+			toChangeImpl(&snapshot, &message::Glyph::set_position, position_, pool);
+		}
+		if (change.fontSize() != nullptr) {
+			toChangeImpl(&snapshot, &message::Glyph::set_fontSize, fontSize_, pool);
+		}
+		if (change.advance() != nullptr) {
+			toChangeImpl(&snapshot, &message::Glyph::set_advance, advance_, pool);
+		}
+	}
+
+};
+
 class TextData  {
 private:
 	std::string characters_{};
+	std::vector<uint> characterStyleIDs_{};
 	Buffer styleOverrideTable_{};
 	Vector layoutSize_{};
 	std::vector<Baseline> baselines_{};
@@ -1435,6 +1463,12 @@ public:
 	}
 	void setCharacters(const std::string& v) {
 		characters_ = v;
+	}
+	const std::vector<uint>& getCharacterStyleIDs() const {
+		return characterStyleIDs_;
+	}
+	void setCharacterStyleIDs(const std::vector<uint>& v) {
+		characterStyleIDs_ = v;
 	}
 	const Buffer& getStyleOverrideTable() const {
 		return styleOverrideTable_;
@@ -1471,6 +1505,9 @@ public:
 		if (change.characters() != nullptr) {
 			applyChangeImpl(characters_, *change.characters());
 		}
+		if (change.characterStyleIDs() != nullptr) {
+			applyChangeImpl(characterStyleIDs_, *change.characterStyleIDs());
+		}
 		if (change.styleOverrideTable() != nullptr) {
 			applyChangeImpl(styleOverrideTable_, *change.styleOverrideTable());
 		}
@@ -1490,6 +1527,7 @@ public:
 
 void toChange(message::TextData& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::TextData::set_characters, characters_, pool);
+		toChangeImpl(&change, &message::TextData::set_characterStyleIDs, characterStyleIDs_, pool);
 		toChangeImpl(&change, &message::TextData::set_styleOverrideTable, styleOverrideTable_, pool);
 		toChangeImpl(&change, &message::TextData::set_layoutSize, layoutSize_, pool);
 		toChangeImpl(&change, &message::TextData::set_baselines, baselines_, pool);
@@ -1500,6 +1538,9 @@ void toChange(message::TextData& change, kiwi::MemoryPool& pool) const {
 void takeSnapshot(message::TextData& snapshot, message::TextData& change, kiwi::MemoryPool& pool) const {
 		if (change.characters() != nullptr) {
 			toChangeImpl(&snapshot, &message::TextData::set_characters, characters_, pool);
+		}
+		if (change.characterStyleIDs() != nullptr) {
+			toChangeImpl(&snapshot, &message::TextData::set_characterStyleIDs, characterStyleIDs_, pool);
 		}
 		if (change.styleOverrideTable() != nullptr) {
 			toChangeImpl(&snapshot, &message::TextData::set_styleOverrideTable, styleOverrideTable_, pool);
@@ -1515,6 +1556,79 @@ void takeSnapshot(message::TextData& snapshot, message::TextData& change, kiwi::
 		}
 		if (change.decorations() != nullptr) {
 			toChangeImpl(&snapshot, &message::TextData::set_decorations, decorations_, pool);
+		}
+	}
+
+};
+
+class DerivedTextData  {
+private:
+	Vector layoutSize_{};
+	std::vector<Baseline> baselines_{};
+	std::vector<Glyph> glyphs_{};
+	std::vector<Decoration> decorations_{};
+
+public:
+
+	const Vector& getLayoutSize() const {
+		return layoutSize_;
+	}
+	void setLayoutSize(const Vector& v) {
+		layoutSize_ = v;
+	}
+	const std::vector<Baseline>& getBaselines() const {
+		return baselines_;
+	}
+	void setBaselines(const std::vector<Baseline>& v) {
+		baselines_ = v;
+	}
+	const std::vector<Glyph>& getGlyphs() const {
+		return glyphs_;
+	}
+	void setGlyphs(const std::vector<Glyph>& v) {
+		glyphs_ = v;
+	}
+	const std::vector<Decoration>& getDecorations() const {
+		return decorations_;
+	}
+	void setDecorations(const std::vector<Decoration>& v) {
+		decorations_ = v;
+	}
+
+  void applyChange(const message::DerivedTextData& change) {
+		if (change.layoutSize() != nullptr) {
+			applyChangeImpl(layoutSize_, *change.layoutSize());
+		}
+		if (change.baselines() != nullptr) {
+			applyChangeImpl(baselines_, *change.baselines());
+		}
+		if (change.glyphs() != nullptr) {
+			applyChangeImpl(glyphs_, *change.glyphs());
+		}
+		if (change.decorations() != nullptr) {
+			applyChangeImpl(decorations_, *change.decorations());
+		}
+	}
+
+void toChange(message::DerivedTextData& change, kiwi::MemoryPool& pool) const {
+		toChangeImpl(&change, &message::DerivedTextData::set_layoutSize, layoutSize_, pool);
+		toChangeImpl(&change, &message::DerivedTextData::set_baselines, baselines_, pool);
+		toChangeImpl(&change, &message::DerivedTextData::set_glyphs, glyphs_, pool);
+		toChangeImpl(&change, &message::DerivedTextData::set_decorations, decorations_, pool);
+	}
+
+void takeSnapshot(message::DerivedTextData& snapshot, message::DerivedTextData& change, kiwi::MemoryPool& pool) const {
+		if (change.layoutSize() != nullptr) {
+			toChangeImpl(&snapshot, &message::DerivedTextData::set_layoutSize, layoutSize_, pool);
+		}
+		if (change.baselines() != nullptr) {
+			toChangeImpl(&snapshot, &message::DerivedTextData::set_baselines, baselines_, pool);
+		}
+		if (change.glyphs() != nullptr) {
+			toChangeImpl(&snapshot, &message::DerivedTextData::set_glyphs, glyphs_, pool);
+		}
+		if (change.decorations() != nullptr) {
+			toChangeImpl(&snapshot, &message::DerivedTextData::set_decorations, decorations_, pool);
 		}
 	}
 
@@ -2836,6 +2950,7 @@ void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, ki
 class TextNodeBase : public TextNodeMixin {
 private:
 	TextData textData_{};
+	DerivedTextData derivedTextData_{};
 
 public:
 
@@ -2845,22 +2960,35 @@ public:
 	void setTextData(const TextData& v) {
 		textData_ = v;
 	}
+	const DerivedTextData& getDerivedTextData() const {
+		return derivedTextData_;
+	}
+	void setDerivedTextData(const DerivedTextData& v) {
+		derivedTextData_ = v;
+	}
 
   void applyChange(const message::NodeChange& change) {
 		if (change.textData() != nullptr) {
 			applyChangeImpl(textData_, *change.textData());
+		}
+		if (change.derivedTextData() != nullptr) {
+			applyChangeImpl(derivedTextData_, *change.derivedTextData());
 		}
 		TextNodeMixin::applyChange(change);
 	}
 
 void toChange(message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		toChangeImpl(&change, &message::NodeChange::set_textData, textData_, pool);
+		toChangeImpl(&change, &message::NodeChange::set_derivedTextData, derivedTextData_, pool);
 		TextNodeMixin::toChange(change, pool);
 	}
 
 void takeSnapshot(message::NodeChange& snapshot, message::NodeChange& change, kiwi::MemoryPool& pool) const {
 		if (change.textData() != nullptr) {
 			toChangeImpl(&snapshot, &message::NodeChange::set_textData, textData_, pool);
+		}
+		if (change.derivedTextData() != nullptr) {
+			toChangeImpl(&snapshot, &message::NodeChange::set_derivedTextData, derivedTextData_, pool);
 		}
 		TextNodeMixin::takeSnapshot(snapshot, change, pool);
 	}
