@@ -8,5 +8,7 @@ inline void CreateStatusPanel(dea::Dezaina &desaina) {
   auto *hoverDocNode = interStatus.hoverDocNode;
   ImGui::Text("hover Node name: %s",
               hoverDocNode ? hoverDocNode->getName().c_str() : "");
+  ImGui::Text("mouse world pos: %.2f, %.2f", interStatus.mouseWorldPos.x,
+              interStatus.mouseWorldPos.y);
   ImGui::End();
 }

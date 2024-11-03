@@ -46,6 +46,7 @@ public:
   struct Status {
     node::NodeConstPtr hoverDocNode = nullptr;
     node::NodeConstPtr hoverInterNode = nullptr;
+    node::Vector mouseWorldPos;
   } status;
 
 private:

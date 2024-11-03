@@ -21,11 +21,11 @@ MouseInteraction::MouseInteraction(Interaction &inter)
   interSelection_.setMouseHoverFilter([this](node::NodeConstPtr node) {
     return !interaction::node_cast<Frame>(node);
   });
-
-
 }
 
 void MouseInteraction::onMouseMove(event::MouseEvent &event) {
+  interaction_.status.mouseWorldPos = {event.worldX, event.worldY};
+
   auto *node = interSelection_.getHoverNode();
   if (!node || node::node_cast<node::PageNode>(node))
     return;
