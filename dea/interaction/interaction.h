@@ -67,7 +67,12 @@ private:
   void update();
   void updateDocSelection();
   void updateNodeEditor();
-  void createNodeEditor(node::NodeConstPtr node);
+
+  template <typename T>
+  void createNodeEditorImpl(node::NodePtr node) {
+    node_editor_ = std::make_unique<T>(node, doc_.editor(), &container_);
+  }
+
   void handleHover();
   // void onBeforeTick(event::Event* event) override;
   void onMouseWheel(event::MouseEvent &event) override;

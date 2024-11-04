@@ -9,10 +9,11 @@ namespace dea::interaction {
 
 class NodeEditor {
 public:
-	NodeEditor(node::Node& node, Frame& parent) : node_(node) {
+	NodeEditor(node::Node* node, Frame* parent) : node_(node) {
 		frame_.setName("nodeEditor");
-		node::Container::append(&frame_, &parent);
+		node::Container::append(&frame_, parent);
 	};
+
 	virtual ~NodeEditor() {
 		if (auto* parent = frame_.getParent()) {
 			node::Container::remove(&frame_, parent);
@@ -20,18 +21,26 @@ public:
 	};
 
 	virtual void update() {
-		frame_.setTransform(GetWorldMatrix(&node_));
-		frame_.setSize(getSize(&node_));
+		if (!node_) return;
+
+		frame_.setTransform(GetWorldMatrix(node_));
+		frame_.setSize(getSize(node_));
 	}
+	
+	void update(const node::Matrix& transform, const node::Vector& size) {
+		frame_.setTransform(transform);
+		frame_.setSize(size);
+	}
+
 	void selectNearestCtrlNode(node::Vector worldPoint, std::function<bool(node::NodeConstPtr)> filter);
 
-	void setEditNode(node::NodeConstPtr node) { node_ = *node; }
-	auto* getEditNode() { return &node_; }
+	void setEditNode(node::NodePtr node) { node_ = node; }
+	auto* getEditNode() { return node_; }
 
 	auto* getContainer() { return &frame_; }
 
 protected:
-	node::Node& node_;
+	node::Node* node_;
 	Frame frame_;
 };
 

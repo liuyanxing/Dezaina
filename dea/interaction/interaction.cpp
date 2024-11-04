@@ -47,33 +47,24 @@ void Interaction::updateDocSelection() {
   docSelection_ = doc_.getSelectionNodes();
 }
 
-void Interaction::createNodeEditor(node::NodeConstPtr node) {
+void Interaction::createNodeEditor(node::NodePtr node) {
   if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
-    node_editor_ = std::make_unique<RectangleEditor>(
-        *rectangleNode, doc_.editor(), container_);
+    createNodeEditorImpl<RectangleEditor>(rectangleNode);
   } else if (auto *frameNode = node::node_cast<node::FrameNode>(node)) {
-    node_editor_ = std::make_unique<FrameEditor>(*frameNode, doc_.editor(),
-                                                 container_);
+    createNodeEditorImpl<FrameEditor>(frameNode);
   } else if (auto *vectorNode = node::node_cast<node::VectorNode>(node)) {
-    node_editor_ = std::make_unique<VectorEditor>(*vectorNode, doc_.editor(),
-                                                  container_);
+    createNodeEditorImpl<VectorEditor>(vectorNode);
   } else if (auto *textNode = node::node_cast<node::TextNode>(node)) {
-    node_editor_ = std::make_unique<TextEditor>(*textNode, doc_.editor(),
-                                                container_);
+    createNodeEditorImpl<TextEditor>(textNode);
   } else if (auto *starNode = node::node_cast<node::StarNode>(node)) {
-    node_editor_ = std::make_unique<StarEditor>(*starNode, doc_.editor(),
-                                                container_);
+    createNodeEditorImpl<StarEditor>(starNode);
   } else if (auto *ellipseNode = node::node_cast<node::EllipseNode>(node)) {
-    node_editor_ = std::make_unique<EllipseEditor>(*ellipseNode, doc_.editor(),
-                                                   container_);
+    createNodeEditorImpl<EllipseEditor>(ellipseNode);
   } else if (auto *lineNode = node::node_cast<node::LineNode>(node)) {
-    node_editor_ = std::make_unique<LineEditor>(*lineNode, doc_.editor(),
-                                                container_);
+    createNodeEditorImpl<LineEditor>(lineNode);
   } else if (auto *polygonNode = node::node_cast<node::PolygonNode>(node)) {
-    node_editor_ = std::make_unique<PolygonEditor>(*polygonNode, doc_.editor(),
-                                                   container_);
-  }
-  else {
+    createNodeEditorImpl<PolygonEditor>(polygonNode);
+  } else {
     assert(false);
   }
 }
@@ -85,14 +76,15 @@ void Interaction::updateNodeEditor() {
   }
 
   if (docSelection_.size() > 1) {
-  } else {
-    auto *node = docSelection_.front();
-    if (!node_editor_ || node_editor_->getEditNode() != node) {
-        node_editor_ = nullptr;
-        createNodeEditor(node);
-    }
-  }
+    return;
+  } 
 
+  auto *node = docSelection_.front();
+  if (!node_editor_ || node_editor_->getEditNode() != node) {
+      node_editor_ = nullptr;
+      createNodeEditor(node);
+      return;
+  }
   node_editor_->update();
 }
 

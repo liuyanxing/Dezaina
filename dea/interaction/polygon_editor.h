@@ -5,14 +5,14 @@ namespace dea::interaction {
 
 class PolygonEditor : public NodeEditor, public BoundEditor {
 public:
-	PolygonEditor(node::PolygonNode& node, document::Editor& editor, Frame& parent) :
+	PolygonEditor(node::PolygonNode* node, document::Editor& editor, Frame*& parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();
 		}
 
 		void update() override {
-			auto* node = node::node_cast<node::PolygonNode>(&node_);
+			auto* node = node::node_cast<node::PolygonNode>(node_);
 			assert(node);
 			NodeEditor::update();
 			BoundEditor::update();
