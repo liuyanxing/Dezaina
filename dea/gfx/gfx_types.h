@@ -3,7 +3,7 @@
 #include <vector>
 #include "base/type.h"
 
-namespace gfx {
+namespace dea::gfx {
 
 class Segment;
 class Path;
@@ -182,8 +182,8 @@ private:
 		inline static int nextID = 0;
 };
 
-using VertexArray = std::vector<Vertex*>;
-using SegmentArray = std::vector<Segment*>;
+using VertexPtrArray = std::vector<Vertex*>;
+using SegmentPtrArray = std::vector<Segment*>;
 
 struct CycleVertex {
 	SegmentVertex* vertex;

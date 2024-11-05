@@ -2,21 +2,12 @@
 
 #include "gfx_types.h"
 
-namespace gfx {
+namespace dea::gfx {
 
 class Network {
 public:
-	Network() = default;
+	static Network buildFromData(const base::Data& data, SkArenaAlloc& arena);
 
-	Network(const base::Data& data, ArenaAlloc& arena);
-	Network(Network&& that) {
-		*this = std::move(that);
-	}
-	Network& operator=(Network&& that) {
-		vertecies_ = std::move(that.vertecies_);
-		segments_ = std::move(that.segments_);
-		return *this;
-	}
 	auto* getVertecies() {
 		return &vertecies_;
 	}
@@ -26,10 +17,18 @@ public:
 	bool empty() {
 		return vertecies_.empty() && segments_.empty();
 	}
+
+	void buildSKPath();
+	void buildCycles(SkArenaAlloc& arena);
+
 	private:
-		VertexArray vertecies_;
-		SegmentArray segments_;
+		VertexPtrArray vertecies_;
+		SegmentPtrArray segments_;
 		ContourCycles cycles_;
+		SegmentPtrArray buildPlanarSegemts(SkArenaAlloc& allocator);
+		SkPath skPath_;
+
+		SkOpContourHead* computeIntersections();
 };
 
 } // namespace gfx

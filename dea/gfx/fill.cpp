@@ -4,7 +4,7 @@
 #include "resource.h"
 #include <corecrt_math_defines.h>
 
-namespace dea::geometry {
+namespace dea::gfx {
 using namespace dea::node;
 using namespace dea::resource;
 using namespace dea::base;
