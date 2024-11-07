@@ -16,7 +16,7 @@ target("dea")
     add_files("*.cpp")
 
     -- add sub directories
-    local subdirs = {"base", "change", "config", "hotkey", "primitives", "schema", "utility", "viewport", "geometry"}
+    local subdirs = {"base", "change", "config", "hotkey", "primitives", "schema", "utility", "viewport", "geometry", "gfx"}
     local modules = {"command", "document", "event", "interaction", "layout", "node", "resource"}
 
     if (has_config("render")) then
