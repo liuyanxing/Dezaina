@@ -18,6 +18,7 @@ Network Network::buildFromData(const base::Data& data, SkArenaAlloc& arena) {
     network.vertecies_.reserve(vertexCount);
     network.segments_.reserve(segmentCount);
     
+    // decode vertecies
     int vertexOffset = 3;
     for (int i = 0; i < vertexCount; i++) {
       auto& vertex = vertecies[i];
@@ -27,25 +28,26 @@ Network Network::buildFromData(const base::Data& data, SkArenaAlloc& arena) {
       network.vertecies_.push_back(&vertex);
     }
     
+    // decode segments
     int segmentOffset = 3 * vertexCount + 3;
-
     for (int i = 0; i < segmentCount; i++) {
       auto& segment = segments[i];
       auto segmentStart = segmentOffset + 7 * i;
+      // unknown
       auto networkIndex = uintData[segmentStart];
+
       auto v0Index = uintData[segmentStart + 1];
-      auto& vertex0 = vertecies[v0Index];
-      auto* v0 = arena.make<SegmentVertex>(&vertex0, 0);
+      auto* v0 = arena.make<SegmentVertex>(vertecies[v0Index], 0);
       v0->setTangentOffset(floatData[segmentStart + 2], floatData[segmentStart + 3]);
 
       auto v1Index = uintData[segmentStart + 4];
-      auto& vertex1 = vertecies[v1Index];
-      auto* v1 = arena.make<SegmentVertex>(&vertex1, 1);
+      auto* v1 = arena.make<SegmentVertex>(vertecies[v1Index], 1);
       v1->setTangentOffset(floatData[segmentStart + 5], floatData[segmentStart + 6]);
       segment.setVertices(v0, v1);
 
       network.segments_.push_back(&segment);
     }
+
 		return network;
 }
 
