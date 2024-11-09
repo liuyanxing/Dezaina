@@ -9,6 +9,7 @@
 #include "node_editor.h"
 #include "selection.h"
 #include <memory>
+#include <string>
 
 namespace dea::interaction {
 
@@ -38,6 +39,12 @@ public:
     endCreateNode();
     creatingNode_ = doc_.createNode<T>(false);
   }
+
+  void startCreateNode(const std::string& name) {
+    endCreateNode();
+    creatingNode_ = doc_.createNode(name, false);
+  }
+
   auto *getCreatingNode() { return creatingNode_; }
   void endCreateNode();
 
