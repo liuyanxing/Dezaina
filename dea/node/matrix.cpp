@@ -1,7 +1,4 @@
 #include "node.generated.h"
-#include <cmath>
-#include <optional>
-#include <iostream>
 
 namespace dea::node {
 
@@ -57,20 +54,15 @@ Vector Matrix::mapVector(const Vector &vector) const {
 }
 
 void Matrix::preTranslate(float x, float y) {
-  m02 += x * m00 + y * m01;
-  m12 += x * m10 + y * m11;
+  *this = *this * Translate(x, y);
 }
 
 void Matrix::preScale(float x, float y) {
-  m00 *= x;
-  m01 *= y;
-  m10 *= x;
-  m11 *= y;
+  *this = *this * Scale(x, y);
 }
 
 void Matrix::preScale(float x, float y, float cx, float cy) {
-  preTranslate(cx, cy);
-  preScale(x, y);
-  preTranslate(-cx, -cy);
+  *this = *this * Translate(cx, cy) * Scale(x, y) * Translate(-cx, -cy);
 }
+
 } // namespace dea::node
