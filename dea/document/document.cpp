@@ -218,4 +218,45 @@ void Document::loadEmpty() {
   setCurrentPage(page);
 }
 
+node::NodePtr createNode(const std::string& type, bool sync = true) {
+  node::GUID id{sessionId_, localId_++};
+  switch (type) {
+  {
+  case "document":
+    return createNode<DocumentNode>(id, sync);
+    break;
+  case "page":
+    return createNode<PageNode>(id, sync);
+    break;
+  case "frame":
+    return createNode<FrameNode>(id, sync);
+    break;
+  case "rectangle":
+    return createNode<RectangleNode>(id, sync);
+    break;
+  case "vector":
+    return createNode<VectorNode>(id, sync);
+    break;
+  case "star":
+    return createNode<StarNode>(id, sync);
+    break;
+  case "line":
+    return createNode<LineNode>(id, sync);
+    break;
+  case "ellipse":
+    return createNode<EllipseNode>(id, sync);
+    break;
+  case "polygon": 
+    return createNode<PolygonNode>(id, sync);
+    break;
+  case "text":
+    return createNode<TextNode>(id, sync);
+    break;
+  default:
+    break;
+  }
+  assert(false);
+  return nullptr;
+}
+
 } // namespace dea::document

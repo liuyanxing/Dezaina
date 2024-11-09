@@ -111,6 +111,10 @@ public:
                                       newWorldY);
   }
 
+  void startCreateNode(const std::string& name) {
+    interaction_.startCreateNode(name);
+  }
+
   static void setImmediate(bool immediate) { immediate_ = immediate;}
   static bool isImmediate() { return immediate_; }
 

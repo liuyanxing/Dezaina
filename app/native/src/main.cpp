@@ -149,7 +149,7 @@ int main(int, char**)
             ImGui::End();
         }
 
-        CreateFilePanel(dezaina);
+        CreateInterPanel(dezaina);
         CreateStatusPanel(dezaina);
 
         // Rendering

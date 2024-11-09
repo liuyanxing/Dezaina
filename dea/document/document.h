@@ -5,6 +5,7 @@
 #include "node.h"
 #include "vendor/figma/kiwi.h"
 #include <cstdint>
+#include <string>
 
 namespace dea::document {
 
@@ -44,6 +45,8 @@ public:
     append(node, parent);
     return node;
   };
+
+  node::NodePtr createNode(const std::string& type, bool sync = true);
 
   bool load(kiwi::ByteBuffer& buffer, message::BinarySchema* schema = nullptr) {
     auto res = applyMessage(buffer, schema);
