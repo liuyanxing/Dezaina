@@ -5,7 +5,7 @@ namespace dea::interaction {
 
 class EllipseEditor : public NodeEditor, public BoundEditor {
 public:
-	EllipseEditor(node::EllipseNode* node, document::Editor& editor, Frame* parent) :
+	EllipseEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();

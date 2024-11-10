@@ -218,42 +218,29 @@ void Document::loadEmpty() {
   setCurrentPage(page);
 }
 
-node::NodePtr createNode(const std::string& type, bool sync = true) {
+node::NodePtr Document::createNode(const std::string& type, bool sync) {
   node::GUID id{sessionId_, localId_++};
-  switch (type) {
-  {
-  case "document":
+
+  if (type == "document") {
     return createNode<DocumentNode>(id, sync);
-    break;
-  case "page":
+  } else if (type == "page") {
     return createNode<PageNode>(id, sync);
-    break;
-  case "frame":
+  } else if (type == "frame") {
     return createNode<FrameNode>(id, sync);
-    break;
-  case "rectangle":
+  } else if (type == "rectangle") {
     return createNode<RectangleNode>(id, sync);
-    break;
-  case "vector":
+  } else if (type == "vector") {
     return createNode<VectorNode>(id, sync);
-    break;
-  case "star":
+  } else if (type == "star") {
     return createNode<StarNode>(id, sync);
-    break;
-  case "line":
+  } else if (type == "line") {
     return createNode<LineNode>(id, sync);
-    break;
-  case "ellipse":
+  } else if (type == "ellipse") {
     return createNode<EllipseNode>(id, sync);
-    break;
-  case "polygon": 
+  } else if (type == "polygon") {
     return createNode<PolygonNode>(id, sync);
-    break;
-  case "text":
+  } else if (type == "text") {
     return createNode<TextNode>(id, sync);
-    break;
-  default:
-    break;
   }
   assert(false);
   return nullptr;

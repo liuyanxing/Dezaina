@@ -1,7 +1,7 @@
 #include "UI/ui.h"
 #include <SDL2/SDL.h>
 
-namespace ui {
+namespace dea::ui {
 void UI::setCursor(CursorType type) {
   SDL_Cursor *sdlCursor;
   switch (type) {

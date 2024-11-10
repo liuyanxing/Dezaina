@@ -49,21 +49,21 @@ void Interaction::updateDocSelection() {
 
 void Interaction::createNodeEditor(node::NodePtr node) {
   if (auto *rectangleNode = node::node_cast<node::RectangleNode>(node)) {
-    createNodeEditorImpl<RectangleEditor>(rectangleNode);
+    createNodeEditorInernal<RectangleEditor>(rectangleNode);
   } else if (auto *frameNode = node::node_cast<node::FrameNode>(node)) {
-    createNodeEditorImpl<FrameEditor>(frameNode);
+    createNodeEditorInernal<FrameEditor>(frameNode);
   } else if (auto *vectorNode = node::node_cast<node::VectorNode>(node)) {
-    createNodeEditorImpl<VectorEditor>(vectorNode);
+    createNodeEditorInernal<VectorEditor>(vectorNode);
   } else if (auto *textNode = node::node_cast<node::TextNode>(node)) {
-    createNodeEditorImpl<TextEditor>(textNode);
+    createNodeEditorInernal<TextEditor>(textNode);
   } else if (auto *starNode = node::node_cast<node::StarNode>(node)) {
-    createNodeEditorImpl<StarEditor>(starNode);
+    createNodeEditorInernal<StarEditor>(starNode);
   } else if (auto *ellipseNode = node::node_cast<node::EllipseNode>(node)) {
-    createNodeEditorImpl<EllipseEditor>(ellipseNode);
+    createNodeEditorInernal<EllipseEditor>(ellipseNode);
   } else if (auto *lineNode = node::node_cast<node::LineNode>(node)) {
-    createNodeEditorImpl<LineEditor>(lineNode);
+    createNodeEditorInernal<LineEditor>(lineNode);
   } else if (auto *polygonNode = node::node_cast<node::PolygonNode>(node)) {
-    createNodeEditorImpl<PolygonEditor>(polygonNode);
+    createNodeEditorInernal<PolygonEditor>(polygonNode);
   } else {
     assert(false);
   }
@@ -82,7 +82,7 @@ void Interaction::updateNodeEditor() {
   auto *node = docSelection_.front();
   if (!node_editor_ || node_editor_->getEditNode() != node) {
       node_editor_ = nullptr;
-      createNodeEditor(node);
+      createNodeEditor(const_cast<node::NodePtr>(node));
       return;
   }
   node_editor_->update();

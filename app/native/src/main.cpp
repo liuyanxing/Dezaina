@@ -8,7 +8,7 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#include "file_panel.h"
+#include "inter_panel.h"
 #include "status_panel.h"
 #include "process_event.h"
 

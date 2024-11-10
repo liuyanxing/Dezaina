@@ -9,14 +9,14 @@ public:
 		Bound,
 		Vector,
 	};
-	VectorEditor(node::VectorNode& node, document::Editor& editor, Frame& parent) :
+	VectorEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();
 		}
 
 	void update() override {
-		auto* node = node::node_cast<node::VectorNode>(&node_);
+		auto* node = node::node_cast<node::VectorNode>(node_);
 		assert(node);
 		NodeEditor::update();
 		BoundEditor::update();

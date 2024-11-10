@@ -5,7 +5,7 @@ namespace dea::interaction {
 
 class PolygonEditor : public NodeEditor, public BoundEditor {
 public:
-	PolygonEditor(node::PolygonNode* node, document::Editor& editor, Frame*& parent) :
+	PolygonEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();

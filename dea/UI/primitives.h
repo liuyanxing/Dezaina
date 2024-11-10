@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ui {
+namespace dea::ui {
 
 enum class CursorType {
   SIZEWE,

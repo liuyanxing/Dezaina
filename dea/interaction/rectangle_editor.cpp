@@ -6,7 +6,7 @@ namespace dea::interaction {
 using namespace node;
 
 void RectangleEditor::update() {
-	auto* node = node::node_cast<node::RectangleNode>(&node_);
+	auto* node = node::node_cast<node::RectangleNode>(node_);
 	assert(node);
 	NodeEditor::update();
 	BoundEditor::update();
