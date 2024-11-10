@@ -5,18 +5,25 @@ namespace dea::interaction {
 
 class VectorEditor : public NodeEditor, public BoundEditor {
 public:
-	VectorEditor(node::VectorNode* node, document::Editor& editor, Frame* parent) :
+	enum Mode {
+		Bound,
+		Vector,
+	};
+	VectorEditor(node::VectorNode& node, document::Editor& editor, Frame& parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();
 		}
 
-		void update() override {
-			auto* node = node::node_cast<node::VectorNode>(node_);
-			assert(node);
-			NodeEditor::update();
-			BoundEditor::update();
-		}
+	void update() override {
+		auto* node = node::node_cast<node::VectorNode>(&node_);
+		assert(node);
+		NodeEditor::update();
+		BoundEditor::update();
+	}
+
+private:
+	Mode editMode_ = Bound;
 };
 
 } // namespace dea::interaction
