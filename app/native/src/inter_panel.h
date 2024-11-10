@@ -39,7 +39,7 @@ inline void CreateInterPanel(dea::Dezaina& desaina) {
 	ImGui::Begin("interaction");
 
 	if (ImGui::Button("load fig")) {
-    std::filesystem::path fig_dir = std::filesystem::current_path() / "figs" / "all shapes.fig";
+    std::filesystem::path fig_dir = std::filesystem::current_path() / "figs" / "vector.fig";
     // std::filesystem::path fig_dir = std::filesystem::current_path() / "figs" / "text.fig";
 		auto& loader = loader::Loader::getInstance();
 		loader.loadFig(fig_dir.string());

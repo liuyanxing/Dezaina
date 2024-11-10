@@ -13,7 +13,7 @@ public:
 	BlobResourceItem(base::Data&& data) : ResourceItem(ResourceType::Blob), data_(std::move(data)) {}
 	BlobResourceItem(BlobResourceItem&& other) : ResourceItem(std::move(other)), data_(std::move(other.data_)) {}
 
-	const auto* data() const { return &data_; }
+	auto& data() const { return data_; }
 
 	static constexpr ResourceType Type = ResourceType::Blob;
 private:
@@ -26,14 +26,14 @@ namespace std {
 template<>
 struct hash<dea::resource::BlobResourceItem> {
 	size_t operator()(const dea::resource::BlobResourceItem& item) const {
-		return std::hash<dea::base::Data>()(*item.data());
+		return std::hash<dea::base::Data>()(item.data());
 	}
 };
 
 template<>
 struct equal_to<dea::resource::BlobResourceItem> {
 	bool operator()(const dea::resource::BlobResourceItem& lhs, const dea::resource::BlobResourceItem& rhs) const {
-		return *lhs.data() == *rhs.data();
+		return lhs.data() == rhs.data();
 	}
 };
 

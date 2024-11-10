@@ -8,8 +8,7 @@
 
 namespace dea::gfx {
 
-Network Network::buildFromData(const base::Data& networkData, SkArenaAlloc& arena) {
-    Network network;
+void Network::buildFromData(const base::Data& networkData, SkArenaAlloc& arena, Network& network) {
     auto* data = networkData.data();
     auto* floatData = reinterpret_cast<const float*>(data);
     auto* uintData = reinterpret_cast<const uint32_t*>(data);
@@ -53,8 +52,6 @@ Network Network::buildFromData(const base::Data& networkData, SkArenaAlloc& aren
 
       network.segments_.push_back(&segment);
     }
-
-		return network;
 }
 
 static SegmentVertex* findTheLeftMostVertex(Segment* segment) {

@@ -69,7 +69,7 @@ GeometryType *getOrBuild(ResourceId id) {
     return attachment->geometry();
   }
 
-  auto geometry = buildGeometry(*blobItem->data());
+  auto geometry = buildGeometry(blobItem->data());
   blobItem->setAttachment(
       std::make_unique<GeometryResourceAttachment>(std::move(geometry)));
   return blobItem->attachment<GeometryResourceAttachment *>()->geometry();

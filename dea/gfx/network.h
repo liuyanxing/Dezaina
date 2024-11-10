@@ -10,7 +10,7 @@ namespace dea::gfx {
 
 class Network {
 public:
-	static Network buildFromData(const base::Data& data, SkArenaAlloc& arena);
+	static void buildFromData(const base::Data& data, SkArenaAlloc& arena, Network& network);
 
 	auto* getVertecies() {
 		return &vertecies_;

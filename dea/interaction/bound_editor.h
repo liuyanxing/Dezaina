@@ -22,6 +22,11 @@ public:
   void getNearestResizeCtrl(node::Vector worldPoint);
   void appendToContainer(node::Node *node) { node::Container::append(node, &container_); }
   void update();
+  void invalidate() {
+		if (auto* parent = container_.getParent()) {
+			node::Container::remove(&container_, parent);
+		}
+  }
 
 protected:
   Frame container_;

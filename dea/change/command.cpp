@@ -47,7 +47,7 @@ void NodeChangesCommand::takeUndoSnapshot() {
 			if (!shape->getFillGeometry().size()) continue;
 			auto* item = resource::Resource::getInstance().get(shape->getFillGeometry().front().commandsBlob);
 			if (item && item->as<resource::BlobResourceItem>()) {
-				pathes.push_back(item->as<resource::BlobResourceItem>()->data());
+				pathes.push_back(&item->as<resource::BlobResourceItem>()->data());
 				auto& fillGeometry = snapshot.set_fillGeometry(pool, 1);
 				toChangeImpl(fillGeometry, shape->getFillGeometry(), pool);
 				fillGeometry[0].set_commandsBlob(pathes.size() - 1);
@@ -79,7 +79,7 @@ void NodeChangesCommand::takeRedoSnapShot() {
 	    Dezaina::instance().document().applyNodeChange(nodeChange);
 		if (auto* shape = node_cast<DefaultShapeNode>(node); shape && !isFillPathValid(nodeChange)) {
 			auto *item = Resource::getInstance().getProvider<BlobResourceProvider>()->store(geometry::buildFill(node));
-			pathes.push_back(item->data());
+			pathes.push_back(&item->data());
 
 			auto& fillGeometry = nodeChange->set_fillGeometry(pool, 1);
 			toChangeImpl(fillGeometry, shape->getFillGeometry(), pool);
