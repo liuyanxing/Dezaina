@@ -5,7 +5,7 @@ namespace dea::interaction {
 
 class LineEditor : public NodeEditor, public BoundEditor {
 public:
-	LineEditor(node::LineNode* node, document::Editor& editor, Frame* parent) :
+	LineEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();

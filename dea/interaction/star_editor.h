@@ -5,7 +5,7 @@ namespace dea::interaction {
 
 class StarEditor : public NodeEditor, public BoundEditor {
 public:
-	StarEditor(node::StarNode* node, document::Editor& editor, Frame* parent) :
+	StarEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor} {
 			update();

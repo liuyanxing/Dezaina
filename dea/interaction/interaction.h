@@ -35,6 +35,8 @@ public:
   auto &getInterSelection() { return interSelection_; }
   auto *getInterPage() { return &container_; }
 
+  void createNodeEditor(node::NodePtr node);
+
   template <typename T> void startCreateNode() {
     endCreateNode();
     creatingNode_ = doc_.createNode<T>(false);
@@ -76,7 +78,7 @@ private:
   void updateNodeEditor();
 
   template <typename T>
-  void createNodeEditorImpl(node::NodePtr node) {
+  void createNodeEditorInernal(node::NodePtr node) {
     node_editor_ = std::make_unique<T>(node, doc_.editor(), &container_);
   }
 

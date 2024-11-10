@@ -6,7 +6,7 @@ namespace dea::interaction {
 
 class RectangleEditor : public NodeEditor, public BoundEditor, public RadiusEditor {
 public:
-	RectangleEditor(node::RectangleNode* node, document::Editor& editor, Frame* parent) :
+	RectangleEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
 		BoundEditor{frame_, editor},
 		RadiusEditor(frame_, editor) {
