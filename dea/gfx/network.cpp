@@ -205,7 +205,7 @@ void Network::buildCycles(SkArenaAlloc& arena) {
   // return mcb;
 }
 
-void Network::buildSKPath() {
+void Network::buildSkPath() {
   for (auto* segment : segments_) {
     auto [v0, v1] = segment->getEndVertecies();
     skPath_.moveTo(v0->x(), v0->y());
@@ -224,6 +224,9 @@ void Network::buildSKPath() {
 }
 
 SegmentPtrArray Network::buildPlanarSegemts(SkArenaAlloc& allocator) {
+    if (skPath_.isEmpty()) {
+        buildSkPath();
+  }
   SkOpContour contour;
   SkOpContourHead* contourList = static_cast<SkOpContourHead*>(&contour);
   SkOpGlobalState globalState(contourList, &allocator, true, nullptr);

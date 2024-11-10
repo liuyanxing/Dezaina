@@ -54,6 +54,7 @@ void Interaction::createNodeEditor(node::NodePtr node) {
     createNodeEditorInernal<FrameEditor>(frameNode);
   } else if (auto *vectorNode = node::node_cast<node::VectorNode>(node)) {
     createNodeEditorInernal<VectorEditor>(vectorNode);
+    node_editor_->as<VectorEditor>()->startEditVector();
   } else if (auto *textNode = node::node_cast<node::TextNode>(node)) {
     createNodeEditorInernal<TextEditor>(textNode);
   } else if (auto *starNode = node::node_cast<node::StarNode>(node)) {

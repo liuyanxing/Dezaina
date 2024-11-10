@@ -6,8 +6,8 @@ package("skia")
     set_description("A complete 2D graphic library for drawing Text, Geometries, and Images.")
     set_license("BSD-3-Clause")
 
-    add_urls("https://github.com/google/skia.git")
-    add_versions("128", "chrome/m128")
+    add_urls("https://github.com/liuyanxing/skia.git")
+    add_versions("128", "dezaina/chrome/m128")
 
     add_deps("gn", "python", "ninja", {kind = "binary"})
 
@@ -52,6 +52,8 @@ package("skia")
         -- installation
         import("package.tools.gn").build(package, args, {buildir = "out"})
         os.mv("include", package:installdir())
+        os.mv("src", package:installdir("include"))
+        os.mv("modules", package:installdir("include"))
         os.cd("out")
         os.rm("obj")
         os.rm("*.ninja")

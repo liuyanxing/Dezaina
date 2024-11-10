@@ -22,7 +22,7 @@ public:
 		return vertecies_.empty() && segments_.empty();
 	}
 
-	void buildSKPath();
+	void buildSkPath();
 	void buildCycles(SkArenaAlloc& arena);
 
 	private:

@@ -39,6 +39,11 @@ public:
 
 	auto* getContainer() { return &frame_; }
 
+	template<typename T>
+	T* as() {
+		return dynamic_cast<T*>(this);
+	}
+
 protected:
 	node::Node* node_;
 	Frame frame_;
