@@ -1,12 +1,18 @@
+#include <stack>
+#include <unordered_map>
+#include "include/src/pathops/SkAddIntersections.h"
+#include "include/src/pathops/SkOpCoincidence.h"
+#include "include/src/pathops/SkOpEdgeBuilder.h"
+#include "include/src/pathops/SkPathOpsCommon.h"
 #include "network.h"
 
 namespace dea::gfx {
 
-Network Network::buildFromData(const base::Data& data, SkArenaAlloc& arena) {
-		Network network;
-    auto* data = data->data();
-    auto* floatData = reinterpret_cast<float*>(data);
-    auto* uintData = reinterpret_cast<uint32_t*>(data);
+Network Network::buildFromData(const base::Data& networkData, SkArenaAlloc& arena) {
+    Network network;
+    auto* data = networkData.data();
+    auto* floatData = reinterpret_cast<const float*>(data);
+    auto* uintData = reinterpret_cast<const uint32_t*>(data);
 
     auto vertexCount = uintData[0];
     auto segmentCount = uintData[1];
@@ -37,11 +43,11 @@ Network Network::buildFromData(const base::Data& data, SkArenaAlloc& arena) {
       auto networkIndex = uintData[segmentStart];
 
       auto v0Index = uintData[segmentStart + 1];
-      auto* v0 = arena.make<SegmentVertex>(vertecies[v0Index], 0);
+      auto* v0 = arena.make<SegmentVertex>(network.vertecies_[v0Index], 0);
       v0->setTangentOffset(floatData[segmentStart + 2], floatData[segmentStart + 3]);
 
       auto v1Index = uintData[segmentStart + 4];
-      auto* v1 = arena.make<SegmentVertex>(vertecies[v1Index], 1);
+      auto* v1 = arena.make<SegmentVertex>(network.vertecies_[v1Index], 1);
       v1->setTangentOffset(floatData[segmentStart + 5], floatData[segmentStart + 6]);
       segment.setVertices(v0, v1);
 
@@ -63,7 +69,7 @@ static SegmentVertex* findTheLeftMostVertex(Segment* segment) {
   return leftMost;
 }
 
-static SegmentVertex* findTheLeftMostVertex(vector<Segment*>& segments) {
+static SegmentVertex* findTheLeftMostVertex(SegmentPtrArray& segments) {
   auto* leftMost = findTheLeftMostVertex(segments[0]);
   for (int i = 1; i < segments.size(); i++) {
     auto* vertex = findTheLeftMostVertex(segments[i]);
@@ -74,13 +80,13 @@ static SegmentVertex* findTheLeftMostVertex(vector<Segment*>& segments) {
   return leftMost;
 }
 
-static  auto getDirection = [](SegmentVertex* vertex) {
+static auto getDirection = [](SegmentVertex* vertex) {
   auto* tangentOffset = vertex->getTangentOffset();
   if (tangentOffset->x() == 0 && tangentOffset->y() == 0) {
     auto another = vertex->segment()->getAnotherVertex(vertex);
     return SkVector{another->x() - vertex->x(), another->y() - vertex->y()};
   }
-  return util::toSkVector(*tangentOffset);
+  return SkVector{tangentOffset->x(), tangentOffset->y()};
 };
 
 static SegmentVertex* getClockwiseMost(const SkVector& pre, SegmentVertex* vertex) {
@@ -136,8 +142,8 @@ static SegmentVertex* getCounterClockwiseMost(const SkVector& pre, SegmentVertex
   return result;
 }
 
-static vector<SegmentVertex*> walk(SegmentVertex* segmentVertex) {
-  vector<SegmentVertex*> res;
+static std::vector<SegmentVertex*> walk(SegmentVertex* segmentVertex) {
+  std::vector<SegmentVertex*> res;
 
   auto* vertex = segmentVertex->getVertex();
   auto* clockwiseMost = getClockwiseMost({0, 1}, segmentVertex);
@@ -152,7 +158,7 @@ static vector<SegmentVertex*> walk(SegmentVertex* segmentVertex) {
   return res;
 }
 
-static CycleVertex buildCycle(vector<Segment*>& segments) {
+static CycleVertex buildCycle(SegmentPtrArray& segments) {
   auto* leftMost = findTheLeftMostVertex(segments);
   auto cycleSegemtnVertices = walk(leftMost);
   // removeSegments(cycleSegemtnVertices, segments);
@@ -160,7 +166,7 @@ static CycleVertex buildCycle(vector<Segment*>& segments) {
   std::unordered_map<Vertex*, CycleVertex> map;
   SegmentVertex* last = nullptr;
   for (auto* segmentVertex : cycleSegemtnVertices) {
-    CycleVertex cycleVertex{segmentVertex, {}};
+    CycleVertex cycleVertex{segmentVertex};
     auto* vertex = segmentVertex->getVertex();
     stack.push(cycleVertex);
     if (last && last->getVertex() == vertex) {
@@ -169,7 +175,7 @@ static CycleVertex buildCycle(vector<Segment*>& segments) {
     last = segmentVertex;
     if (map.contains(vertex)) {
       auto& cycleVertex = map[vertex];
-      vector<CycleVertex> cycle;
+      std::vector<CycleVertex> cycle;
       while(stack.size() > 1 && stack.top() != cycleVertex) {
         auto& topVertex =  stack.top();
         cycle.push_back(topVertex);
@@ -177,7 +183,7 @@ static CycleVertex buildCycle(vector<Segment*>& segments) {
         stack.pop();
       }
       std::reverse(cycle.begin(), cycle.end());
-      stack.top().cycle = std::move(cycle);
+     // stack.top().cycle = std::move(cycle);
       continue;
     }
     map.insert({vertex, cycleVertex});
@@ -186,8 +192,8 @@ static CycleVertex buildCycle(vector<Segment*>& segments) {
   return stack.top();
 }
 
-static vector<CycleVertex> buildMinimalCycleBasis(vector<Segment*>& segments) {
-  vector<CycleVertex> cycles;
+static std::vector<CycleVertex> buildMinimalCycleBasis(SegmentPtrArray& segments) {
+  std::vector<CycleVertex> cycles;
   // 暂时不考虑多个环的情况
   // while (!segments.empty()) {
   //   cycles.push_back(buildCycle(segments));
@@ -198,8 +204,8 @@ static vector<CycleVertex> buildMinimalCycleBasis(vector<Segment*>& segments) {
 void Network::buildCycles(SkArenaAlloc& arena) {
   auto segments = buildPlanarSegemts(arena);
   auto mcb = buildMinimalCycleBasis(segments);
-  buildCyclesPath(mcb);
-  return mcb;
+  // buildCyclesPath(mcb);
+  // return mcb;
 }
 
 void Network::buildSKPath() {
@@ -245,11 +251,11 @@ SegmentPtrArray Network::buildPlanarSegemts(SkArenaAlloc& allocator) {
   }
 
   SegmentPtrArray result;
-  std::unordered_map<SkOpPtT*, vector<SegmentVertex*>> ptVertexMap;
+  std::unordered_map<SkOpPtT*, std::vector<SegmentVertex*>> ptVertexMap;
   cur = contourList;
   int index = 0;
   while (cur) {
-    auto segment = segments[index];
+    auto segment = segments_[index];
     // only one segment per contour, the order is the same as the order of the segments in the network
     auto* opSegment = cur->first();
     SkOpSpanBase* curSpan = opSegment->head(), *nextSpan = nullptr;

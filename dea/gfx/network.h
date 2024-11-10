@@ -1,6 +1,10 @@
 #pragma once
 
 #include "gfx_types.h"
+#include "include/src/base/SkArenaAlloc.h"
+#include "include/src/pathops/SkOpContour.h"
+#include "base/data.h"
+#include "include/core/SkPath.h"
 
 namespace dea::gfx {
 
