@@ -28,6 +28,7 @@ using namespace ui;
 
 Interaction::Interaction(Document &doc) : doc_(doc) {
   container_.setName("inter");
+  container_.disable();
   container_.setSize({FLT_MAX, FLT_MAX});
   container_.addEventListener(EventType::MouseMove, [this](Event &event) {
     if (node_editor_) {

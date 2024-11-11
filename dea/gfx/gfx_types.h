@@ -50,6 +50,11 @@ public:
 		this->y_ = y;
 	}
 
+	void translate(float dx, float dy) {
+		x_ += dx;
+		y_ += dy;
+	}
+
 	void setStyleID(int styleID) {
 		styleID_ = styleID;
 	}
@@ -82,6 +87,10 @@ public:
 		tangentOffset.set(x, y);
 	}
 
+	void translateTangent(float dx, float dy) {
+		tangentOffset.set(tangentOffset.x() + dx, tangentOffset.y() + dy);
+	}
+
 	void setVertex(Vertex* vertex) {
 		this->vertex_ = vertex;
 	}
@@ -90,8 +99,8 @@ public:
 		t_ = t;
 	}
 
-	Vector* getTangentOffset() {
-		return &tangentOffset;
+	Vector getTangentOffset() {
+		return tangentOffset;
 	}
 
 	Vector getTangentEnd() const {
@@ -136,6 +145,26 @@ private:
 
 class Segment {
 public:
+	class VertexIter {
+	public:
+		VertexIter(SegmentVertex* vertex) : vertex_(vertex) {}
+		bool goNext() {
+			vertex_ = vertex_->next();
+			return vertex_ != nullptr;
+		}
+		void goAnother() {
+			vertex_ = vertex_->segment()->getAnotherVertex(vertex_);
+		}
+		auto* get() {
+			return vertex_;
+		}
+		auto clone() {
+			return VertexIter{vertex_};
+		}
+	private:
+		SegmentVertex* vertex_;
+	};
+
 	void setVertices(SegmentVertex* v0, SegmentVertex* v1) {
 		vertices[0] = v0;
 		vertices[1] = v1;

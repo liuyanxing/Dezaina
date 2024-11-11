@@ -17,9 +17,8 @@ MouseInteraction::MouseInteraction(Interaction &inter)
     interaction_.status.hoverDocNode = node;
   });
 
-  // frame cannot be selected, it acts as a container
   interSelection_.setMouseHoverFilter([this](node::NodeConstPtr node) {
-    return !interaction::node_cast<Frame>(node);
+    return interaction::node_cast<InteractionNode>(node)->isEnable();
   });
 }
 

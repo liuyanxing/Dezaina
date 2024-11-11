@@ -11,6 +11,7 @@ class NodeEditor {
 public:
 	NodeEditor(node::Node* node, Frame* parent) : node_(node) {
 		frame_.setName("nodeEditor");
+		frame_.disable();
 		node::Container::append(&frame_, parent);
 	};
 
