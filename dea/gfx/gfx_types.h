@@ -152,8 +152,9 @@ public:
 			vertex_ = vertex_->next();
 			return vertex_ != nullptr;
 		}
-		void goAnother() {
+		VertexIter& goAnother() {
 			vertex_ = vertex_->segment()->getAnotherVertex(vertex_);
+			return *this;
 		}
 		auto* get() {
 			return vertex_;
