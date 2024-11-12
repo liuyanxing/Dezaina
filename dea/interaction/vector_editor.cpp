@@ -1,6 +1,8 @@
 #include "vector_editor.h"
 #include "resource.h"
 #include "resource/blob.h"
+#include "config/size.h"
+#include "config/color.h"
 #include <unordered_set>
 
 namespace dea::interaction {
@@ -9,19 +11,24 @@ namespace dea::interaction {
 	using namespace event;
 
   void VectorEditor::saveNetwork() {
-		auto data = network_.serialize();
-		auto* resourceItem = Resource::getInstance().getProvider<BlobResourceProvider>()->store(data);
+		auto* resourceItem = Resource::getInstance().getProvider<BlobResourceProvider>()->store(network_.serialize());
 		auto* vectorNode = node::node_cast<VectorNode>(node_);
-		auto vectorData = vectorNode.getVectorData();
-		vectorData.setVectorNetworkBlob(resourceItem.id());
+		auto vectorData = vectorNode->getVectorData();
+		vectorData.setVectorNetworkBlob(resourceItem->id());
 		editor_.setVectorData(vectorData);
 	}
 
 	void VectorEditor::buildCtrlNodes() {
+		vertexNodes_.clear();
+		vertexNodeMap_.clear();
 		for (auto* segment : network_.getSegments()) {
 			auto& [v0, v1] = segment->getVerticies();
 			vertexNodes_.emplace_back(v0, frame_);
 			vertexNodes_.emplace_back(v1, frame_);
+		}
+		for (auto& nodeVertex : vertexNodes_)
+		{
+			vertexNodeMap_.insert({ nodeVertex.getVertex(), &nodeVertex });
 		}
 		for (auto& vertexNode : vertexNodes_) {
 			vertexNode.getNode().addEventListener(EventType::MouseDrag, [this, &vertexNode](Event &e) {
@@ -35,7 +42,7 @@ namespace dea::interaction {
 		}
 	}
 
-	void VectorEditor::selectVertexNode(VectorNode* node, int depth) {
+	void VectorEditor::selectVertexNode(VertexNode* node, int depth) {
 		if (!node) return;
 		selectedVertexNodes_.push_back(node);
 
@@ -44,7 +51,8 @@ namespace dea::interaction {
 		std::unordered_set<gfx::SegmentVertex*> vertexNodes;
 		auto addToCtrlHandleNodes = [this, &vertexNodes](gfx::SegmentVertex* vertex) {
 			if (vertexNodes.contains(vertex)) return;
-			ctrlHandleNodes_.emplace_back(vertex, frame_);
+			vertexNodes.insert(vertex);
+			ctrlHandleNodes_.emplace_back(*vertexNodeMap_[vertex], frame_);
 		};
 		for (auto& vertexNode : vertexNodes_) {
 			gfx::Segment::VertexIter iter{node->getVertex()};
@@ -61,7 +69,6 @@ namespace dea::interaction {
 		  ctrlHandleNode.getNode().addEventListener(EventType::MouseDrag, [this, &ctrlHandleNode](Event &e) {
 				auto &event = static_cast<MouseEvent &>(e);
 				ctrlHandleNode.getVertexNode().getVertex()->translateTangent(event.worldDx, event.worldDy);
-
 				// network_.encode();
 			});
 		}
@@ -98,11 +105,11 @@ namespace dea::interaction {
 
 	void VectorEditor::VertexNode::select() {
 		auto fillPaint = node_.getFillPaints();
-		fillPaint[0].setColor({1, 0, 0, 1});
-		node_.setFillPaints(fillPaint);
+		// fillPaint[0].setColor({1, 0, 0, 1});
+		// node_.setFillPaints(fillPaint);
 	}
 
-	VectorEditor::CtrlHandleNode::CtrlHandleNode(VertexNode& vertexNode, Frame& parent) : vertex_(vertex) {
+	VectorEditor::CtrlHandleNode::CtrlHandleNode(VertexNode& vertexNode, Frame& parent) : vertexNode_(vertexNode) {
 		SolidPaint fillPaint;
 		fillPaint.setColor({1, 1, 1, 1});
 		SolidPaint strokePaint;
@@ -113,7 +120,6 @@ namespace dea::interaction {
 		node_.setStrokePaints({strokePaint});
 		node_.setStrokeWeight(config::size::Min);
 		node_.setSize({config::size::Tiny, config::size::Tiny});
-		auto* v = vertex_->getVertex();
 		node_.setTransform(Matrix::Translate(vertexNode.getTangentEnd()));
 		node::Container::append(&node_, &parent);
 
@@ -121,8 +127,7 @@ namespace dea::interaction {
 		line.setFillPaints({fillPaint});
 		line.setStrokePaints({strokePaint});
 		line.setStrokeWeight(config::size::Min);
-		line.setSize({config::size::Tiny, vertexNode.getTangentLength()});
-		auto* ctrl = vertex_->getCtrl();
+		line.setSize({config::size::Tiny, vertexNode.getTagentLength()});
 		line.setTransform(Matrix::Translate(vertexNode.getPos()) * Matrix::Rotate(vertexNode.getTangentAngle()));
 		line.disable();
 		node::Container::append(&line, &parent);

@@ -51,8 +51,8 @@ void NodeChangesCommand::takeUndoSnapshot() {
 			auto* item = resource::Resource::getInstance().get(shape->getFillGeometry().front().commandsBlob);
 			if (item && item->as<resource::BlobResourceItem>()) {
 				blobs.push_back(&item->as<resource::BlobResourceItem>()->data());
-				assert(snapshot.get_fillGeometry());
-				snapshot.get_fillGeometry()[0].set_commandsBlob(blobs.size() - 1);
+				assert(snapshot.fillGeometry());
+				(*snapshot.fillGeometry())[0].set_commandsBlob(blobs.size() - 1);
 			}
 		}
 		if (shape->getStrokeGeometry().size()) {
@@ -62,8 +62,8 @@ void NodeChangesCommand::takeUndoSnapshot() {
 			auto* item = resource::Resource::getInstance().get(vectorNode->getVectorData().getVectorNetworkBlob());
 			if (item && item->as<resource::BlobResourceItem>()) {
 				blobs.push_back(&item->as<resource::BlobResourceItem>()->data());
-				assert(snapshot.get_vectorData());
-				snapshot.get_vectorData()->set_vectorNetworkBlob(blobs.size() - 1);
+				assert(snapshot.vectorData());
+				snapshot.vectorData()->set_vectorNetworkBlob(blobs.size() - 1);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ void NodeChangesCommand::takeRedoSnapShot() {
 			if (nodeChange->fillGeometry()) {
 				BlobResourceItem* item = nullptr;
 				if (isFillPathValid(nodeChange)) {
-					item = Resource::Get<BlobResourceItem>(nodeChange->fillGeometry()[0].commandsBlob());
+					item = Resource::Get<BlobResourceItem*>(*(*nodeChange->fillGeometry())[0].commandsBlob());
 				} else {
 					item = Resource::getInstance().getProvider<BlobResourceProvider>()->store(geometry::buildFill(node));
 				}

@@ -29,7 +29,7 @@ using PaintsValue = std::vector<node::PaintUnion>;
 using RecordValue =
     std::variant<float, node::Matrix, node::Node *, base::v2<float>,
                  base::v4<float>, SetSizeValue, node::NodeIdArray,
-                 CreateNodeValue, PaintsValue, node::VectorData>;
+                 CreateNodeValue, PaintsValue, node::VectorData, uint32_t>;
 
 struct EditRecordItem {
   EditRecordItem(const node::GUID &nodeId, RecordType type,

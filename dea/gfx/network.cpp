@@ -79,12 +79,12 @@ static SegmentVertex* findTheLeftMostVertex(SegmentPtrArray& segments) {
 }
 
 static auto getDirection = [](SegmentVertex* vertex) {
-  auto* tangentOffset = vertex->getTangentOffset();
-  if (tangentOffset->x() == 0 && tangentOffset->y() == 0) {
+  auto tangentOffset = vertex->getTangentOffset();
+  if (tangentOffset.x() == 0 && tangentOffset.y() == 0) {
     auto another = vertex->segment()->getAnotherVertex(vertex);
     return SkVector{another->x() - vertex->x(), another->y() - vertex->y()};
   }
-  return SkVector{tangentOffset->x(), tangentOffset->y()};
+  return SkVector{tangentOffset.x(), tangentOffset.y()};
 };
 
 static SegmentVertex* getClockwiseMost(const SkVector& pre, SegmentVertex* vertex) {
@@ -338,19 +338,18 @@ SegmentPtrArray Network::buildPlanarSegemts(SkArenaAlloc& allocator) {
   return result;
 }
 
-base::Data Network::serialize() {
+base::Data Network::serialize() const {
   base::Buffer buffer;
-  const auto* vertecies = network.getVertecies();
-  const auto* segments = network.getSegments();
+
   // 0 is region count, ignore it for now
-  buffer.writeUint(vertecies->size(), segments->size(), 0);
-  std::unordered_map<node::Vertex*, int> vertexIndexMap;
+  buffer.write(vertecies_.size(), segments_.size(), 0);
+  std::unordered_map<Vertex*, int> vertexIndexMap;
   int index = 0;
-  for (auto& vertex : *vertecies) {
+  for (auto& vertex : vertecies_) {
     vertexIndexMap.insert({vertex, index++});
     buffer.write(vertex->styleID(), vertex->x(), vertex->y());
   }
-  for (auto& segment : *segments) {
+  for (auto& segment : segments_) {
     auto vertecies = segment->getVerticies();
     auto vertex0 = vertecies[0]->getVertex();
     auto vertex1 = vertecies[1]->getVertex();
@@ -358,11 +357,11 @@ base::Data Network::serialize() {
     buffer.writeUint(0);
 
     buffer.writeUint(vertexIndexMap[vertex0]);
-    buffer.writeFloat(vertecies[0]->getTangentOffset()->x());
-    buffer.writeFloat(vertecies[1]->getTangentOffset()->y());
-    buffer.writeUint(vertexIndexMap[vertex1]);
-    buffer.writeFloat(vertecies[1]->getTangentOffset()->x());
-    buffer.writeFloat(vertecies[1]->getTangentOffset()->y());
+   // buffer.writeFloat(vertecies_[0]->getTangentOffset()->x());
+   // buffer.writeFloat(vertecies_[1]->getTangentOffset()->y());
+   // buffer.writeUint(vertexIndexMap[vertex1]);
+   // buffer.writeFloat(vertecies_[1]->getTangentOffset()->x());
+   // buffer.writeFloat(vertecies_[1]->getTangentOffset()->y());
   }
   return buffer.toData();
 }
