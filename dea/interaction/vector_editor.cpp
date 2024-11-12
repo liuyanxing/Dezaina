@@ -8,6 +8,15 @@ namespace dea::interaction {
 	using namespace resource;
 	using namespace event;
 
+  void VectorEditor::saveNetwork() {
+		auto data = network_.serialize();
+		auto* resourceItem = Resource::getInstance().getProvider<BlobResourceProvider>()->store(data);
+		auto* vectorNode = node::node_cast<VectorNode>(node_);
+		auto vectorData = vectorNode.getVectorData();
+		vectorData.setVectorNetworkBlob(resourceItem.id());
+		editor_.setVectorData(vectorData);
+	}
+
 	void VectorEditor::buildCtrlNodes() {
 		for (auto* segment : network_.getSegments()) {
 			auto& [v0, v1] = segment->getVerticies();
@@ -18,7 +27,6 @@ namespace dea::interaction {
 			vertexNode.getNode().addEventListener(EventType::MouseDrag, [this, &vertexNode](Event &e) {
 				auto &event = static_cast<MouseEvent &>(e);
 				vertexNode.getVertex()->getVertex()->translate(event.worldDx, event.worldDy);
-				network_.encode();
 			});
 			vertexNode.getNode().addEventListener(EventType::MouseDown, [this, &vertexNode](Event &e) {
 				auto &event = static_cast<MouseEvent &>(e);
@@ -53,6 +61,7 @@ namespace dea::interaction {
 		  ctrlHandleNode.getNode().addEventListener(EventType::MouseDrag, [this, &ctrlHandleNode](Event &e) {
 				auto &event = static_cast<MouseEvent &>(e);
 				ctrlHandleNode.getVertexNode().getVertex()->translateTangent(event.worldDx, event.worldDy);
+
 				// network_.encode();
 			});
 		}

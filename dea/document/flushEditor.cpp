@@ -3,6 +3,7 @@
 #include "document.h"
 #include "layout.h"
 #include "node/type.h"
+#include "node/utility.h"
 
 namespace dea::document {
 
@@ -31,7 +32,7 @@ void Document::flushEditor() {
     change.addNodeChange(node);
 
     if (node::node_cast<node::DefaultShapeNode
-    >(node) && record.type >= RecordType::kLayoutRelation) {
+    >(node) && record.isLayoutRelated()) {
       cLayout.add(&record);
       continue;
     }
@@ -44,6 +45,28 @@ void Document::flushEditor() {
       auto& fill = std::get<PaintsValue>(record.value);
       auto& fillChange = nodeChange->set_fillPaints(pool, fill.size());
       node::toChangeImpl(fillChange, fill, pool);
+      break;
+    }
+    case RecordType::kSetVectorData:
+    {
+      auto& vectorData = std::get<node::VectorData>(record.value);
+      nodeChange->set_vectorData(vectorData.toChange(pool));
+      break;
+    }
+    case RecordType::kSetFillCommandBlob:
+    {
+      auto& blobId = std::get<uint32_t>(record.value);
+      auto &pathes = nodeChange->set_fillGeometry(pool, 1);
+      node::Path path{node::WindingRule::NONZERO, blobId};
+      toChangeImpl(pathes[0], path, pool);
+      break;
+    }
+    case RecordType::kSetStrokeCommandBlob:
+    {
+      auto& blobId = std::get<uint32_t>(record.value);
+      auto &pathes = nodeChange->set_fillGeometry(pool, 1);
+      node::Path path{node::WindingRule::NONZERO, blobId};
+      toChangeImpl(pathes[0], path, pool);
       break;
     }
     

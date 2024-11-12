@@ -5,6 +5,7 @@
 #include "include/src/pathops/SkOpEdgeBuilder.h"
 #include "include/src/pathops/SkPathOpsCommon.h"
 #include "network.h"
+#include "base/buffer.h"
 
 namespace dea::gfx {
 
@@ -335,6 +336,35 @@ SegmentPtrArray Network::buildPlanarSegemts(SkArenaAlloc& allocator) {
     cur = static_cast<SkOpContourHead*>(cur->next());
   }
   return result;
+}
+
+base::Data Network::serialize() {
+  base::Buffer buffer;
+  const auto* vertecies = network.getVertecies();
+  const auto* segments = network.getSegments();
+  // 0 is region count, ignore it for now
+  buffer.writeUint(vertecies->size(), segments->size(), 0);
+  std::unordered_map<node::Vertex*, int> vertexIndexMap;
+  int index = 0;
+  for (auto& vertex : *vertecies) {
+    vertexIndexMap.insert({vertex, index++});
+    buffer.write(vertex->styleID(), vertex->x(), vertex->y());
+  }
+  for (auto& segment : *segments) {
+    auto vertecies = segment->getVerticies();
+    auto vertex0 = vertecies[0]->getVertex();
+    auto vertex1 = vertecies[1]->getVertex();
+    // 0 is region ref, ignore it for now
+    buffer.writeUint(0);
+
+    buffer.writeUint(vertexIndexMap[vertex0]);
+    buffer.writeFloat(vertecies[0]->getTangentOffset()->x());
+    buffer.writeFloat(vertecies[1]->getTangentOffset()->y());
+    buffer.writeUint(vertexIndexMap[vertex1]);
+    buffer.writeFloat(vertecies[1]->getTangentOffset()->x());
+    buffer.writeFloat(vertecies[1]->getTangentOffset()->y());
+  }
+  return buffer.toData();
 }
 
 } // namespace gfx

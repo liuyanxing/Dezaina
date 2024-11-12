@@ -147,6 +147,10 @@ bool Document::processNodeChanges(message::Message& message) {
       }
     }
 
+    if (auto* vectorData = node_change.vectorData()) {
+      vectorData->set_vectorNetworkBlob(blobIdMap_[*vectorData.commandsBlob()]);
+    }
+
     node->applyChange(node_change);
 
     if (isNewNode) {

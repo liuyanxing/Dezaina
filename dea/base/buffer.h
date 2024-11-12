@@ -24,9 +24,7 @@ public:
   }
 
   Data toData() {
-    Data data(reinterpret_cast<char *>(data_), size());
-    data_ = nullptr;
-    return data;
+    return Data::MakeWithCopy(data_, size_);
   };
 
   static Buffer MakeEmpty() {

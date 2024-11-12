@@ -24,6 +24,7 @@ public:
 
 	void buildSkPath();
 	void buildCycles(SkArenaAlloc& arena);
+	base::Data serialize() const;
 
 	private:
 		VertexPtrArray vertecies_;

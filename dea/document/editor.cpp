@@ -106,4 +106,14 @@ Editor &Editor::appendSolidPaint(node::Color color) {
   return *this;
 }
 
+
+Editor &Editor::setVectorData(const node::VectorData& vectorData) {
+  editNodes([vectorData, this](Node *node) {
+    if (auto *vectorNode = node_cast<VectorNode>(node)) {
+      addRecord(node->getGuid(), RecordType::kSetVectorData, vectorData);
+    }
+  });
+  return *this;
+}
+
 } // namespace dea::document

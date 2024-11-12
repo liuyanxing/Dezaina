@@ -2,6 +2,7 @@
 
 #include "node.h"
 #include "node/node.h"
+#include "base/type.h"
 #include <array>
 #include <functional>
 #include <tuple>
@@ -13,6 +14,9 @@ enum class RecordType {
   kCreate,
   kSelection,
   FillPaint,
+  kSetVectorData,
+  kSetFillCommandBlob,
+  kSetStrokeCommandBlob,
   kLayoutRelation,
   kSetParent = kLayoutRelation,
   kTransform,
@@ -23,9 +27,9 @@ using SetSizeValue = std::array<node::Vector, 2>;
 using CreateNodeValue = std::tuple<node::NodeType, node::Node *>;
 using PaintsValue = std::vector<node::PaintUnion>;
 using RecordValue =
-    std::variant<float, node::Matrix, node::Node *, std::array<float, 2>,
-                 std::array<float, 4>, SetSizeValue, node::NodeIdArray,
-                 CreateNodeValue, PaintsValue>;
+    std::variant<float, node::Matrix, node::Node *, base::v2<float>,
+                 base::v4<float>, SetSizeValue, node::NodeIdArray,
+                 CreateNodeValue, PaintsValue, node::VectorData>;
 
 struct EditRecordItem {
   EditRecordItem(const node::GUID &nodeId, RecordType type,
@@ -34,6 +38,9 @@ struct EditRecordItem {
   node::GUID nodeId;
   RecordType type;
   RecordValue value;
+  bool isLayoutRelated() const {
+    return type >= RecordType::kLayoutRelation;
+  }
 };
 
 class Editor {
@@ -60,6 +67,10 @@ public:
   Editor &setTransform(const node::Matrix &transform);
 
   Editor &appendSolidPaint(node::Color color);
+
+  Editor &setVectorData(const node::VectorData& vectorData);
+  Editor &setFillCommandBlob(uint32_t commandBlobId);
+  Editor &setStrokeCommandBlob(uint32_t commandBlobId);
 
   Editor &select(const node::NodeIdArray &selection) {
     addRecord(RecordType::kSelection, selection);

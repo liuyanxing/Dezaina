@@ -82,6 +82,8 @@ private:
 	std::vector<VertexNode> vertexNodes_;
 	std::vector<VertexNode> selectedVertexNodes_;
 	std::vector<CtrlHandleNode> ctrlHandleNodes_;
+
+	void saveNetwork();
 };
 
 } // namespace dea::interaction
