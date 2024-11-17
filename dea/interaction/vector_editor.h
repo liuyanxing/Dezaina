@@ -15,6 +15,9 @@ public:
 	class VertexNode {
 	public:
 		VertexNode(gfx::SegmentVertex* vertex, Frame& parent);
+		~VertexNode() {
+			node::Container::remove(&node_, node_.getParent());
+		}
 		void select();
 		auto& getNode() { return node_; }
 		auto* getVertex() { return vertex_; }
@@ -40,6 +43,10 @@ public:
 	class CtrlHandleNode {
 	public:
 		CtrlHandleNode(VertexNode& vertexNode, Frame& parent);
+		~CtrlHandleNode() {
+			node::Container::remove(&node_, node_.getParent());
+			node::Container::remove(&line_, node_.getParent());
+		}
 		auto& getNode() { return node_; }
 		auto& getVertexNode() { return vertexNode_; }
 	private:
@@ -47,6 +54,8 @@ public:
 		Rectangle line_;
 		VertexNode& vertexNode_;
 	};
+
+	using OnSelectVertexNodeCb = std::function<void(VertexNode*)>;
 
 	VectorEditor(node::NodePtr node, document::Editor& editor, Frame* parent) :
 		NodeEditor(node, parent),
@@ -74,6 +83,7 @@ public:
 	// if depth is 0, select node and another node of the same segment
 	// or select all nodes of the segment that contains the node
 	void selectVertexNode(VertexNode* node, int depth = 1);
+	void onSelectVertexNode(const OnSelectVertexNodeCb& cb) { onSelectVertexNodeCb_ = cb; }
 
 private:
 	Mode editMode_ = Bound;
@@ -83,6 +93,7 @@ private:
 	std::vector<VertexNode*> selectedVertexNodes_;
 	std::vector<CtrlHandleNode> ctrlHandleNodes_;
 	std::unordered_map<gfx::SegmentVertex*, VertexNode*> vertexNodeMap_;
+	OnSelectVertexNodeCb onSelectVertexNodeCb_;
 
 	void saveNetwork();
 };
