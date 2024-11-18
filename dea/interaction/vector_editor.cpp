@@ -26,8 +26,8 @@ namespace dea::interaction {
 
 		for (int i = 0; auto * segment : network_.getSegments()) {
 			auto& [v0, v1] = segment->getVerticies();
-			vertexNodes_.emplace_back(v0, frame_).getNode().setName("v" + std::to_string(i) + std::string("_0"));
-			vertexNodes_.emplace_back(v1, frame_).getNode().setName("v" + std::to_string(i) + std::string("_1"));
+			vertexNodes_.emplace_back(v0, frame_).getInterNode().setName("v" + std::to_string(i) + std::string("_0"));
+			vertexNodes_.emplace_back(v1, frame_).getInterNode().setName("v" + std::to_string(i) + std::string("_1"));
 			i++;
 		}
 		for (auto& nodeVertex : vertexNodes_)
@@ -80,10 +80,16 @@ namespace dea::interaction {
 		buildCtrlNodes();
 	}
 
-	VectorEditor::VertexNode::VertexNode(gfx::SegmentVertex* vertex, Frame& parent) : vertex_(vertex) {
+	VectorEditor::VertexNode::VertexNode(gfx::SegmentVertex* vertex, Frame& parent) :
+		vertex_(vertex),
+		ctrlHandleNode_{container_} {
+		auto* v = vertex_->getVertex();
+		container_.disable();
+		node_.setTransform(Matrix::Translate(v->x(), v->y()));
+
 		pos_ = {vertex->getVertex()->x(), vertex->getVertex()->y()};
 		SolidPaint fillPaint;
-		fillPaint.setColor({1, 0, 0, 1});
+		fillPaint.setColor({1, 1, 1, 1});
 		SolidPaint strokePaint;
 		auto &[r, g, b, a] = config::color::Primary;
 		strokePaint.setColor({r, g, b, a});
@@ -91,9 +97,12 @@ namespace dea::interaction {
 		node_.setFillPaints({fillPaint});
 		node_.setStrokePaints({strokePaint});
 		node_.setStrokeWeight(config::size::Min);
-		node_.setSize({config::size::Small, config::size::Small});
-		auto* v = vertex_->getVertex();
-		node_.setTransform(Matrix::Translate(v->x(), v->y()));
+		auto size = config::size::Small;
+		node_.setSize({size, size});
+		node_.setRectangleTopLeftCornerRadius(size / 2);
+		node_.setRectangleTopRightCornerRadius(size / 2);
+		node_.setRectangleBottomRightCornerRadius(size / 2);
+		node_.setRectangleBottomLeftCornerRadius(size / 2);
 		node_.layout(&node_);
 
 		node::Container::append(&node_, &parent);
@@ -109,7 +118,7 @@ namespace dea::interaction {
 		ctrlHandleNode_.hide();
 	}
 
-	VectorEditor::CtrlHandleNode::CtrlHandleNode(Frame& parent) : vertexNode_(vertexNode) {
+	VectorEditor::CtrlHandleNode::CtrlHandleNode(Frame& parent) {
 		container_.disable();
 
 		SolidPaint fillPaint;
@@ -122,18 +131,18 @@ namespace dea::interaction {
 		node_.setStrokePaints({strokePaint});
 		node_.setStrokeWeight(config::size::Min);
 		node_.setSize({config::size::Tiny, config::size::Tiny});
-		node_.setTransform(Matrix::Translate(vertexNode.getTangentEnd()));
-		node_.setName(vertexNode.getNode().getName() + "_R");
+		// node_.setTransform(Matrix::Translate(vertexNode.getTangentEnd()));
+		// node_.setName(vertexNode.getNode().getName() + "_R");
 		node_.layout(&node_);
 		node::Container::append(&node_, &parent);
 
 		line_.setFillPaints({fillPaint});
 		line_.setStrokePaints({strokePaint});
 		line_.setStrokeWeight(config::size::Min);
-		line_.setSize({config::size::Tiny, vertexNode.getTagentLength()});
-		line_.setTransform(Matrix::Translate(vertexNode.getPos()) * Matrix::Rotate(vertexNode.getTangentAngle()));
+		// line_.setSize({config::size::Tiny, vertexNode.getTagentLength()});
+		// line_.setTransform(Matrix::Translate(vertexNode.getPos()) * Matrix::Rotate(vertexNode.getTangentAngle()));
 		line_.disable();
-		line_.setName(vertexNode.getNode().getName() + "_L");
+		// line_.setName(vertexNode.getNode().getName() + "_L");
 		node::Container::append(&line_, &parent);
 	}
 
