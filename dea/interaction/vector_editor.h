@@ -12,6 +12,30 @@ public:
 		Vector,
 	};
 
+	class CtrlHandleNode {
+	public:
+		CtrlHandleNode(Frame& parent);
+		~CtrlHandleNode() {
+			node::Container::remove(&node_, node_.getParent());
+			node::Container::remove(&line_, node_.getParent());
+		}
+		void hide() {
+			node_.disable();
+			line_.disable();
+			container_.setVisible(false);
+		}
+		void show() {
+			node_.enable();
+			line_.enable();
+			container_.setVisible(true);
+		}
+		auto& getInterNode() { return node_; }
+	private:
+	  Frame container_;
+		Rectangle node_;
+		Rectangle line_;
+	};
+
 	class VertexNode {
 	public:
 		VertexNode(gfx::SegmentVertex* vertex, Frame& parent);
@@ -19,7 +43,9 @@ public:
 			node::Container::remove(&node_, node_.getParent());
 		}
 		void select();
-		auto& getNode() { return node_; }
+		void unSelect();
+		auto& getInterNode() { return node_; }
+		auto& getCtrlHandleNode() { return ctrlHandleNode_; }
 		auto* getVertex() { return vertex_; }
 		auto  getPos() { return pos_; }
 		auto getTangentEnd() {
@@ -35,24 +61,11 @@ public:
 			return node::Vector{t.x(), t.y()}.angle({0, -1});
 		}
 	private:
+		Frame container_;
 		Rectangle node_;
+		CtrlHandleNode ctrlHandleNode_;
 		node::Vector pos_;
 		gfx::SegmentVertex* vertex_;
-	};
-
-	class CtrlHandleNode {
-	public:
-		CtrlHandleNode(VertexNode& vertexNode, Frame& parent);
-		~CtrlHandleNode() {
-			node::Container::remove(&node_, node_.getParent());
-			node::Container::remove(&line_, node_.getParent());
-		}
-		auto& getNode() { return node_; }
-		auto& getVertexNode() { return vertexNode_; }
-	private:
-		Rectangle node_;
-		Rectangle line_;
-		VertexNode& vertexNode_;
 	};
 
 	using OnSelectVertexNodeCb = std::function<void(VertexNode*)>;
@@ -90,8 +103,6 @@ private:
 	gfx::Network network_;
 	std::unique_ptr<SkArenaAlloc> arena_;
 	std::vector<VertexNode> vertexNodes_;
-	std::vector<VertexNode*> selectedVertexNodes_;
-	std::vector<CtrlHandleNode> ctrlHandleNodes_;
 	std::unordered_map<gfx::SegmentVertex*, VertexNode*> vertexNodeMap_;
 	OnSelectVertexNodeCb onSelectVertexNodeCb_;
 

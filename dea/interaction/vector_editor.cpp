@@ -3,7 +3,6 @@
 #include "resource/blob.h"
 #include "config/size.h"
 #include "config/color.h"
-#include <unordered_set>
 
 namespace dea::interaction {
 	using namespace node;
@@ -21,65 +20,51 @@ namespace dea::interaction {
 	void VectorEditor::buildCtrlNodes() {
 		vertexNodes_.clear();
 		vertexNodeMap_.clear();
-		// it's important to reserve size because vertexNodes_ may reallocate
+
+		// it's important to reserve because vertexNodes_ may reallocate
 		vertexNodes_.reserve(network_.getSegments().size() * 2);
 
 		for (int i = 0; auto * segment : network_.getSegments()) {
 			auto& [v0, v1] = segment->getVerticies();
-			vertexNodes_.emplace_back(v0, frame_);
-			vertexNodes_.back().getNode().setName("v" + std::to_string(i) + std::string("_0"));
-			vertexNodes_.emplace_back(v1, frame_);
-			vertexNodes_.back().getNode().setName("v" + std::to_string(i) + std::string("_1"));
+			vertexNodes_.emplace_back(v0, frame_).getNode().setName("v" + std::to_string(i) + std::string("_0"));
+			vertexNodes_.emplace_back(v1, frame_).getNode().setName("v" + std::to_string(i) + std::string("_1"));
 			i++;
 		}
-		ctrlHandleNodes_.reserve(vertexNodes_.size() * 4);
 		for (auto& nodeVertex : vertexNodes_)
 		{
 			vertexNodeMap_.insert({ nodeVertex.getVertex(), &nodeVertex });
 		}
 		for (auto& vertexNode : vertexNodes_) {
-			vertexNode.getNode().addEventListener(EventType::MouseDrag, [this, &vertexNode](Event &e) {
+			vertexNode.getInterNode().addEventListener(EventType::MouseDrag, [this, &vertexNode](Event &e) {
 				auto &event = static_cast<MouseEvent &>(e);
 				vertexNode.getVertex()->getVertex()->translate(event.worldDx, event.worldDy);
 			});
-			vertexNode.getNode().addEventListener(EventType::MouseDown, [this, &vertexNode](Event &e) {
+			vertexNode.getInterNode().addEventListener(EventType::MouseDown, [this, &vertexNode](Event &e) {
 				auto &event = static_cast<MouseEvent &>(e);
 				selectVertexNode(&vertexNode);
+			});
+			vertexNode.getCtrlHandleNode().getInterNode().addEventListener(EventType::MouseDown, [this, &vertexNode](Event &e) {
+				selectVertexNode(&vertexNode, 0);
 			});
 		}
 	}
 
 	void VectorEditor::selectVertexNode(VertexNode* node, int depth) {
 		if (!node) return;
+		for (auto& vertexNode : vertexNodes_) {
+			vertexNode.unSelect();
+			vertexNode.getCtrlHandleNode().hide();
+		}
+
 		node->select();
-		selectedVertexNodes_.push_back(node);
 		onSelectVertexNodeCb_(node);
 
-		// get edited vertexNode
-		std::unordered_set<gfx::SegmentVertex*> vertexNodes;
-		auto addToCtrlHandleNodes = [this, &vertexNodes](gfx::SegmentVertex* vertex) {
-			if (vertexNodes.contains(vertex)) return;
-			vertexNodes.insert(vertex);
-			ctrlHandleNodes_.emplace_back(*vertexNodeMap_[vertex], frame_);
-		};
-		for (auto& vertexNode : vertexNodes_) {
-			gfx::Segment::VertexIter iter{node->getVertex()};
-			do {
-				addToCtrlHandleNodes(iter.get());
-				if (depth == 0 && iter.get() != node->getVertex()) { continue; }
-				addToCtrlHandleNodes(iter.clone().goAnother().get());
-			} while(iter.goNext());
-		}
-		for (auto& ctrlHandleNode : ctrlHandleNodes_) {
-			ctrlHandleNode.getNode().addEventListener(EventType::MouseDown, [this, &ctrlHandleNode](Event &e) {
-				selectVertexNode(&ctrlHandleNode.getVertexNode(), 0);
-			});
-		  ctrlHandleNode.getNode().addEventListener(EventType::MouseDrag, [this, &ctrlHandleNode](Event &e) {
-				auto &event = static_cast<MouseEvent &>(e);
-				ctrlHandleNode.getVertexNode().getVertex()->translateTangent(event.worldDx, event.worldDy);
-				// network_.encode();
-			});
-		}
+		gfx::Segment::VertexIter iter{node->getVertex()};
+		do {
+			vertexNodeMap_[iter.get()]->select();
+			if (depth == 0 && iter.get() != node->getVertex()) { continue; }
+			vertexNodeMap_[iter.clone().goAnother().get()]->getCtrlHandleNode().show();
+		} while(iter.goNext());
 	}
 
 	void VectorEditor::startEditVector() {
@@ -88,6 +73,7 @@ namespace dea::interaction {
 		arena_ = std::make_unique<SkArenaAlloc>(40 * 1024);
 		if (auto* vector = node::node_cast<node::VectorNode>(node_)) {
 			const auto resourceItem = Resource::getInstance().get(vector->getVectorData().getVectorNetworkBlob());
+			assert(resourceItem);
 			gfx::Network::buildFromData(resourceItem->as<BlobResourceItem>()->data(), *arena_, network_);
 			network_.buildCycles(*arena_);
 		}
@@ -116,9 +102,16 @@ namespace dea::interaction {
 	void VectorEditor::VertexNode::select() {
 		auto fillPaint = node_.getFillPaints();
 		std::get<SolidPaint>(fillPaint[0]).setColor({ 1, 0, 0, 1 });
+		ctrlHandleNode_.show();
 	}
 
-	VectorEditor::CtrlHandleNode::CtrlHandleNode(VertexNode& vertexNode, Frame& parent) : vertexNode_(vertexNode) {
+	void VectorEditor::VertexNode::unSelect() {
+		ctrlHandleNode_.hide();
+	}
+
+	VectorEditor::CtrlHandleNode::CtrlHandleNode(Frame& parent) : vertexNode_(vertexNode) {
+		container_.disable();
+
 		SolidPaint fillPaint;
 		fillPaint.setColor({1, 1, 1, 1});
 		SolidPaint strokePaint;
