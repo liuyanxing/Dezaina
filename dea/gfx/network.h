@@ -12,11 +12,11 @@ class Network {
 public:
 	static void buildFromData(const base::Data& data, SkArenaAlloc& arena, Network& network);
 
-	auto* getVertecies() {
-		return &vertecies_;
+	auto& getVertecies() {
+		return vertecies_;
 	}
-	auto* getSegments() {
-		return &segments_;
+	auto& getSegments() {
+		return segments_;
 	}
 	bool empty() {
 		return vertecies_.empty() && segments_.empty();

@@ -56,6 +56,9 @@ void Interaction::createNodeEditor(node::NodePtr node) {
   } else if (auto *vectorNode = node::node_cast<node::VectorNode>(node)) {
     createNodeEditorInernal<VectorEditor>(vectorNode);
     node_editor_->as<VectorEditor>()->startEditVector();
+    node_editor_->as<VectorEditor>()->onSelectVertexNode([this](VectorEditor::VertexNode *node) {
+      dump();
+    });
   } else if (auto *textNode = node::node_cast<node::TextNode>(node)) {
     createNodeEditorInernal<TextEditor>(textNode);
   } else if (auto *starNode = node::node_cast<node::StarNode>(node)) {
@@ -168,12 +171,15 @@ bool Interaction::dragInterNode(const std::string &query, float worldX,
 
 void Interaction::dump() {
   NodeIter iter(&container_);
-  spdlog::info("dumping page");
+  spdlog::info("dumping inter");
   while (iter.isValid()) {
     auto *node = iter.get();
     auto *parent = node->getParent();
-    spdlog::info("node: {}, parent: {}", getNodeTypeString(node),
-                 getNodeTypeString(parent));
+    spdlog::info("node: {}, name: {}, parent: {}, name: {}",
+                    getNodeTypeString(node),
+                         node->getName(),
+                    getNodeTypeString(parent),
+                    parent ? parent->getName() : "");
     ++iter;
   }
   spdlog::info("dump end");

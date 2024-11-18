@@ -117,6 +117,7 @@ PaintDrawers& buildFillPaintDrawers(node::NodeConstPtr node) {
     return buildFillPaintDrawers(textNode);
   }
   auto* shapeNode = node::node_cast<const node::DefaultShapeNode>(node);
+  assert(shapeNode);
   buildPaintDrawers(shapeNode->getFillPaints());
   return paintDrawers;
 }

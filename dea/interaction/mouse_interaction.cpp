@@ -22,6 +22,14 @@ MouseInteraction::MouseInteraction(Interaction &inter)
   });
 }
 
+void MouseInteraction::onMouseDown(event::MouseEvent &event) {
+  auto *node = interSelection_.getHoverNode();
+  if (!node || node::node_cast<node::PageNode>(node))
+    return;
+  auto *emitter = interaction::node_cast<event::EventEmitter>(node);
+  emitter->emit(event);
+}
+
 void MouseInteraction::onMouseMove(event::MouseEvent &event) {
   interaction_.status.mouseWorldPos = {event.worldX, event.worldY};
 

@@ -32,6 +32,7 @@ private:
   Interaction &interaction_;
 
   void onMouseMove(event::MouseEvent &event) override;
+  void onMouseDown(event::MouseEvent &event) override;
   void onMouseDrag(event::MouseEvent &event) override;
   void onPageChange(event::Event &event) override;
   void hanldeDragCreateNode(event::MouseEvent &event);

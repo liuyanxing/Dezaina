@@ -192,7 +192,8 @@ public:
 		return vertices[0]->getVertex() == vertex || vertices[1]->getVertex() == vertex;
 	}
 	bool hasTangent(Vector* tangent) {
-		return vertices[0]->getTangentOffset() == tangent || vertices[1]->getTangentOffset() == tangent;
+		// return &vertices[0]->getTangentOffset() == tangent || &vertices[1]->getTangentOffset() == tangent;
+		return true;
 	}
 	SegmentVertex* getT(float t) {
 		for (auto v : vertices) {
