@@ -25,6 +25,8 @@ public:
 	void buildSkPath();
 	void buildCycles(SkArenaAlloc& arena);
 	base::Data serialize() const;
+	base::Data builFillGeometryData() const;
+	base::Data builStrokeGeometryData() const;
 
 	private:
 		VertexPtrArray vertecies_;
